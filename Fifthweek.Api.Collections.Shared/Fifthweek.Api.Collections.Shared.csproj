@@ -52,15 +52,15 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="CollectionId.cs" />
+    <Compile Include="QueueId.cs" />
     <Compile Include="IDefragmentQueueDbStatement.cs" />
     <Compile Include="IGetWeeklyReleaseScheduleDbStatement.cs" />
     <Compile Include="WeeklyReleaseSchedule.cs" />
     <Compile Include="HourOfWeek.cs" />
-    <Compile Include="ICollectionSecurity.cs" />
+    <Compile Include="IQueueSecurity.cs" />
     <Compile Include="IGetLiveDateOfNewQueuedPostDbStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ValidCollectionName.cs" />
+    <Compile Include="ValidQueueName.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

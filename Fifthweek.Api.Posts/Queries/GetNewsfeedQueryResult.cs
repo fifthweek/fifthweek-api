@@ -30,9 +30,6 @@
             public ChannelId ChannelId { get; private set; }
 
             [Optional]
-            public CollectionId CollectionId { get; private set; }
-
-            [Optional]
             public Comment Comment { get; private set; }
 
             [Optional]

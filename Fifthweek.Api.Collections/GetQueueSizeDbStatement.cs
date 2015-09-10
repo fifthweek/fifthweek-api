@@ -18,24 +18,22 @@
             @"
             SELECT  COUNT(*)
             FROM    {0}
-            WHERE   {1} = @CollectionId
-            AND     {2} > @Now
-            AND     {3} = 1",
+            WHERE   {1} = @QueueId
+            AND     {2} > @Now",
             Post.Table, 
-            Post.Fields.CollectionId, 
-            Post.Fields.LiveDate, 
-            Post.Fields.ScheduledByQueue);
+            Post.Fields.QueueId, 
+            Post.Fields.LiveDate);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<int> ExecuteAsync(CollectionId collectionId, DateTime now)
+        public async Task<int> ExecuteAsync(QueueId queueId, DateTime now)
         {
-            collectionId.AssertNotNull("collectionId");
+            queueId.AssertNotNull("queueId");
             now.AssertUtc("now");
 
             var parameters = new
             {
-                CollectionId = collectionId.Value,
+                QueueId = queueId.Value,
                 Now = now
             };
 

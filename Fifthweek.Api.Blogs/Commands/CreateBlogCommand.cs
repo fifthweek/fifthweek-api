@@ -12,9 +12,11 @@
         
         public BlogId NewBlogId { get; private set; }
 
-        public ValidBlogName BlogName { get; private set; }
+        public ChannelId FirstChannelId { get; private set; }
 
-        public ValidTagline Tagline { get; private set; }
+        public ValidBlogName BlogName { get; private set; }
+        
+        public ValidIntroduction Introduction { get; private set; }
 
         public ValidChannelPrice BasePrice { get; private set; }
     }

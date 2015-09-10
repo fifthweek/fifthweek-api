@@ -23,7 +23,6 @@
             SET 
                 {1} = @Name, 
                 {2} = @Price,
-                {3} = @Description,
                 {4} = 
                 (
                     CASE
@@ -50,7 +49,7 @@
             Channel.Table,
             Channel.Fields.Name,
             Channel.Fields.Price,
-            Channel.Fields.Description,
+            Channel.Fields.Id,
             Channel.Fields.IsVisibleToNonSubscribers,
             Channel.Fields.PriceLastSetDate,
             Channel.Fields.Id,
@@ -63,7 +62,6 @@
             UserId userId,
             ChannelId channelId,
             ValidChannelName name,
-            ValidChannelDescription description,
             ValidChannelPrice price, 
             bool isVisibleToNonSubscribers, 
             DateTime now)
@@ -80,7 +78,6 @@
                             IsVisibleToNonSubscribers = isVisibleToNonSubscribers,
                             Name = name.Value,
                             Price = price.Value,
-                            Description = description.Value,
                             PriceLastSetDate = now
                         });
                 }

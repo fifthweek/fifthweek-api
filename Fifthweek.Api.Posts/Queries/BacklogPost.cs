@@ -16,7 +16,7 @@
         public ChannelId ChannelId { get; private set; }
 
         [Optional]
-        public CollectionId CollectionId { get; private set; }
+        public QueueId QueueId { get; private set; }
 
         [Optional]
         public Comment Comment { get; private set; }

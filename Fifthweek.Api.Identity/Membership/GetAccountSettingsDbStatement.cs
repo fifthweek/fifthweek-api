@@ -20,7 +20,7 @@
     public partial class GetAccountSettingsDbStatement : IGetAccountSettingsDbStatement
     {
         private static readonly string Sql = string.Format(
-            @"SELECT u.{0}, u.{1}, u.{2}, u.{3}, cab.{4} as Balance, origin.{11},
+            @"SELECT u.{1}, u.{2}, u.{3}, cab.{4} as Balance, origin.{11},
                     CASE WHEN origin.{10} IS NULL OR origin.{13}={14} THEN 'False' ELSE 'True' END AS HasPaymentInformation,
                     cpo.{17}, cpo.{18}
                 FROM {5} u
@@ -72,7 +72,6 @@
                     : new CreatorPercentageOverrideData(result.Percentage.Value, result.ExpiryDate);
 
                 return new GetAccountSettingsDbResult(
-                    result.Name == null ? null : new CreatorName(result.Name),
                     new Username(result.UserName),
                     new Email(result.Email), 
                     result.ProfileImageFileId == null ? null : new FileId(result.ProfileImageFileId.Value),
@@ -85,8 +84,6 @@
 
         private class GetAccountSettingsDapperResult
         {
-            public string Name { get; set; }
-
             public string UserName { get; set; }
 
             public string Email { get; set; }
@@ -108,9 +105,6 @@
     [AutoConstructor, AutoEqualityMembers]
     public partial class GetAccountSettingsDbResult
     {
-        [Optional]
-        public CreatorName Name { get; private set; }
-
         public Username Username { get; private set; }
 
         public Email Email { get; private set; }

@@ -17,11 +17,11 @@
     public class TryGetQueuedPostCollectionDbStatementTests : PersistenceTestsBase
     {
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly DateTime Now = DateTime.UtcNow;
 
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
-        private TryGetQueuedPostCollectionDbStatement target;
+        private TryGetPostQueueIdDbStatement target;
 
         [TestInitialize]
         public void Initialize()
@@ -36,7 +36,7 @@
 
         public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new TryGetQueuedPostCollectionDbStatement(connectionFactory);
+            this.target = new TryGetPostQueueIdDbStatement(connectionFactory);
         }
 
         [TestMethod]
@@ -114,7 +114,7 @@
 
                 var result = await this.target.ExecuteAsync(PostId, Now);
 
-                Assert.AreEqual(result, CollectionId);
+                Assert.AreEqual(result, QueueId);
 
                 return ExpectedSideEffects.None;
             });
@@ -126,12 +126,12 @@
             {
                 var userId = Guid.NewGuid();
                 var channelId = Guid.NewGuid();
-                await databaseContext.CreateTestCollectionAsync(userId, channelId, CollectionId.Value);
+                await databaseContext.CreateTestCollectionAsync(userId, channelId, QueueId.Value);
 
                 var post = PostTests.UniqueFileOrImage(new Random());
                 post.Id = PostId.Value;
                 post.ChannelId = channelId;
-                post.CollectionId = CollectionId.Value;
+                post.QueueId = QueueId.Value;
                 post.ScheduledByQueue = queuePost;
                 post.LiveDate = liveDateInFuture ? Now.AddDays(1) : Now.AddDays(-1);
                 await databaseContext.Database.Connection.InsertAsync(post);

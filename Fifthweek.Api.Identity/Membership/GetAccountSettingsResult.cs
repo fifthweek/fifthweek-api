@@ -10,9 +10,6 @@
     [AutoEqualityMembers]
     public partial class GetAccountSettingsResult
     {
-        [Optional]
-        public CreatorName Name { get; private set; }
-
         public Username Username { get; private set; }
 
         public Email Email { get; private set; }

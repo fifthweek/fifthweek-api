@@ -27,7 +27,7 @@
     {
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
@@ -147,13 +147,13 @@
             using (var databaseContext = testDatabase.CreateContext())
             {
                 var random = new Random();
-                await databaseContext.CreateTestCollectionAsync(CreatorId.Value, ChannelId.Value, CollectionId.Value);
+                await databaseContext.CreateTestCollectionAsync(CreatorId.Value, ChannelId.Value, QueueId.Value);
                 await databaseContext.CreateTestFileWithExistingUserAsync(CreatorId.Value, FileId.Value);
 
                 var post = PostTests.UniqueFileOrImage(random);
                 post.Id = PostId.Value;
                 post.ChannelId = ChannelId.Value;
-                post.CollectionId = CollectionId.Value;
+                post.QueueId = QueueId.Value;
                 post.FileId = FileId.Value;
                 post.CreationDate = new SqlDateTime(post.CreationDate).Value;
                 post.LiveDate = new SqlDateTime(post.LiveDate).Value;
@@ -174,7 +174,7 @@
                 
                 await databaseContext.CreateTestChannelSubscriptionWithExistingReferences(CreatorId.Value, ChannelId.Value);
 
-                var weeklyReleaseTimes = WeeklyReleaseTimeTests.GenerateSortedWeeklyReleaseTimes(CollectionId.Value, 3);
+                var weeklyReleaseTimes = WeeklyReleaseTimeTests.GenerateSortedWeeklyReleaseTimes(QueueId.Value, 3);
                 await databaseContext.Database.Connection.InsertAsync(weeklyReleaseTimes);
             }
         }
@@ -184,12 +184,12 @@
             using (var databaseContext = testDatabase.CreateContext())
             {
                 var channel = await databaseContext.Channels.SingleAsync(v => v.Id == ChannelId.Value);
-                var collection = await databaseContext.Collections.SingleAsync(v => v.Id == CollectionId.Value);
+                var collection = await databaseContext.Queues.SingleAsync(v => v.Id == QueueId.Value);
                 var subscription = await databaseContext.ChannelSubscriptions.SingleAsync(v => v.ChannelId == ChannelId.Value && v.UserId == CreatorId.Value);
                 var post = await databaseContext.Posts.SingleAsync(v => v.Id == PostId.Value);
                 var comment = await databaseContext.Comments.SingleAsync(v => v.Id == CommentId.Value);
                 var like = await databaseContext.Likes.SingleAsync(v => v.UserId == UserId.Value && v.PostId == PostId.Value);
-                var weeklyReleaseTimes = await databaseContext.WeeklyReleaseTimes.Where(v => v.CollectionId == CollectionId.Value).ToListAsync();
+                var weeklyReleaseTimes = await databaseContext.WeeklyReleaseTimes.Where(v => v.QueueId == QueueId.Value).ToListAsync();
 
                 var result = new List<IIdentityEquatable>
                 {

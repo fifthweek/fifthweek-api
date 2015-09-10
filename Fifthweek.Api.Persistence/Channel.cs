@@ -27,10 +27,6 @@
         public string Name { get; set; }
 
         [Required]
-        [MaxLength(250)] // See: ValidChannelDescription.MaxLength
-        public string Description { get; set; }
-
-        [Required]
         public int Price { get; set; }
 
         [Required]

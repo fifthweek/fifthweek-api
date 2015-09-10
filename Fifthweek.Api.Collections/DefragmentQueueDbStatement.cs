@@ -12,27 +12,25 @@
     public partial class DefragmentQueueDbStatement : IDefragmentQueueDbStatement
     {
         private readonly IGetQueueSizeDbStatement getQueueSize;
-        private readonly IGetQueueLowerBoundDbStatement getQueueLowerBound;
         private readonly IQueuedPostLiveDateCalculator liveDateCalculator;
         private readonly IUpdateAllLiveDatesInQueueDbStatement updateAllLiveDatesInQueue;
 
-        public async Task ExecuteAsync(CollectionId collectionId, WeeklyReleaseSchedule weeklyReleaseSchedule, DateTime now)
+        public async Task ExecuteAsync(QueueId queueId, WeeklyReleaseSchedule weeklyReleaseSchedule, DateTime now)
         {
-            collectionId.AssertNotNull("collectionId");
+            queueId.AssertNotNull("queueId");
             weeklyReleaseSchedule.AssertNotNull("weeklyReleaseSchedule");
             now.AssertUtc("now");
 
-            var queueSize = await this.getQueueSize.ExecuteAsync(collectionId, now);
+            var queueSize = await this.getQueueSize.ExecuteAsync(queueId, now);
 
             if (queueSize == 0)
             {
                 return;
             }
 
-            var exclusiveLowerBound = await this.getQueueLowerBound.ExecuteAsync(collectionId, now);
-            var unfragmentedLiveDates = this.liveDateCalculator.GetNextLiveDates(exclusiveLowerBound, weeklyReleaseSchedule, queueSize);
+            var unfragmentedLiveDates = this.liveDateCalculator.GetNextLiveDates(now, weeklyReleaseSchedule, queueSize);
             
-            await this.updateAllLiveDatesInQueue.ExecuteAsync(collectionId, unfragmentedLiveDates, now);
+            await this.updateAllLiveDatesInQueue.ExecuteAsync(queueId, unfragmentedLiveDates, now);
         }
     }
 }

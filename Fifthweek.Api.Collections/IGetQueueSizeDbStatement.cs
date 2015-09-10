@@ -7,6 +7,6 @@
 
     public interface IGetQueueSizeDbStatement
     {
-        Task<int> ExecuteAsync(CollectionId collectionId, DateTime now);
+        Task<int> ExecuteAsync(QueueId queueId, DateTime now);
     }
 }

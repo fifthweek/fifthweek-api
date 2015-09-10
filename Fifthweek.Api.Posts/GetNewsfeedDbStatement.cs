@@ -40,7 +40,7 @@
 
         private static readonly string SqlStart = string.Format(@"
             SELECT blog.{12} AS BlogId, blog.{13} AS CreatorId, post.{1} AS PostId, 
-                   post.{2}, {4}, {5}, {6}, {7}, {3}, post.{21}, 
+                   post.{2}, {5}, {6}, {7}, {3}, post.{21}, 
                    [file].{16} as FileName, [file].{17} as FileExtension, [file].{18} as FileSize, 
                    image.{16} as ImageName, image.{17} as ImageExtension, image.{18} as ImageSize, 
                    image.{19} as ImageRenderWidth, image.{20} as ImageRenderHeight,
@@ -60,7 +60,7 @@
             Post.Fields.Id,
             Post.Fields.ChannelId,
             Post.Fields.LiveDate,
-            Post.Fields.CollectionId,
+            Post.Fields.QueueId,
             Post.Fields.Comment,
             Post.Fields.FileId,
             Post.Fields.ImageId,
@@ -93,11 +93,6 @@
             @"
             AND channel.{0} IN @RequestedChannelIds",
             Channel.Fields.Id);
-
-        private static readonly string CollectionFilter = string.Format(
-            @"
-            AND post.{0} IN @RequestedCollectionIds",
-            Post.Fields.CollectionId);
 
         private static readonly string SubscriptionFilter = string.Format(
             @"
@@ -166,7 +161,6 @@
             UserId requestorId,
             UserId creatorId,
             IReadOnlyList<ChannelId> requestedChannelIds,
-            IReadOnlyList<CollectionId> requestedCollectionIds,
             DateTime now,
             DateTime origin,
             bool searchForwards,
@@ -182,7 +176,6 @@
                 RequestorId = requestorId.Value,
                 CreatorId = creatorId == null ? null : (Guid?)creatorId.Value,
                 RequestedChannelIds = requestedChannelIds == null ? null : requestedChannelIds.Select(v => v.Value).ToList(),
-                RequestedCollectionIds = requestedCollectionIds == null ? null : requestedCollectionIds.Select(v => v.Value).ToList(),
                 Now = now,
                 Origin = origin,
                 StartIndex = startIndex.Value,
@@ -204,11 +197,6 @@
                 if (requestedChannelIds != null && requestedChannelIds.Count > 0)
                 {
                     query.Append(ChannelFilter);
-                }
-
-                if (requestedCollectionIds != null && requestedCollectionIds.Count > 0)
-                {
-                    query.Append(CollectionFilter);
                 }
 
                 if (creatorId != null)

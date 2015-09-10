@@ -24,12 +24,12 @@
             var post = new Post(postId.Value)
             {
                 LiveDate = this.scheduledDateClipping.Apply(now, newTime),
-                ScheduledByQueue = false
+                QueueId = null
             };
 
             var parameters = new SqlGenerationParameters<Post, Post.Fields>(post)
             {
-                UpdateMask = Post.Fields.LiveDate | Post.Fields.ScheduledByQueue
+                UpdateMask = Post.Fields.LiveDate | Post.Fields.QueueId
             };
 
             using (var connection = this.connectionFactory.CreateConnection())

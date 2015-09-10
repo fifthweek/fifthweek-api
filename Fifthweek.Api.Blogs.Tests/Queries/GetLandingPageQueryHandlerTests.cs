@@ -68,7 +68,7 @@
             var databaseResult = new GetLandingPageDbStatement.GetLandingPageDbResult(
                     CreatorId,
                     null,
-                    new GetBlogChannelsAndCollectionsDbStatement.BlogDbResult(
+                    new GetBlogChannelsAndQueuesDbStatement.BlogDbResult(
                         BlogId,
                         CreatorId,
                         Name,
@@ -105,7 +105,7 @@
             var databaseResult = new GetLandingPageDbStatement.GetLandingPageDbResult(
                     CreatorId,
                     ProfileImageFileId,
-                    new GetBlogChannelsAndCollectionsDbStatement.BlogDbResult(
+                    new GetBlogChannelsAndQueuesDbStatement.BlogDbResult(
                         BlogId,
                         CreatorId,
                         Name,

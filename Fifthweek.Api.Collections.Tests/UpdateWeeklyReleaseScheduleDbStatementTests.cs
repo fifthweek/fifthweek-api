@@ -12,7 +12,7 @@
     [TestClass]
     public class UpdateWeeklyReleaseScheduleDbStatementTests
     {
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly WeeklyReleaseSchedule WeeklyReleaseSchedule = WeeklyReleaseSchedule.Parse(new[] { HourOfWeek.Parse(42) });
         private static readonly DateTime Now = DateTime.UtcNow;
 
@@ -40,24 +40,24 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireWeeklyReleaseSchedule()
         {
-            await this.target.ExecuteAsync(CollectionId, null, Now);
+            await this.target.ExecuteAsync(QueueId, null, Now);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public async Task ItShouldRequireUtcDate()
         {
-            await this.target.ExecuteAsync(CollectionId, WeeklyReleaseSchedule, DateTime.Now);
+            await this.target.ExecuteAsync(QueueId, WeeklyReleaseSchedule, DateTime.Now);
         }
 
         [TestMethod]
         public async Task ItShouldReplaceWeeklyReleaseTimes()
         {
-            this.replaceWeeklyReleaseTimes.Setup(_ => _.ExecuteAsync(CollectionId, WeeklyReleaseSchedule))
+            this.replaceWeeklyReleaseTimes.Setup(_ => _.ExecuteAsync(QueueId, WeeklyReleaseSchedule))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.target.ExecuteAsync(CollectionId, WeeklyReleaseSchedule, Now);
+            await this.target.ExecuteAsync(QueueId, WeeklyReleaseSchedule, Now);
 
             this.replaceWeeklyReleaseTimes.Verify();
         }
@@ -66,16 +66,16 @@
         public async Task ItShouldDefragmentQueueAfterReplacingWeeklyReleaseTimes()
         {
             var callOrder = 0;
-            this.replaceWeeklyReleaseTimes.Setup(_ => _.ExecuteAsync(CollectionId, WeeklyReleaseSchedule))
+            this.replaceWeeklyReleaseTimes.Setup(_ => _.ExecuteAsync(QueueId, WeeklyReleaseSchedule))
                 .Returns(Task.FromResult(0))
                 .Callback(() => Assert.AreEqual(0, callOrder++));
 
-            this.defragmentQueue.Setup(_ => _.ExecuteAsync(CollectionId, WeeklyReleaseSchedule, Now))
+            this.defragmentQueue.Setup(_ => _.ExecuteAsync(QueueId, WeeklyReleaseSchedule, Now))
                 .Returns(Task.FromResult(0))
                 .Callback(() => Assert.AreEqual(1, callOrder++))
                 .Verifiable();
 
-            await this.target.ExecuteAsync(CollectionId, WeeklyReleaseSchedule, Now);
+            await this.target.ExecuteAsync(QueueId, WeeklyReleaseSchedule, Now);
 
             this.defragmentQueue.Verify();
         }

@@ -15,7 +15,8 @@
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IPostSecurity postSecurity;
         private readonly ISetPostLiveDateDbStatement setPostLiveDate;
-        private readonly IRemoveFromQueueIfRequiredDbStatement removeFromQueueIfRequired;
+        private readonly IDefragmentQueueIfRequiredDbStatement defragmentQueueIfRequired;
+        private readonly ITimestampCreator timestampCreator;
 
         public async Task HandleAsync(RescheduleForNowCommand command)
         {
@@ -29,9 +30,9 @@
 
         private Task RescheduleForNowAsync(PostId postId)
         {
-            var now = DateTime.UtcNow;
+            var now = this.timestampCreator.Now();
 
-            return this.removeFromQueueIfRequired.ExecuteAsync(
+            return this.defragmentQueueIfRequired.ExecuteAsync(
                 postId,
                 now,
                 () => this.setPostLiveDate.ExecuteAsync(postId, now, now));

@@ -101,8 +101,8 @@
             channels.Add(channel);
             await connection.InsertAsync(channels);
 
-            var collections = new List<Collection>();
-            var collection = CollectionTests.UniqueEntity(random);
+            var collections = new List<Queue>();
+            var collection = QueueTests.UniqueEntity(random);
             collection.ChannelId = channel.Id;
             collections.Add(collection);
             await connection.InsertAsync(collections);

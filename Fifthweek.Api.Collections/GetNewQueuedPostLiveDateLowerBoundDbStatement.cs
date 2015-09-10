@@ -17,33 +17,24 @@
     public partial class GetNewQueuedPostLiveDateLowerBoundDbStatement : IGetNewQueuedPostLiveDateLowerBoundDbStatement
     {
         private static readonly string Sql = string.Format(
-                @"SELECT ISNULL(
-                    MAX({2}), 
-                   (SELECT  MAX(DefaultLowerBound)
-                    FROM   (VALUES (@Now), ((SELECT TOP 1 {6} FROM {4} WHERE {5} = @CollectionId))) AS DefaultLowerBounds(DefaultLowerBound))
-                )
+                @"SELECT ISNULL(MAX({2}), @Now)
                 FROM    {0}
-                WHERE   {1} = @CollectionId
-                AND     {2} > @Now
-                AND     {3} = 1",
+                WHERE   {1} = @QueueId
+                AND     {2} > @Now",
                 Post.Table,
-                Post.Fields.CollectionId,
-                Post.Fields.LiveDate,
-                Post.Fields.ScheduledByQueue,
-                Collection.Table,
-                Collection.Fields.Id,
-                Collection.Fields.QueueExclusiveLowerBound);
+                Post.Fields.QueueId,
+                Post.Fields.LiveDate);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<DateTime> ExecuteAsync(Shared.CollectionId collectionId, DateTime now)
+        public async Task<DateTime> ExecuteAsync(Shared.QueueId queueId, DateTime now)
         {
-            collectionId.AssertNotNull("collectionId");
+            queueId.AssertNotNull("queueId");
             now.AssertUtc("now");
 
             var parameters = new
             {
-                CollectionId = collectionId.Value,
+                QueueId = queueId.Value,
                 Now = now
             };
 

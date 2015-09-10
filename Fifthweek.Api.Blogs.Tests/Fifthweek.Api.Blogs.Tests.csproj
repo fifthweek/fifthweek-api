@@ -106,7 +106,7 @@
     <Compile Include="Controllers\BlogControllerTests.cs" />
     <Compile Include="Controllers\SubscriptionControllerTests.cs" />
     <Compile Include="GetAllCreatorRevenuesDbStatementTests.cs" />
-    <Compile Include="GetBlogChannelsAndCollectionsDbStatementTests.cs" />
+    <Compile Include="GetBlogChannelsAndQueuesDbStatementTests.cs" />
     <Compile Include="GetBlogSubscriberInformationDbStatementTests.cs" />
     <Compile Include="GetCreatorRevenueDbStatementTests.cs" />
     <Compile Include="GetIsTestUserBlogDbStatementTests.cs" />
@@ -114,7 +114,7 @@
     <Compile Include="GetUserSubscriptionsDbStatementTests.cs" />
     <Compile Include="GetFreeAccessUsersDbStatementTests.cs" />
     <Compile Include="Queries\GetAllCreatorRevenuesQueryHandlerTests.cs" />
-    <Compile Include="Queries\GetBlogChannelsAndCollectionsQueryHandlerTests.cs" />
+    <Compile Include="Queries\GetBlogChannelsAndQueuesQueryHandlerTests.cs" />
     <Compile Include="Queries\GetBlogSubscriberInformationQueryHandlerTests.cs" />
     <Compile Include="Queries\GetLandingPageQueryHandlerTests.cs" />
     <Compile Include="Queries\GetUserSubscriptionsQueryHandlerTests.cs" />

@@ -62,33 +62,31 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="CollectionOwnership.cs" />
-    <Compile Include="CollectionSecurity.cs" />
-    <Compile Include="Commands\DeleteCollectionCommand.cs" />
-    <Compile Include="Commands\DeleteCollectionCommandHandler.cs" />
-    <Compile Include="Commands\UpdateCollectionCommandHandler.cs" />
-    <Compile Include="Commands\UpdateCollectionCommand.cs" />
-    <Compile Include="Commands\CreateCollectionCommand.cs" />
-    <Compile Include="Commands\CreateCollectionCommandHandler.cs" />
-    <Compile Include="Controllers\CollectionController.cs" />
-    <Compile Include="Controllers\CollectionCreation.cs" />
-    <Compile Include="Controllers\UpdatedCollectionData.cs" />
-    <Compile Include="Controllers\NewCollectionData.cs" />
+    <Compile Include="QueueOwnership.cs" />
+    <Compile Include="QueueSecurity.cs" />
+    <Compile Include="Commands\DeleteQueueCommand.cs" />
+    <Compile Include="Commands\DeleteQueueCommandHandler.cs" />
+    <Compile Include="Commands\UpdateQueueCommandHandler.cs" />
+    <Compile Include="Commands\UpdateQueueCommand.cs" />
+    <Compile Include="Commands\CreateQueueCommand.cs" />
+    <Compile Include="Commands\CreateQueueCommandHandler.cs" />
+    <Compile Include="Controllers\QueueController.cs" />
+    <Compile Include="Controllers\QueueCreation.cs" />
+    <Compile Include="Controllers\UpdatedQueueData.cs" />
+    <Compile Include="Controllers\NewQueueData.cs" />
     <Compile Include="DefragmentQueueDbStatement.cs" />
-    <Compile Include="DeleteCollectionDbStatement.cs" />
-    <Compile Include="GetQueueLowerBoundDbStatement.cs" />
+    <Compile Include="DeleteQueueDbStatement.cs" />
     <Compile Include="GetNewQueuedPostLiveDateLowerBoundDbStatement.cs" />
     <Compile Include="GetQueueSizeDbStatement.cs" />
     <Compile Include="GetWeeklyReleaseScheduleDbStatement.cs" />
-    <Compile Include="ICollectionOwnership.cs" />
-    <Compile Include="IDeleteCollectionDbStatement.cs" />
-    <Compile Include="IGetQueueLowerBoundDbStatement.cs" />
+    <Compile Include="IQueueOwnership.cs" />
+    <Compile Include="IDeleteQueueDbStatement.cs" />
     <Compile Include="IGetNewQueuedPostLiveDateLowerBoundDbStatement.cs" />
     <Compile Include="IGetQueueSizeDbStatement.cs" />
     <Compile Include="IQueuedPostLiveDateCalculator.cs" />
     <Compile Include="IReplaceWeeklyReleaseTimesDbStatement.cs" />
     <Compile Include="IUpdateAllLiveDatesInQueueDbStatement.cs" />
-    <Compile Include="IUpdateCollectionFieldsDbStatement.cs" />
+    <Compile Include="IUpdateQueueFieldsDbStatement.cs" />
     <Compile Include="IUpdateWeeklyReleaseScheduleDbStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GetLiveDateOfNewQueuedPostDbStatement.cs" />
@@ -97,10 +95,14 @@
     <Compile Include="QueuedPostLiveDateCalculator.cs" />
     <Compile Include="ReplaceWeeklyReleaseTimesDbStatement.cs" />
     <Compile Include="UpdateAllLiveDatesInQueueDbStatement.cs" />
-    <Compile Include="UpdateCollectionFieldsDbStatement.cs" />
+    <Compile Include="UpdateQueueFieldsDbStatement.cs" />
     <Compile Include="UpdateWeeklyReleaseScheduleDbStatement.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Blogs.Shared\Fifthweek.Api.Blogs.Shared.csproj">
+      <Project>{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}</Project>
+      <Name>Fifthweek.Api.Blogs.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
       <Project>{df1bb4e7-5315-4e5c-ba73-6dfa4d9e7564}</Project>
       <Name>Fifthweek.Api.Channels.Shared</Name>

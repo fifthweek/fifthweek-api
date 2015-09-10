@@ -34,7 +34,6 @@
                     newChannelId,
                     newChannel.BlogId,
                     newChannel.Name,
-                    newChannel.Description,
                     newChannel.Price,
                     newChannel.IsVisibleToNonSubscribers));
 
@@ -56,7 +55,6 @@
                     requester,
                     channelIdObject,
                     channel.Name,
-                    channel.Description,
                     channel.Price,
                     channel.IsVisibleToNonSubscribers));
 

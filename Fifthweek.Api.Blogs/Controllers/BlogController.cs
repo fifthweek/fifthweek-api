@@ -7,6 +7,7 @@
     using Fifthweek.Api.Blogs.Commands;
     using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
@@ -31,12 +32,14 @@
 
             var requester = await this.requesterContext.GetRequesterAsync();
             var newBlogId = new BlogId(this.guidCreator.CreateSqlSequential());
+            var firstChannelId = new ChannelId(this.guidCreator.CreateSqlSequential());
 
             await this.createBlog.HandleAsync(new CreateBlogCommand(
                 requester,
                 newBlogId,
+                firstChannelId,
                 blog.Name,
-                blog.Tagline,
+                blog.Introduction,
                 blog.BasePrice));
 
             return newBlogId;
@@ -56,7 +59,6 @@
                 requester,
                 blogIdObject,
                 blog.Name,
-                blog.Tagline,
                 blog.Introduction,
                 blog.Description,
                 blog.HeaderImageFileId,

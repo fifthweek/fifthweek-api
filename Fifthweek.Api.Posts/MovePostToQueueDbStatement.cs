@@ -13,68 +13,51 @@ namespace Fifthweek.Api.Posts
     [AutoConstructor]
     public partial class MovePostToQueueDbStatement : IMovePostToQueueDbStatement
     {
-        public static readonly string WherePostLiveDateUniqueToCollection = string.Format(
+        public static readonly string WherePostLiveDateUniqueToQueue = string.Format(
             @"
             NOT EXISTS (SELECT * 
                         FROM  {0} WITH (UPDLOCK, HOLDLOCK)
                         WHERE {1} != @{1}
                         AND   {2}  = @{2}
-                        AND   {3}  = @{3}
-                        AND   {4}  = 1)",
+                        AND   {3}  = @{3})",
             Post.Table,
             Post.Fields.Id,
-            Post.Fields.CollectionId,
-            Post.Fields.LiveDate,
-            Post.Fields.ScheduledByQueue); 
+            Post.Fields.QueueId,
+            Post.Fields.LiveDate);
 
-        private static readonly string WherePostInCollection = string.Format(
+        private static readonly string WherePostNotInQueue = string.Format(
             @"
             EXISTS (SELECT * 
                     FROM    {0} WITH (UPDLOCK, HOLDLOCK)
                     WHERE   {1} = @{1}
-                    AND     {2} = @CollectionId)",
+                    AND     {2} != @{2})",
             Post.Table,
             Post.Fields.Id,
-            Post.Fields.CollectionId);
-
-        private static readonly string WherePostNotQueued = string.Format(
-            @"
-            EXISTS (SELECT * 
-                    FROM    {0} WITH (UPDLOCK, HOLDLOCK)
-                    WHERE   {1} = @{1}
-                    AND     {2} = 0)",
-            Post.Table,
-            Post.Fields.Id,
-            Post.Fields.ScheduledByQueue);
+            Post.Fields.QueueId);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
         private readonly IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost;
 
-        public async Task ExecuteAsync(PostId postId, CollectionId currentCollectionId)
+        public async Task ExecuteAsync(PostId postId, QueueId queueId)
         {
             postId.AssertNotNull("postId");
-            currentCollectionId.AssertNotNull("currentCollectionId");
+            queueId.AssertNotNull("queueId");
 
-            var nextLiveDate = await this.getLiveDateOfNewQueuedPost.ExecuteAsync(currentCollectionId);
+            var nextLiveDate = await this.getLiveDateOfNewQueuedPost.ExecuteAsync(queueId);
 
             var post = new Post(postId.Value)
             {
-                ScheduledByQueue = true,
+                QueueId = queueId.Value,
                 LiveDate = nextLiveDate
             };
 
             var parameters = new SqlGenerationParameters<Post, Post.Fields>(post)
             {
-                UpdateMask = Post.Fields.ScheduledByQueue | Post.Fields.LiveDate,
-                AdditionalParameters = new
-                {
-                    CollectionId = currentCollectionId.Value
-                },
+                UpdateMask = Post.Fields.QueueId | Post.Fields.LiveDate,
                 Conditions = new[]
                 {
-                    WherePostLiveDateUniqueToCollection, // Perform locks in 'descending supersets' to avoid deadlock.
-                    WherePostInCollection, // May have changed between calculation and update.
-                    WherePostNotQueued // Make operation idempotent.
+                    WherePostLiveDateUniqueToQueue, // Perform locks in 'descending supersets' to avoid deadlock.
+                    WherePostNotInQueue
                 }
             };
 
@@ -85,8 +68,7 @@ namespace Fifthweek.Api.Posts
 
                 if (concurrencyFailure)
                 {
-                    // Log the collection ID, as the post ID will be useless for debugging (as it was never created).
-                    throw new OptimisticConcurrencyException(string.Format("Failed to optimistically queue post. {0}", currentCollectionId));
+                    throw new OptimisticConcurrencyException(string.Format("Failed to optimistically queue post with queue {0}", queueId));
                 }
             }
         }

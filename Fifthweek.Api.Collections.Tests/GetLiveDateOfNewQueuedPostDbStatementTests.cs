@@ -16,8 +16,8 @@
     [TestClass]
     public class GetLiveDateOfNewQueuedPostDbStatementTests
     {
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
-        private static readonly IReadOnlyList<WeeklyReleaseTime> SortedReleaseTimes = WeeklyReleaseTimeTests.GenerateSortedWeeklyReleaseTimes(CollectionId.Value, 10);
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
+        private static readonly IReadOnlyList<WeeklyReleaseTime> SortedReleaseTimes = WeeklyReleaseTimeTests.GenerateSortedWeeklyReleaseTimes(QueueId.Value, 10);
         private static readonly IReadOnlyList<HourOfWeek> SortedHoursOfWeek = SortedReleaseTimes.Select(_ => HourOfWeek.Parse(_.HourOfWeek)).ToList();
         private static readonly WeeklyReleaseSchedule WeeklyReleaseSchedule = WeeklyReleaseSchedule.Parse(SortedHoursOfWeek);
         private static readonly DateTime LiveDateLowerBound = DateTime.UtcNow.AddDays(5);
@@ -49,13 +49,13 @@
         [TestMethod]
         public async Task ItShouldCalculateReleaseTimeOfHypotheticalNewQueuedPost()
         {
-            this.getNewQueuedPostLiveDateLowerBound.Setup(_ => _.ExecuteAsync(CollectionId, It.IsAny<DateTime>())).ReturnsAsync(LiveDateLowerBound);
-            this.getCollectionWeeklyReleaseTimes.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(WeeklyReleaseSchedule);
+            this.getNewQueuedPostLiveDateLowerBound.Setup(_ => _.ExecuteAsync(QueueId, It.IsAny<DateTime>())).ReturnsAsync(LiveDateLowerBound);
+            this.getCollectionWeeklyReleaseTimes.Setup(_ => _.ExecuteAsync(QueueId)).ReturnsAsync(WeeklyReleaseSchedule);
             this.queuedPostReleaseTimeCalculator
                 .Setup(_ => _.GetNextLiveDate(LiveDateLowerBound, WeeklyReleaseSchedule))
                 .Returns(CalculatedLiveDate);
 
-            var result = await this.target.ExecuteAsync(CollectionId);
+            var result = await this.target.ExecuteAsync(QueueId);
 
             Assert.AreEqual(result, CalculatedLiveDate);
         }

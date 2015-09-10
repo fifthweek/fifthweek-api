@@ -92,6 +92,24 @@
         }
 
         [TestMethod]
+        public async Task WhenChannelsDoNotExist_ItShouldReturnNull()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new GetLandingPageDbStatement(testDatabase);
+
+                await this.CreateDataAsync(testDatabase, true, false);
+                await testDatabase.TakeSnapshotAsync();
+
+                var result = await this.target.ExecuteAsync(Username);
+
+                Assert.IsNull(result);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
         public async Task WhenGettingBlog_ItShouldReturnTheResult()
         {
             await this.DatabaseTestAsync(async testDatabase =>
@@ -153,7 +171,7 @@
             });
         }
 
-        private async Task CreateDataAsync(TestDatabaseContext testDatabase, bool createBlog = true)
+        private async Task CreateDataAsync(TestDatabaseContext testDatabase, bool createBlog = true, bool createChannels = true)
         {
             await this.CreateUserAsync(testDatabase);
             await this.CreateHeaderFileAsync(testDatabase);
@@ -161,7 +179,11 @@
             if (createBlog)
             {
                 await this.CreateBlogAsync(testDatabase);
-                await this.CreateChannelsAndCollectionsAsync(testDatabase);
+                
+                if (createChannels)
+                {
+                    await this.CreateChannelsAndCollectionsAsync(testDatabase);
+                }
             }
         }
 

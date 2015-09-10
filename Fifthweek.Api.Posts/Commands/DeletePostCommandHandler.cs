@@ -16,8 +16,9 @@
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IPostSecurity postSecurity;
         private readonly IDeletePostDbStatement deletePost;
-        private readonly IRemoveFromQueueIfRequiredDbStatement removeFromQueueIfRequired;
+        private readonly IDefragmentQueueIfRequiredDbStatement defragmentQueueIfRequired;
         private readonly IScheduleGarbageCollectionStatement scheduleGarbageCollection;
+        private readonly ITimestampCreator timestampCreator;
 
         public async Task HandleAsync(DeletePostCommand command)
         {
@@ -26,9 +27,9 @@
             var userId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
             await this.postSecurity.AssertWriteAllowedAsync(userId, command.PostId);
 
-            var now = DateTime.UtcNow;
+            var now = this.timestampCreator.Now();
 
-            await this.removeFromQueueIfRequired.ExecuteAsync(
+            await this.defragmentQueueIfRequired.ExecuteAsync(
                 command.PostId,
                 now,
                 () => this.deletePost.ExecuteAsync(command.PostId));

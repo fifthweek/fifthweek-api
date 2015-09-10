@@ -12,14 +12,8 @@
 
         public string Name { get; private set; }
 
-        public string Description { get; private set; }
-
         public int Price { get; private set; }
 
-        public bool IsDefault { get; private set; }
-
         public bool IsVisibleToNonSubscribers { get; private set; }
-
-        public IReadOnlyList<CollectionResult> Collections { get; private set; }
     }
 }

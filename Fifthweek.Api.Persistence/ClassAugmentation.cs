@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 01/09/2015 17:44:34 (UTC)
-//// Mapped solution in 20.16s
+//// Generated on 10/09/2015 13:32:09 (UTC)
+//// Mapped solution in 31s
 
 
 namespace Fifthweek.Api.Persistence
@@ -21,7 +21,6 @@ namespace Fifthweek.Api.Persistence
             System.Guid creatorId,
             Fifthweek.Api.Persistence.Identity.FifthweekUser creator,
             System.String name,
-            System.String tagline,
             System.String introduction,
             System.String description,
             System.String externalVideoUrl,
@@ -44,11 +43,6 @@ namespace Fifthweek.Api.Persistence
                 throw new ArgumentNullException("name");
             }
 
-            if (tagline == null)
-            {
-                throw new ArgumentNullException("tagline");
-            }
-
             if (introduction == null)
             {
                 throw new ArgumentNullException("introduction");
@@ -63,7 +57,6 @@ namespace Fifthweek.Api.Persistence
             this.CreatorId = creatorId;
             this.Creator = creator;
             this.Name = name;
-            this.Tagline = tagline;
             this.Introduction = introduction;
             this.Description = description;
             this.ExternalVideoUrl = externalVideoUrl;
@@ -89,7 +82,6 @@ namespace Fifthweek.Api.Persistence
             System.Guid blogId,
             Fifthweek.Api.Persistence.Blog blog,
             System.String name,
-            System.String description,
             System.Int32 price,
             System.Boolean isVisibleToNonSubscribers,
             System.DateTime creationDate,
@@ -108,11 +100,6 @@ namespace Fifthweek.Api.Persistence
             if (name == null)
             {
                 throw new ArgumentNullException("name");
-            }
-
-            if (description == null)
-            {
-                throw new ArgumentNullException("description");
             }
 
             if (price == null)
@@ -139,7 +126,6 @@ namespace Fifthweek.Api.Persistence
             this.BlogId = blogId;
             this.Blog = blog;
             this.Name = name;
-            this.Description = description;
             this.Price = price;
             this.IsVisibleToNonSubscribers = isVisibleToNonSubscribers;
             this.CreationDate = creationDate;
@@ -211,14 +197,13 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
-    public partial class Collection 
+    public partial class Queue 
     {
-        public Collection(
+        public Queue(
             System.Guid id,
-            System.Guid channelId,
-            Fifthweek.Api.Persistence.Channel channel,
+            System.Guid blogId,
+            Fifthweek.Api.Persistence.Blog blog,
             System.String name,
-            System.DateTime queueExclusiveLowerBound,
             System.DateTime creationDate)
         {
             if (id == null)
@@ -226,19 +211,14 @@ namespace Fifthweek.Api.Persistence
                 throw new ArgumentNullException("id");
             }
 
-            if (channelId == null)
+            if (blogId == null)
             {
-                throw new ArgumentNullException("channelId");
+                throw new ArgumentNullException("blogId");
             }
 
             if (name == null)
             {
                 throw new ArgumentNullException("name");
-            }
-
-            if (queueExclusiveLowerBound == null)
-            {
-                throw new ArgumentNullException("queueExclusiveLowerBound");
             }
 
             if (creationDate == null)
@@ -247,10 +227,9 @@ namespace Fifthweek.Api.Persistence
             }
 
             this.Id = id;
-            this.ChannelId = channelId;
-            this.Channel = channel;
+            this.BlogId = blogId;
+            this.Blog = blog;
             this.Name = name;
-            this.QueueExclusiveLowerBound = queueExclusiveLowerBound;
             this.CreationDate = creationDate;
         }
     }
@@ -432,14 +411,13 @@ namespace Fifthweek.Api.Persistence
             System.Guid id,
             System.Guid channelId,
             Fifthweek.Api.Persistence.Channel channel,
-            System.Nullable<System.Guid> collectionId,
-            Fifthweek.Api.Persistence.Collection collection,
+            System.Nullable<System.Guid> queueId,
+            Fifthweek.Api.Persistence.Queue queue,
             System.Nullable<System.Guid> fileId,
             Fifthweek.Api.Persistence.File file,
             System.Nullable<System.Guid> imageId,
             Fifthweek.Api.Persistence.File image,
             System.String comment,
-            System.Boolean scheduledByQueue,
             System.DateTime liveDate,
             System.DateTime creationDate)
         {
@@ -451,11 +429,6 @@ namespace Fifthweek.Api.Persistence
             if (channelId == null)
             {
                 throw new ArgumentNullException("channelId");
-            }
-
-            if (scheduledByQueue == null)
-            {
-                throw new ArgumentNullException("scheduledByQueue");
             }
 
             if (liveDate == null)
@@ -471,14 +444,13 @@ namespace Fifthweek.Api.Persistence
             this.Id = id;
             this.ChannelId = channelId;
             this.Channel = channel;
-            this.CollectionId = collectionId;
-            this.Collection = collection;
+            this.QueueId = queueId;
+            this.Queue = queue;
             this.FileId = fileId;
             this.File = file;
             this.ImageId = imageId;
             this.Image = image;
             this.Comment = comment;
-            this.ScheduledByQueue = scheduledByQueue;
             this.LiveDate = liveDate;
             this.CreationDate = creationDate;
         }
@@ -814,13 +786,13 @@ namespace Fifthweek.Api.Persistence
     public partial class WeeklyReleaseTime 
     {
         public WeeklyReleaseTime(
-            System.Guid collectionId,
-            Fifthweek.Api.Persistence.Collection collection,
+            System.Guid queueId,
+            Fifthweek.Api.Persistence.Queue queue,
             System.Byte hourOfWeek)
         {
-            if (collectionId == null)
+            if (queueId == null)
             {
-                throw new ArgumentNullException("collectionId");
+                throw new ArgumentNullException("queueId");
             }
 
             if (hourOfWeek == null)
@@ -828,8 +800,8 @@ namespace Fifthweek.Api.Persistence
                 throw new ArgumentNullException("hourOfWeek");
             }
 
-            this.CollectionId = collectionId;
-            this.Collection = collection;
+            this.QueueId = queueId;
+            this.Queue = queue;
             this.HourOfWeek = hourOfWeek;
         }
     }
@@ -1197,7 +1169,7 @@ namespace Fifthweek.Api.Persistence
     {
         public override string ToString()
         {
-            return string.Format("Blog({0}, {1}, \"{2}\", \"{3}\", \"{4}\", \"{5}\", \"{6}\", {7}, {8})", this.Id == null ? "null" : this.Id.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.Description == null ? "null" : this.Description.ToString(), this.ExternalVideoUrl == null ? "null" : this.ExternalVideoUrl.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+            return string.Format("Blog({0}, {1}, \"{2}\", \"{3}\", \"{4}\", \"{5}\", {6}, {7})", this.Id == null ? "null" : this.Id.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.Description == null ? "null" : this.Description.ToString(), this.ExternalVideoUrl == null ? "null" : this.ExternalVideoUrl.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1228,7 +1200,6 @@ namespace Fifthweek.Api.Persistence
                 hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Introduction != null ? this.Introduction.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ExternalVideoUrl != null ? this.ExternalVideoUrl.GetHashCode() : 0);
@@ -1251,11 +1222,6 @@ namespace Fifthweek.Api.Persistence
             }
         
             if (!object.Equals(this.Name, other.Name))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Tagline, other.Tagline))
             {
                 return false;
             }
@@ -1302,7 +1268,7 @@ namespace Fifthweek.Api.Persistence
     {
         public override string ToString()
         {
-            return string.Format("Channel({0}, {1}, \"{2}\", \"{3}\", {4}, {5}, {6}, {7})", this.Id == null ? "null" : this.Id.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Description == null ? "null" : this.Description.ToString(), this.Price == null ? "null" : this.Price.ToString(), this.IsVisibleToNonSubscribers == null ? "null" : this.IsVisibleToNonSubscribers.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString(), this.PriceLastSetDate == null ? "null" : this.PriceLastSetDate.ToString());
+            return string.Format("Channel({0}, {1}, \"{2}\", {3}, {4}, {5}, {6})", this.Id == null ? "null" : this.Id.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Price == null ? "null" : this.Price.ToString(), this.IsVisibleToNonSubscribers == null ? "null" : this.IsVisibleToNonSubscribers.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString(), this.PriceLastSetDate == null ? "null" : this.PriceLastSetDate.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1333,7 +1299,6 @@ namespace Fifthweek.Api.Persistence
                 hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.BlogId != null ? this.BlogId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Price != null ? this.Price.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.IsVisibleToNonSubscribers != null ? this.IsVisibleToNonSubscribers.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
@@ -1355,11 +1320,6 @@ namespace Fifthweek.Api.Persistence
             }
         
             if (!object.Equals(this.Name, other.Name))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Description, other.Description))
             {
                 return false;
             }
@@ -1478,11 +1438,11 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
-    public partial class Collection 
+    public partial class Queue 
     {
         public override string ToString()
         {
-            return string.Format("Collection({0}, {1}, \"{2}\", {3}, {4})", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.QueueExclusiveLowerBound == null ? "null" : this.QueueExclusiveLowerBound.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+            return string.Format("Queue({0}, {1}, \"{2}\", {3})", this.Id == null ? "null" : this.Id.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1502,7 +1462,7 @@ namespace Fifthweek.Api.Persistence
                 return false;
             }
         
-            return this.Equals((Collection)obj);
+            return this.Equals((Queue)obj);
         }
         
         public override int GetHashCode()
@@ -1511,32 +1471,26 @@ namespace Fifthweek.Api.Persistence
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.BlogId != null ? this.BlogId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.QueueExclusiveLowerBound != null ? this.QueueExclusiveLowerBound.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
                 return hashCode;
             }
         }
         
-        protected bool Equals(Collection other)
+        protected bool Equals(Queue other)
         {
             if (!object.Equals(this.Id, other.Id))
             {
                 return false;
             }
         
-            if (!object.Equals(this.ChannelId, other.ChannelId))
+            if (!object.Equals(this.BlogId, other.BlogId))
             {
                 return false;
             }
         
             if (!object.Equals(this.Name, other.Name))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.QueueExclusiveLowerBound, other.QueueExclusiveLowerBound))
             {
                 return false;
             }
@@ -1842,7 +1796,7 @@ namespace Fifthweek.Api.Persistence
     {
         public override string ToString()
         {
-            return string.Format("Post({0}, {1}, {2}, {3}, {4}, \"{5}\", {6}, {7}, {8})", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledByQueue == null ? "null" : this.ScheduledByQueue.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+            return string.Format("Post({0}, {1}, {2}, {3}, {4}, \"{5}\", {6}, {7})", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.QueueId == null ? "null" : this.QueueId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1872,11 +1826,10 @@ namespace Fifthweek.Api.Persistence
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.QueueId != null ? this.QueueId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ImageId != null ? this.ImageId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ScheduledByQueue != null ? this.ScheduledByQueue.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.LiveDate != null ? this.LiveDate.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
                 return hashCode;
@@ -1895,7 +1848,7 @@ namespace Fifthweek.Api.Persistence
                 return false;
             }
         
-            if (!object.Equals(this.CollectionId, other.CollectionId))
+            if (!object.Equals(this.QueueId, other.QueueId))
             {
                 return false;
             }
@@ -1911,11 +1864,6 @@ namespace Fifthweek.Api.Persistence
             }
         
             if (!object.Equals(this.Comment, other.Comment))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ScheduledByQueue, other.ScheduledByQueue))
             {
                 return false;
             }
@@ -2516,7 +2464,7 @@ namespace Fifthweek.Api.Persistence
     {
         public override string ToString()
         {
-            return string.Format("WeeklyReleaseTime({0}, {1})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.HourOfWeek == null ? "null" : this.HourOfWeek.ToString());
+            return string.Format("WeeklyReleaseTime({0}, {1})", this.QueueId == null ? "null" : this.QueueId.ToString(), this.HourOfWeek == null ? "null" : this.HourOfWeek.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2544,7 +2492,7 @@ namespace Fifthweek.Api.Persistence
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.QueueId != null ? this.QueueId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.HourOfWeek != null ? this.HourOfWeek.GetHashCode() : 0);
                 return hashCode;
             }
@@ -2552,7 +2500,7 @@ namespace Fifthweek.Api.Persistence
         
         protected bool Equals(WeeklyReleaseTime other)
         {
-            if (!object.Equals(this.CollectionId, other.CollectionId))
+            if (!object.Equals(this.QueueId, other.QueueId))
             {
                 return false;
             }
@@ -3466,21 +3414,20 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
-    public partial class Collection 
+    public partial class Queue 
     {
-        public Collection Copy()
+        public Queue Copy()
         {
-            var copy = new Collection();
+            var copy = new Queue();
             copy.Id = this.Id;
-            copy.ChannelId = this.ChannelId;
-            copy.Channel = this.Channel;
+            copy.BlogId = this.BlogId;
+            copy.Blog = this.Blog;
             copy.Name = this.Name;
-            copy.QueueExclusiveLowerBound = this.QueueExclusiveLowerBound;
             copy.CreationDate = this.CreationDate;
             return copy;
         }
         
-        public Collection Copy(Action<Collection> applyDelta)
+        public Queue Copy(Action<Queue> applyDelta)
         {
             var copy = this.Copy();
             applyDelta(copy);
@@ -3505,14 +3452,13 @@ namespace Fifthweek.Api.Persistence
             copy.Id = this.Id;
             copy.ChannelId = this.ChannelId;
             copy.Channel = this.Channel;
-            copy.CollectionId = this.CollectionId;
-            copy.Collection = this.Collection;
+            copy.QueueId = this.QueueId;
+            copy.Queue = this.Queue;
             copy.FileId = this.FileId;
             copy.File = this.File;
             copy.ImageId = this.ImageId;
             copy.Image = this.Image;
             copy.Comment = this.Comment;
-            copy.ScheduledByQueue = this.ScheduledByQueue;
             copy.LiveDate = this.LiveDate;
             copy.CreationDate = this.CreationDate;
             return copy;
@@ -3588,12 +3534,11 @@ namespace Fifthweek.Api.Persistence
             Id = 1, 
             CreatorId = 2, 
             Name = 4, 
-            Tagline = 8, 
-            Introduction = 16, 
-            Description = 32, 
-            ExternalVideoUrl = 64, 
-            HeaderImageFileId = 128, 
-            CreationDate = 256
+            Introduction = 8, 
+            Description = 16, 
+            ExternalVideoUrl = 32, 
+            HeaderImageFileId = 64, 
+            CreationDate = 128
         }
     }
 
@@ -3610,7 +3555,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
+                    entity.Id, entity.CreatorId, entity.Name, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
                 }).ToArray(),
                 transaction);
         }
@@ -3626,7 +3571,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
+                    entity.Id, entity.CreatorId, entity.Name, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
                 },
                 transaction);
         }
@@ -3671,7 +3616,7 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate });
+                : new Dapper.DynamicParameters(new { entity.Id, entity.CreatorId, entity.Name, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -3695,7 +3640,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(Blog.Fields.Empty, fields), 
                 new 
                 {
-                    entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
+                    entity.Id, entity.CreatorId, entity.Name, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
                 },
                 transaction);
         }
@@ -3712,7 +3657,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
+                    entity.Id, entity.CreatorId, entity.Name, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
                 },
                 transaction);
         }
@@ -3783,7 +3728,7 @@ namespace Fifthweek.Api.Persistence
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO Blogs(Id, CreatorId, Name, Tagline, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate) VALUES(@Id, @CreatorId, @Name, @Tagline, @Introduction, @Description, @ExternalVideoUrl, @HeaderImageFileId, @CreationDate)";
+            const string insert = "INSERT INTO Blogs(Id, CreatorId, Name, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate) VALUES(@Id, @CreatorId, @Name, @Introduction, @Description, @ExternalVideoUrl, @HeaderImageFileId, @CreationDate)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
@@ -3794,7 +3739,7 @@ namespace Fifthweek.Api.Persistence
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE Blogs WITH (HOLDLOCK) as Target
-                USING (VALUES (@Id, @CreatorId, @Name, @Tagline, @Introduction, @Description, @ExternalVideoUrl, @HeaderImageFileId, @CreationDate)) AS Source (Id, CreatorId, Name, Tagline, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate)
+                USING (VALUES (@Id, @CreatorId, @Name, @Introduction, @Description, @ExternalVideoUrl, @HeaderImageFileId, @CreationDate)) AS Source (Id, CreatorId, Name, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate)
                 ON    (");
                 
             if (mergeOnFields == Blog.Fields.Empty)
@@ -3813,8 +3758,8 @@ namespace Fifthweek.Api.Persistence
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (Id, CreatorId, Name, Tagline, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate)
-                    VALUES  (Source.Id, Source.CreatorId, Source.Name, Source.Tagline, Source.Introduction, Source.Description, Source.ExternalVideoUrl, Source.HeaderImageFileId, Source.CreationDate);");
+                    INSERT  (Id, CreatorId, Name, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate)
+                    VALUES  (Source.Id, Source.CreatorId, Source.Name, Source.Introduction, Source.Description, Source.ExternalVideoUrl, Source.HeaderImageFileId, Source.CreationDate);");
             return sql.ToString();
         }
         
@@ -3843,11 +3788,6 @@ namespace Fifthweek.Api.Persistence
             if (fields.HasFlag(Blog.Fields.Name))
             {
                 fieldNames.Add("Name");
-            }
-        
-            if (fields.HasFlag(Blog.Fields.Tagline))
-            {
-                fieldNames.Add("Tagline");
             }
         
             if (fields.HasFlag(Blog.Fields.Introduction))
@@ -3897,11 +3837,6 @@ namespace Fifthweek.Api.Persistence
                 parameters.Add("Name", entity.Name);
             }
         
-            if (fields.HasFlag(Blog.Fields.Tagline) && (excludedFields == null || !excludedFields.Value.HasFlag(Blog.Fields.Tagline)))
-            {
-                parameters.Add("Tagline", entity.Tagline);
-            }
-        
             if (fields.HasFlag(Blog.Fields.Introduction) && (excludedFields == null || !excludedFields.Value.HasFlag(Blog.Fields.Introduction)))
             {
                 parameters.Add("Introduction", entity.Introduction);
@@ -3946,11 +3881,6 @@ namespace Fifthweek.Api.Persistence
             if (!fields.HasFlag(Blog.Fields.Name))
             {
                 parameters.Add("Name", entity.Name);
-            }
-        
-            if (!fields.HasFlag(Blog.Fields.Tagline))
-            {
-                parameters.Add("Tagline", entity.Tagline);
             }
         
             if (!fields.HasFlag(Blog.Fields.Introduction))
@@ -4044,11 +3974,10 @@ namespace Fifthweek.Api.Persistence
             Id = 1, 
             BlogId = 2, 
             Name = 4, 
-            Description = 8, 
-            Price = 16, 
-            IsVisibleToNonSubscribers = 32, 
-            CreationDate = 64, 
-            PriceLastSetDate = 128
+            Price = 8, 
+            IsVisibleToNonSubscribers = 16, 
+            CreationDate = 32, 
+            PriceLastSetDate = 64
         }
     }
 
@@ -4065,7 +3994,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.Id, entity.BlogId, entity.Name, entity.Description, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate
+                    entity.Id, entity.BlogId, entity.Name, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate
                 }).ToArray(),
                 transaction);
         }
@@ -4081,7 +4010,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.Id, entity.BlogId, entity.Name, entity.Description, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate
+                    entity.Id, entity.BlogId, entity.Name, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate
                 },
                 transaction);
         }
@@ -4126,7 +4055,7 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.Id, entity.BlogId, entity.Name, entity.Description, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate });
+                : new Dapper.DynamicParameters(new { entity.Id, entity.BlogId, entity.Name, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -4150,7 +4079,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(Channel.Fields.Empty, fields), 
                 new 
                 {
-                    entity.Id, entity.BlogId, entity.Name, entity.Description, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate
+                    entity.Id, entity.BlogId, entity.Name, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate
                 },
                 transaction);
         }
@@ -4167,7 +4096,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.Id, entity.BlogId, entity.Name, entity.Description, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate
+                    entity.Id, entity.BlogId, entity.Name, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate
                 },
                 transaction);
         }
@@ -4238,7 +4167,7 @@ namespace Fifthweek.Api.Persistence
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO Channels(Id, BlogId, Name, Description, Price, IsVisibleToNonSubscribers, CreationDate, PriceLastSetDate) VALUES(@Id, @BlogId, @Name, @Description, @Price, @IsVisibleToNonSubscribers, @CreationDate, @PriceLastSetDate)";
+            const string insert = "INSERT INTO Channels(Id, BlogId, Name, Price, IsVisibleToNonSubscribers, CreationDate, PriceLastSetDate) VALUES(@Id, @BlogId, @Name, @Price, @IsVisibleToNonSubscribers, @CreationDate, @PriceLastSetDate)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
@@ -4249,7 +4178,7 @@ namespace Fifthweek.Api.Persistence
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE Channels WITH (HOLDLOCK) as Target
-                USING (VALUES (@Id, @BlogId, @Name, @Description, @Price, @IsVisibleToNonSubscribers, @CreationDate, @PriceLastSetDate)) AS Source (Id, BlogId, Name, Description, Price, IsVisibleToNonSubscribers, CreationDate, PriceLastSetDate)
+                USING (VALUES (@Id, @BlogId, @Name, @Price, @IsVisibleToNonSubscribers, @CreationDate, @PriceLastSetDate)) AS Source (Id, BlogId, Name, Price, IsVisibleToNonSubscribers, CreationDate, PriceLastSetDate)
                 ON    (");
                 
             if (mergeOnFields == Channel.Fields.Empty)
@@ -4268,8 +4197,8 @@ namespace Fifthweek.Api.Persistence
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (Id, BlogId, Name, Description, Price, IsVisibleToNonSubscribers, CreationDate, PriceLastSetDate)
-                    VALUES  (Source.Id, Source.BlogId, Source.Name, Source.Description, Source.Price, Source.IsVisibleToNonSubscribers, Source.CreationDate, Source.PriceLastSetDate);");
+                    INSERT  (Id, BlogId, Name, Price, IsVisibleToNonSubscribers, CreationDate, PriceLastSetDate)
+                    VALUES  (Source.Id, Source.BlogId, Source.Name, Source.Price, Source.IsVisibleToNonSubscribers, Source.CreationDate, Source.PriceLastSetDate);");
             return sql.ToString();
         }
         
@@ -4298,11 +4227,6 @@ namespace Fifthweek.Api.Persistence
             if (fields.HasFlag(Channel.Fields.Name))
             {
                 fieldNames.Add("Name");
-            }
-        
-            if (fields.HasFlag(Channel.Fields.Description))
-            {
-                fieldNames.Add("Description");
             }
         
             if (fields.HasFlag(Channel.Fields.Price))
@@ -4347,11 +4271,6 @@ namespace Fifthweek.Api.Persistence
                 parameters.Add("Name", entity.Name);
             }
         
-            if (fields.HasFlag(Channel.Fields.Description) && (excludedFields == null || !excludedFields.Value.HasFlag(Channel.Fields.Description)))
-            {
-                parameters.Add("Description", entity.Description);
-            }
-        
             if (fields.HasFlag(Channel.Fields.Price) && (excludedFields == null || !excludedFields.Value.HasFlag(Channel.Fields.Price)))
             {
                 parameters.Add("Price", entity.Price);
@@ -4391,11 +4310,6 @@ namespace Fifthweek.Api.Persistence
             if (!fields.HasFlag(Channel.Fields.Name))
             {
                 parameters.Add("Name", entity.Name);
-            }
-        
-            if (!fields.HasFlag(Channel.Fields.Description))
-            {
-                parameters.Add("Description", entity.Description);
             }
         
             if (!fields.HasFlag(Channel.Fields.Price))
@@ -4828,11 +4742,11 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
-    public partial class Collection  : IIdentityEquatable
+    public partial class Queue  : IIdentityEquatable
     {
-        public const string Table = "Collections";
+        public const string Table = "Queues";
         
-        public Collection(
+        public Queue(
             System.Guid id)
         {
             if (id == null)
@@ -4860,10 +4774,10 @@ namespace Fifthweek.Api.Persistence
                 return false;
             }
         
-            return this.IdentityEquals((Collection)other);
+            return this.IdentityEquals((Queue)other);
         }
         
-        protected bool IdentityEquals(Collection other)
+        protected bool IdentityEquals(Queue other)
         {
             if (!object.Equals(this.Id, other.Id))
             {
@@ -4878,18 +4792,17 @@ namespace Fifthweek.Api.Persistence
         {
             Empty = 0,
             Id = 1, 
-            ChannelId = 2, 
+            BlogId = 2, 
             Name = 4, 
-            QueueExclusiveLowerBound = 8, 
-            CreationDate = 16
+            CreationDate = 8
         }
     }
 
-    public static partial class CollectionExtensions
+    public static partial class QueueExtensions
     {
         public static System.Threading.Tasks.Task InsertAsync(
             this System.Data.Common.DbConnection connection, 
-            System.Collections.Generic.IEnumerable<Collection> entities, 
+            System.Collections.Generic.IEnumerable<Queue> entities, 
             bool idempotent = true, 
             System.Data.IDbTransaction transaction = null)
         {
@@ -4898,14 +4811,14 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound, entity.CreationDate
+                    entity.Id, entity.BlogId, entity.Name, entity.CreationDate
                 }).ToArray(),
                 transaction);
         }
         
         public static System.Threading.Tasks.Task InsertAsync(
             this System.Data.Common.DbConnection connection, 
-            Collection entity,
+            Queue entity,
             bool idempotent = true, 
             System.Data.IDbTransaction transaction = null)
         {
@@ -4914,14 +4827,14 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound, entity.CreationDate
+                    entity.Id, entity.BlogId, entity.Name, entity.CreationDate
                 },
                 transaction);
         }
         
         public static System.Threading.Tasks.Task<int> InsertAsync(
             this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<Collection, Collection.Fields> parameters)
+            SqlGenerationParameters<Queue, Queue.Fields> parameters)
         {
             var sql = new System.Text.StringBuilder();
         
@@ -4959,7 +4872,7 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound, entity.CreationDate });
+                : new Dapper.DynamicParameters(new { entity.Id, entity.BlogId, entity.Name, entity.CreationDate });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -4974,25 +4887,25 @@ namespace Fifthweek.Api.Persistence
         
         public static System.Threading.Tasks.Task UpsertAsync(
             this System.Data.Common.DbConnection connection, 
-            Collection entity, 
-            Collection.Fields fields,
+            Queue entity, 
+            Queue.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
             return Dapper.SqlMapper.ExecuteAsync(
                 connection, 
-                UpsertStatement(Collection.Fields.Empty, fields), 
+                UpsertStatement(Queue.Fields.Empty, fields), 
                 new 
                 {
-                    entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound, entity.CreationDate
+                    entity.Id, entity.BlogId, entity.Name, entity.CreationDate
                 },
                 transaction);
         }
         
         public static System.Threading.Tasks.Task UpsertAsync(
             this System.Data.Common.DbConnection connection, 
-            Collection entity, 
-            Collection.Fields mergeOnFields,
-            Collection.Fields updateFields,
+            Queue entity, 
+            Queue.Fields mergeOnFields,
+            Queue.Fields updateFields,
             System.Data.IDbTransaction transaction = null)
         {
             return Dapper.SqlMapper.ExecuteAsync(
@@ -5000,15 +4913,15 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound, entity.CreationDate
+                    entity.Id, entity.BlogId, entity.Name, entity.CreationDate
                 },
                 transaction);
         }
         
         public static System.Threading.Tasks.Task UpdateAsync(
             this System.Data.Common.DbConnection connection, 
-            Collection entity, 
-            Collection.Fields fields,
+            Queue entity, 
+            Queue.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
             return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
@@ -5016,7 +4929,7 @@ namespace Fifthweek.Api.Persistence
         
         public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<Collection, Collection.Fields> parameters)
+            SqlGenerationParameters<Queue, Queue.Fields> parameters)
         {
             if (parameters.UpdateMask == null)
             {
@@ -5071,21 +4984,21 @@ namespace Fifthweek.Api.Persistence
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO Collections(Id, ChannelId, Name, QueueExclusiveLowerBound, CreationDate) VALUES(@Id, @ChannelId, @Name, @QueueExclusiveLowerBound, @CreationDate)";
+            const string insert = "INSERT INTO Queues(Id, BlogId, Name, CreationDate) VALUES(@Id, @BlogId, @Name, @CreationDate)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
-        public static string UpsertStatement(Collection.Fields mergeOnFields, Collection.Fields updateFields)
+        public static string UpsertStatement(Queue.Fields mergeOnFields, Queue.Fields updateFields)
         {
             // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
             // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
             var sql = new System.Text.StringBuilder();
             sql.Append(
-                @"MERGE Collections WITH (HOLDLOCK) as Target
-                USING (VALUES (@Id, @ChannelId, @Name, @QueueExclusiveLowerBound, @CreationDate)) AS Source (Id, ChannelId, Name, QueueExclusiveLowerBound, CreationDate)
+                @"MERGE Queues WITH (HOLDLOCK) as Target
+                USING (VALUES (@Id, @BlogId, @Name, @CreationDate)) AS Source (Id, BlogId, Name, CreationDate)
                 ON    (");
                 
-            if (mergeOnFields == Collection.Fields.Empty)
+            if (mergeOnFields == Queue.Fields.Empty)
             {
                 sql.Append(@"Target.Id = Source.Id");
             }
@@ -5101,21 +5014,21 @@ namespace Fifthweek.Api.Persistence
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (Id, ChannelId, Name, QueueExclusiveLowerBound, CreationDate)
-                    VALUES  (Source.Id, Source.ChannelId, Source.Name, Source.QueueExclusiveLowerBound, Source.CreationDate);");
+                    INSERT  (Id, BlogId, Name, CreationDate)
+                    VALUES  (Source.Id, Source.BlogId, Source.Name, Source.CreationDate);");
             return sql.ToString();
         }
         
-        public static string UpdateStatement(Collection.Fields fields)
+        public static string UpdateStatement(Queue.Fields fields)
         {
             var sql = new System.Text.StringBuilder();
-            sql.Append("UPDATE Collections SET ");
+            sql.Append("UPDATE Queues SET ");
             sql.AppendUpdateParameters(GetFieldNames(fields));
             sql.Append(" WHERE Id = @Id");
             return sql.ToString();
         }
         
-        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Collection.Fields fields, bool autoIncludePrimaryKeys = true)
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Queue.Fields fields, bool autoIncludePrimaryKeys = true)
         {
             var fieldNames = new System.Collections.Generic.List<string>();
             if (autoIncludePrimaryKeys)
@@ -5123,22 +5036,17 @@ namespace Fifthweek.Api.Persistence
                 fieldNames.Add("Id");
             }
         
-            if (fields.HasFlag(Collection.Fields.ChannelId))
+            if (fields.HasFlag(Queue.Fields.BlogId))
             {
-                fieldNames.Add("ChannelId");
+                fieldNames.Add("BlogId");
             }
         
-            if (fields.HasFlag(Collection.Fields.Name))
+            if (fields.HasFlag(Queue.Fields.Name))
             {
                 fieldNames.Add("Name");
             }
         
-            if (fields.HasFlag(Collection.Fields.QueueExclusiveLowerBound))
-            {
-                fieldNames.Add("QueueExclusiveLowerBound");
-            }
-        
-            if (fields.HasFlag(Collection.Fields.CreationDate))
+            if (fields.HasFlag(Queue.Fields.CreationDate))
             {
                 fieldNames.Add("CreationDate");
             }
@@ -5147,30 +5055,25 @@ namespace Fifthweek.Api.Persistence
         }
         
         private static Dapper.DynamicParameters OnlySpecifiedParameters(
-            Collection entity, 
-            Collection.Fields fields,
-            Collection.Fields? excludedFields = null)
+            Queue entity, 
+            Queue.Fields fields,
+            Queue.Fields? excludedFields = null)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
             parameters.Add("Id", entity.Id);
-            if (fields.HasFlag(Collection.Fields.ChannelId) && (excludedFields == null || !excludedFields.Value.HasFlag(Collection.Fields.ChannelId)))
+            if (fields.HasFlag(Queue.Fields.BlogId) && (excludedFields == null || !excludedFields.Value.HasFlag(Queue.Fields.BlogId)))
             {
-                parameters.Add("ChannelId", entity.ChannelId);
+                parameters.Add("BlogId", entity.BlogId);
             }
         
-            if (fields.HasFlag(Collection.Fields.Name) && (excludedFields == null || !excludedFields.Value.HasFlag(Collection.Fields.Name)))
+            if (fields.HasFlag(Queue.Fields.Name) && (excludedFields == null || !excludedFields.Value.HasFlag(Queue.Fields.Name)))
             {
                 parameters.Add("Name", entity.Name);
             }
         
-            if (fields.HasFlag(Collection.Fields.QueueExclusiveLowerBound) && (excludedFields == null || !excludedFields.Value.HasFlag(Collection.Fields.QueueExclusiveLowerBound)))
-            {
-                parameters.Add("QueueExclusiveLowerBound", entity.QueueExclusiveLowerBound);
-            }
-        
-            if (fields.HasFlag(Collection.Fields.CreationDate) && (excludedFields == null || !excludedFields.Value.HasFlag(Collection.Fields.CreationDate)))
+            if (fields.HasFlag(Queue.Fields.CreationDate) && (excludedFields == null || !excludedFields.Value.HasFlag(Queue.Fields.CreationDate)))
             {
                 parameters.Add("CreationDate", entity.CreationDate);
             }
@@ -5179,29 +5082,24 @@ namespace Fifthweek.Api.Persistence
         }
         
         private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
-            Collection entity, 
-            Collection.Fields fields)
+            Queue entity, 
+            Queue.Fields fields)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
             parameters.Add("Id", entity.Id);
-            if (!fields.HasFlag(Collection.Fields.ChannelId))
+            if (!fields.HasFlag(Queue.Fields.BlogId))
             {
-                parameters.Add("ChannelId", entity.ChannelId);
+                parameters.Add("BlogId", entity.BlogId);
             }
         
-            if (!fields.HasFlag(Collection.Fields.Name))
+            if (!fields.HasFlag(Queue.Fields.Name))
             {
                 parameters.Add("Name", entity.Name);
             }
         
-            if (!fields.HasFlag(Collection.Fields.QueueExclusiveLowerBound))
-            {
-                parameters.Add("QueueExclusiveLowerBound", entity.QueueExclusiveLowerBound);
-            }
-        
-            if (!fields.HasFlag(Collection.Fields.CreationDate))
+            if (!fields.HasFlag(Queue.Fields.CreationDate))
             {
                 parameters.Add("CreationDate", entity.CreationDate);
             }
@@ -6547,13 +6445,12 @@ namespace Fifthweek.Api.Persistence
             Empty = 0,
             Id = 1, 
             ChannelId = 2, 
-            CollectionId = 4, 
+            QueueId = 4, 
             FileId = 8, 
             ImageId = 16, 
             Comment = 32, 
-            ScheduledByQueue = 64, 
-            LiveDate = 128, 
-            CreationDate = 256
+            LiveDate = 64, 
+            CreationDate = 128
         }
     }
 
@@ -6570,7 +6467,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.ScheduledByQueue, entity.LiveDate, entity.CreationDate
+                    entity.Id, entity.ChannelId, entity.QueueId, entity.FileId, entity.ImageId, entity.Comment, entity.LiveDate, entity.CreationDate
                 }).ToArray(),
                 transaction);
         }
@@ -6586,7 +6483,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.ScheduledByQueue, entity.LiveDate, entity.CreationDate
+                    entity.Id, entity.ChannelId, entity.QueueId, entity.FileId, entity.ImageId, entity.Comment, entity.LiveDate, entity.CreationDate
                 },
                 transaction);
         }
@@ -6631,7 +6528,7 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.ScheduledByQueue, entity.LiveDate, entity.CreationDate });
+                : new Dapper.DynamicParameters(new { entity.Id, entity.ChannelId, entity.QueueId, entity.FileId, entity.ImageId, entity.Comment, entity.LiveDate, entity.CreationDate });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -6655,7 +6552,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(Post.Fields.Empty, fields), 
                 new 
                 {
-                    entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.ScheduledByQueue, entity.LiveDate, entity.CreationDate
+                    entity.Id, entity.ChannelId, entity.QueueId, entity.FileId, entity.ImageId, entity.Comment, entity.LiveDate, entity.CreationDate
                 },
                 transaction);
         }
@@ -6672,7 +6569,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.ScheduledByQueue, entity.LiveDate, entity.CreationDate
+                    entity.Id, entity.ChannelId, entity.QueueId, entity.FileId, entity.ImageId, entity.Comment, entity.LiveDate, entity.CreationDate
                 },
                 transaction);
         }
@@ -6743,7 +6640,7 @@ namespace Fifthweek.Api.Persistence
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO Posts(Id, ChannelId, CollectionId, FileId, ImageId, Comment, ScheduledByQueue, LiveDate, CreationDate) VALUES(@Id, @ChannelId, @CollectionId, @FileId, @ImageId, @Comment, @ScheduledByQueue, @LiveDate, @CreationDate)";
+            const string insert = "INSERT INTO Posts(Id, ChannelId, QueueId, FileId, ImageId, Comment, LiveDate, CreationDate) VALUES(@Id, @ChannelId, @QueueId, @FileId, @ImageId, @Comment, @LiveDate, @CreationDate)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
@@ -6754,7 +6651,7 @@ namespace Fifthweek.Api.Persistence
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE Posts WITH (HOLDLOCK) as Target
-                USING (VALUES (@Id, @ChannelId, @CollectionId, @FileId, @ImageId, @Comment, @ScheduledByQueue, @LiveDate, @CreationDate)) AS Source (Id, ChannelId, CollectionId, FileId, ImageId, Comment, ScheduledByQueue, LiveDate, CreationDate)
+                USING (VALUES (@Id, @ChannelId, @QueueId, @FileId, @ImageId, @Comment, @LiveDate, @CreationDate)) AS Source (Id, ChannelId, QueueId, FileId, ImageId, Comment, LiveDate, CreationDate)
                 ON    (");
                 
             if (mergeOnFields == Post.Fields.Empty)
@@ -6773,8 +6670,8 @@ namespace Fifthweek.Api.Persistence
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (Id, ChannelId, CollectionId, FileId, ImageId, Comment, ScheduledByQueue, LiveDate, CreationDate)
-                    VALUES  (Source.Id, Source.ChannelId, Source.CollectionId, Source.FileId, Source.ImageId, Source.Comment, Source.ScheduledByQueue, Source.LiveDate, Source.CreationDate);");
+                    INSERT  (Id, ChannelId, QueueId, FileId, ImageId, Comment, LiveDate, CreationDate)
+                    VALUES  (Source.Id, Source.ChannelId, Source.QueueId, Source.FileId, Source.ImageId, Source.Comment, Source.LiveDate, Source.CreationDate);");
             return sql.ToString();
         }
         
@@ -6800,9 +6697,9 @@ namespace Fifthweek.Api.Persistence
                 fieldNames.Add("ChannelId");
             }
         
-            if (fields.HasFlag(Post.Fields.CollectionId))
+            if (fields.HasFlag(Post.Fields.QueueId))
             {
-                fieldNames.Add("CollectionId");
+                fieldNames.Add("QueueId");
             }
         
             if (fields.HasFlag(Post.Fields.FileId))
@@ -6818,11 +6715,6 @@ namespace Fifthweek.Api.Persistence
             if (fields.HasFlag(Post.Fields.Comment))
             {
                 fieldNames.Add("Comment");
-            }
-        
-            if (fields.HasFlag(Post.Fields.ScheduledByQueue))
-            {
-                fieldNames.Add("ScheduledByQueue");
             }
         
             if (fields.HasFlag(Post.Fields.LiveDate))
@@ -6852,9 +6744,9 @@ namespace Fifthweek.Api.Persistence
                 parameters.Add("ChannelId", entity.ChannelId);
             }
         
-            if (fields.HasFlag(Post.Fields.CollectionId) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.CollectionId)))
+            if (fields.HasFlag(Post.Fields.QueueId) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.QueueId)))
             {
-                parameters.Add("CollectionId", entity.CollectionId);
+                parameters.Add("QueueId", entity.QueueId);
             }
         
             if (fields.HasFlag(Post.Fields.FileId) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.FileId)))
@@ -6870,11 +6762,6 @@ namespace Fifthweek.Api.Persistence
             if (fields.HasFlag(Post.Fields.Comment) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.Comment)))
             {
                 parameters.Add("Comment", entity.Comment);
-            }
-        
-            if (fields.HasFlag(Post.Fields.ScheduledByQueue) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.ScheduledByQueue)))
-            {
-                parameters.Add("ScheduledByQueue", entity.ScheduledByQueue);
             }
         
             if (fields.HasFlag(Post.Fields.LiveDate) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.LiveDate)))
@@ -6903,9 +6790,9 @@ namespace Fifthweek.Api.Persistence
                 parameters.Add("ChannelId", entity.ChannelId);
             }
         
-            if (!fields.HasFlag(Post.Fields.CollectionId))
+            if (!fields.HasFlag(Post.Fields.QueueId))
             {
-                parameters.Add("CollectionId", entity.CollectionId);
+                parameters.Add("QueueId", entity.QueueId);
             }
         
             if (!fields.HasFlag(Post.Fields.FileId))
@@ -6921,11 +6808,6 @@ namespace Fifthweek.Api.Persistence
             if (!fields.HasFlag(Post.Fields.Comment))
             {
                 parameters.Add("Comment", entity.Comment);
-            }
-        
-            if (!fields.HasFlag(Post.Fields.ScheduledByQueue))
-            {
-                parameters.Add("ScheduledByQueue", entity.ScheduledByQueue);
             }
         
             if (!fields.HasFlag(Post.Fields.LiveDate))
@@ -9914,12 +9796,12 @@ namespace Fifthweek.Api.Persistence
         public const string Table = "WeeklyReleaseTimes";
         
         public WeeklyReleaseTime(
-            System.Guid collectionId,
+            System.Guid queueId,
             System.Byte hourOfWeek)
         {
-            if (collectionId == null)
+            if (queueId == null)
             {
-                throw new ArgumentNullException("collectionId");
+                throw new ArgumentNullException("queueId");
             }
 
             if (hourOfWeek == null)
@@ -9927,7 +9809,7 @@ namespace Fifthweek.Api.Persistence
                 throw new ArgumentNullException("hourOfWeek");
             }
 
-            this.CollectionId = collectionId;
+            this.QueueId = queueId;
             this.HourOfWeek = hourOfWeek;
         }
         
@@ -9953,7 +9835,7 @@ namespace Fifthweek.Api.Persistence
         
         protected bool IdentityEquals(WeeklyReleaseTime other)
         {
-            if (!object.Equals(this.CollectionId, other.CollectionId))
+            if (!object.Equals(this.QueueId, other.QueueId))
             {
                 return false;
             }
@@ -9970,7 +9852,7 @@ namespace Fifthweek.Api.Persistence
         public enum Fields
         {
             Empty = 0,
-            CollectionId = 1, 
+            QueueId = 1, 
             HourOfWeek = 2
         }
     }
@@ -9988,7 +9870,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.CollectionId, entity.HourOfWeek
+                    entity.QueueId, entity.HourOfWeek
                 }).ToArray(),
                 transaction);
         }
@@ -10004,7 +9886,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.CollectionId, entity.HourOfWeek
+                    entity.QueueId, entity.HourOfWeek
                 },
                 transaction);
         }
@@ -10049,7 +9931,7 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.CollectionId, entity.HourOfWeek });
+                : new Dapper.DynamicParameters(new { entity.QueueId, entity.HourOfWeek });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -10073,7 +9955,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(WeeklyReleaseTime.Fields.Empty, fields), 
                 new 
                 {
-                    entity.CollectionId, entity.HourOfWeek
+                    entity.QueueId, entity.HourOfWeek
                 },
                 transaction);
         }
@@ -10090,7 +9972,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.CollectionId, entity.HourOfWeek
+                    entity.QueueId, entity.HourOfWeek
                 },
                 transaction);
         }
@@ -10161,7 +10043,7 @@ namespace Fifthweek.Api.Persistence
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO WeeklyReleaseTimes(CollectionId, HourOfWeek) VALUES(@CollectionId, @HourOfWeek)";
+            const string insert = "INSERT INTO WeeklyReleaseTimes(QueueId, HourOfWeek) VALUES(@QueueId, @HourOfWeek)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
@@ -10172,12 +10054,12 @@ namespace Fifthweek.Api.Persistence
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE WeeklyReleaseTimes WITH (HOLDLOCK) as Target
-                USING (VALUES (@CollectionId, @HourOfWeek)) AS Source (CollectionId, HourOfWeek)
+                USING (VALUES (@QueueId, @HourOfWeek)) AS Source (QueueId, HourOfWeek)
                 ON    (");
                 
             if (mergeOnFields == WeeklyReleaseTime.Fields.Empty)
             {
-                sql.Append(@"Target.CollectionId = Source.CollectionId AND Target.HourOfWeek = Source.HourOfWeek");
+                sql.Append(@"Target.QueueId = Source.QueueId AND Target.HourOfWeek = Source.HourOfWeek");
             }
             else
             {
@@ -10191,8 +10073,8 @@ namespace Fifthweek.Api.Persistence
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (CollectionId, HourOfWeek)
-                    VALUES  (Source.CollectionId, Source.HourOfWeek);");
+                    INSERT  (QueueId, HourOfWeek)
+                    VALUES  (Source.QueueId, Source.HourOfWeek);");
             return sql.ToString();
         }
         
@@ -10201,7 +10083,7 @@ namespace Fifthweek.Api.Persistence
             var sql = new System.Text.StringBuilder();
             sql.Append("UPDATE WeeklyReleaseTimes SET ");
             sql.AppendUpdateParameters(GetFieldNames(fields));
-            sql.Append(" WHERE CollectionId = @CollectionId AND HourOfWeek = @HourOfWeek");
+            sql.Append(" WHERE QueueId = @QueueId AND HourOfWeek = @HourOfWeek");
             return sql.ToString();
         }
         
@@ -10210,7 +10092,7 @@ namespace Fifthweek.Api.Persistence
             var fieldNames = new System.Collections.Generic.List<string>();
             if (autoIncludePrimaryKeys)
             {
-                fieldNames.Add("CollectionId");
+                fieldNames.Add("QueueId");
             }
         
             if (autoIncludePrimaryKeys)
@@ -10229,7 +10111,7 @@ namespace Fifthweek.Api.Persistence
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("CollectionId", entity.CollectionId);
+            parameters.Add("QueueId", entity.QueueId);
             parameters.Add("HourOfWeek", entity.HourOfWeek);
             return parameters;
         }
@@ -10241,7 +10123,7 @@ namespace Fifthweek.Api.Persistence
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("CollectionId", entity.CollectionId);
+            parameters.Add("QueueId", entity.QueueId);
             parameters.Add("HourOfWeek", entity.HourOfWeek);
             return parameters;
         }

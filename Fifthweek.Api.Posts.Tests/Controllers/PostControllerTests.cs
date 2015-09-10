@@ -28,7 +28,7 @@
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly DateTime? Origin = DateTime.UtcNow;
         private static readonly bool SearchForwards = true;
         private Mock<ICommandHandler<DeletePostCommand>> deletePost;
@@ -85,7 +85,7 @@
         public async Task WhenGettingCreatorBacklog_ItShouldReturnResultFromCreatorBacklogQuery()
         {
             var query = new GetCreatorBacklogQuery(Requester, UserId);
-            var queryResult = new[] { new GetCreatorBacklogQueryResult(PostId, ChannelId, CollectionId, new Comment(""), null, null, null, null, false, DateTime.UtcNow) };
+            var queryResult = new[] { new GetCreatorBacklogQueryResult(PostId, ChannelId, QueueId, new Comment(""), null, null, null, null, false, DateTime.UtcNow) };
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.getCreatorBacklog.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
@@ -109,8 +109,8 @@
             var requestData = new CreatorNewsfeedPaginationData { Count = 5, StartIndex = 10 };
 
             var now = DateTime.UtcNow;
-            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, BlogId, ChannelId, CollectionId, new Comment(string.Empty), null, null, null, null, now, 0, 0, false) }, 10);
-            var expectedResult = new[] { new GetCreatorNewsfeedQueryResult(PostId, ChannelId, CollectionId, new Comment(string.Empty), null, null, null, null, now) };
+            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, BlogId, ChannelId, QueueId, new Comment(string.Empty), null, null, null, null, now, 0, 0, false) }, 10);
+            var expectedResult = new[] { new GetCreatorNewsfeedQueryResult(PostId, ChannelId, QueueId, new Comment(string.Empty), null, null, null, null, now) };
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.getNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
@@ -137,19 +137,19 @@
         [TestMethod]
         public async Task WhenGettingNewsfeed_ItShouldReturnResultFromNewsfeedQuery()
         {
-            var query = new GetNewsfeedQuery(Requester, UserId, new[] { ChannelId }, new[] { CollectionId }, Origin, SearchForwards, NonNegativeInt.Parse(10), PositiveInt.Parse(5));
+            var query = new GetNewsfeedQuery(Requester, UserId, new[] { ChannelId }, new[] { QueueId }, Origin, SearchForwards, NonNegativeInt.Parse(10), PositiveInt.Parse(5));
             var requestData = new NewsfeedFilter 
             { 
                 CreatorId = UserId.Value.EncodeGuid(), 
                 ChannelId = ChannelId.Value.EncodeGuid(),
-                CollectionId = CollectionId.Value.EncodeGuid(),
+                CollectionId = QueueId.Value.EncodeGuid(),
                 Origin = Origin,
                 SearchForwards = SearchForwards,
                 Count = 5, 
                 StartIndex = 10 
             };
 
-            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, BlogId, ChannelId, CollectionId, new Comment(string.Empty), null, null, null, null, DateTime.UtcNow, 0, 0, false) }, 10);
+            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, BlogId, ChannelId, QueueId, new Comment(string.Empty), null, null, null, null, DateTime.UtcNow, 0, 0, false) }, 10);
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.getNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
@@ -192,11 +192,11 @@
             var newQueueOrder = new[] { new PostId(Guid.NewGuid()) };
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
-            this.reorderQueue.Setup(v => v.HandleAsync(new ReorderQueueCommand(Requester, CollectionId, newQueueOrder)))
+            this.reorderQueue.Setup(v => v.HandleAsync(new ReorderQueueCommand(Requester, QueueId, newQueueOrder)))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.target.PostNewQueueOrder(CollectionId.Value.EncodeGuid(), newQueueOrder);
+            await this.target.PostNewQueueOrder(QueueId.Value.EncodeGuid(), newQueueOrder);
 
             this.reorderQueue.Verify();
         }
@@ -212,7 +212,7 @@
         [ExpectedException(typeof(BadRequestException))]
         public async Task WhenReorderingQueue_WithoutSpecifyingNewOrder_ItShouldThrowBadRequestException()
         {
-            await this.target.PostNewQueueOrder(CollectionId.Value.EncodeGuid(), null);
+            await this.target.PostNewQueueOrder(QueueId.Value.EncodeGuid(), null);
         }
 
         [TestMethod]

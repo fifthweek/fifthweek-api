@@ -59,12 +59,10 @@
     <Compile Include="BlogDescription.cs" />
     <Compile Include="BlogId.cs" />
     <Compile Include="BlogName.cs" />
-    <Compile Include="Tagline.cs" />
     <Compile Include="ValidBlogDescription.cs" />
     <Compile Include="ValidExternalVideoUrl.cs" />
     <Compile Include="ValidIntroduction.cs" />
     <Compile Include="ValidBlogName.cs" />
-    <Compile Include="ValidTagline.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -75,6 +73,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
+      <Project>{DF1BB4E7-5315-4E5C-BA73-6DFA4D9E7564}</Project>
+      <Name>Fifthweek.Api.Channels.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Identity.Shared\Fifthweek.Api.Identity.Shared.csproj">
       <Project>{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}</Project>
       <Name>Fifthweek.Api.Identity.Shared</Name>

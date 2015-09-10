@@ -12,7 +12,6 @@ namespace Fifthweek.Api.Channels
             UserId userId,
             ChannelId channelId,
             ValidChannelName name,
-            ValidChannelDescription description,
             ValidChannelPrice price, 
             bool isVisibleToNonSubscribers, 
             DateTime now);

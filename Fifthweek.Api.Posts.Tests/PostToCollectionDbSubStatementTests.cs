@@ -24,8 +24,8 @@
         private const int QueuedPostCount = 3;
 
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
-        private static readonly CollectionId DifferentCollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
+        private static readonly QueueId DifferentQueueId = new QueueId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
@@ -36,7 +36,7 @@
         private Mock<IGetLiveDateOfNewQueuedPostDbStatement> getLiveDateOfNewQueuedPost;
         private Mock<IScheduledDateClippingFunction> scheduledDateClipping;
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
-        private PostToCollectionDbSubStatements target;
+        private PostToChannelDbSubStatements target;
 
         [TestInitialize]
         public void Initialize()
@@ -52,7 +52,7 @@
 
         public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new PostToCollectionDbSubStatements(connectionFactory, this.getLiveDateOfNewQueuedPost.Object, this.scheduledDateClipping.Object);
+            this.target = new PostToChannelDbSubStatements(connectionFactory, this.getLiveDateOfNewQueuedPost.Object, this.scheduledDateClipping.Object);
         }
 
         // We test for this as nullable strings are not explicitly defined by the language, so this is a good way of checking we've
@@ -123,7 +123,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 var uniqueLiveDate = DateTime.UtcNow.AddDays(42);
-                this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(uniqueLiveDate);
+                this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(QueueId)).ReturnsAsync(uniqueLiveDate);
 
                 this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
@@ -152,7 +152,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 var sharedLiveDate = DateTime.UtcNow.AddDays(42);
-                this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(sharedLiveDate);
+                this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(QueueId)).ReturnsAsync(sharedLiveDate);
 
                 this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
@@ -182,7 +182,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 var sharedLiveDate = DateTime.UtcNow.AddDays(42);
-                this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(sharedLiveDate);
+                this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(QueueId)).ReturnsAsync(sharedLiveDate);
 
                 this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
@@ -212,7 +212,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 var sharedLiveDate = DateTime.UtcNow.AddDays(42);
-                this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(sharedLiveDate);
+                this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(QueueId)).ReturnsAsync(sharedLiveDate);
 
                 this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
@@ -235,7 +235,7 @@
             {
                 var firstUniqueDate = DateTime.UtcNow.AddDays(42);
                 var secondUniqueDate = DateTime.UtcNow.AddDays(43);
-                this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsInOrderAsync(firstUniqueDate, secondUniqueDate);
+                this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(QueueId)).ReturnsInOrderAsync(firstUniqueDate, secondUniqueDate);
 
                 this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
@@ -254,7 +254,7 @@
                 PostId.Value,
                 default(Guid), 
                 null,
-                CollectionId.Value,
+                QueueId.Value,
                 null,
                 null,
                 null,
@@ -272,7 +272,7 @@
             {
                 if (differentCollection)
                 {
-                    var collection = CollectionTests.UniqueEntity(Random);
+                    var collection = QueueTests.UniqueEntity(Random);
                     collection.Id = DifferentCollectionId.Value;
                     collection.ChannelId = ChannelId.Value;
                     await databaseContext.Database.Connection.InsertAsync(collection);
@@ -280,7 +280,7 @@
 
                 var post = PostTests.UniqueFileOrImage(Random);
                 post.ChannelId = ChannelId.Value;
-                post.CollectionId = differentCollection ? DifferentCollectionId.Value : CollectionId.Value;
+                post.QueueId = differentCollection ? DifferentCollectionId.Value : QueueId.Value;
                 post.FileId = FileId.Value; // Reuse same file across each post. Not realistic, but doesn't matter for this test.
                 post.ScheduledByQueue = scheduledByQueue;
                 post.LiveDate = liveDate;
@@ -292,7 +292,7 @@
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                await databaseContext.CreateTestCollectionAsync(UserId.Value, ChannelId.Value, CollectionId.Value);
+                await databaseContext.CreateTestCollectionAsync(UserId.Value, ChannelId.Value, QueueId.Value);
                 await databaseContext.CreateTestFileWithExistingUserAsync(UserId.Value, FileId.Value);
 
                 if (createQueuedPosts)
@@ -301,7 +301,7 @@
                     {
                         var post = PostTests.UniqueFileOrImage(Random);
                         post.ChannelId = ChannelId.Value;
-                        post.CollectionId = CollectionId.Value;
+                        post.QueueId = QueueId.Value;
                         post.FileId = FileId.Value; // Reuse same file across each post. Not realistic, but doesn't matter for this test.
                         post.ScheduledByQueue = true;
                         post.LiveDate = DateTime.UtcNow.AddDays(i);

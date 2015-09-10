@@ -14,27 +14,27 @@
     public class RemoveFromQueueIfRequiredDbStatementTests
     {
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly WeeklyReleaseSchedule WeeklyReleaseSchedule = WeeklyReleaseSchedule.Parse(new[] { HourOfWeek.Parse(42) });
         private static readonly DateTime Now = DateTime.UtcNow;
 
-        private Mock<ITryGetQueuedPostCollectionDbStatement> tryGetPostQueuedCollection;
+        private Mock<ITryGetPostQueueIdStatement> tryGetPostQueuedCollection;
         private Mock<IGetWeeklyReleaseScheduleDbStatement> getWeeklyReleaseSchedule;
         private Mock<IDefragmentQueueDbStatement> defragmentQueue;
         private Mock<Func<Task>> potentialRemovalOperation;
 
-        private RemoveFromQueueIfRequiredDbStatement target;
+        private DefragmentQueueIfRequiredDbStatement target;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.tryGetPostQueuedCollection = new Mock<ITryGetQueuedPostCollectionDbStatement>();
+            this.tryGetPostQueuedCollection = new Mock<ITryGetPostQueueIdStatement>();
             this.getWeeklyReleaseSchedule = new Mock<IGetWeeklyReleaseScheduleDbStatement>();
 
             this.potentialRemovalOperation = new Mock<Func<Task>>(MockBehavior.Strict);
             this.defragmentQueue = new Mock<IDefragmentQueueDbStatement>(MockBehavior.Strict);
 
-            this.target = new RemoveFromQueueIfRequiredDbStatement(this.tryGetPostQueuedCollection.Object, this.getWeeklyReleaseSchedule.Object, this.defragmentQueue.Object);
+            this.target = new DefragmentQueueIfRequiredDbStatement(this.tryGetPostQueuedCollection.Object, this.getWeeklyReleaseSchedule.Object, this.defragmentQueue.Object);
         }
 
         [TestMethod]
@@ -61,8 +61,8 @@
         [TestMethod]
         public async Task WhenPostIsQueued_ItShouldDefragmentQueue()
         {
-            this.tryGetPostQueuedCollection.Setup(_ => _.ExecuteAsync(PostId, Now)).ReturnsAsync(CollectionId);
-            this.getWeeklyReleaseSchedule.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(WeeklyReleaseSchedule);
+            this.tryGetPostQueuedCollection.Setup(_ => _.ExecuteAsync(PostId, Now)).ReturnsAsync(QueueId);
+            this.getWeeklyReleaseSchedule.Setup(_ => _.ExecuteAsync(QueueId)).ReturnsAsync(WeeklyReleaseSchedule);
 
             var callOrder = 0;
             this.potentialRemovalOperation.Setup(_ => _())
@@ -70,7 +70,7 @@
                 .Callback(() => Assert.AreEqual(0, callOrder++))
                 .Verifiable();
 
-            this.defragmentQueue.Setup(_ => _.ExecuteAsync(CollectionId, WeeklyReleaseSchedule, It.Is<DateTime>(now => now.Kind == DateTimeKind.Utc)))
+            this.defragmentQueue.Setup(_ => _.ExecuteAsync(QueueId, WeeklyReleaseSchedule, It.Is<DateTime>(now => now.Kind == DateTimeKind.Utc)))
                 .Returns(Task.FromResult(0))
                 .Callback(() => Assert.AreEqual(1, callOrder++))
                 .Verifiable();

@@ -18,9 +18,9 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly DateTime CalculatedLiveDate = DateTime.UtcNow.AddDays(8);
-        private Mock<ICollectionSecurity> collectionSecurity;
+        private Mock<IQueueSecurity> collectionSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IGetLiveDateOfNewQueuedPostDbStatement> getLiveDateOfNewQueuedPost;
         private GetLiveDateOfNewQueuedPostQueryHandler target;
@@ -28,7 +28,7 @@
         [TestInitialize]
         public void Initialize()
         {
-            this.collectionSecurity = new Mock<ICollectionSecurity>();
+            this.collectionSecurity = new Mock<IQueueSecurity>();
             this.getLiveDateOfNewQueuedPost = new Mock<IGetLiveDateOfNewQueuedPostDbStatement>();
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             
@@ -44,24 +44,24 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
-            await this.target.HandleAsync(new GetLiveDateOfNewQueuedPostQuery(Requester.Unauthenticated, CollectionId));
+            await this.target.HandleAsync(new GetLiveDateOfNewQueuedPostQuery(Requester.Unauthenticated, QueueId));
         }
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenNotAllowedToPost_ItShouldThrowUnauthorizedException()
         {
-            this.collectionSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, CollectionId)).Throws<UnauthorizedException>();
+            this.collectionSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, QueueId)).Throws<UnauthorizedException>();
 
-            await this.target.HandleAsync(new GetLiveDateOfNewQueuedPostQuery(Requester, CollectionId));
+            await this.target.HandleAsync(new GetLiveDateOfNewQueuedPostQuery(Requester, QueueId));
         }
 
         [TestMethod]
         public async Task ItShouldCalculateReleaseTimeOfHypotheticalNewQueuedPost()
         {
-            this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(CalculatedLiveDate);
+            this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(QueueId)).ReturnsAsync(CalculatedLiveDate);
 
-            var result = await this.target.HandleAsync(new GetLiveDateOfNewQueuedPostQuery(Requester, CollectionId));
+            var result = await this.target.HandleAsync(new GetLiveDateOfNewQueuedPostQuery(Requester, QueueId));
 
             Assert.AreEqual(result, CalculatedLiveDate);
         }

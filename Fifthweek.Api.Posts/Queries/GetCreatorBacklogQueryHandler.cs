@@ -62,7 +62,7 @@
                 var completePost = new GetCreatorBacklogQueryResult(
                     post.PostId,
                     post.ChannelId,
-                    post.CollectionId,
+                    post.QueueId,
                     post.Comment,
                     file,
                     file == null ? null : new FileSourceInformation(post.FileName, post.FileExtension, this.mimeTypeMap.GetMimeType(post.FileExtension), post.FileSize ?? 0, null),

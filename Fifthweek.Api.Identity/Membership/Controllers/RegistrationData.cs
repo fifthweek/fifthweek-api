@@ -17,8 +17,7 @@
 
         [Parsed(typeof(ValidPassword))]
         public string Password { get; set; }
-        
-        [Optional, Parsed(typeof(ValidCreatorName))]
-        public string CreatorName { get; set; }
+
+        public bool RegisterAsCreator { get; set; }
     }
 }

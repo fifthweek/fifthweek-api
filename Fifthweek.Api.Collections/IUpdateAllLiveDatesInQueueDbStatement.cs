@@ -8,6 +8,6 @@
 
     public interface IUpdateAllLiveDatesInQueueDbStatement
     {
-        Task ExecuteAsync(CollectionId collectionId, IReadOnlyList<DateTime> ascendingLiveDates, DateTime now);
+        Task ExecuteAsync(QueueId queueId, IReadOnlyList<DateTime> ascendingLiveDates, DateTime now);
     }
 }

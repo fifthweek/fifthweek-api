@@ -12,7 +12,7 @@
     [AutoConstructor]
     public partial class GetLiveDateOfNewQueuedPostQueryHandler : IQueryHandler<GetLiveDateOfNewQueuedPostQuery, DateTime>
     {
-        private readonly ICollectionSecurity collectionSecurity;
+        private readonly IQueueSecurity queueSecurity;
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost;
 
@@ -23,9 +23,9 @@
             var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
 
             // This query is only raised when a user is about to post something, so request same privileges.
-            await this.collectionSecurity.AssertWriteAllowedAsync(authenticatedUserId, query.CollectionId);
+            await this.queueSecurity.AssertWriteAllowedAsync(authenticatedUserId, query.QueueId);
 
-            return await this.getLiveDateOfNewQueuedPost.ExecuteAsync(query.CollectionId);
+            return await this.getLiveDateOfNewQueuedPost.ExecuteAsync(query.QueueId);
         }
     }
 }

@@ -12,44 +12,44 @@ namespace Fifthweek.Api.Collections.Shared
     using System.Collections.Generic;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
-    public partial class CollectionId 
+    public partial class QueueId 
     {
         public class JsonConverter : Newtonsoft.Json.JsonConverter
         {
             public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
             {
-                var valueType = (CollectionId)value;
+                var valueType = (QueueId)value;
                 serializer.Serialize(writer, valueType.Value);
             }
         
             public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
             {
-                if (objectType != typeof(CollectionId))
+                if (objectType != typeof(QueueId))
                 {
-                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(CollectionId).Name, "objectType");
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(QueueId).Name, "objectType");
                 }
         
                 var value = serializer.Deserialize<System.Guid>(reader);
-                return new CollectionId(value);
+                return new QueueId(value);
             }
         
             public override bool CanConvert(Type objectType)
             {
-                return objectType == typeof(CollectionId);
+                return objectType == typeof(QueueId);
             }
         }
         
-        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<CollectionId>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<CollectionId>
+        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<QueueId>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<QueueId>
         {
-            public override void SetValue(System.Data.IDbDataParameter parameter, CollectionId value)
+            public override void SetValue(System.Data.IDbDataParameter parameter, QueueId value)
             {
                 parameter.DbType = System.Data.DbType.Guid;
                 parameter.Value = value.Value;
             }
         
-            public override CollectionId Parse(object value)
+            public override QueueId Parse(object value)
             {
-                return new CollectionId((System.Guid)value);
+                return new QueueId((System.Guid)value);
             }
         }
     }
@@ -112,9 +112,9 @@ namespace Fifthweek.Api.Collections.Shared
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
 
-    public partial class CollectionId 
+    public partial class QueueId 
     {
-        public CollectionId(
+        public QueueId(
             System.Guid value)
         {
             if (value == null)
@@ -134,7 +134,7 @@ namespace Fifthweek.Api.Collections.Shared
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
 
-    public partial class CollectionId 
+    public partial class QueueId 
     {
         public override string ToString()
         {
@@ -158,7 +158,7 @@ namespace Fifthweek.Api.Collections.Shared
                 return false;
             }
         
-            return this.Equals((CollectionId)obj);
+            return this.Equals((QueueId)obj);
         }
         
         public override int GetHashCode()
@@ -171,7 +171,7 @@ namespace Fifthweek.Api.Collections.Shared
             }
         }
         
-        protected bool Equals(CollectionId other)
+        protected bool Equals(QueueId other)
         {
             if (!object.Equals(this.Value, other.Value))
             {
@@ -244,7 +244,7 @@ namespace Fifthweek.Api.Collections.Shared
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
 
-    public partial class ValidCollectionName 
+    public partial class ValidQueueName 
     {
         public override string ToString()
         {
@@ -268,7 +268,7 @@ namespace Fifthweek.Api.Collections.Shared
                 return false;
             }
         
-            return this.Equals((ValidCollectionName)obj);
+            return this.Equals((ValidQueueName)obj);
         }
         
         public override int GetHashCode()
@@ -281,7 +281,7 @@ namespace Fifthweek.Api.Collections.Shared
             }
         }
         
-        protected bool Equals(ValidCollectionName other)
+        protected bool Equals(ValidQueueName other)
         {
             if (!object.Equals(this.Value, other.Value))
             {

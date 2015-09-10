@@ -4,6 +4,6 @@
 
     public interface IGetWeeklyReleaseScheduleDbStatement
     {
-        Task<WeeklyReleaseSchedule> ExecuteAsync(CollectionId collectionId);
+        Task<WeeklyReleaseSchedule> ExecuteAsync(QueueId queueId);
     }
 }

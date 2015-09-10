@@ -18,23 +18,23 @@ namespace Fifthweek.Api.Collections
         private static readonly string DeleteWeeklyReleaseTimesSql = string.Format(
             @"
             DELETE FROM {0}
-            WHERE {1} = @CollectionId",
+            WHERE {1} = @QueueId",
             WeeklyReleaseTime.Table,
-            WeeklyReleaseTime.Fields.CollectionId);
+            WeeklyReleaseTime.Fields.QueueId);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task ExecuteAsync(CollectionId collectionId, WeeklyReleaseSchedule weeklyReleaseSchedule)
+        public async Task ExecuteAsync(QueueId queueId, WeeklyReleaseSchedule weeklyReleaseSchedule)
         {
-            collectionId.AssertNotNull("collectionId");
+            queueId.AssertNotNull("queueId");
             weeklyReleaseSchedule.AssertNotNull("weeklyReleaseSchedule");
 
             var newWeeklyReleaseTimes = weeklyReleaseSchedule.Value.Select(
-                _ => new WeeklyReleaseTime(collectionId.Value, null, (byte)_.Value));
+                _ => new WeeklyReleaseTime(queueId.Value, null, (byte)_.Value));
 
             var deletionParameters = new
             {
-                CollectionId = collectionId.Value
+                QueueId = queueId.Value
             };
 
             // Transaction required on the following, as database must always contain at least one weekly release time per 

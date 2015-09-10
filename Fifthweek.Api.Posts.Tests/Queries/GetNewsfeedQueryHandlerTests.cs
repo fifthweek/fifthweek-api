@@ -34,7 +34,7 @@
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly List<ChannelId> ChannelIds = new List<ChannelId> { new ChannelId(Guid.NewGuid()) };
-        private static readonly List<CollectionId> CollectionIds = new List<CollectionId> { new CollectionId(Guid.NewGuid()) };
+        private static readonly List<QueueId> CollectionIds = new List<QueueId> { new QueueId(Guid.NewGuid()) };
         private static readonly DateTime? Origin = DateTime.UtcNow;
         private static readonly bool SearchForwards = true;
         private static readonly NonNegativeInt StartIndex = NonNegativeInt.Parse(10);
@@ -139,7 +139,7 @@
 
                 Assert.AreEqual(item.Input.PostId, item.Output.PostId);
                 Assert.AreEqual(item.Input.ChannelId, item.Output.ChannelId);
-                Assert.AreEqual(item.Input.CollectionId, item.Output.CollectionId);
+                Assert.AreEqual(item.Input.QueueId, item.Output.QueueId);
                 Assert.AreEqual(item.Input.Comment, item.Output.Comment);
                 Assert.AreEqual(item.Input.LiveDate, item.Output.LiveDate);
             }
@@ -153,7 +153,7 @@
             DateTime nowDate = DateTime.MinValue;
             DateTime originDate = DateTime.MaxValue;
             this.getNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, CollectionIds, It.IsAny<DateTime>(), It.IsAny<DateTime>(), SearchForwards, StartIndex, Count))
-                .Callback<UserId, UserId, IReadOnlyList<ChannelId>, IReadOnlyList<CollectionId>, DateTime, DateTime, bool, NonNegativeInt, PositiveInt>(
+                .Callback<UserId, UserId, IReadOnlyList<ChannelId>, IReadOnlyList<QueueId>, DateTime, DateTime, bool, NonNegativeInt, PositiveInt>(
                 (a, b, c, d, now, origin, e, f, g) => 
                 {
                     nowDate = now;
@@ -183,7 +183,7 @@
                 var channelId = new ChannelId(Guid.NewGuid());
                 for (var collectionIndex = 0; collectionIndex < CollectionsPerChannel; collectionIndex++)
                 {
-                    var collectionId = collectionIndex == 0 ? null : new CollectionId(Guid.NewGuid());
+                    var collectionId = collectionIndex == 0 ? null : new QueueId(Guid.NewGuid());
                     for (var i = 0; i < Posts; i++)
                     {
                         // Ensure we have one post that is `now` (i.e. AddDays(0)).

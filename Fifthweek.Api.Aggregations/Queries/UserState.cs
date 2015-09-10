@@ -16,9 +16,6 @@ namespace Fifthweek.Api.Aggregations.Queries
         public UserAccessSignatures AccessSignatures { get; private set; }
 
         [Optional]
-        public CreatorStatus CreatorStatus { get; private set; }
-
-        [Optional]
         public GetAccountSettingsResult AccountSettings { get; private set; }
 
         [Optional]

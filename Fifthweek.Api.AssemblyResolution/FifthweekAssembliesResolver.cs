@@ -15,7 +15,7 @@
             typeof(Channels.AutofacRegistration).Assembly,
             typeof(Channels.Shared.ChannelId).Assembly,
             typeof(Collections.AutofacRegistration).Assembly,
-            typeof(Collections.Shared.CollectionId).Assembly,
+            typeof(Collections.Shared.QueueId).Assembly,
             typeof(EndToEndTestMailboxes.SetLatestMessageDbStatement).Assembly,
             typeof(EndToEndTestMailboxes.Shared.MailboxName).Assembly,
             typeof(Identity.Membership.AutofacRegistration).Assembly,

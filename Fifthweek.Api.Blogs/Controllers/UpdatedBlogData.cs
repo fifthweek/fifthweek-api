@@ -10,9 +10,6 @@
         [Parsed(typeof(ValidBlogName))]
         public string Name { get; set; }
 
-        [Parsed(typeof(ValidTagline))]
-        public string Tagline { get; set; }
-
         [Parsed(typeof(ValidIntroduction))]
         public string Introduction { get; set; }
 

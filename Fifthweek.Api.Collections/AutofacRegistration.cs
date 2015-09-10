@@ -9,20 +9,19 @@
     {
         public void Register(ContainerBuilder builder)
         {
-            builder.RegisterType<CollectionOwnership>().As<ICollectionOwnership>();
-            builder.RegisterType<CollectionSecurity>().As<ICollectionSecurity>();
+            builder.RegisterType<QueueOwnership>().As<IQueueOwnership>();
+            builder.RegisterType<QueueSecurity>().As<IQueueSecurity>();
             builder.RegisterType<GetNewQueuedPostLiveDateLowerBoundDbStatement>().As<IGetNewQueuedPostLiveDateLowerBoundDbStatement>();
             builder.RegisterType<GetLiveDateOfNewQueuedPostDbStatement>().As<IGetLiveDateOfNewQueuedPostDbStatement>();
             builder.RegisterType<GetWeeklyReleaseScheduleDbStatement>().As<IGetWeeklyReleaseScheduleDbStatement>();
             builder.RegisterType<QueuedPostLiveDateCalculator>().As<IQueuedPostLiveDateCalculator>();
-            builder.RegisterType<DeleteCollectionDbStatement>().As<IDeleteCollectionDbStatement>();
+            builder.RegisterType<DeleteQueueDbStatement>().As<IDeleteQueueDbStatement>();
             builder.RegisterType<DefragmentQueueDbStatement>().As<IDefragmentQueueDbStatement>();
             builder.RegisterType<GetQueueSizeDbStatement>().As<IGetQueueSizeDbStatement>();
-            builder.RegisterType<GetQueueLowerBoundDbStatement>().As<IGetQueueLowerBoundDbStatement>();
             builder.RegisterType<UpdateAllLiveDatesInQueueDbStatement>().As<IUpdateAllLiveDatesInQueueDbStatement>();
             builder.RegisterType<UpdateWeeklyReleaseScheduleDbStatement>().As<IUpdateWeeklyReleaseScheduleDbStatement>();
             builder.RegisterType<ReplaceWeeklyReleaseTimesDbStatement>().As<IReplaceWeeklyReleaseTimesDbStatement>();
-            builder.RegisterType<UpdateCollectionFieldsDbStatement>().As<IUpdateCollectionFieldsDbStatement>();
+            builder.RegisterType<UpdateQueueFieldsDbStatement>().As<IUpdateQueueFieldsDbStatement>();
         }
     }
 }

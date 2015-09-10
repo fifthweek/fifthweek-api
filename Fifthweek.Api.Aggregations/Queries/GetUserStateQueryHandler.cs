@@ -24,9 +24,8 @@
         private readonly IRequesterSecurity requesterSecurity;
 
         private readonly IQueryHandler<GetUserAccessSignaturesQuery, UserAccessSignatures> getUserAccessSignatures;
-        private readonly IQueryHandler<GetCreatorStatusQuery, CreatorStatus> getCreatorStatus;
         private readonly IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult> getAccountSettings;
-        private readonly IQueryHandler<GetBlogChannelsAndCollectionsQuery, GetBlogChannelsAndCollectionsResult> getBlogChannelsAndCollections;
+        private readonly IQueryHandler<GetBlogChannelsAndQueuesQuery, GetBlogChannelsAndQueuesResult> getBlogChannelsAndQueues;
         private readonly IQueryHandler<GetUserSubscriptionsQuery, GetUserSubscriptionsResult> getBlogSubscriptions;
         private readonly IImpersonateIfRequired impersonateIfRequired;
 
@@ -35,7 +34,6 @@
             query.AssertNotNull("query");
 
             GetUserSubscriptionsResult userSubscriptions = null;
-            CreatorStatus creatorStatus = null;
             GetAccountSettingsResult accountSettings = null;
             BlogWithFileInformation blog = null;
             
@@ -52,13 +50,7 @@
 
                 await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId);
                 
-                bool isCreator = await this.requesterSecurity.IsInRoleAsync(query.Requester, FifthweekRole.Creator);
-
-                Task<CreatorStatus> creatorStatusTask = null;
-                if (isCreator)
-                {
-                    creatorStatusTask = this.getCreatorStatus.HandleAsync(new GetCreatorStatusQuery(query.Requester, query.RequestedUserId));
-                }
+                var isCreator = await this.requesterSecurity.IsInRoleAsync(query.Requester, FifthweekRole.Creator);
 
                 var blogSubscriptionsTask = this.getBlogSubscriptions.HandleAsync(new GetUserSubscriptionsQuery(query.Requester, query.RequestedUserId));
                 var accountSettingsTask = this.getAccountSettings.HandleAsync(new GetAccountSettingsQuery(
@@ -66,15 +58,7 @@
 
                 if (isCreator)
                 {
-                    creatorStatus = await creatorStatusTask;
-
-                    var blogChannelsAndCollectionsTask = Task.FromResult<GetBlogChannelsAndCollectionsResult>(null);
-                    if (creatorStatus.BlogId != null)
-                    {
-                        blogChannelsAndCollectionsTask = this.getBlogChannelsAndCollections.HandleAsync(new GetBlogChannelsAndCollectionsQuery(creatorStatus.BlogId));
-                    }
-
-                    var blogChannelsAndCollections = await blogChannelsAndCollectionsTask;
+                    var blogChannelsAndCollections = await this.getBlogChannelsAndQueues.HandleAsync(new GetBlogChannelsAndQueuesQuery(query.RequestedUserId));
                     if (blogChannelsAndCollections != null)
                     {
                         blog = blogChannelsAndCollections.Blog;
@@ -101,7 +85,6 @@
 
             return new UserState(
                 userAccessSignatures, 
-                creatorStatus, 
                 accountSettings,
                 blog,
                 userSubscriptions);

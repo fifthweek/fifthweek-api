@@ -30,7 +30,6 @@
                 userId,
                 command.ChannelId,
                 command.Name,
-                command.Description,
                 command.Price,
                 command.IsVisibleToNonSubscribers,
                 DateTime.UtcNow);

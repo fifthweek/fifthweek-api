@@ -22,7 +22,7 @@
                      unreleasedRevenue.{9} AS UnreleasedRevenue,
                      COALESCE(releasedRevenue.{9}, 0) AS ReleasedRevenue, 
                      COALESCE(retainedRevenue.RetainedRevenue, 0) AS RetainedRevenue,
-                     u.{12} AS Username, u.{13}, u.{14}, COALESCE(u.{15}, 0) As EmailConfirmed
+                     u.{12} AS Username, u.{14}, COALESCE(u.{15}, 0) As EmailConfirmed
                 FROM ({6})  unreleasedRevenue
                 LEFT OUTER JOIN ({8}) releasedRevenue ON unreleasedRevenue.{7} = releasedRevenue.{7}
                 LEFT OUTER JOIN (
@@ -73,7 +73,6 @@
                     (int)v.ReleasedRevenue, 
                     (int)(v.UnreleasedRevenue - v.RetainedRevenue),
                     v.Username == null ? null : new Username(v.Username),
-                    v.Name == null ? null : new CreatorName(v.Name),
                     v.Email == null ? null : new Email(v.Email),
                     v.EmailConfirmed)).ToList());
             }

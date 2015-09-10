@@ -37,7 +37,6 @@
                 command.BlogId.Value,
                 null,
                 command.Name.Value,
-                command.Description.Value,
                 command.Price.Value,
                 command.IsVisibleToNonSubscribers,
                 now,

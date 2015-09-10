@@ -27,7 +27,7 @@ namespace Fifthweek.Api.Persistence
 
         public IDbSet<Channel> Channels { get; set; }
         
-        public IDbSet<Collection> Collections { get; set; }
+        public IDbSet<Queue> Queues { get; set; }
 
         public IDbSet<WeeklyReleaseTime> WeeklyReleaseTimes { get; set; }
 

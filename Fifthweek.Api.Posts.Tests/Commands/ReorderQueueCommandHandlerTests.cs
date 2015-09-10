@@ -33,7 +33,7 @@
 
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly DateTime Now = DateTime.UtcNow;
         private static readonly IReadOnlyList<PostId> NewOrder = new[]
@@ -73,14 +73,14 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task ItShouldRequireUserIsAuthenticated()
         {
-            await this.target.HandleAsync(new ReorderQueueCommand(Requester.Unauthenticated, CollectionId, NewOrder));
+            await this.target.HandleAsync(new ReorderQueueCommand(Requester.Unauthenticated, QueueId, NewOrder));
         }
 
         [TestMethod]
         public async Task WhenFewerThan2IdsAreProvided_ItShouldHaveNoEffect()
         {
-            await this.target.HandleAsync(new ReorderQueueCommand(Requester, CollectionId, new PostId[0]));
-            await this.target.HandleAsync(new ReorderQueueCommand(Requester, CollectionId, new PostId[1]));
+            await this.target.HandleAsync(new ReorderQueueCommand(Requester, QueueId, new PostId[0]));
+            await this.target.HandleAsync(new ReorderQueueCommand(Requester, QueueId, new PostId[1]));
         }
 
         [TestMethod]
@@ -92,7 +92,7 @@
 
                 var validPosts = await this.CreateValidQueueCandidatesAsync(testDatabase);
                 var attemptedNewQueueOrder = GetRandomSubset(validPosts);
-                var command = new ReorderQueueCommand(Requester, CollectionId, attemptedNewQueueOrder);
+                var command = new ReorderQueueCommand(Requester, QueueId, attemptedNewQueueOrder);
                 await this.target.HandleAsync(command);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -112,7 +112,7 @@
 
                 var attemptedNewQueueOrder = GetRandomSubset(validPosts);
 
-                return await this.TestExpectedQueueOrderAsync(testDatabase, validPosts, new ReorderQueueCommand(Requester, CollectionId, attemptedNewQueueOrder));
+                return await this.TestExpectedQueueOrderAsync(testDatabase, validPosts, new ReorderQueueCommand(Requester, QueueId, attemptedNewQueueOrder));
             });
 
             // Test with all of the collection's posts.
@@ -122,7 +122,7 @@
 
                 var attemptedNewQueueOrder = Shuffle(validPosts);
 
-                return await this.TestExpectedQueueOrderAsync(testDatabase, validPosts, new ReorderQueueCommand(Requester, CollectionId, attemptedNewQueueOrder));
+                return await this.TestExpectedQueueOrderAsync(testDatabase, validPosts, new ReorderQueueCommand(Requester, QueueId, attemptedNewQueueOrder));
             });
         }
 
@@ -134,13 +134,13 @@
                 var invalidPosts = await this.CreatePostsAsync(
                     testDatabase,
                     new UserId(Guid.NewGuid()),
-                    CollectionId,
+                    QueueId,
                     liveDateInFuture: true,
                     scheduledByQueue: true);
 
                 var attemptedNewQueueOrder = GetRandomSubset(invalidPosts);
 
-                return await this.TestExpectedQueueOrderAsync(testDatabase, new Post[0], new ReorderQueueCommand(Requester, CollectionId, attemptedNewQueueOrder));
+                return await this.TestExpectedQueueOrderAsync(testDatabase, new Post[0], new ReorderQueueCommand(Requester, QueueId, attemptedNewQueueOrder));
             });
         }
 
@@ -151,7 +151,7 @@
                 this.CreatePostsAsync(
                         testDatabase,
                         UserId,
-                        new CollectionId(Guid.NewGuid()),
+                        new QueueId(Guid.NewGuid()),
                         liveDateInFuture: true,
                         scheduledByQueue: true));
         }
@@ -163,7 +163,7 @@
                 this.CreatePostsAsync(
                         testDatabase,
                         UserId,
-                        CollectionId,
+                        QueueId,
                         liveDateInFuture: true,
                         scheduledByQueue: false));
         }
@@ -175,7 +175,7 @@
                 this.CreatePostsAsync(
                         testDatabase,
                         UserId,
-                        CollectionId,
+                        QueueId,
                         liveDateInFuture: false,
                         scheduledByQueue: true));
         }
@@ -215,7 +215,7 @@
                     GetRandomSubset(validPosts),
                     GetRandomSubset(invalidPosts));
 
-                return await this.TestExpectedQueueOrderAsync(testDatabase, validPosts, new ReorderQueueCommand(Requester, CollectionId, attemptedNewQueueOrder));
+                return await this.TestExpectedQueueOrderAsync(testDatabase, validPosts, new ReorderQueueCommand(Requester, QueueId, attemptedNewQueueOrder));
             });
 
             // Test with invalid posts only. Expect no posts to be re-ordered.
@@ -225,7 +225,7 @@
 
                 var attemptedNewQueueOrder = GetRandomSubset(invalidPosts);
 
-                return await this.TestExpectedQueueOrderAsync(testDatabase, new Post[0], new ReorderQueueCommand(Requester, CollectionId, attemptedNewQueueOrder));
+                return await this.TestExpectedQueueOrderAsync(testDatabase, new Post[0], new ReorderQueueCommand(Requester, QueueId, attemptedNewQueueOrder));
             });
         }
 
@@ -287,7 +287,7 @@
             return this.CreatePostsAsync(
                 testDatabase,
                 UserId,
-                CollectionId,
+                QueueId,
                 liveDateInFuture: true,
                 scheduledByQueue: true);
         }
@@ -295,7 +295,7 @@
         private async Task<IReadOnlyList<Post>> CreatePostsAsync(
             TestDatabaseContext testDatabase,
             UserId userId,
-            CollectionId collectionId,
+            QueueId queueId,
             bool liveDateInFuture,
             bool scheduledByQueue)
         {
@@ -318,8 +318,8 @@
                 channel.BlogId = subscription.Id;
                 await databaseContext.Database.Connection.InsertAsync(channel);
 
-                var collection = CollectionTests.UniqueEntity(Random);
-                collection.Id = collectionId.Value;
+                var collection = QueueTests.UniqueEntity(Random);
+                collection.Id = queueId.Value;
                 collection.ChannelId = channel.Id;
                 await databaseContext.Database.Connection.InsertAsync(collection);
 
@@ -338,7 +338,7 @@
                 {
                     var post = PostTests.UniqueFileOrImage(Random);
                     post.ChannelId = channel.Id;
-                    post.CollectionId = collectionId.Value;
+                    post.QueueId = queueId.Value;
                     post.FileId = file.Id;
                     post.ScheduledByQueue = scheduledByQueue;
                     post.LiveDate = Now.AddDays((1 + Random.Next(100)) * (liveDateInFuture ? 1 : -1));

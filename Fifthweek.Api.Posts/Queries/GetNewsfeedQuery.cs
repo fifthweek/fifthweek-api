@@ -22,9 +22,6 @@
         public IReadOnlyList<ChannelId> ChannelIds { get; private set; }
 
         [Optional]
-        public IReadOnlyList<CollectionId> CollectionIds { get; private set; }
-
-        [Optional]
         public DateTime? Origin { get; private set; }
 
         public bool SearchForwards { get; private set; }

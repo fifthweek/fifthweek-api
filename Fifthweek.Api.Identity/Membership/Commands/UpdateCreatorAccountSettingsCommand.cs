@@ -10,7 +10,5 @@
         public Requester Requester { get; private set; }
 
         public UserId RequestedUserId { get; private set; }
-
-        public ValidCreatorName Name { get; private set; }
     }
 }

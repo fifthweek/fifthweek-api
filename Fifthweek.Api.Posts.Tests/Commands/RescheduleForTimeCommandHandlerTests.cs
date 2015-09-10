@@ -25,7 +25,7 @@
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IPostSecurity> postSecurity;
         private Mock<ISetPostLiveDateDbStatement> setBacklogPostLiveDateToNow;
-        private Mock<IRemoveFromQueueIfRequiredDbStatement> removeFromQueueIfRequired;
+        private Mock<IDefragmentQueueIfRequiredDbStatement> removeFromQueueIfRequired;
         private RescheduleForTimeCommandHandler target;
 
         [TestInitialize]
@@ -37,7 +37,7 @@
 
             // Mock potentially side-effecting components with strict behaviour.            
             this.setBacklogPostLiveDateToNow = new Mock<ISetPostLiveDateDbStatement>(MockBehavior.Strict);
-            this.removeFromQueueIfRequired = new Mock<IRemoveFromQueueIfRequiredDbStatement>(MockBehavior.Strict);
+            this.removeFromQueueIfRequired = new Mock<IDefragmentQueueIfRequiredDbStatement>(MockBehavior.Strict);
 
             this.target = new RescheduleForTimeCommandHandler(
                 this.requesterSecurity.Object, 

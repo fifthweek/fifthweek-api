@@ -52,7 +52,7 @@
 
         private static readonly string Query =
             BlogIdQuery + 
-            GetBlogChannelsAndCollectionsDbStatement.BlogQuery + 
+            GetBlogChannelsAndQueuesDbStatement.BlogQuery + 
             ChannelsQuery +
             UserQuery;
 
@@ -75,6 +75,11 @@
                 }
             }
 
+            if (channels.Count == 0)
+            {
+                return null;
+            }
+
             var user = users.SingleOrDefault();
 
             if (user == null)
@@ -89,15 +94,13 @@
                 return null;
             }
 
-            var blogResult = GetBlogChannelsAndCollectionsDbStatement.GetBlogDbResult(blog);
+            var blogResult = GetBlogChannelsAndQueuesDbStatement.GetBlogDbResult(blog, new List<QueueResult>());
+            
             var channelsResult = channels.Select(v => new ChannelResult(
                 new ChannelId(v.Id),
                 v.Name,
-                v.Description,
                 v.Price,
-                v.Id == v.BlogId,
-                v.IsVisibleToNonSubscribers,
-                new List<CollectionResult>())).ToList();
+                v.IsVisibleToNonSubscribers)).ToList();
 
             return new GetLandingPageDbResult(
                 new UserId(user.Id), 
@@ -114,7 +117,7 @@
             [Optional]
             public FileId ProfileImageFileId { get; private set; }
 
-            public GetBlogChannelsAndCollectionsDbStatement.BlogDbResult Blog { get; private set; }
+            public GetBlogChannelsAndQueuesDbStatement.BlogDbResult Blog { get; private set; }
 
             public IReadOnlyList<ChannelResult> Channels { get; private set; }
         }

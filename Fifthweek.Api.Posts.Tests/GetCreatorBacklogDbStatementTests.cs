@@ -148,7 +148,7 @@
                     _.ImageSize = null;
                     _.ImageRenderWidth = null;
                     _.ImageRenderHeight = null;
-                    _.CollectionId = null;
+                    _.QueueId = null;
                 });
 
                 var expectedOrder = SortedBacklogPosts.Select(removeSortInsensitiveValues).ToList();
@@ -198,24 +198,24 @@
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                var channels = new Dictionary<ChannelId, List<CollectionId>>();
+                var channels = new Dictionary<ChannelId, List<QueueId>>();
                 var files = new List<FileId>();
                 var images = new List<FileId>();
                 var channelEntities = new List<Channel>();
-                var collectionEntities = new List<Collection>();
+                var collectionEntities = new List<Queue>();
                 var postEntities = new List<Post>();
 
                 if (createLivePosts)
                 {
                     var channelId = new ChannelId(Guid.NewGuid());
-                    var collectionId = new CollectionId(Guid.NewGuid());
-                    channels.Add(channelId, new List<CollectionId>(new[] { collectionId }));
+                    var collectionId = new QueueId(Guid.NewGuid());
+                    channels.Add(channelId, new List<QueueId>(new[] { collectionId }));
 
                     for (var i = 1; i <= 10; i++)
                     {
                         var post = PostTests.UniqueFileOrImage(Random);
                         post.ChannelId = channelId.Value;
-                        post.CollectionId = collectionId.Value;
+                        post.QueueId = collectionId.Value;
                         post.LiveDate = DateTime.UtcNow.AddDays(i * -1);
                         postEntities.Add(post);
                     }
@@ -237,19 +237,19 @@
 
                         if (!channels.ContainsKey(backlogPost.ChannelId))
                         {
-                            channels.Add(backlogPost.ChannelId, new List<CollectionId>());
+                            channels.Add(backlogPost.ChannelId, new List<QueueId>());
                         }
 
-                        if (backlogPost.CollectionId != null)
+                        if (backlogPost.QueueId != null)
                         {
-                            channels[backlogPost.ChannelId].Add(backlogPost.CollectionId);
+                            channels[backlogPost.ChannelId].Add(backlogPost.QueueId);
                         }
 
                         postEntities.Add(new Post(
                             backlogPost.PostId.Value,
                             backlogPost.ChannelId.Value,
                             null,
-                            backlogPost.CollectionId == null ? (Guid?)null : backlogPost.CollectionId.Value,
+                            backlogPost.QueueId == null ? (Guid?)null : backlogPost.QueueId.Value,
                             null,
                             backlogPost.FileId == null ? (Guid?)null : backlogPost.FileId.Value,
                             null,
@@ -274,7 +274,7 @@
 
                     foreach (var collectionId in channelKvp.Value)
                     {
-                        var collection = CollectionTests.UniqueEntity(Random);
+                        var collection = QueueTests.UniqueEntity(Random);
                         collection.Id = collectionId.Value;
                         collection.ChannelId = channelId.Value;
 
@@ -331,7 +331,7 @@
                     var channelId = new ChannelId(Guid.NewGuid());
                     for (var collectionIndex = 0; collectionIndex < CollectionsPerChannel; collectionIndex++)
                     {
-                        var collectionId = collectionIndex == 0 ? null : new CollectionId(Guid.NewGuid());
+                        var collectionId = collectionIndex == 0 ? null : new QueueId(Guid.NewGuid());
                         for (var i = 0; i < Posts; i++)
                         {
                             var creationDate = new SqlDateTime(liveDate.AddMinutes(i)).Value;

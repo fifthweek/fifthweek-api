@@ -24,16 +24,16 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly ValidComment Comment = ValidComment.Parse("Hey peeps!");
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
-        private static readonly ReviseFileCommand Command = new ReviseFileCommand(Requester, PostId, FileId, Comment);
+        private static readonly RevisePostCommand Command = new RevisePostCommand(Requester, PostId, FileId, Comment);
         private Mock<IPostSecurity> postSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private Mock<IScheduleGarbageCollectionStatement> scheduleGarbageCollection;
-        private ReviseFileCommandHandler target;
+        private RevisePostCommandHandler target;
 
         [TestInitialize]
         public void Initialize()
@@ -51,7 +51,7 @@
 
         public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new ReviseFileCommandHandler(
+            this.target = new RevisePostCommandHandler(
                 this.requesterSecurity.Object,
                 this.postSecurity.Object,
                 connectionFactory,
@@ -62,7 +62,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
-            await this.target.HandleAsync(new ReviseFileCommand(Requester.Unauthenticated, PostId, FileId, Comment));
+            await this.target.HandleAsync(new RevisePostCommand(Requester.Unauthenticated, PostId, FileId, Comment));
         }
 
         [TestMethod]
@@ -124,7 +124,7 @@
                 var expectedPost = new Post(PostId.Value)
                 {
                     ChannelId = ChannelId.Value,
-                    CollectionId = CollectionId.Value,
+                    QueueId = QueueId.Value,
                     FileId = FileId.Value,
                     Comment = Comment.Value
                 };
@@ -149,7 +149,7 @@
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                await databaseContext.CreateTestCollectionAsync(UserId.Value, ChannelId.Value, CollectionId.Value);
+                await databaseContext.CreateTestCollectionAsync(UserId.Value, ChannelId.Value, QueueId.Value);
 
                 if (createPost)
                 {
@@ -160,7 +160,7 @@
                     var post = PostTests.UniqueFileOrImage(new Random());
                     post.Id = PostId.Value;
                     post.ChannelId = ChannelId.Value;
-                    post.CollectionId = CollectionId.Value;
+                    post.QueueId = QueueId.Value;
                     post.FileId = existingFileId;
                     await databaseContext.Database.Connection.InsertAsync(post);    
                 }

@@ -7,7 +7,5 @@
     [AutoEqualityMembers]
     public partial class CreatorInformation
     {
-        [Parsed(typeof(ValidCreatorName))]
-        public string Name { get; set; }
     }
 }

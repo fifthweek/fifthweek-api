@@ -172,7 +172,7 @@
                 var post = PostTests.UniqueFileOrImage(new Random());
                 post.Id = PostId.Value;
                 post.ChannelId = channelId;
-                post.CollectionId = collectionId;
+                post.QueueId = collectionId;
                 post.ScheduledByQueue = scheduledByQueue;
                 post.LiveDate = Now.AddDays(liveDateInFuture ? 10 : -10);
                 await databaseContext.Database.Connection.InsertAsync(post);

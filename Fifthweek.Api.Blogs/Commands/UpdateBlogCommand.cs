@@ -14,8 +14,6 @@
 
         public ValidBlogName BlogName { get; private set; }
 
-        public ValidTagline Tagline { get; private set; }
-
         public ValidIntroduction Introduction { get; private set; }
 
         [Optional]

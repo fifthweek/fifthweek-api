@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 08/04/2015 10:38:18 (UTC)
-//// Mapped solution in 6.06s
+//// Generated on 10/09/2015 13:52:14 (UTC)
+//// Mapped solution in 19.65s
 
 namespace Fifthweek.Api.Blogs.Shared
 {
     using Fifthweek.CodeGeneration;
+    using System;
+    using System.Linq;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class BlogDescription 
@@ -55,6 +57,7 @@ namespace Fifthweek.Api.Blogs.Shared
 {
     using System;
     using Fifthweek.CodeGeneration;
+    using System.Linq;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class BlogId 
@@ -102,6 +105,8 @@ namespace Fifthweek.Api.Blogs.Shared
 namespace Fifthweek.Api.Blogs.Shared
 {
     using Fifthweek.CodeGeneration;
+    using System;
+    using System.Linq;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class BlogName 
@@ -148,6 +153,8 @@ namespace Fifthweek.Api.Blogs.Shared
 }
 namespace Fifthweek.Api.Blogs.Shared
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
@@ -195,6 +202,8 @@ namespace Fifthweek.Api.Blogs.Shared
 }
 namespace Fifthweek.Api.Blogs.Shared
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
@@ -240,57 +249,12 @@ namespace Fifthweek.Api.Blogs.Shared
         }
     }
 }
-namespace Fifthweek.Api.Blogs.Shared
-{
-    using Fifthweek.CodeGeneration;
-
-    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
-    public partial class Tagline 
-    {
-        public class JsonConverter : Newtonsoft.Json.JsonConverter
-        {
-            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                var valueType = (Tagline)value;
-                serializer.Serialize(writer, valueType.Value);
-            }
-        
-            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                if (objectType != typeof(Tagline))
-                {
-                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(Tagline).Name, "objectType");
-                }
-        
-                var value = serializer.Deserialize<System.String>(reader);
-                return new Tagline(value);
-            }
-        
-            public override bool CanConvert(Type objectType)
-            {
-                return objectType == typeof(Tagline);
-            }
-        }
-        
-        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<Tagline>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<Tagline>
-        {
-            public override void SetValue(System.Data.IDbDataParameter parameter, Tagline value)
-            {
-                parameter.DbType = System.Data.DbType.String;
-                parameter.Value = value.Value;
-            }
-        
-            public override Tagline Parse(object value)
-            {
-                return new Tagline((System.String)value);
-            }
-        }
-    }
-}
 
 namespace Fifthweek.Api.Blogs.Shared
 {
     using Fifthweek.CodeGeneration;
+    using System;
+    using System.Linq;
 
     public partial class BlogDescription 
     {
@@ -310,6 +274,7 @@ namespace Fifthweek.Api.Blogs.Shared
 {
     using System;
     using Fifthweek.CodeGeneration;
+    using System.Linq;
 
     public partial class BlogId 
     {
@@ -328,6 +293,8 @@ namespace Fifthweek.Api.Blogs.Shared
 namespace Fifthweek.Api.Blogs.Shared
 {
     using Fifthweek.CodeGeneration;
+    using System;
+    using System.Linq;
 
     public partial class BlogName 
     {
@@ -345,6 +312,8 @@ namespace Fifthweek.Api.Blogs.Shared
 }
 namespace Fifthweek.Api.Blogs.Shared
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     public partial class ExternalVideoUrl 
@@ -363,6 +332,8 @@ namespace Fifthweek.Api.Blogs.Shared
 }
 namespace Fifthweek.Api.Blogs.Shared
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     public partial class Introduction 
@@ -379,28 +350,12 @@ namespace Fifthweek.Api.Blogs.Shared
         }
     }
 }
-namespace Fifthweek.Api.Blogs.Shared
-{
-    using Fifthweek.CodeGeneration;
-
-    public partial class Tagline 
-    {
-        public Tagline(
-            System.String value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
-        }
-    }
-}
 
 namespace Fifthweek.Api.Blogs.Shared
 {
     using Fifthweek.CodeGeneration;
+    using System;
+    using System.Linq;
 
     public partial class BlogDescription 
     {
@@ -454,6 +409,7 @@ namespace Fifthweek.Api.Blogs.Shared
 {
     using System;
     using Fifthweek.CodeGeneration;
+    using System.Linq;
 
     public partial class BlogId 
     {
@@ -506,6 +462,8 @@ namespace Fifthweek.Api.Blogs.Shared
 namespace Fifthweek.Api.Blogs.Shared
 {
     using Fifthweek.CodeGeneration;
+    using System;
+    using System.Linq;
 
     public partial class BlogName 
     {
@@ -557,6 +515,8 @@ namespace Fifthweek.Api.Blogs.Shared
 }
 namespace Fifthweek.Api.Blogs.Shared
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     public partial class ExternalVideoUrl 
@@ -609,6 +569,8 @@ namespace Fifthweek.Api.Blogs.Shared
 }
 namespace Fifthweek.Api.Blogs.Shared
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     public partial class Introduction 
@@ -649,58 +611,6 @@ namespace Fifthweek.Api.Blogs.Shared
         }
         
         protected bool Equals(Introduction other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs.Shared
-{
-    using Fifthweek.CodeGeneration;
-
-    public partial class Tagline 
-    {
-        public override string ToString()
-        {
-            return string.Format("Tagline(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((Tagline)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(Tagline other)
         {
             if (!object.Equals(this.Value, other.Value))
             {

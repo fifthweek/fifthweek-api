@@ -11,7 +11,7 @@
         {
             builder.RegisterType<BlogOwnership>().As<IBlogOwnership>();
             builder.RegisterType<BlogSecurity>().As<IBlogSecurity>();
-            builder.RegisterType<GetBlogChannelsAndCollectionsDbStatement>().As<IGetBlogChannelsAndCollectionsDbStatement>();
+            builder.RegisterType<GetBlogChannelsAndQueuesDbStatement>().As<IGetBlogChannelsAndQueuesDbStatement>();
             builder.RegisterType<UpdateFreeAccessUsersDbStatement>().As<IUpdateFreeAccessUsersDbStatement>();
             builder.RegisterType<GetFreeAccessUsersDbStatement>().As<IGetFreeAccessUsersDbStatement>();
             builder.RegisterType<GetUserSubscriptionsDbStatement>().As<IGetUserSubscriptionsDbStatement>();

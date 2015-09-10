@@ -18,19 +18,19 @@
         private static readonly string Sql = string.Format(
             @"SELECT * 
             FROM    {0} 
-            WHERE   {1}=@CollectionId",
+            WHERE   {1}=@QueueId",
             WeeklyReleaseTime.Table,
-            WeeklyReleaseTime.Fields.CollectionId);
+            WeeklyReleaseTime.Fields.QueueId);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<WeeklyReleaseSchedule> ExecuteAsync(CollectionId collectionId)
+        public async Task<WeeklyReleaseSchedule> ExecuteAsync(QueueId queueId)
         {
-            collectionId.AssertNotNull("collectionId");
+            queueId.AssertNotNull("queueId");
 
             var parameters = new
             {
-                CollectionId = collectionId.Value
+                QueueId = queueId.Value
             };
 
             using (var connection = this.connectionFactory.CreateConnection())
@@ -42,8 +42,8 @@
                 {
                     throw new Exception(
                         string.Format(
-                            "Collection does not have any weekly release times defined. At least one should exist per collection at all times. {0}",
-                            collectionId));
+                            "Queue does not have any weekly release times defined. At least one should exist per collection at all times. {0}",
+                            queueId));
                 }
 
                 return WeeklyReleaseSchedule.Parse(hoursOfWeek);

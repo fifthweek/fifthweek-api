@@ -48,14 +48,13 @@
             var blogWithFileInformation = new BlogWithFileInformation(
                 blog.BlogId,
                 blog.BlogName,
-                blog.BlogName,
-                blog.Tagline,
                 blog.Introduction,
                 blog.CreationDate,
                 headerFileInformation,
                 blog.Video,
                 blog.Description,
-                channels);
+                channels,
+                blog.Queues);
 
             return new GetLandingPageResult(
                 queryResult.UserId, 

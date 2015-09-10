@@ -90,7 +90,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
-    <Compile Include="Collection.cs" />
+    <Compile Include="Queue.cs" />
     <Compile Include="DapperExtensions.cs" />
     <Compile Include="DapperTypeHandlerRegistration.cs" />
     <Compile Include="EndToEndTestEmail.cs" />

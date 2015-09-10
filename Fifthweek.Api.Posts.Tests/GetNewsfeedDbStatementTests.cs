@@ -57,7 +57,7 @@
             CreatorId,
         };
         private static readonly List<ChannelId> ChannelIds;
-        private static readonly List<List<CollectionId>> CollectionIds;
+        private static readonly List<List<QueueId>> CollectionIds;
         private static readonly NonNegativeInt StartIndex = NonNegativeInt.Parse(10);
         private static readonly PositiveInt Count = PositiveInt.Parse(5);
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
@@ -76,18 +76,18 @@
         static GetNewsfeedDbStatementTests()
         {
             ChannelIds = new List<ChannelId>();
-            CollectionIds = new List<List<CollectionId>>();
+            CollectionIds = new List<List<QueueId>>();
             for (int i = 0; i < ChannelsPerCreator; i++)
             {
                 ChannelIds.Add(new ChannelId(Guid.NewGuid()));
 
-                var collectionIds = new List<CollectionId>();
+                var collectionIds = new List<QueueId>();
                 CollectionIds.Add(collectionIds);
 
                 for (int j = 0; j < CollectionsPerChannel; j++)
                 {
                     // Null colleciton is for notes.
-                    collectionIds.Add(j == 0 ? null : new CollectionId(Guid.NewGuid()));
+                    collectionIds.Add(j == 0 ? null : new QueueId(Guid.NewGuid()));
                 }
             }
 
@@ -250,7 +250,7 @@
                         _.ImageSize = null;
                         _.ImageRenderWidth = null;
                         _.ImageRenderHeight = null;
-                        _.CollectionId = null;
+                        _.QueueId = null;
                     });
 
                     var expectedOrder = expectedPosts.Select(removeSortInsensitiveValues).ToList();
@@ -305,7 +305,7 @@
             Func<UserId, 
                  UserId, 
                  IReadOnlyList<ChannelId>,
-                 IReadOnlyList<CollectionId>, 
+                 IReadOnlyList<QueueId>, 
                  DateTime,
                  bool,
                  NonNegativeInt,
@@ -412,15 +412,15 @@
 
             // Filter by collection for creator.
             await parameterizedTest(
-                CreatorId, CreatorId, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.CollectionId)).ToList(), 0);
+                CreatorId, CreatorId, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.QueueId)).ToList(), 0);
 
             // Filter by collection.
             await parameterizedTest(
-                SubscribedUserId, null, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.CollectionId)).ToList(), 10);
+                SubscribedUserId, null, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.QueueId)).ToList(), 10);
 
             // Filter by valid collection and creator combination.
             await parameterizedTest(
-                SubscribedUserId, CreatorId, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.CollectionId)).ToList(), 10);
+                SubscribedUserId, CreatorId, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.QueueId)).ToList(), 10);
 
             // Filter by invalid collection and creator combination.
             await parameterizedTest(
@@ -428,7 +428,7 @@
 
             // Filter by valid channel and collection combination.
             await parameterizedTest(
-                SubscribedUserId, null, new[] { ChannelIds[0] }, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.CollectionId)).ToList(), 10);
+                SubscribedUserId, null, new[] { ChannelIds[0] }, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.QueueId)).ToList(), 10);
 
             // Filter by invalid channel and collection combination.
             await parameterizedTest(
@@ -436,7 +436,7 @@
 
             // Filter by valid creator, channel and collection combination.
             await parameterizedTest(
-                SubscribedUserId, CreatorId, new[] { ChannelIds[0] }, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.CollectionId)).ToList(), 10);
+                SubscribedUserId, CreatorId, new[] { ChannelIds[0] }, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.QueueId)).ToList(), 10);
 
             // Filter by invalid creator, channel and collection combination.
             await parameterizedTest(
@@ -472,11 +472,11 @@
                 var calculatedAccountBalances = new List<CalculatedAccountBalance>();
                 var freeAccessUsers = new List<FreeAccessUser>();
                 
-                var channels = new Dictionary<ChannelId, List<CollectionId>>();
+                var channels = new Dictionary<ChannelId, List<QueueId>>();
                 var files = new List<FileId>();
                 var images = new List<FileId>();
                 var channelEntities = new List<Channel>();
-                var collectionEntities = new List<Collection>();
+                var collectionEntities = new List<Queue>();
                 var postEntities = new List<Post>();
                 var origins = new List<UserPaymentOrigin>();
                 var likes = new List<Like>();
@@ -542,19 +542,19 @@
 
                         if (!channels.ContainsKey(newsfeedPost.ChannelId))
                         {
-                            channels.Add(newsfeedPost.ChannelId, new List<CollectionId>());
+                            channels.Add(newsfeedPost.ChannelId, new List<QueueId>());
                         }
 
-                        if (newsfeedPost.CollectionId != null)
+                        if (newsfeedPost.QueueId != null)
                         {
-                            channels[newsfeedPost.ChannelId].Add(newsfeedPost.CollectionId);
+                            channels[newsfeedPost.ChannelId].Add(newsfeedPost.QueueId);
                         }
 
                         postEntities.Add(new Post(
                             newsfeedPost.PostId.Value,
                             newsfeedPost.ChannelId.Value,
                             null,
-                            newsfeedPost.CollectionId == null ? (Guid?)null : newsfeedPost.CollectionId.Value,
+                            newsfeedPost.QueueId == null ? (Guid?)null : newsfeedPost.QueueId.Value,
                             null,
                             newsfeedPost.FileId == null ? (Guid?)null : newsfeedPost.FileId.Value,
                             null,
@@ -604,7 +604,7 @@
 
                     foreach (var collectionId in channelKvp.Value)
                     {
-                        var collection = CollectionTests.UniqueEntity(Random);
+                        var collection = QueueTests.UniqueEntity(Random);
                         collection.Id = collectionId.Value;
                         collection.ChannelId = channelId.Value;
 
@@ -721,12 +721,12 @@
 
         private class ParameterizedTestWrapper
         {
-            private readonly Func<UserId, UserId, IReadOnlyList<ChannelId>, IReadOnlyList<CollectionId>, DateTime, bool, NonNegativeInt, PositiveInt, IReadOnlyList<NewsfeedPost>, int, Task> parameterizedTest;
+            private readonly Func<UserId, UserId, IReadOnlyList<ChannelId>, IReadOnlyList<QueueId>, DateTime, bool, NonNegativeInt, PositiveInt, IReadOnlyList<NewsfeedPost>, int, Task> parameterizedTest;
 
             public ParameterizedTestWrapper(Func<UserId,
                  UserId,
                  IReadOnlyList<ChannelId>,
-                 IReadOnlyList<CollectionId>,
+                 IReadOnlyList<QueueId>,
                  DateTime,
                  bool,
                  NonNegativeInt,
@@ -742,7 +742,7 @@
                 UserId userId,
                 UserId creatorId,
                 IReadOnlyList<ChannelId> channelIds,
-                IReadOnlyList<CollectionId> collectionIds,
+                IReadOnlyList<QueueId> collectionIds,
                 DateTime origin,
                 bool searchForwards,
                 NonNegativeInt startIndex,
@@ -771,7 +771,7 @@
                     v.PostId,
                     v.BlogId,
                     v.ChannelId,
-                    v.CollectionId,
+                    v.QueueId,
                     v.Comment,
                     v.FileId,
                     v.ImageId,

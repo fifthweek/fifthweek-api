@@ -23,7 +23,7 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private Mock<ICommandHandler<PostImageCommand>> postImage;
         private Mock<ICommandHandler<ReviseImageCommand>> reviseImage;
@@ -48,8 +48,8 @@
         [TestMethod]
         public async Task WhenPostingImage_ItShouldIssuePostImageCommand()
         {
-            var data = new NewImageData(CollectionId, FileId, null, null, true);
-            var command = new PostImageCommand(Requester, PostId, CollectionId, FileId, null, null, true);
+            var data = new NewImageData(QueueId, FileId, null, null, true);
+            var command = new PostImageCommand(Requester, PostId, QueueId, FileId, null, null, true);
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);

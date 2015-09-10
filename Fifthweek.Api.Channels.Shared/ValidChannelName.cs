@@ -6,6 +6,9 @@
 
     using Fifthweek.CodeGeneration;
 
+    /// <summary>
+    /// This should match ValidBlogName, as the blog name is used as the default channel name.
+    /// </summary>
     [AutoEqualityMembers]
     public partial class ValidChannelName
     {

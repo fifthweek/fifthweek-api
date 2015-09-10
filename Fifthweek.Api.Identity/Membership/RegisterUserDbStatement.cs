@@ -43,7 +43,6 @@
             Username username,
             Email email,
             string exampleWork,
-            CreatorName name,
             Password password,
             DateTime timeStamp)
         {
@@ -60,7 +59,6 @@
                 UserName = username.Value,
                 Email = email.Value,
                 ExampleWork = exampleWork,
-                Name = name == null ? null : name.Value,
                 RegistrationDate = timeStamp,
                 LastSignInDate = SqlDateTime.MinValue.Value,
                 LastAccessTokenDate = SqlDateTime.MinValue.Value,

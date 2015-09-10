@@ -15,7 +15,7 @@
     [TestClass]
     public class PostToCollectionDbStatementTests
     {
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly ValidComment Comment = ValidComment.Parse("Hey guys!");
@@ -26,7 +26,7 @@
                 PostId.Value,
                 default(Guid),
                 null,
-                CollectionId.Value,
+                QueueId.Value,
                 null,
                 null,
                 null,
@@ -41,7 +41,7 @@
                 PostId.Value,
                 default(Guid),
                 null,
-                CollectionId.Value,
+                QueueId.Value,
                 null,
                 null,
                 null,
@@ -56,7 +56,7 @@
                 PostId.Value,
                 default(Guid),
                 null,
-                CollectionId.Value,
+                QueueId.Value,
                 null,
                 FileId.Value,
                 null,
@@ -67,16 +67,16 @@
                 default(DateTime),
                 Now);
 
-        private Mock<IPostToCollectionDbSubStatements> subStatements;
-        private PostToCollectionDbStatement target;
+        private Mock<IPostToChannelDbSubStatements> subStatements;
+        private PostToChannelDbStatement target;
 
         [TestInitialize]
         public void Initialize()
         {
             // Give side-effecting components strict mock behaviour.
-            this.subStatements = new Mock<IPostToCollectionDbSubStatements>(MockBehavior.Strict);
+            this.subStatements = new Mock<IPostToChannelDbSubStatements>(MockBehavior.Strict);
 
-            this.target = new PostToCollectionDbStatement(this.subStatements.Object);
+            this.target = new PostToChannelDbStatement(this.subStatements.Object);
         }
 
         [TestMethod]
@@ -84,7 +84,7 @@
         {
             this.subStatements.Setup(_ => _.QueuePostAsync(CommentedFile)).Returns(Task.FromResult(0)).Verifiable();
 
-            await this.target.ExecuteAsync(PostId, CollectionId, Comment, null, true, FileId, false, Now);
+            await this.target.ExecuteAsync(PostId, QueueId, Comment, null, true, FileId, false, Now);
 
             this.subStatements.Verify();
         }
@@ -94,7 +94,7 @@
         {
             this.subStatements.Setup(_ => _.QueuePostAsync(CommentedImage)).Returns(Task.FromResult(0)).Verifiable();
 
-            await this.target.ExecuteAsync(PostId, CollectionId, Comment, null, true, FileId, true, Now);
+            await this.target.ExecuteAsync(PostId, QueueId, Comment, null, true, FileId, true, Now);
 
             this.subStatements.Verify();
         }
@@ -104,7 +104,7 @@
         {
             this.subStatements.Setup(_ => _.QueuePostAsync(UncommentedImage)).Returns(Task.FromResult(0)).Verifiable();
 
-            await this.target.ExecuteAsync(PostId, CollectionId, null, null, true, FileId, true, Now);
+            await this.target.ExecuteAsync(PostId, QueueId, null, null, true, FileId, true, Now);
 
             this.subStatements.Verify();
         }
@@ -114,7 +114,7 @@
         {
             this.subStatements.Setup(_ => _.QueuePostAsync(CommentedImage)).Returns(Task.FromResult(0)).Verifiable();
 
-            await this.target.ExecuteAsync(PostId, CollectionId, Comment, null, true, FileId, true, Now);
+            await this.target.ExecuteAsync(PostId, QueueId, Comment, null, true, FileId, true, Now);
 
             this.subStatements.Verify();
         }
@@ -124,7 +124,7 @@
         {
             this.subStatements.Setup(_ => _.SchedulePostAsync(CommentedImage, TwoDaysFromNow, Now)).Returns(Task.FromResult(0)).Verifiable();
 
-            await this.target.ExecuteAsync(PostId, CollectionId, Comment, TwoDaysFromNow, false, FileId, true, Now);
+            await this.target.ExecuteAsync(PostId, QueueId, Comment, TwoDaysFromNow, false, FileId, true, Now);
 
             this.subStatements.Verify();
         }
@@ -134,7 +134,7 @@
         {
             this.subStatements.Setup(_ => _.SchedulePostAsync(CommentedImage, null, Now)).Returns(Task.FromResult(0)).Verifiable();
 
-            await this.target.ExecuteAsync(PostId, CollectionId, Comment, null, false, FileId, true, Now);
+            await this.target.ExecuteAsync(PostId, QueueId, Comment, null, false, FileId, true, Now);
 
             this.subStatements.Verify();
         }

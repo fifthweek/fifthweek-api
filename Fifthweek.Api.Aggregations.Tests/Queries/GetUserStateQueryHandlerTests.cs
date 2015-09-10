@@ -50,8 +50,8 @@
         private static readonly GetUserSubscriptionsResult UserSubscriptions =
             new GetUserSubscriptionsResult(new List<BlogSubscriptionStatus>
                 {
-                    new BlogSubscriptionStatus(new BlogId(Guid.NewGuid()), "name", new UserId(Guid.NewGuid()), new Username("username"), null, false, new List<ChannelSubscriptionStatus> { new ChannelSubscriptionStatus(new ChannelId(Guid.NewGuid()), "name", 10, 10, true, DateTime.UtcNow, DateTime.UtcNow, true, new List<CollectionSubscriptionStatus>()) } ),
-                    new BlogSubscriptionStatus(new BlogId(Guid.NewGuid()), "name2", new UserId(Guid.NewGuid()), new Username("username2"), null, false, new List<ChannelSubscriptionStatus> { new ChannelSubscriptionStatus(new ChannelId(Guid.NewGuid()), "name2", 20, 20, true, DateTime.UtcNow, DateTime.UtcNow, true, new List<CollectionSubscriptionStatus>()) } )
+                    new BlogSubscriptionStatus(new BlogId(Guid.NewGuid()), "name", new UserId(Guid.NewGuid()), new Username("username"), null, false, new List<ChannelSubscriptionStatus> { new ChannelSubscriptionStatus(new ChannelId(Guid.NewGuid()), "name", 10, 10, true, DateTime.UtcNow, DateTime.UtcNow, true, new List<QueueSubscriptionStatus>()) } ),
+                    new BlogSubscriptionStatus(new BlogId(Guid.NewGuid()), "name2", new UserId(Guid.NewGuid()), new Username("username2"), null, false, new List<ChannelSubscriptionStatus> { new ChannelSubscriptionStatus(new ChannelId(Guid.NewGuid()), "name2", 20, 20, true, DateTime.UtcNow, DateTime.UtcNow, true, new List<QueueSubscriptionStatus>()) } )
                 });
 
         private GetUserStateQueryHandler target;
@@ -60,7 +60,7 @@
         private Mock<IQueryHandler<GetUserAccessSignaturesQuery, UserAccessSignatures>> getUserAccessSignatures;
         private Mock<IQueryHandler<GetCreatorStatusQuery, CreatorStatus>> getCreatorStatus;
         private Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>> getAccountSettings;
-        private Mock<IQueryHandler<GetBlogChannelsAndCollectionsQuery, GetBlogChannelsAndCollectionsResult>> getBlogChannelsAndCollections;
+        private Mock<IQueryHandler<GetBlogChannelsAndQueuesQuery, GetBlogChannelsAndQueuesResult>> getBlogChannelsAndCollections;
         private Mock<IQueryHandler<GetUserSubscriptionsQuery, GetUserSubscriptionsResult>> getBlogSubscriptions;
         private Mock<IImpersonateIfRequired> impersonateIfRequired;
 
@@ -74,7 +74,7 @@
             // Give potentially side-effecting components strict mock behaviour.
             this.getCreatorStatus = new Mock<IQueryHandler<GetCreatorStatusQuery, CreatorStatus>>(MockBehavior.Strict);
             this.getAccountSettings = new Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>>(MockBehavior.Strict);
-            this.getBlogChannelsAndCollections = new Mock<IQueryHandler<GetBlogChannelsAndCollectionsQuery, GetBlogChannelsAndCollectionsResult>>(MockBehavior.Strict);
+            this.getBlogChannelsAndCollections = new Mock<IQueryHandler<GetBlogChannelsAndQueuesQuery, GetBlogChannelsAndQueuesResult>>(MockBehavior.Strict);
             this.getBlogSubscriptions = new Mock<IQueryHandler<GetUserSubscriptionsQuery, GetUserSubscriptionsResult>>(MockBehavior.Strict);
             this.impersonateIfRequired = new Mock<IImpersonateIfRequired>(MockBehavior.Strict);
 
@@ -216,9 +216,9 @@
 
             var creatorStatus = new CreatorStatus(new BlogId(Guid.NewGuid()), true);
             var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
-            var blogChannelsAndCollections = new GetBlogChannelsAndCollectionsResult(
+            var blogChannelsAndCollections = new GetBlogChannelsAndQueuesResult(
                 new BlogWithFileInformation(new BlogId(Guid.NewGuid()), new BlogName("My Subscription"), new BlogName("My Subscription"), new Tagline("Tagline is great"), new Introduction("Once upon a time there was an intro."), DateTime.UtcNow, null, null, null,
-                    new List<ChannelResult> { new ChannelResult(new ChannelId(Guid.NewGuid()), "name", "description", 10, true, true, new List<CollectionResult>()) }));
+                    new List<ChannelResult> { new ChannelResult(new ChannelId(Guid.NewGuid()), "name", "description", 10, true, true, new List<QueueResult>()) }));
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, new List<ChannelId> { blogChannelsAndCollections.Blog.Channels[0].ChannelId }, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId })))
                 .ReturnsAsync(UserAccessSignatures);
@@ -228,7 +228,7 @@
                 .ReturnsAsync(creatorStatus);
             this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now)))
                 .ReturnsAsync(accountSettings);
-            this.getBlogChannelsAndCollections.Setup(v => v.HandleAsync(new GetBlogChannelsAndCollectionsQuery(creatorStatus.BlogId)))
+            this.getBlogChannelsAndCollections.Setup(v => v.HandleAsync(new GetBlogChannelsAndQueuesQuery(creatorStatus.BlogId)))
                 .ReturnsAsync(blogChannelsAndCollections);
 
             var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId, false, Now));

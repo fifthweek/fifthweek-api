@@ -12,7 +12,7 @@
     {
         public Requester Requester { get; private set; }
 
-        public CollectionId CollectionId { get; private set; }
+        public QueueId QueueId { get; private set; }
 
         public IReadOnlyList<PostId> NewPartialQueueOrder { get; private set; } 
     }

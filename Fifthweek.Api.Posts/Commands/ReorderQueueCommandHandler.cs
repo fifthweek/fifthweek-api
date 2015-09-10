@@ -34,9 +34,8 @@
             INNER JOIN  {9} subscription
               ON        channel.{8} = subscription.{10}
             WHERE       subscription.{11} = @CreatorId
-            AND         post.{5}          = @CollectionId
-            AND         post.{2}          > @Now
-            AND         post.{3}          = 1;
+            AND         post.{5}          = @QueueId
+            AND         post.{2}          > @Now;
 
             -- Posts ordered by LiveDate with incremental index.
             CREATE TABLE #LiveDateOrdering(Id uniqueidentifier, LiveDate datetime, [Index] int);
@@ -67,9 +66,9 @@
             Post.Table,
             Post.Fields.Id,
             Post.Fields.LiveDate,
-            Post.Fields.ScheduledByQueue,
+            Post.Fields.Id,
             Post.Fields.ChannelId,
-            Post.Fields.CollectionId,
+            Post.Fields.QueueId,
             Channel.Table,
             Channel.Fields.Id,
             Channel.Fields.BlogId,
@@ -114,7 +113,7 @@
             var parameters = new
             {
                 CreatorId = userId.Value,
-                CollectionId = command.CollectionId.Value,
+                QueueId = command.QueueId.Value,
                 Now = DateTime.UtcNow
             };
 

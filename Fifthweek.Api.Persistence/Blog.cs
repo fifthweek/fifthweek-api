@@ -24,17 +24,13 @@
         public FifthweekUser Creator { get; set; }
 
         [Required]
-        [MaxLength(25)] // See: ValidBlogName.MaxLength
+        [MaxLength(50)] // See: ValidBlogName.MaxLength
         public string Name { get; set; }
-
-        [Required]
-        [MaxLength(55)] // See: ValidTagline.MaxLength
-        public string Tagline { get; set; }
 
         [Required]
         [MaxLength(250)] // See: ValidIntroduction.MaxLength
         public string Introduction { get; set; }
-
+        
         [Optional]
         [MaxLength(2000)] // See: ValidDescription.MaxLength
         public string Description { get; set; }

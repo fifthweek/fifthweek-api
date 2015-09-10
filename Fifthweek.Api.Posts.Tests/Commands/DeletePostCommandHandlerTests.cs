@@ -26,7 +26,7 @@
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IPostSecurity> postSecurity;
         private Mock<IDeletePostDbStatement> deletePost;
-        private Mock<IRemoveFromQueueIfRequiredDbStatement> removeFromQueueIfRequired;
+        private Mock<IDefragmentQueueIfRequiredDbStatement> removeFromQueueIfRequired;
         private Mock<IScheduleGarbageCollectionStatement> scheduleGarbageCollection;
 
         [TestInitialize]
@@ -37,7 +37,7 @@
             this.postSecurity = new Mock<IPostSecurity>();
 
             this.deletePost = new Mock<IDeletePostDbStatement>(MockBehavior.Strict);
-            this.removeFromQueueIfRequired = new Mock<IRemoveFromQueueIfRequiredDbStatement>(MockBehavior.Strict);
+            this.removeFromQueueIfRequired = new Mock<IDefragmentQueueIfRequiredDbStatement>(MockBehavior.Strict);
             this.scheduleGarbageCollection = new Mock<IScheduleGarbageCollectionStatement>(MockBehavior.Strict);
 
             this.target = new DeletePostCommandHandler(

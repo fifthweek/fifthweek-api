@@ -24,7 +24,5 @@
         public DateTime SubscriptionStartDate { get; private set; }
 
         public bool IsVisibleToNonSubscribers { get; private set; }
-
-        public IReadOnlyList<CollectionSubscriptionStatus> Collections { get; private set; }
     }
 }

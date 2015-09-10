@@ -18,9 +18,6 @@
         public string ChannelId { get; set; }
 
         [Optional]
-        public string CollectionId { get; set; }
-
-        [Optional]
         public DateTime? Origin { get; set; }
 
         public bool SearchForwards { get; set; }

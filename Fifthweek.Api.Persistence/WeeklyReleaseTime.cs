@@ -14,10 +14,10 @@
         }
 
         [Key, Column(Order = 1)]
-        public Guid CollectionId { get; set; }
+        public Guid QueueId { get; set; }
 
         [Key, Column(Order = 1), Optional, NonEquatable]
-        public Collection Collection { get; set; }
+        public Queue Queue { get; set; }
 
         [Key, Column(Order = 2)] // Stored as UTC, starting at Sunday as day 0, to be consistent with .NET's DayOfWeek enum.
         public byte HourOfWeek { get; set; }

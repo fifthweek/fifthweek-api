@@ -18,7 +18,7 @@
         private const int PostCount = 10;
 
         private static readonly Random Random = new Random();
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly DateTime Now = DateTime.UtcNow;
 
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
@@ -49,7 +49,7 @@
         [ExpectedException(typeof(ArgumentException))]
         public async Task ItShouldRequireUtcDate()
         {
-            await this.target.ExecuteAsync(CollectionId, DateTime.Now);
+            await this.target.ExecuteAsync(QueueId, DateTime.Now);
         }
 
         [TestMethod]
@@ -61,7 +61,7 @@
                 await this.CreateCollectionWithoutPostsAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(CollectionId, Now);
+                var result = await this.target.ExecuteAsync(QueueId, Now);
 
                 Assert.AreEqual(0, result);
 
@@ -78,7 +78,7 @@
                 await this.CreateCollectionWithPostsAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(CollectionId, Now);
+                var result = await this.target.ExecuteAsync(QueueId, Now);
 
                 Assert.AreEqual(0, result);
 
@@ -95,7 +95,7 @@
                 await this.CreateCollectionWithPostsAsync(testDatabase, queuePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(CollectionId, Now);
+                var result = await this.target.ExecuteAsync(QueueId, Now);
 
                 Assert.AreEqual(0, result);
 
@@ -112,7 +112,7 @@
                 await this.CreateCollectionWithPostsAsync(testDatabase, queuePosts: true, queueInFuture: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(CollectionId, Now);
+                var result = await this.target.ExecuteAsync(QueueId, Now);
 
                 Assert.AreEqual(PostCount, result);
 
@@ -129,7 +129,7 @@
                 await this.CreateQueuedPostsForAnotherCollectionAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(CollectionId, Now);
+                var result = await this.target.ExecuteAsync(QueueId, Now);
 
                 Assert.AreEqual(0, result);
 
@@ -143,7 +143,7 @@
             {
                 var userId = Guid.NewGuid();
                 var channelId = Guid.NewGuid();
-                await databaseContext.CreateTestCollectionAsync(userId, channelId, CollectionId.Value);
+                await databaseContext.CreateTestCollectionAsync(userId, channelId, QueueId.Value);
             }
         }
 
@@ -153,14 +153,14 @@
             {
                 var userId = Guid.NewGuid();
                 var channelId = Guid.NewGuid();
-                await databaseContext.CreateTestCollectionAsync(userId, channelId, CollectionId.Value);
+                await databaseContext.CreateTestCollectionAsync(userId, channelId, QueueId.Value);
 
                 var posts = new List<Post>();
                 for (var i = 0; i < PostCount; i++)
                 {
                     var post = PostTests.UniqueFileOrImage(Random);
                     post.ChannelId = channelId;
-                    post.CollectionId = CollectionId.Value;
+                    post.QueueId = QueueId.Value;
                     post.ScheduledByQueue = queuePosts;
                     post.LiveDate = queueInFuture ? Now.AddDays(1) : Now.AddDays(-1);
                     posts.Add(post);
@@ -176,9 +176,9 @@
             {
                 var userId = Guid.NewGuid();
                 var channelId = Guid.NewGuid();
-                await databaseContext.CreateTestCollectionAsync(userId, channelId, CollectionId.Value);
+                await databaseContext.CreateTestCollectionAsync(userId, channelId, QueueId.Value);
 
-                var otherCollection = CollectionTests.UniqueEntity(Random);
+                var otherCollection = QueueTests.UniqueEntity(Random);
                 otherCollection.ChannelId = channelId;
                 await databaseContext.Database.Connection.InsertAsync(otherCollection);
 
@@ -188,7 +188,7 @@
                 {
                     var post = PostTests.UniqueFileOrImage(Random);
                     post.ChannelId = channelId;
-                    post.CollectionId = otherCollection.Id;
+                    post.QueueId = otherCollection.Id;
                     post.ScheduledByQueue = true;
                     post.LiveDate = Now.AddDays(1);
                     posts.Add(post);

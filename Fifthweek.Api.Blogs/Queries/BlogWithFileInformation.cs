@@ -14,12 +14,7 @@
     {
         public BlogId BlogId { get; private set; }
         
-        [Obsolete]
-        public BlogName BlogName { get; private set; }
-        
         public BlogName Name { get; private set; }
-
-        public Tagline Tagline { get; private set; }
 
         public Introduction Introduction { get; private set; }
 
@@ -35,5 +30,7 @@
         public BlogDescription Description { get; private set; }
 
         public IReadOnlyList<ChannelResult> Channels { get; private set; }
+
+        public IReadOnlyList<QueueResult> Queues { get; private set; }
     }
 }

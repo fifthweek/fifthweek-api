@@ -17,7 +17,7 @@
     [TestClass]
     public class ReplaceWeeklyReleaseTimesDbStatementTests : PersistenceTestsBase
     {
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly HourOfWeek ExistingReleaseA = HourOfWeek.Parse(0);
         private static readonly HourOfWeek ExistingReleaseB = HourOfWeek.Parse(2);
@@ -55,7 +55,7 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireWeeklyReleaseSchedule()
         {
-            await this.target.ExecuteAsync(CollectionId, null);
+            await this.target.ExecuteAsync(QueueId, null);
         }
 
         [TestMethod]
@@ -65,10 +65,10 @@
             {
                 this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
-                await this.target.ExecuteAsync(CollectionId, WeeklyReleaseSchedule);
+                await this.target.ExecuteAsync(QueueId, WeeklyReleaseSchedule);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(CollectionId, WeeklyReleaseSchedule);
+                await this.target.ExecuteAsync(QueueId, WeeklyReleaseSchedule);
 
                 return ExpectedSideEffects.None;
             });
@@ -118,12 +118,12 @@
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(CollectionId, schedule);
+                await this.target.ExecuteAsync(QueueId, schedule);
 
                 return new ExpectedSideEffects
                 {
-                    Inserts = expectedInserts.Select(_ => new WeeklyReleaseTime(CollectionId.Value, null, (byte)_.Value)).ToArray(),
-                    Deletes = expectedDeletes.Select(_ => new WeeklyReleaseTime(CollectionId.Value, null, (byte)_.Value)).ToArray()
+                    Inserts = expectedInserts.Select(_ => new WeeklyReleaseTime(QueueId.Value, null, (byte)_.Value)).ToArray(),
+                    Deletes = expectedDeletes.Select(_ => new WeeklyReleaseTime(QueueId.Value, null, (byte)_.Value)).ToArray()
                 };
             });
         }
@@ -144,16 +144,16 @@
                 channel.Blog = subscription;
                 channel.BlogId = subscription.Id;
 
-                var collection = CollectionTests.UniqueEntity(random);
-                collection.Id = CollectionId.Value;
+                var collection = QueueTests.UniqueEntity(random);
+                collection.Id = QueueId.Value;
                 collection.Channel = channel;
                 collection.ChannelId = channel.Id;
 
                 var weeklyReleaseTimes =
                     new[] { ExistingReleaseA, ExistingReleaseB, ExistingReleaseC }.Select(
-                        _ => new WeeklyReleaseTime(CollectionId.Value, (byte)_.Value));
+                        _ => new WeeklyReleaseTime(QueueId.Value, (byte)_.Value));
 
-                databaseContext.Collections.Add(collection);
+                databaseContext.Queues.Add(collection);
                 await databaseContext.SaveChangesAsync();
 
                 await databaseContext.Database.Connection.InsertAsync(weeklyReleaseTimes);

@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Shared;
@@ -14,8 +15,9 @@
     {
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IPostSecurity postSecurity;
-        private readonly ITryGetUnqueuedPostCollectionDbStatement tryGetUnqueuedPostCollection;
         private readonly IMovePostToQueueDbStatement movePostToQueue;
+        private readonly IDefragmentQueueIfRequiredDbStatement defragmentQueueIfRequired;
+        private readonly ITimestampCreator timestampCreator;
 
         public async Task HandleAsync(RescheduleWithQueueCommand command)
         {
@@ -24,19 +26,17 @@
             var userId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
             await this.postSecurity.AssertWriteAllowedAsync(userId, command.PostId);
 
-            await this.RescheduleWithQueueAsync(command);
+            await this.RescheduleWithQueueAsync(command.PostId, command.QueueId);
         }
 
-        private async Task RescheduleWithQueueAsync(RescheduleWithQueueCommand command)
+        private Task RescheduleWithQueueAsync(PostId postId, QueueId queueId)
         {
-            var collectionId = await this.tryGetUnqueuedPostCollection.ExecuteAsync(command.PostId);
-            if (collectionId == null)
-            {
-                // Post is already queued within the collection, or not within a collection.
-                return;
-            }
+            var now = this.timestampCreator.Now();
 
-            await this.movePostToQueue.ExecuteAsync(command.PostId, collectionId);
+            return this.defragmentQueueIfRequired.ExecuteAsync(
+                postId,
+                now,
+                () => this.movePostToQueue.ExecuteAsync(postId, queueId));
         }
     }
 }

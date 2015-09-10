@@ -15,17 +15,17 @@
         private readonly IReplaceWeeklyReleaseTimesDbStatement replaceWeeklyReleaseTimes;
         private readonly IDefragmentQueueDbStatement defragmentQueue;
 
-        public async Task ExecuteAsync(CollectionId collectionId, WeeklyReleaseSchedule weeklyReleaseSchedule, DateTime now)
+        public async Task ExecuteAsync(QueueId queueId, WeeklyReleaseSchedule weeklyReleaseSchedule, DateTime now)
         {
-            collectionId.AssertNotNull("collectionId");
+            queueId.AssertNotNull("queueId");
             weeklyReleaseSchedule.AssertNotNull("weeklyReleaseSchedule");
             now.AssertUtc("now");
 
             // Transaction required on the following, as we don't want user to see a queue that does not match the collection's release times.
             using (var transaction = TransactionScopeBuilder.CreateAsync())
             {
-                await this.replaceWeeklyReleaseTimes.ExecuteAsync(collectionId, weeklyReleaseSchedule);
-                await this.defragmentQueue.ExecuteAsync(collectionId, weeklyReleaseSchedule, now);
+                await this.replaceWeeklyReleaseTimes.ExecuteAsync(queueId, weeklyReleaseSchedule);
+                await this.defragmentQueue.ExecuteAsync(queueId, weeklyReleaseSchedule, now);
 
                 transaction.Complete();
             }

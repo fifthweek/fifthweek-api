@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 19/05/2015 15:04:03 (UTC)
-//// Mapped solution in 7.38s
+//// Generated on 10/09/2015 17:19:23 (UTC)
+//// Mapped solution in 10.58s
 
 namespace Fifthweek.Api.Identity.Shared.Membership
 {
@@ -200,53 +200,6 @@ namespace Fifthweek.Api.Identity.Shared.Membership
         }
     }
 }
-namespace Fifthweek.Api.Identity.Shared.Membership
-{
-    using Fifthweek.CodeGeneration;
-
-    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
-    public partial class CreatorName 
-    {
-        public class JsonConverter : Newtonsoft.Json.JsonConverter
-        {
-            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                var valueType = (CreatorName)value;
-                serializer.Serialize(writer, valueType.Value);
-            }
-        
-            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                if (objectType != typeof(CreatorName))
-                {
-                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(CreatorName).Name, "objectType");
-                }
-        
-                var value = serializer.Deserialize<System.String>(reader);
-                return new CreatorName(value);
-            }
-        
-            public override bool CanConvert(Type objectType)
-            {
-                return objectType == typeof(CreatorName);
-            }
-        }
-        
-        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<CreatorName>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<CreatorName>
-        {
-            public override void SetValue(System.Data.IDbDataParameter parameter, CreatorName value)
-            {
-                parameter.DbType = System.Data.DbType.String;
-                parameter.Value = value.Value;
-            }
-        
-            public override CreatorName Parse(object value)
-            {
-                return new CreatorName((System.String)value);
-            }
-        }
-    }
-}
 
 namespace Fifthweek.Api.Identity.Shared.Membership
 {
@@ -305,24 +258,6 @@ namespace Fifthweek.Api.Identity.Shared.Membership.Events
             }
 
             this.UserId = userId;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.Shared.Membership
-{
-    using Fifthweek.CodeGeneration;
-
-    public partial class CreatorName 
-    {
-        public CreatorName(
-            System.String value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
         }
     }
 }
@@ -589,58 +524,6 @@ namespace Fifthweek.Api.Identity.Shared.Membership.Events
         protected bool Equals(UserRegisteredEvent other)
         {
             if (!object.Equals(this.UserId, other.UserId))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.Shared.Membership
-{
-    using Fifthweek.CodeGeneration;
-
-    public partial class CreatorName 
-    {
-        public override string ToString()
-        {
-            return string.Format("CreatorName(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((CreatorName)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(CreatorName other)
-        {
-            if (!object.Equals(this.Value, other.Value))
             {
                 return false;
             }

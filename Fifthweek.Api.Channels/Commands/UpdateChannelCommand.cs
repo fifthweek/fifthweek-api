@@ -13,8 +13,6 @@
 
         public ValidChannelName Name { get; private set; }
 
-        public ValidChannelDescription Description { get; private set; }
-
         public ValidChannelPrice Price { get; private set; }
 
         public bool IsVisibleToNonSubscribers { get; private set; }

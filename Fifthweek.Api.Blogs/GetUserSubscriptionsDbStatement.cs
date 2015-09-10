@@ -87,29 +87,7 @@
             FifthweekUser.Fields.UserName,
             FifthweekUser.Fields.ProfileImageFileId);
 
-
-        private static readonly string CollectionsQuery = string.Format(
-            @"SELECT collection.{0}, collection.{1}, channel.{2} AS ChannelId
-                FROM {4} collection 
-                INNER JOIN {5} channel ON collection.{6} = channel.{7} 
-                INNER JOIN {8} subscription ON channel.{7} = subscription.{9}
-                INNER JOIN {11} subscriber ON subscription.{10} = subscriber.{12}
-                WHERE subscriber.{12} = @UserId",
-            Collection.Fields.Id,
-            Collection.Fields.Name,
-            Channel.Fields.Id,
-            Collection.Fields.ChannelId,
-            Collection.Table,
-            Channel.Table,
-            Collection.Fields.ChannelId,
-            Channel.Fields.Id,
-            ChannelSubscription.Table,
-            ChannelSubscription.Fields.ChannelId,
-            ChannelSubscription.Fields.UserId,
-            FifthweekUser.Table,
-            FifthweekUser.Fields.Id);
-
-        private static readonly string Sql = SubscriptionsQuery + ";" + FreeAccessQuery + ";" + CollectionsQuery;
+        private static readonly string Sql = SubscriptionsQuery + ";" + FreeAccessQuery;
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
@@ -119,18 +97,14 @@
 
             List<DbResult> subscriptionResults;
             List<DbResult> freeAccessResults;
-            List<PartialCollection> collectionResults;
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 using (var multi = await connection.QueryMultipleAsync(Sql, new { UserId = userId.Value }))
                 {
                     subscriptionResults = multi.Read<DbResult>().ToList();
                     freeAccessResults = multi.Read<DbResult>().ToList();
-                    collectionResults = multi.Read<PartialCollection>().ToList();
                 } 
             }
-
-            var groupdedCollections = collectionResults.ToLookup(v => v.ChannelId);
 
             var blogs = new Dictionary<BlogId, BlogSubscriptionDbResult>();
 
@@ -170,7 +144,6 @@
                     blogs.Add(blogId, blog);
                 }
 
-                var collections = groupdedCollections[item.ChannelId].Select(v => new CollectionSubscriptionStatus(new CollectionId(v.Id), v.Name)).ToList();
                 var channel = new ChannelSubscriptionStatus(
                     new ChannelId(item.ChannelId),
                     item.ChannelName,
@@ -179,8 +152,7 @@
                     item.ChannelId == item.BlogId,
                     item.PriceLastSetDate,
                     item.SubscriptionStartDate,
-                    item.IsVisibleToNonSubscribers,
-                    collections);
+                    item.IsVisibleToNonSubscribers);
 
                 ((List<ChannelSubscriptionStatus>)blog.Channels).Add(channel);
             }
@@ -215,11 +187,11 @@
             public bool IsVisibleToNonSubscribers { get; set; }
         }
 
-        public class PartialCollection
+        public class PartialQueue
         {
             public Guid Id { get; set; }
 
-            public Guid ChannelId { get; set; }
+            public Guid BlogId { get; set; }
 
             public string Name { get; set; }
         }

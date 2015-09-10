@@ -74,7 +74,7 @@
     <Compile Include="CommentTests.cs" />
     <Compile Include="LikeTests.cs" />
     <Compile Include="PostTests.cs" />
-    <Compile Include="CollectionTests.cs" />
+    <Compile Include="QueueTests.cs" />
     <Compile Include="ClassAugmentation.cs">
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
       <AutoGen>True</AutoGen>

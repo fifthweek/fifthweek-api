@@ -31,7 +31,6 @@
                 command.Username,
                 command.Email,
                 command.ExampleWork,
-                command.CreatorName,
                 command.Password,
                 DateTime.UtcNow);
 

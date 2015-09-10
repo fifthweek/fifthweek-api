@@ -31,7 +31,6 @@
             if (result.ProfileImageFileId == null)
             {
                 return new GetAccountSettingsResult(
-                    result.Name, 
                     result.Username, 
                     result.Email, 
                     null, 
@@ -48,7 +47,6 @@
                 FilePurposes.ProfileImage);
 
             return new GetAccountSettingsResult(
-                result.Name, 
                 result.Username, 
                 result.Email,
                 fileInformation,

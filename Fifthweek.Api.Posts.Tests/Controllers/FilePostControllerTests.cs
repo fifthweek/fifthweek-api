@@ -23,10 +23,10 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
-        private Mock<ICommandHandler<PostFileCommand>> postFile;
-        private Mock<ICommandHandler<ReviseFileCommand>> reviseFile;
+        private Mock<ICommandHandler<PostToChannelCommand>> postFile;
+        private Mock<ICommandHandler<RevisePostCommand>> reviseFile;
         private Mock<IRequesterContext> requesterContext;
         private Mock<IGuidCreator> guidCreator;
         private FilePostController target;
@@ -34,8 +34,8 @@
         [TestInitialize]
         public void Initialize()
         {
-            this.postFile = new Mock<ICommandHandler<PostFileCommand>>();
-            this.reviseFile = new Mock<ICommandHandler<ReviseFileCommand>>();
+            this.postFile = new Mock<ICommandHandler<PostToChannelCommand>>();
+            this.reviseFile = new Mock<ICommandHandler<RevisePostCommand>>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new FilePostController(
@@ -48,8 +48,8 @@
         [TestMethod]
         public async Task WhenPostingFile_ItShouldIssuePostFileCommand()
         {
-            var data = new NewFileData(CollectionId, FileId, null, null, true);
-            var command = new PostFileCommand(Requester, PostId, CollectionId, FileId, null, null, true);
+            var data = new NewPostData(QueueId, FileId, null, null, true);
+            var command = new PostToChannelCommand(Requester, PostId, QueueId, FileId, null, null, true);
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
@@ -70,8 +70,8 @@
         [TestMethod]
         public async Task WhenPuttingFile_ItShouldIssuePostFileCommand()
         {
-            var data = new RevisedFileData(FileId, null);
-            var command = new ReviseFileCommand(Requester, PostId, FileId, null);
+            var data = new RevisedPostData(FileId, null);
+            var command = new RevisePostCommand(Requester, PostId, FileId, null);
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
@@ -86,7 +86,7 @@
         [ExpectedException(typeof(BadRequestException))]
         public async Task WhenPuttingFile_WithoutSpecifyingRevisedFileId_ItShouldThrowBadRequestException()
         {
-            await this.target.PutFile(string.Empty, new RevisedFileData(FileId, null));
+            await this.target.PutFile(string.Empty, new RevisedPostData(FileId, null));
         }
 
         [TestMethod]

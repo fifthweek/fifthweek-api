@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 26/07/2015 11:53:52 (UTC)
-//// Mapped solution in 11.98s
+//// Generated on 10/09/2015 17:47:11 (UTC)
+//// Mapped solution in 24.31s
 
 namespace Fifthweek.Api.Channels.Shared
 {
@@ -181,62 +181,6 @@ namespace Fifthweek.Api.Channels.Shared
         }
         
         protected bool Equals(ValidChannelName other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Channels.Shared
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-
-    public partial class ValidChannelDescription 
-    {
-        public override string ToString()
-        {
-            return string.Format("ValidChannelDescription(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((ValidChannelDescription)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(ValidChannelDescription other)
         {
             if (!object.Equals(this.Value, other.Value))
             {

@@ -20,7 +20,7 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly RescheduleWithQueueCommand Command = new RescheduleWithQueueCommand(Requester, PostId);
 
         private Mock<IRequesterSecurity> requesterSecurity;
@@ -76,9 +76,9 @@
         public async Task WhenPostIsScheduledInCollection_ItShouldMovePostToQueue()
         {
             this.tryGetUnqueuedPostCollection.Setup(_ => _.ExecuteAsync(PostId))
-                .ReturnsAsync(CollectionId);
+                .ReturnsAsync(QueueId);
 
-            this.moveBacklogPostToQueue.Setup(_ => _.ExecuteAsync(PostId, CollectionId))
+            this.moveBacklogPostToQueue.Setup(_ => _.ExecuteAsync(PostId, QueueId))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 

@@ -8,6 +8,6 @@
 
     public interface IMovePostToQueueDbStatement
     {
-        Task ExecuteAsync(PostId postId, CollectionId currentCollectionId);
+        Task ExecuteAsync(PostId postId, QueueId queueId);
     }
 }

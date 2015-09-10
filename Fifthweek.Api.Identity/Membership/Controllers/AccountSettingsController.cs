@@ -75,11 +75,10 @@
             userId.AssertUrlParameterProvided("userId");
             creatorInformation.AssertBodyProvided("creatorInformation");
 
-            var parsedCreatorInformation = creatorInformation.Parse();
             var requester = await this.requesterContext.GetRequesterAsync();
             var requestedUserId = new UserId(userId.DecodeGuid());
 
-            var command = new UpdateCreatorAccountSettingsCommand(requester, requestedUserId, parsedCreatorInformation.Name);
+            var command = new UpdateCreatorAccountSettingsCommand(requester, requestedUserId);
 
             await this.updateCreatorAccountSettings.HandleAsync(command);
         }

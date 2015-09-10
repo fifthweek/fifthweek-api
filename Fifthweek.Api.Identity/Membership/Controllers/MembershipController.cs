@@ -39,8 +39,7 @@
                 registration.Email,
                 registration.Username,
                 registration.Password,
-                registration.CreatorName != null,
-                registration.CreatorName);
+                registration.RegisterAsCreator);
 
             await this.registerUser.HandleAsync(command);
             return this.Ok();

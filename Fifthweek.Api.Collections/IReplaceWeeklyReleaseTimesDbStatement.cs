@@ -6,6 +6,6 @@
 
     public interface IReplaceWeeklyReleaseTimesDbStatement
     {
-        Task ExecuteAsync(CollectionId collectionId, WeeklyReleaseSchedule weeklyReleaseSchedule);
+        Task ExecuteAsync(QueueId queueId, WeeklyReleaseSchedule weeklyReleaseSchedule);
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 01/06/2015 09:44:24 (UTC)
-//// Mapped solution in 6.36s
+//// Generated on 10/09/2015 17:40:41 (UTC)
+//// Mapped solution in 21.99s
 
 
 namespace Fifthweek.Api.Collections
@@ -23,9 +23,9 @@ namespace Fifthweek.Api.Collections
     using System.Transactions;
     using Fifthweek.Shared;
 
-    public partial class CollectionOwnership 
+    public partial class QueueOwnership 
     {
-        public CollectionOwnership(
+        public QueueOwnership(
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (connectionFactory == null)
@@ -55,17 +55,17 @@ namespace Fifthweek.Api.Collections
     using System.Transactions;
     using Fifthweek.Shared;
 
-    public partial class CollectionSecurity 
+    public partial class QueueSecurity 
     {
-        public CollectionSecurity(
-            Fifthweek.Api.Collections.ICollectionOwnership collectionOwnership)
+        public QueueSecurity(
+            Fifthweek.Api.Collections.IQueueOwnership queueOwnership)
         {
-            if (collectionOwnership == null)
+            if (queueOwnership == null)
             {
-                throw new ArgumentNullException("collectionOwnership");
+                throw new ArgumentNullException("queueOwnership");
             }
 
-            this.collectionOwnership = collectionOwnership;
+            this.queueOwnership = queueOwnership;
         }
     }
 }
@@ -85,14 +85,15 @@ namespace Fifthweek.Api.Collections.Commands
     using System.Collections.Generic;
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
-    public partial class CreateCollectionCommand 
+    public partial class CreateQueueCommand 
     {
-        public CreateCollectionCommand(
+        public CreateQueueCommand(
             Fifthweek.Api.Identity.Shared.Membership.Requester requester,
-            Fifthweek.Api.Collections.Shared.CollectionId newCollectionId,
-            Fifthweek.Api.Channels.Shared.ChannelId channelId,
-            Fifthweek.Api.Collections.Shared.ValidCollectionName name,
+            Fifthweek.Api.Collections.Shared.QueueId newQueueId,
+            Fifthweek.Api.Blogs.Shared.BlogId blogId,
+            Fifthweek.Api.Collections.Shared.ValidQueueName name,
             Fifthweek.Api.Collections.Shared.HourOfWeek initialWeeklyReleaseTime)
         {
             if (requester == null)
@@ -100,14 +101,14 @@ namespace Fifthweek.Api.Collections.Commands
                 throw new ArgumentNullException("requester");
             }
 
-            if (newCollectionId == null)
+            if (newQueueId == null)
             {
-                throw new ArgumentNullException("newCollectionId");
+                throw new ArgumentNullException("newQueueId");
             }
 
-            if (channelId == null)
+            if (blogId == null)
             {
-                throw new ArgumentNullException("channelId");
+                throw new ArgumentNullException("blogId");
             }
 
             if (name == null)
@@ -121,8 +122,8 @@ namespace Fifthweek.Api.Collections.Commands
             }
 
             this.Requester = requester;
-            this.NewCollectionId = newCollectionId;
-            this.ChannelId = channelId;
+            this.NewQueueId = newQueueId;
+            this.BlogId = blogId;
             this.Name = name;
             this.InitialWeeklyReleaseTime = initialWeeklyReleaseTime;
         }
@@ -144,12 +145,13 @@ namespace Fifthweek.Api.Collections.Commands
     using System.Collections.Generic;
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
-    public partial class CreateCollectionCommandHandler 
+    public partial class CreateQueueCommandHandler 
     {
-        public CreateCollectionCommandHandler(
+        public CreateQueueCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity,
+            Fifthweek.Api.Blogs.Shared.IBlogSecurity blogSecurity,
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (requesterSecurity == null)
@@ -157,9 +159,9 @@ namespace Fifthweek.Api.Collections.Commands
                 throw new ArgumentNullException("requesterSecurity");
             }
 
-            if (channelSecurity == null)
+            if (blogSecurity == null)
             {
-                throw new ArgumentNullException("channelSecurity");
+                throw new ArgumentNullException("blogSecurity");
             }
 
             if (connectionFactory == null)
@@ -168,7 +170,7 @@ namespace Fifthweek.Api.Collections.Commands
             }
 
             this.requesterSecurity = requesterSecurity;
-            this.channelSecurity = channelSecurity;
+            this.blogSecurity = blogSecurity;
             this.connectionFactory = connectionFactory;
         }
     }
@@ -190,12 +192,12 @@ namespace Fifthweek.Api.Collections.Commands
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
 
-    public partial class UpdateCollectionCommand 
+    public partial class UpdateQueueCommand 
     {
-        public UpdateCollectionCommand(
+        public UpdateQueueCommand(
             Fifthweek.Api.Identity.Shared.Membership.Requester requester,
-            Fifthweek.Api.Collections.Shared.CollectionId collectionId,
-            Fifthweek.Api.Collections.Shared.ValidCollectionName name,
+            Fifthweek.Api.Collections.Shared.QueueId queueId,
+            Fifthweek.Api.Collections.Shared.ValidQueueName name,
             Fifthweek.Api.Collections.Shared.WeeklyReleaseSchedule weeklyReleaseSchedule)
         {
             if (requester == null)
@@ -203,9 +205,9 @@ namespace Fifthweek.Api.Collections.Commands
                 throw new ArgumentNullException("requester");
             }
 
-            if (collectionId == null)
+            if (queueId == null)
             {
-                throw new ArgumentNullException("collectionId");
+                throw new ArgumentNullException("queueId");
             }
 
             if (name == null)
@@ -219,7 +221,7 @@ namespace Fifthweek.Api.Collections.Commands
             }
 
             this.Requester = requester;
-            this.CollectionId = collectionId;
+            this.QueueId = queueId;
             this.Name = name;
             this.WeeklyReleaseSchedule = weeklyReleaseSchedule;
         }
@@ -241,31 +243,32 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
-    public partial class CollectionController 
+    public partial class QueueController 
     {
-        public CollectionController(
-            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Collections.Commands.CreateCollectionCommand> createCollection,
-            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Collections.Commands.UpdateCollectionCommand> updateCollection,
-            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Collections.Commands.DeleteCollectionCommand> deleteCollection,
+        public QueueController(
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Collections.Commands.CreateQueueCommand> createQueue,
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Collections.Commands.UpdateQueueCommand> updateQueue,
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Collections.Commands.DeleteQueueCommand> deleteQueue,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Collections.Queries.GetLiveDateOfNewQueuedPostQuery,System.DateTime> getLiveDateOfNewQueuedPost,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
-            IGuidCreator guidCreator,
+            Fifthweek.Shared.IGuidCreator guidCreator,
             Fifthweek.Shared.IRandom random)
         {
-            if (createCollection == null)
+            if (createQueue == null)
             {
-                throw new ArgumentNullException("createCollection");
+                throw new ArgumentNullException("createQueue");
             }
 
-            if (updateCollection == null)
+            if (updateQueue == null)
             {
-                throw new ArgumentNullException("updateCollection");
+                throw new ArgumentNullException("updateQueue");
             }
 
-            if (deleteCollection == null)
+            if (deleteQueue == null)
             {
-                throw new ArgumentNullException("deleteCollection");
+                throw new ArgumentNullException("deleteQueue");
             }
 
             if (getLiveDateOfNewQueuedPost == null)
@@ -288,9 +291,9 @@ namespace Fifthweek.Api.Collections.Controllers
                 throw new ArgumentNullException("random");
             }
 
-            this.createCollection = createCollection;
-            this.updateCollection = updateCollection;
-            this.deleteCollection = deleteCollection;
+            this.createQueue = createQueue;
+            this.updateQueue = updateQueue;
+            this.deleteQueue = deleteQueue;
             this.getLiveDateOfNewQueuedPost = getLiveDateOfNewQueuedPost;
             this.requesterContext = requesterContext;
             this.guidCreator = guidCreator;
@@ -314,16 +317,17 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
-    public partial class NewCollectionData 
+    public partial class NewQueueData 
     {
-        public NewCollectionData(
-            Fifthweek.Api.Channels.Shared.ChannelId channelId,
+        public NewQueueData(
+            Fifthweek.Api.Blogs.Shared.BlogId blogId,
             System.String name)
         {
-            if (channelId == null)
+            if (blogId == null)
             {
-                throw new ArgumentNullException("channelId");
+                throw new ArgumentNullException("blogId");
             }
 
             if (name == null)
@@ -331,7 +335,7 @@ namespace Fifthweek.Api.Collections.Controllers
                 throw new ArgumentNullException("name");
             }
 
-            this.ChannelId = channelId;
+            this.BlogId = blogId;
             this.Name = name;
         }
     }
@@ -352,10 +356,11 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
-    public partial class UpdatedCollectionData 
+    public partial class UpdatedQueueData 
     {
-        public UpdatedCollectionData(
+        public UpdatedQueueData(
             System.String name,
             System.Collections.Generic.List<System.Int32> weeklyReleaseSchedule)
         {
@@ -501,20 +506,20 @@ namespace Fifthweek.Api.Collections.Queries
     {
         public GetLiveDateOfNewQueuedPostQuery(
             Fifthweek.Api.Identity.Shared.Membership.Requester requester,
-            Fifthweek.Api.Collections.Shared.CollectionId collectionId)
+            Fifthweek.Api.Collections.Shared.QueueId queueId)
         {
             if (requester == null)
             {
                 throw new ArgumentNullException("requester");
             }
 
-            if (collectionId == null)
+            if (queueId == null)
             {
-                throw new ArgumentNullException("collectionId");
+                throw new ArgumentNullException("queueId");
             }
 
             this.Requester = requester;
-            this.CollectionId = collectionId;
+            this.QueueId = queueId;
         }
     }
 }
@@ -534,13 +539,13 @@ namespace Fifthweek.Api.Collections.Queries
     public partial class GetLiveDateOfNewQueuedPostQueryHandler 
     {
         public GetLiveDateOfNewQueuedPostQueryHandler(
-            Fifthweek.Api.Collections.Shared.ICollectionSecurity collectionSecurity,
+            Fifthweek.Api.Collections.Shared.IQueueSecurity queueSecurity,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Collections.Shared.IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost)
         {
-            if (collectionSecurity == null)
+            if (queueSecurity == null)
             {
-                throw new ArgumentNullException("collectionSecurity");
+                throw new ArgumentNullException("queueSecurity");
             }
 
             if (requesterSecurity == null)
@@ -553,7 +558,7 @@ namespace Fifthweek.Api.Collections.Queries
                 throw new ArgumentNullException("getLiveDateOfNewQueuedPost");
             }
 
-            this.collectionSecurity = collectionSecurity;
+            this.queueSecurity = queueSecurity;
             this.requesterSecurity = requesterSecurity;
             this.getLiveDateOfNewQueuedPost = getLiveDateOfNewQueuedPost;
         }
@@ -576,12 +581,12 @@ namespace Fifthweek.Api.Collections.Commands
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
 
-    public partial class UpdateCollectionCommandHandler 
+    public partial class UpdateQueueCommandHandler 
     {
-        public UpdateCollectionCommandHandler(
+        public UpdateQueueCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Collections.Shared.ICollectionSecurity collectionSecurity,
-            Fifthweek.Api.Collections.IUpdateCollectionFieldsDbStatement updateCollectionFields,
+            Fifthweek.Api.Collections.Shared.IQueueSecurity queueSecurity,
+            Fifthweek.Api.Collections.IUpdateQueueFieldsDbStatement updateQueueFields,
             Fifthweek.Api.Collections.IUpdateWeeklyReleaseScheduleDbStatement updateWeeklyReleaseSchedule)
         {
             if (requesterSecurity == null)
@@ -589,14 +594,14 @@ namespace Fifthweek.Api.Collections.Commands
                 throw new ArgumentNullException("requesterSecurity");
             }
 
-            if (collectionSecurity == null)
+            if (queueSecurity == null)
             {
-                throw new ArgumentNullException("collectionSecurity");
+                throw new ArgumentNullException("queueSecurity");
             }
 
-            if (updateCollectionFields == null)
+            if (updateQueueFields == null)
             {
-                throw new ArgumentNullException("updateCollectionFields");
+                throw new ArgumentNullException("updateQueueFields");
             }
 
             if (updateWeeklyReleaseSchedule == null)
@@ -605,8 +610,8 @@ namespace Fifthweek.Api.Collections.Commands
             }
 
             this.requesterSecurity = requesterSecurity;
-            this.collectionSecurity = collectionSecurity;
-            this.updateCollectionFields = updateCollectionFields;
+            this.queueSecurity = queueSecurity;
+            this.updateQueueFields = updateQueueFields;
             this.updateWeeklyReleaseSchedule = updateWeeklyReleaseSchedule;
         }
     }
@@ -628,24 +633,24 @@ namespace Fifthweek.Api.Collections.Commands
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
 
-    public partial class DeleteCollectionCommand 
+    public partial class DeleteQueueCommand 
     {
-        public DeleteCollectionCommand(
+        public DeleteQueueCommand(
             Fifthweek.Api.Identity.Shared.Membership.Requester requester,
-            Fifthweek.Api.Collections.Shared.CollectionId collectionId)
+            Fifthweek.Api.Collections.Shared.QueueId queueId)
         {
             if (requester == null)
             {
                 throw new ArgumentNullException("requester");
             }
 
-            if (collectionId == null)
+            if (queueId == null)
             {
-                throw new ArgumentNullException("collectionId");
+                throw new ArgumentNullException("queueId");
             }
 
             this.Requester = requester;
-            this.CollectionId = collectionId;
+            this.QueueId = queueId;
         }
     }
 }
@@ -666,12 +671,12 @@ namespace Fifthweek.Api.Collections.Commands
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
 
-    public partial class DeleteCollectionCommandHandler 
+    public partial class DeleteQueueCommandHandler 
     {
-        public DeleteCollectionCommandHandler(
+        public DeleteQueueCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Collections.Shared.ICollectionSecurity collectionSecurity,
-            Fifthweek.Api.Collections.IDeleteCollectionDbStatement deleteCollection,
+            Fifthweek.Api.Collections.Shared.IQueueSecurity queueSecurity,
+            Fifthweek.Api.Collections.IDeleteQueueDbStatement deleteQueue,
             Fifthweek.Api.FileManagement.Shared.IScheduleGarbageCollectionStatement scheduleGarbageCollection)
         {
             if (requesterSecurity == null)
@@ -679,14 +684,14 @@ namespace Fifthweek.Api.Collections.Commands
                 throw new ArgumentNullException("requesterSecurity");
             }
 
-            if (collectionSecurity == null)
+            if (queueSecurity == null)
             {
-                throw new ArgumentNullException("collectionSecurity");
+                throw new ArgumentNullException("queueSecurity");
             }
 
-            if (deleteCollection == null)
+            if (deleteQueue == null)
             {
-                throw new ArgumentNullException("deleteCollection");
+                throw new ArgumentNullException("deleteQueue");
             }
 
             if (scheduleGarbageCollection == null)
@@ -695,8 +700,8 @@ namespace Fifthweek.Api.Collections.Commands
             }
 
             this.requesterSecurity = requesterSecurity;
-            this.collectionSecurity = collectionSecurity;
-            this.deleteCollection = deleteCollection;
+            this.queueSecurity = queueSecurity;
+            this.deleteQueue = deleteQueue;
             this.scheduleGarbageCollection = scheduleGarbageCollection;
         }
     }
@@ -719,9 +724,9 @@ namespace Fifthweek.Api.Collections
     using System.Transactions;
     using Fifthweek.Shared;
 
-    public partial class DeleteCollectionDbStatement 
+    public partial class DeleteQueueDbStatement 
     {
-        public DeleteCollectionDbStatement(
+        public DeleteQueueDbStatement(
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (connectionFactory == null)
@@ -755,18 +760,12 @@ namespace Fifthweek.Api.Collections
     {
         public DefragmentQueueDbStatement(
             Fifthweek.Api.Collections.IGetQueueSizeDbStatement getQueueSize,
-            Fifthweek.Api.Collections.IGetQueueLowerBoundDbStatement getQueueLowerBound,
             Fifthweek.Api.Collections.IQueuedPostLiveDateCalculator liveDateCalculator,
             Fifthweek.Api.Collections.IUpdateAllLiveDatesInQueueDbStatement updateAllLiveDatesInQueue)
         {
             if (getQueueSize == null)
             {
                 throw new ArgumentNullException("getQueueSize");
-            }
-
-            if (getQueueLowerBound == null)
-            {
-                throw new ArgumentNullException("getQueueLowerBound");
             }
 
             if (liveDateCalculator == null)
@@ -780,7 +779,6 @@ namespace Fifthweek.Api.Collections
             }
 
             this.getQueueSize = getQueueSize;
-            this.getQueueLowerBound = getQueueLowerBound;
             this.liveDateCalculator = liveDateCalculator;
             this.updateAllLiveDatesInQueue = updateAllLiveDatesInQueue;
         }
@@ -900,9 +898,9 @@ namespace Fifthweek.Api.Collections
     using System.Transactions;
     using Fifthweek.Shared;
 
-    public partial class UpdateCollectionFieldsDbStatement 
+    public partial class UpdateQueueFieldsDbStatement 
     {
-        public UpdateCollectionFieldsDbStatement(
+        public UpdateQueueFieldsDbStatement(
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (connectionFactory == null)
@@ -969,16 +967,17 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
-    public partial class CollectionCreation 
+    public partial class QueueCreation 
     {
-        public CollectionCreation(
-            Fifthweek.Api.Collections.Shared.CollectionId collectionId,
+        public QueueCreation(
+            Fifthweek.Api.Collections.Shared.QueueId queueId,
             Fifthweek.Api.Collections.Shared.HourOfWeek defaultWeeklyReleaseTime)
         {
-            if (collectionId == null)
+            if (queueId == null)
             {
-                throw new ArgumentNullException("collectionId");
+                throw new ArgumentNullException("queueId");
             }
 
             if (defaultWeeklyReleaseTime == null)
@@ -986,40 +985,8 @@ namespace Fifthweek.Api.Collections.Controllers
                 throw new ArgumentNullException("defaultWeeklyReleaseTime");
             }
 
-            this.CollectionId = collectionId;
+            this.QueueId = queueId;
             this.DefaultWeeklyReleaseTime = defaultWeeklyReleaseTime;
-        }
-    }
-}
-namespace Fifthweek.Api.Collections
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Collections.Shared;
-    using System.Collections.Generic;
-    using System.Text;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections.Queries;
-    using System.Transactions;
-    using Fifthweek.Shared;
-
-    public partial class GetQueueLowerBoundDbStatement 
-    {
-        public GetQueueLowerBoundDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
-        {
-            if (connectionFactory == null)
-            {
-                throw new ArgumentNullException("connectionFactory");
-            }
-
-            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -1040,12 +1007,13 @@ namespace Fifthweek.Api.Collections.Commands
     using System.Collections.Generic;
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
-    public partial class CreateCollectionCommand 
+    public partial class CreateQueueCommand 
     {
         public override string ToString()
         {
-            return string.Format("CreateCollectionCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.NewCollectionId == null ? "null" : this.NewCollectionId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.InitialWeeklyReleaseTime == null ? "null" : this.InitialWeeklyReleaseTime.ToString());
+            return string.Format("CreateQueueCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.NewQueueId == null ? "null" : this.NewQueueId.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.InitialWeeklyReleaseTime == null ? "null" : this.InitialWeeklyReleaseTime.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1065,7 +1033,7 @@ namespace Fifthweek.Api.Collections.Commands
                 return false;
             }
         
-            return this.Equals((CreateCollectionCommand)obj);
+            return this.Equals((CreateQueueCommand)obj);
         }
         
         public override int GetHashCode()
@@ -1074,27 +1042,27 @@ namespace Fifthweek.Api.Collections.Commands
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.NewCollectionId != null ? this.NewCollectionId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.NewQueueId != null ? this.NewQueueId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.BlogId != null ? this.BlogId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.InitialWeeklyReleaseTime != null ? this.InitialWeeklyReleaseTime.GetHashCode() : 0);
                 return hashCode;
             }
         }
         
-        protected bool Equals(CreateCollectionCommand other)
+        protected bool Equals(CreateQueueCommand other)
         {
             if (!object.Equals(this.Requester, other.Requester))
             {
                 return false;
             }
         
-            if (!object.Equals(this.NewCollectionId, other.NewCollectionId))
+            if (!object.Equals(this.NewQueueId, other.NewQueueId))
             {
                 return false;
             }
         
-            if (!object.Equals(this.ChannelId, other.ChannelId))
+            if (!object.Equals(this.BlogId, other.BlogId))
             {
                 return false;
             }
@@ -1130,11 +1098,11 @@ namespace Fifthweek.Api.Collections.Commands
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
 
-    public partial class UpdateCollectionCommand 
+    public partial class UpdateQueueCommand 
     {
         public override string ToString()
         {
-            return string.Format("UpdateCollectionCommand({0}, {1}, {2}, {3})", this.Requester == null ? "null" : this.Requester.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.WeeklyReleaseSchedule == null ? "null" : this.WeeklyReleaseSchedule.ToString());
+            return string.Format("UpdateQueueCommand({0}, {1}, {2}, {3})", this.Requester == null ? "null" : this.Requester.ToString(), this.QueueId == null ? "null" : this.QueueId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.WeeklyReleaseSchedule == null ? "null" : this.WeeklyReleaseSchedule.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1154,7 +1122,7 @@ namespace Fifthweek.Api.Collections.Commands
                 return false;
             }
         
-            return this.Equals((UpdateCollectionCommand)obj);
+            return this.Equals((UpdateQueueCommand)obj);
         }
         
         public override int GetHashCode()
@@ -1163,21 +1131,21 @@ namespace Fifthweek.Api.Collections.Commands
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.QueueId != null ? this.QueueId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.WeeklyReleaseSchedule != null ? this.WeeklyReleaseSchedule.GetHashCode() : 0);
                 return hashCode;
             }
         }
         
-        protected bool Equals(UpdateCollectionCommand other)
+        protected bool Equals(UpdateQueueCommand other)
         {
             if (!object.Equals(this.Requester, other.Requester))
             {
                 return false;
             }
         
-            if (!object.Equals(this.CollectionId, other.CollectionId))
+            if (!object.Equals(this.QueueId, other.QueueId))
             {
                 return false;
             }
@@ -1212,12 +1180,13 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
-    public partial class NewCollectionData 
+    public partial class NewQueueData 
     {
         public override string ToString()
         {
-            return string.Format("NewCollectionData({0}, \"{1}\")", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString());
+            return string.Format("NewQueueData({0}, \"{1}\")", this.BlogId == null ? "null" : this.BlogId.ToString(), this.Name == null ? "null" : this.Name.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1237,7 +1206,7 @@ namespace Fifthweek.Api.Collections.Controllers
                 return false;
             }
         
-            return this.Equals((NewCollectionData)obj);
+            return this.Equals((NewQueueData)obj);
         }
         
         public override int GetHashCode()
@@ -1245,15 +1214,15 @@ namespace Fifthweek.Api.Collections.Controllers
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.BlogId != null ? this.BlogId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 return hashCode;
             }
         }
         
-        protected bool Equals(NewCollectionData other)
+        protected bool Equals(NewQueueData other)
         {
-            if (!object.Equals(this.ChannelId, other.ChannelId))
+            if (!object.Equals(this.BlogId, other.BlogId))
             {
                 return false;
             }
@@ -1283,12 +1252,13 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
-    public partial class UpdatedCollectionData 
+    public partial class UpdatedQueueData 
     {
         public override string ToString()
         {
-            return string.Format("UpdatedCollectionData(\"{0}\", {1})", this.Name == null ? "null" : this.Name.ToString(), this.WeeklyReleaseSchedule == null ? "null" : this.WeeklyReleaseSchedule.ToString());
+            return string.Format("UpdatedQueueData(\"{0}\", {1})", this.Name == null ? "null" : this.Name.ToString(), this.WeeklyReleaseSchedule == null ? "null" : this.WeeklyReleaseSchedule.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1308,7 +1278,7 @@ namespace Fifthweek.Api.Collections.Controllers
                 return false;
             }
         
-            return this.Equals((UpdatedCollectionData)obj);
+            return this.Equals((UpdatedQueueData)obj);
         }
         
         public override int GetHashCode()
@@ -1330,7 +1300,7 @@ namespace Fifthweek.Api.Collections.Controllers
             }
         }
         
-        protected bool Equals(UpdatedCollectionData other)
+        protected bool Equals(UpdatedQueueData other)
         {
             if (!object.Equals(this.Name, other.Name))
             {
@@ -1370,7 +1340,7 @@ namespace Fifthweek.Api.Collections.Queries
     {
         public override string ToString()
         {
-            return string.Format("GetLiveDateOfNewQueuedPostQuery({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString());
+            return string.Format("GetLiveDateOfNewQueuedPostQuery({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.QueueId == null ? "null" : this.QueueId.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1399,7 +1369,7 @@ namespace Fifthweek.Api.Collections.Queries
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.QueueId != null ? this.QueueId.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -1411,7 +1381,7 @@ namespace Fifthweek.Api.Collections.Queries
                 return false;
             }
         
-            if (!object.Equals(this.CollectionId, other.CollectionId))
+            if (!object.Equals(this.QueueId, other.QueueId))
             {
                 return false;
             }
@@ -1437,11 +1407,11 @@ namespace Fifthweek.Api.Collections.Commands
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
 
-    public partial class DeleteCollectionCommand 
+    public partial class DeleteQueueCommand 
     {
         public override string ToString()
         {
-            return string.Format("DeleteCollectionCommand({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString());
+            return string.Format("DeleteQueueCommand({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.QueueId == null ? "null" : this.QueueId.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1461,7 +1431,7 @@ namespace Fifthweek.Api.Collections.Commands
                 return false;
             }
         
-            return this.Equals((DeleteCollectionCommand)obj);
+            return this.Equals((DeleteQueueCommand)obj);
         }
         
         public override int GetHashCode()
@@ -1470,19 +1440,19 @@ namespace Fifthweek.Api.Collections.Commands
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.QueueId != null ? this.QueueId.GetHashCode() : 0);
                 return hashCode;
             }
         }
         
-        protected bool Equals(DeleteCollectionCommand other)
+        protected bool Equals(DeleteQueueCommand other)
         {
             if (!object.Equals(this.Requester, other.Requester))
             {
                 return false;
             }
         
-            if (!object.Equals(this.CollectionId, other.CollectionId))
+            if (!object.Equals(this.QueueId, other.QueueId))
             {
                 return false;
             }
@@ -1507,12 +1477,13 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
-    public partial class CollectionCreation 
+    public partial class QueueCreation 
     {
         public override string ToString()
         {
-            return string.Format("CollectionCreation({0}, {1})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.DefaultWeeklyReleaseTime == null ? "null" : this.DefaultWeeklyReleaseTime.ToString());
+            return string.Format("QueueCreation({0}, {1})", this.QueueId == null ? "null" : this.QueueId.ToString(), this.DefaultWeeklyReleaseTime == null ? "null" : this.DefaultWeeklyReleaseTime.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1532,7 +1503,7 @@ namespace Fifthweek.Api.Collections.Controllers
                 return false;
             }
         
-            return this.Equals((CollectionCreation)obj);
+            return this.Equals((QueueCreation)obj);
         }
         
         public override int GetHashCode()
@@ -1540,15 +1511,15 @@ namespace Fifthweek.Api.Collections.Controllers
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.QueueId != null ? this.QueueId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.DefaultWeeklyReleaseTime != null ? this.DefaultWeeklyReleaseTime.GetHashCode() : 0);
                 return hashCode;
             }
         }
         
-        protected bool Equals(CollectionCreation other)
+        protected bool Equals(QueueCreation other)
         {
-            if (!object.Equals(this.CollectionId, other.CollectionId))
+            if (!object.Equals(this.QueueId, other.QueueId))
             {
                 return false;
             }
@@ -1578,18 +1549,19 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
-    public partial class NewCollectionData 
+    public partial class NewQueueData 
     {
         public class Parsed
         {
             public Parsed(
-                Fifthweek.Api.Channels.Shared.ChannelId channelId,
-                ValidCollectionName name)
+                Fifthweek.Api.Blogs.Shared.BlogId blogId,
+                ValidQueueName name)
             {
-                if (channelId == null)
+                if (blogId == null)
                 {
-                    throw new ArgumentNullException("channelId");
+                    throw new ArgumentNullException("blogId");
                 }
 
                 if (name == null)
@@ -1597,27 +1569,27 @@ namespace Fifthweek.Api.Collections.Controllers
                     throw new ArgumentNullException("name");
                 }
 
-                this.ChannelId = channelId;
+                this.BlogId = blogId;
                 this.Name = name;
             }
         
-            public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; private set; }
+            public Fifthweek.Api.Blogs.Shared.BlogId BlogId { get; private set; }
         
-            public ValidCollectionName Name { get; private set; }
+            public ValidQueueName Name { get; private set; }
         }
     }
 
-    public static partial class NewCollectionDataExtensions
+    public static partial class NewQueueDataExtensions
     {
-        public static NewCollectionData.Parsed Parse(this NewCollectionData target)
+        public static NewQueueData.Parsed Parse(this NewQueueData target)
         {
             var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
         
-            ValidCollectionName parsed0 = null;
-            if (!ValidCollectionName.IsEmpty(target.Name))
+            ValidQueueName parsed0 = null;
+            if (!ValidQueueName.IsEmpty(target.Name))
             {
                 System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
-                if (!ValidCollectionName.TryParse(target.Name, out parsed0, out parsed0Errors))
+                if (!ValidQueueName.TryParse(target.Name, out parsed0, out parsed0Errors))
                 {
                     var modelState = new System.Web.Http.ModelBinding.ModelState();
                     foreach (var errorMessage in parsed0Errors)
@@ -1640,8 +1612,8 @@ namespace Fifthweek.Api.Collections.Controllers
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
             }
         
-            return new NewCollectionData.Parsed(
-                target.ChannelId,
+            return new NewQueueData.Parsed(
+                target.BlogId,
                 parsed0);
         }    
     }
@@ -1662,13 +1634,14 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
-    public partial class UpdatedCollectionData 
+    public partial class UpdatedQueueData 
     {
         public class Parsed
         {
             public Parsed(
-                ValidCollectionName name,
+                ValidQueueName name,
                 WeeklyReleaseSchedule weeklyReleaseSchedule)
             {
                 if (name == null)
@@ -1685,23 +1658,23 @@ namespace Fifthweek.Api.Collections.Controllers
                 this.WeeklyReleaseSchedule = weeklyReleaseSchedule;
             }
         
-            public ValidCollectionName Name { get; private set; }
+            public ValidQueueName Name { get; private set; }
         
             public WeeklyReleaseSchedule WeeklyReleaseSchedule { get; private set; }
         }
     }
 
-    public static partial class UpdatedCollectionDataExtensions
+    public static partial class UpdatedQueueDataExtensions
     {
-        public static UpdatedCollectionData.Parsed Parse(this UpdatedCollectionData target)
+        public static UpdatedQueueData.Parsed Parse(this UpdatedQueueData target)
         {
             var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
         
-            ValidCollectionName parsed0 = null;
-            if (!ValidCollectionName.IsEmpty(target.Name))
+            ValidQueueName parsed0 = null;
+            if (!ValidQueueName.IsEmpty(target.Name))
             {
                 System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
-                if (!ValidCollectionName.TryParse(target.Name, out parsed0, out parsed0Errors))
+                if (!ValidQueueName.TryParse(target.Name, out parsed0, out parsed0Errors))
                 {
                     var modelState = new System.Web.Http.ModelBinding.ModelState();
                     foreach (var errorMessage in parsed0Errors)
@@ -1772,7 +1745,7 @@ namespace Fifthweek.Api.Collections.Controllers
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
             }
         
-            return new UpdatedCollectionData.Parsed(
+            return new UpdatedQueueData.Parsed(
                 parsed0,
                 parsed1);
         }    

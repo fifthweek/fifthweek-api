@@ -20,7 +20,7 @@
     public class UpdateAllLiveDatesInQueueDbStatementTests : PersistenceTestsBase
     {
         private static readonly Random Random = new Random(); 
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly DateTime Now = DateTime.UtcNow;
         private static readonly IReadOnlyList<DateTime> PastDates = new[] { Now.AddDays(-1), Now.AddDays(-2), Now.AddDays(-3) };
         private static readonly IReadOnlyList<DateTime> FutureDatesA = new[] { Now.AddDays(1), Now.AddDays(2), Now.AddDays(3) };
@@ -55,7 +55,7 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireAscendingLiveDates()
         {
-            await this.target.ExecuteAsync(CollectionId, null, Now);
+            await this.target.ExecuteAsync(QueueId, null, Now);
         }
 
         [TestMethod]
@@ -63,7 +63,7 @@
         public async Task ItShouldRequireAscendingLiveDatesToBeUtc()
         {
             await this.target.ExecuteAsync(
-                CollectionId,
+                QueueId,
                 new[] { Now.AddDays(1), DateTime.Now.AddDays(2), Now.AddDays(3) }, 
                 Now);
         }
@@ -73,7 +73,7 @@
         public async Task ItShouldRequireAscendingLiveDatesToBeGreaterThanNow()
         {
             await this.target.ExecuteAsync(
-                CollectionId,
+                QueueId,
                 new[] { Now, Now.AddDays(2), Now.AddDays(3) },
                 Now);
         }
@@ -83,7 +83,7 @@
         public async Task ItShouldRequireAscendingLiveDatesToBeGreaterThanNow2()
         {
             await this.target.ExecuteAsync(
-                CollectionId,
+                QueueId,
                 new[] { Now.AddDays(-1), Now.AddDays(2), Now.AddDays(3) },
                 Now);
         }
@@ -93,7 +93,7 @@
         public async Task ItShouldRequireAscendingLiveDatesToContainNoDuplicates()
         {
             await this.target.ExecuteAsync(
-                CollectionId,
+                QueueId,
                 new[] { Now.AddDays(1), Now.AddDays(2), Now.AddDays(2), Now.AddDays(3) },
                 Now);
         }
@@ -103,7 +103,7 @@
         public async Task ItShouldRequireAscendingLiveDatesToBeSorted()
         {
             await this.target.ExecuteAsync(
-                CollectionId,
+                QueueId,
                 new[] { Now.AddDays(1), Now.AddDays(4), Now.AddDays(2), Now.AddDays(3) },
                 Now);
         }
@@ -112,7 +112,7 @@
         [ExpectedException(typeof(ArgumentException))]
         public async Task ItShouldRequireUtcDate()
         {
-            await this.target.ExecuteAsync(CollectionId, FutureDatesA, DateTime.Now);
+            await this.target.ExecuteAsync(QueueId, FutureDatesA, DateTime.Now);
         }
 
         [TestMethod]
@@ -121,11 +121,11 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.InitializeTarget(testDatabase);
-                await this.CreatePostsAsync(testDatabase, CollectionId, FutureDatesA, scheduledByQueue: true);
-                await this.target.ExecuteAsync(CollectionId, FutureDatesB, Now);
+                await this.CreatePostsAsync(testDatabase, QueueId, FutureDatesA, scheduledByQueue: true);
+                await this.target.ExecuteAsync(QueueId, FutureDatesB, Now);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(CollectionId, FutureDatesB, Now);
+                await this.target.ExecuteAsync(QueueId, FutureDatesB, Now);
 
                 return ExpectedSideEffects.None;
             });
@@ -137,10 +137,10 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.InitializeTarget(testDatabase);
-                await this.CreatePostsAsync(testDatabase, CollectionId, FutureDatesA, scheduledByQueue: true);
+                await this.CreatePostsAsync(testDatabase, QueueId, FutureDatesA, scheduledByQueue: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(CollectionId, FutureDatesA, Now);
+                await this.target.ExecuteAsync(QueueId, FutureDatesA, Now);
 
                 return ExpectedSideEffects.None;
             });
@@ -152,10 +152,10 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.InitializeTarget(testDatabase);
-                await this.CreatePostsAsync(testDatabase, CollectionId, PastDates, scheduledByQueue: true);
+                await this.CreatePostsAsync(testDatabase, QueueId, PastDates, scheduledByQueue: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(CollectionId, FutureDatesA, Now);
+                await this.target.ExecuteAsync(QueueId, FutureDatesA, Now);
 
                 return ExpectedSideEffects.None;
             });
@@ -192,10 +192,10 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.InitializeTarget(testDatabase);
-                await this.CreatePostsAsync(testDatabase, CollectionId, FutureDatesA, scheduledByQueue: false);
+                await this.CreatePostsAsync(testDatabase, QueueId, FutureDatesA, scheduledByQueue: false);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(CollectionId, FutureDatesB, Now);
+                await this.target.ExecuteAsync(QueueId, FutureDatesB, Now);
 
                 return ExpectedSideEffects.None;
             });
@@ -207,12 +207,12 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.InitializeTarget(testDatabase);
-                await this.CreatePostsAsync(testDatabase, CollectionId, FutureDatesA, scheduledByQueue: true);
+                await this.CreatePostsAsync(testDatabase, QueueId, FutureDatesA, scheduledByQueue: true);
                 await testDatabase.TakeSnapshotAsync();
 
                 await ExpectedException.AssertExceptionAsync<ArgumentException>(() =>
                 {
-                    return this.target.ExecuteAsync(CollectionId, FutureDatesB.Skip(1).ToArray(), Now);
+                    return this.target.ExecuteAsync(QueueId, FutureDatesB.Skip(1).ToArray(), Now);
                 });
 
                 return ExpectedSideEffects.None;
@@ -229,13 +229,13 @@
                     ? existingFutureLiveDates
                     : existingFutureLiveDates.Concat(existingPastLiveDates).ToArray();
 
-                var posts = await this.CreatePostsAsync(testDatabase, CollectionId, newEntityDates, scheduledByQueue: true);
+                var posts = await this.CreatePostsAsync(testDatabase, QueueId, newEntityDates, scheduledByQueue: true);
                 var futurePostFilter = new HashSet<DateTime>(existingFutureLiveDates.Select(_ => new SqlDateTime(_).Value));                
                 var futurePosts = posts.Where(_ => futurePostFilter.Contains(_.LiveDate)).ToArray();
 
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(CollectionId, newLiveDates, Now);
+                await this.target.ExecuteAsync(QueueId, newLiveDates, Now);
 
                 var updatedPosts = new List<Post>();
                 for (var i = 0; i < futurePosts.Length; i++)
@@ -259,7 +259,7 @@
 
         private async Task<IReadOnlyList<Post>> CreatePostsAsync(
             TestDatabaseContext testDatabase,
-            CollectionId collectionId,
+            QueueId queueId,
             IReadOnlyList<DateTime> liveDates,
             bool scheduledByQueue)
         {
@@ -280,8 +280,8 @@
                 channel.BlogId = subscription.Id;
                 await databaseContext.Database.Connection.InsertAsync(channel);
 
-                var collection = CollectionTests.UniqueEntity(Random);
-                collection.Id = collectionId.Value;
+                var collection = QueueTests.UniqueEntity(Random);
+                collection.Id = queueId.Value;
                 collection.ChannelId = channel.Id;
                 await databaseContext.Database.Connection.InsertAsync(collection);
 
@@ -300,7 +300,7 @@
                 {
                     var post = PostTests.UniqueFileOrImage(Random);
                     post.ChannelId = channel.Id;
-                    post.CollectionId = collectionId.Value;
+                    post.QueueId = queueId.Value;
                     post.FileId = file.Id;
                     post.ScheduledByQueue = scheduledByQueue;
                     post.LiveDate = liveDate;

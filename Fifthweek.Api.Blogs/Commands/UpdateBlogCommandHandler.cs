@@ -42,7 +42,6 @@
                 default(Guid),
                 null,
                 command.BlogName == null ? null : command.BlogName.Value,
-                command.Tagline == null ? null : command.Tagline.Value,
                 command.Introduction == null ? null : command.Introduction.Value,
                 command.Description == null ? null : command.Description.Value,
                 command.Video == null ? null : command.Video.Value,
@@ -55,7 +54,6 @@
                 await connection.UpdateAsync(
                     blog,
                     Blog.Fields.Name |
-                    Blog.Fields.Tagline |
                     Blog.Fields.Introduction |
                     Blog.Fields.Description |
                     Blog.Fields.ExternalVideoUrl |

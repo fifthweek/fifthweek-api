@@ -45,7 +45,7 @@
         private readonly List<FifthweekUser> users = new List<FifthweekUser>();
         private readonly List<Blog> blogs = new List<Blog>();
         private readonly List<Channel> channels = new List<Channel>();
-        private readonly List<Collection> collections = new List<Collection>();
+        private readonly List<Queue> collections = new List<Queue>();
         private readonly List<WeeklyReleaseTime> weeklyReleaseTimes = new List<WeeklyReleaseTime>();
         private readonly List<Post> posts = new List<Post>();
         private readonly List<File> files = new List<File>();
@@ -460,7 +460,7 @@
         {
             for (var collectionIndex = 0; collectionIndex < CollectionsPerChannel; collectionIndex++)
             {
-                var collection = CollectionTests.UniqueEntity(Random);
+                var collection = QueueTests.UniqueEntity(Random);
                 collection.Channel = channel;
                 collection.ChannelId = channel.Id;
                 this.collections.Add(collection);
@@ -473,18 +473,18 @@
             }
         }
 
-        private void CreateFileAndImagePosts(Collection collection)
+        private void CreateFileAndImagePosts(Queue queue)
         {
             for (var postIndex = 0; postIndex < ImagesPerCollection; postIndex++)
             {
                 var post = PostTests.UniqueFileOrImage(Random);
-                post.Channel = collection.Channel;
-                post.ChannelId = collection.Channel.Id;
-                post.Collection = collection;
-                post.CollectionId = collection.Id;
+                post.Channel = queue.Channel;
+                post.ChannelId = queue.Channel.Id;
+                post.Queue = queue;
+                post.QueueId = queue.Id;
 
                 var file = FileTests.UniqueEntity(Random);
-                file.UserId = collection.Channel.Blog.Creator.Id;
+                file.UserId = queue.Channel.Blog.Creator.Id;
                 post.Image = file;
                 post.ImageId = file.Id;
 
@@ -495,13 +495,13 @@
             for (var postIndex = 0; postIndex < FilesPerCollection; postIndex++)
             {
                 var post = PostTests.UniqueFileOrImage(Random);
-                post.Channel = collection.Channel;
-                post.ChannelId = collection.Channel.Id;
-                post.Collection = collection;
-                post.CollectionId = collection.Id;
+                post.Channel = queue.Channel;
+                post.ChannelId = queue.Channel.Id;
+                post.Queue = queue;
+                post.QueueId = queue.Id;
 
                 var file = FileTests.UniqueEntity(Random);
-                file.UserId = collection.Channel.Blog.Creator.Id;
+                file.UserId = queue.Channel.Blog.Creator.Id;
                 post.File = file;
                 post.FileId = file.Id;
 

@@ -59,7 +59,6 @@
     <Compile Include="ValidAcceptedChannelPrice.cs" />
     <Compile Include="ValidChannelName.cs" />
     <Compile Include="ValidChannelPrice.cs" />
-    <Compile Include="ValidChannelDescription.cs" />
     <Compile Include="ValidChannelPriceBase.cs" />
   </ItemGroup>
   <ItemGroup>

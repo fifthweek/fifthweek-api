@@ -15,7 +15,6 @@
     {
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IUserManager userManager;
-        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task HandleAsync(UpdateCreatorAccountSettingsCommand command)
         {
@@ -23,13 +22,6 @@
 
             var userId = await this.requesterSecurity.AuthenticateAsAsync(command.Requester, command.RequestedUserId);
             var isCreator = await this.requesterSecurity.IsInRoleAsync(command.Requester, FifthweekRole.Creator);
-
-            var updatedUser = new FifthweekUser(userId.Value);
-            updatedUser.Name = command.Name.Value;
-            using (var connection = this.connectionFactory.CreateConnection())
-            {
-                await connection.UpdateAsync(updatedUser, FifthweekUser.Fields.Name);
-            }
 
             if (!isCreator)
             {

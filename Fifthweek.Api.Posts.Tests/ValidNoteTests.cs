@@ -49,7 +49,7 @@
         }
 
         [TestMethod]
-        public void ItShouldAllowBasicTaglines()
+        public void ItShouldAllowBasicValues()
         {
             this.GoodValue(this.ValueA);
             this.GoodValue(this.ValueB);

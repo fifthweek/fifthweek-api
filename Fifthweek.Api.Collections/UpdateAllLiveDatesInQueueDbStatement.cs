@@ -27,9 +27,8 @@
             INSERT INTO #PostsToUpdate 
             SELECT      {1}, ROW_NUMBER() OVER (ORDER BY LiveDate ASC)
             FROM        {0}
-            WHERE       {4} = @CollectionId
-            AND         {2} > @Now
-            AND         {3} = 1;
+            WHERE       {3} = @QueueId
+            AND         {2} > @Now;
 
             DECLARE @QueuedPostCount int = (SELECT COUNT(*) FROM #PostsToUpdate);
             DECLARE @NewLiveDateCount int = (SELECT COUNT(*) FROM #NewLiveDates);
@@ -60,14 +59,13 @@
             Post.Table,
             Post.Fields.Id,
             Post.Fields.LiveDate,
-            Post.Fields.ScheduledByQueue,
-            Post.Fields.CollectionId);
+            Post.Fields.QueueId);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task ExecuteAsync(CollectionId collectionId, IReadOnlyList<DateTime> ascendingLiveDates, DateTime now)
+        public async Task ExecuteAsync(QueueId queueId, IReadOnlyList<DateTime> ascendingLiveDates, DateTime now)
         {
-            collectionId.AssertNotNull("collectionId");
+            queueId.AssertNotNull("queueId");
             ascendingLiveDates.AssertNotNull("ascendingLiveDates");
             ascendingLiveDates.AssertNonEmpty("ascendingLiveDates");
             now.AssertUtc("now");
@@ -94,7 +92,7 @@
 
             var parameters = new DynamicParameters(new
             {
-                CollectionId = collectionId.Value,
+                QueueId = queueId.Value,
                 Now = now
             });
 

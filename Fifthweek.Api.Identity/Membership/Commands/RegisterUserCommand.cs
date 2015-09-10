@@ -18,8 +18,5 @@
         public ValidPassword Password { get; private set; }
 
         public bool RegiserAsCreator { get; private set; }
-
-        [Optional]
-        public ValidCreatorName CreatorName { get; private set; }
     }
 }

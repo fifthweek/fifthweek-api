@@ -23,7 +23,7 @@
 
         IDbSet<Channel> Channels { get; }
 
-        IDbSet<Collection> Collections { get; }
+        IDbSet<Queue> Queues { get; }
 
         IDbSet<WeeklyReleaseTime> WeeklyReleaseTimes { get; }
 

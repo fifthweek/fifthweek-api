@@ -16,7 +16,6 @@ namespace Fifthweek.Api.Posts
             UserId requestorId,
             UserId creatorId,
             IReadOnlyList<ChannelId> requestedChannelIds,
-            IReadOnlyList<CollectionId> requestedCollectionIds,
             DateTime now,
             DateTime origin,
             bool searchForwards, 

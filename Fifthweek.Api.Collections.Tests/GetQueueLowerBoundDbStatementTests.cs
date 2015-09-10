@@ -20,7 +20,7 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly DateTime LowerBound = DateTime.SpecifyKind(new SqlDateTime(DateTime.UtcNow).Value, DateTimeKind.Utc);
 
         private Mock<IFifthweekDbConnectionFactory> databaseConnectionFactory;
@@ -46,7 +46,7 @@
         [ExpectedException(typeof(ArgumentException))]
         public async Task ItShouldRequireUtcDate()
         {
-            await this.target.ExecuteAsync(CollectionId, DateTime.Now);
+            await this.target.ExecuteAsync(QueueId, DateTime.Now);
         }
 
         [TestMethod]
@@ -60,7 +60,7 @@
                 await ExpectedException.AssertExceptionAsync<Exception>(() =>
                 {
                     var now = LowerBound;
-                    return this.target.ExecuteAsync(CollectionId, now);
+                    return this.target.ExecuteAsync(QueueId, now);
                 });
 
                 return ExpectedSideEffects.None;
@@ -77,7 +77,7 @@
                 await testDatabase.TakeSnapshotAsync();
 
                 var now = LowerBound.AddDays(-10);
-                var actual = await this.target.ExecuteAsync(CollectionId, now);
+                var actual = await this.target.ExecuteAsync(QueueId, now);
 
                 Assert.AreEqual(LowerBound, actual);
 
@@ -95,7 +95,7 @@
                 await testDatabase.TakeSnapshotAsync();
 
                 var now = LowerBound.AddDays(10);
-                var actual = await this.target.ExecuteAsync(CollectionId, now);
+                var actual = await this.target.ExecuteAsync(QueueId, now);
 
                 Assert.AreEqual(now, actual);
 
@@ -107,9 +107,9 @@
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                var collection = CollectionTests.UniqueEntityWithForeignEntities(UserId.Value, ChannelId.Value, CollectionId.Value);
+                var collection = QueueTests.UniqueEntityWithForeignEntities(UserId.Value, ChannelId.Value, QueueId.Value);
                 collection.QueueExclusiveLowerBound = LowerBound;
-                databaseContext.Collections.Add(collection);
+                databaseContext.Queues.Add(collection);
                 await databaseContext.SaveChangesAsync();
             }
         }

@@ -16,8 +16,8 @@
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
-    [AutoConstructor]
-    public partial class PostController : IPostController
+    [RoutePrefix("posts"), AutoConstructor]
+    public partial class PostController : ApiController
     {
         private readonly ICommandHandler<DeletePostCommand> deletePost;
         private readonly ICommandHandler<ReorderQueueCommand> reorderQueue;
@@ -30,10 +30,13 @@
         private readonly IQueryHandler<GetCommentsQuery, CommentsResult> getComments;
         private readonly ICommandHandler<LikePostCommand> postLike;
         private readonly ICommandHandler<DeleteLikeCommand> deleteLike;
+        private readonly ICommandHandler<PostToChannelCommand> postPost;
+        private readonly ICommandHandler<RevisePostCommand> revisePost;
         private readonly IRequesterContext requesterContext;
         private readonly ITimestampCreator timestampCreator;
         private readonly IGuidCreator guidCreator;
 
+        [Route("creatorBacklog/{creatorId}")]
         public async Task<IEnumerable<GetCreatorBacklogQueryResult>> GetCreatorBacklog(string creatorId)
         {
             creatorId.AssertUrlParameterProvided("creatorId");
@@ -43,30 +46,7 @@
             return await this.getCreatorBacklog.HandleAsync(new GetCreatorBacklogQuery(requester, creatorIdObject));
         }
 
-        public async Task<IEnumerable<GetCreatorNewsfeedQueryResult>> GetCreatorNewsfeed(string creatorId, CreatorNewsfeedPaginationData newsfeedPaginationData)
-        {
-            creatorId.AssertUrlParameterProvided("creatorId");
-            newsfeedPaginationData.AssertUrlParameterProvided("newsfeedPaginationData");
-            var newsfeedPagination = newsfeedPaginationData.Parse();
-
-            var creatorIdObject = new UserId(creatorId.DecodeGuid());
-            var requester = await this.requesterContext.GetRequesterAsync();
-
-            var result = await this.getNewsfeed.HandleAsync(new GetNewsfeedQuery(
-                requester, creatorIdObject, null, null, null, false, newsfeedPagination.StartIndex, newsfeedPagination.Count));
-
-            return result.Posts.Select(v => new GetCreatorNewsfeedQueryResult(
-                v.PostId,
-                v.ChannelId,
-                v.CollectionId,
-                v.Comment,
-                v.File,
-                v.FileSource,
-                v.Image,
-                v.ImageSource,
-                v.LiveDate)).ToList();
-        }
-
+        [Route("newsfeed")]
         public async Task<GetNewsfeedQueryResult> GetNewsfeed(NewsfeedFilter filterData)
         {
             filterData.AssertUrlParameterProvided("filter");
@@ -84,18 +64,54 @@
                 channelIds = new List<ChannelId> { new ChannelId(filterData.ChannelId.DecodeGuid()) };
             }
 
-            IReadOnlyList<CollectionId> collectionIds = null;
-            if (!string.IsNullOrWhiteSpace(filterData.CollectionId))
-            {
-                collectionIds = new List<CollectionId> { new CollectionId(filterData.CollectionId.DecodeGuid()) };
-            }
-
             var requester = await this.requesterContext.GetRequesterAsync();
 
             return await this.getNewsfeed.HandleAsync(new GetNewsfeedQuery(
-                requester, creatorId, channelIds, collectionIds, filter.Origin, filter.SearchForwards, filter.StartIndex, filter.Count));
+                requester, creatorId, channelIds, filter.Origin, filter.SearchForwards, filter.StartIndex, filter.Count));
         }
 
+        [Route("")]
+        public async Task PostPost(NewPostData postData)
+        {
+            postData.AssertBodyProvided("postData");
+            var post = postData.Parse();
+
+            var requester = await this.requesterContext.GetRequesterAsync();
+            var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
+            var timestamp = this.timestampCreator.Now();
+
+            await this.postPost.HandleAsync(new PostToChannelCommand(
+                requester,
+                newPostId,
+                post.ChannelId,
+                post.FileId,
+                post.ImageId,
+                post.Comment,
+                post.ScheduledPostTime,
+                post.QueueId,
+                timestamp));
+        }
+
+        [Route("{postId}")]
+        public async Task PutPost(string postId, RevisedPostData postData)
+        {
+            postId.AssertUrlParameterProvided("postId");
+            postData.AssertBodyProvided("postData");
+
+            var post = postData.Parse();
+            var postIdObject = new PostId(postId.DecodeGuid());
+
+            var requester = await this.requesterContext.GetRequesterAsync();
+
+            await this.revisePost.HandleAsync(new RevisePostCommand(
+                requester,
+                postIdObject,
+                post.FileId,
+                post.ImageId,
+                post.Comment));
+        }
+
+        [Route("{postId}")]
         public async Task DeletePost(string postId)
         {
             postId.AssertUrlParameterProvided("postId");
@@ -105,27 +121,32 @@
             await this.deletePost.HandleAsync(new DeletePostCommand(parsedPostId, requester));
         }
 
-        public async Task PostNewQueueOrder(string collectionId, IEnumerable<PostId> newQueueOrder)
+        [Route("queues/{queueId}")]
+        public async Task PostNewQueueOrder(string queueId, IEnumerable<PostId> newQueueOrder)
         {
-            collectionId.AssertUrlParameterProvided("collectionId");
+            queueId.AssertUrlParameterProvided("queueId");
             newQueueOrder.AssertBodyProvided("newQueueOrder");
 
-            var collectionIdObject = new CollectionId(collectionId.DecodeGuid());
+            var queueIdObject = new QueueId(queueId.DecodeGuid());
             var requester = await this.requesterContext.GetRequesterAsync();
 
-            await this.reorderQueue.HandleAsync(new ReorderQueueCommand(requester, collectionIdObject, newQueueOrder.ToList()));
+            await this.reorderQueue.HandleAsync(new ReorderQueueCommand(requester, queueIdObject, newQueueOrder.ToList()));
         }
 
-        public async Task PostToQueue(string postId)
+        [Route("queued")]
+        public async Task PostToQueue(string postId, string queueId)
         {
             postId.AssertUrlParameterProvided("postId");
+            queueId.AssertBodyProvided("queueId");
 
             var parsedPostId = new PostId(postId.DecodeGuid());
+            var parsedQueueId = new QueueId(queueId.DecodeGuid());
             var requester = await this.requesterContext.GetRequesterAsync();
 
-            await this.rescheduleWithQueue.HandleAsync(new RescheduleWithQueueCommand(requester, parsedPostId));
+            await this.rescheduleWithQueue.HandleAsync(new RescheduleWithQueueCommand(requester, parsedPostId, parsedQueueId));
         }
 
+        [Route("live")]
         public async Task PostToLive(string postId)
         {
             postId.AssertBodyProvided("postId");
@@ -135,6 +156,7 @@
             await this.rescheduleForNow.HandleAsync(new RescheduleForNowCommand(requester, parsedPostId));
         }
 
+        [Route("{postId}/liveDate")]
         public async Task PutLiveDate(string postId, DateTime newLiveDate)
         {
             postId.AssertUrlParameterProvided("postId");
@@ -146,6 +168,7 @@
             await this.rescheduleForTime.HandleAsync(new RescheduleForTimeCommand(requester, parsedPostId, newLiveDate));
         }
 
+        [Route("{postId}/comments")]
         public async Task PostComment(string postId, CommentData comment)
         {
             postId.AssertUrlParameterProvided("postId");
@@ -166,6 +189,7 @@
                 timestamp));
         }
 
+        [Route("{postId}/comments")]
         public async Task<CommentsResult> GetComments(string postId)
         {
             postId.AssertUrlParameterProvided("postId");
@@ -176,6 +200,7 @@
             return await this.getComments.HandleAsync(new GetCommentsQuery(requester, parsedPostId));
         }
 
+        [Route("{postId}/likes")]
         public async Task PostLike(string postId)
         {
             postId.AssertUrlParameterProvided("postId");
@@ -188,6 +213,7 @@
             await this.postLike.HandleAsync(new LikePostCommand(requester, parsedPostId, timestamp));
         }
 
+        [Route("{postId}/likes")]
         public async Task DeleteLike(string postId)
         {
             postId.AssertUrlParameterProvided("postId");

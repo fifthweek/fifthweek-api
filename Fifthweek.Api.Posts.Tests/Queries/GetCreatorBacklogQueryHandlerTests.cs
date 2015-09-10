@@ -145,7 +145,7 @@
 
                 Assert.AreEqual(item.Input.PostId, item.Output.PostId);
                 Assert.AreEqual(item.Input.ChannelId, item.Output.ChannelId);
-                Assert.AreEqual(item.Input.CollectionId, item.Output.CollectionId);
+                Assert.AreEqual(item.Input.QueueId, item.Output.QueueId);
                 Assert.AreEqual(item.Input.Comment, item.Output.Comment);
                 Assert.AreEqual(item.Input.ScheduledByQueue, item.Output.ScheduledByQueue);
                 Assert.AreEqual(item.Input.LiveDate, item.Output.LiveDate);
@@ -169,7 +169,7 @@
                     var channelId = new ChannelId(Guid.NewGuid());
                     for (var collectionIndex = 0; collectionIndex < CollectionsPerChannel; collectionIndex++)
                     {
-                        var collectionId = collectionIndex == 0 ? null : new CollectionId(Guid.NewGuid());
+                        var collectionId = collectionIndex == 0 ? null : new QueueId(Guid.NewGuid());
                         for (var i = 0; i < Posts; i++)
                         {
                             result.Add(

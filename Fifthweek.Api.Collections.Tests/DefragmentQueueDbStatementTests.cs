@@ -15,7 +15,7 @@
     {
         private const int QueueSize = 10;
 
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly WeeklyReleaseSchedule WeeklyReleaseSchedule = WeeklyReleaseSchedule.Parse(new[] { HourOfWeek.Parse(42) });
         private static readonly DateTime Now = DateTime.UtcNow;
         private static readonly DateTime ExclusiveLowerBound = Now.AddDays(10);
@@ -52,33 +52,33 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireWeeklyReleaseSchedule()
         {
-            await this.target.ExecuteAsync(CollectionId, null, Now);
+            await this.target.ExecuteAsync(QueueId, null, Now);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public async Task ItShouldRequireUtcDate()
         {
-            await this.target.ExecuteAsync(CollectionId, WeeklyReleaseSchedule, DateTime.Now);
+            await this.target.ExecuteAsync(QueueId, WeeklyReleaseSchedule, DateTime.Now);
         }
 
         [TestMethod]
         public async Task WhenQueueIsEmpty_ItShouldHaveNoEffect()
         {
-            this.getQueueSize.Setup(_ => _.ExecuteAsync(CollectionId, Now)).ReturnsAsync(0);
+            this.getQueueSize.Setup(_ => _.ExecuteAsync(QueueId, Now)).ReturnsAsync(0);
             
-            await this.target.ExecuteAsync(CollectionId, WeeklyReleaseSchedule, Now);
+            await this.target.ExecuteAsync(QueueId, WeeklyReleaseSchedule, Now);
         }
 
         [TestMethod]
         public async Task WhenQueueIsNotEmpty_ItShouldUpdateAllLiveDatesInQueueWithUnfragmentedDates()
         {
-            this.getQueueSize.Setup(_ => _.ExecuteAsync(CollectionId, Now)).ReturnsAsync(QueueSize);
-            this.getQueueLowerBound.Setup(_ => _.ExecuteAsync(CollectionId, Now)).ReturnsAsync(ExclusiveLowerBound);
+            this.getQueueSize.Setup(_ => _.ExecuteAsync(QueueId, Now)).ReturnsAsync(QueueSize);
+            this.getQueueLowerBound.Setup(_ => _.ExecuteAsync(QueueId, Now)).ReturnsAsync(ExclusiveLowerBound);
             this.liveDateCalculator.Setup(_ => _.GetNextLiveDates(ExclusiveLowerBound, WeeklyReleaseSchedule, QueueSize)).Returns(UnfragmentedDates);
-            this.updateAllLiveDatesInQueue.Setup(_ => _.ExecuteAsync(CollectionId, UnfragmentedDates, Now)).Returns(Task.FromResult(0)).Verifiable();
+            this.updateAllLiveDatesInQueue.Setup(_ => _.ExecuteAsync(QueueId, UnfragmentedDates, Now)).Returns(Task.FromResult(0)).Verifiable();
 
-            await this.target.ExecuteAsync(CollectionId, WeeklyReleaseSchedule, Now);
+            await this.target.ExecuteAsync(QueueId, WeeklyReleaseSchedule, Now);
 
             this.updateAllLiveDatesInQueue.Verify();
         }

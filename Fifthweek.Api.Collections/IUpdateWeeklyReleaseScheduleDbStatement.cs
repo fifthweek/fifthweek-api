@@ -7,6 +7,6 @@
 
     public interface IUpdateWeeklyReleaseScheduleDbStatement
     {
-        Task ExecuteAsync(CollectionId collectionId, WeeklyReleaseSchedule weeklyReleaseSchedule, DateTime now);
+        Task ExecuteAsync(QueueId queueId, WeeklyReleaseSchedule weeklyReleaseSchedule, DateTime now);
     }
 }

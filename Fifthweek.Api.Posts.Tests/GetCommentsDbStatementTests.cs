@@ -25,7 +25,7 @@
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
         private static readonly UserId UserId1 = new UserId(Guid.NewGuid());
         private static readonly UserId UserId2 = new UserId(Guid.NewGuid());
-        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
@@ -76,13 +76,13 @@
             using (var databaseContext = testDatabase.CreateContext())
             {
                 var random = new Random();
-                await databaseContext.CreateTestCollectionAsync(CreatorId.Value, ChannelId.Value, CollectionId.Value);
+                await databaseContext.CreateTestCollectionAsync(CreatorId.Value, ChannelId.Value, QueueId.Value);
                 await databaseContext.CreateTestFileWithExistingUserAsync(CreatorId.Value, FileId.Value);
 
                 var post = PostTests.UniqueFileOrImage(random);
                 post.Id = PostId.Value;
                 post.ChannelId = ChannelId.Value;
-                post.CollectionId = CollectionId.Value;
+                post.QueueId = QueueId.Value;
                 post.FileId = FileId.Value;
                 post.CreationDate = new SqlDateTime(post.CreationDate).Value;
                 post.LiveDate = new SqlDateTime(post.LiveDate).Value;
