@@ -49,6 +49,8 @@ namespace Fifthweek.Api.Posts
                 return this.subStatements.QueuePostAsync(post);
             }
 
+            sheduledPostDate.AssertNotNull("sheduledPostDate");
+
             return this.subStatements.SchedulePostAsync(post, sheduledPostDate, now);
         }
     }

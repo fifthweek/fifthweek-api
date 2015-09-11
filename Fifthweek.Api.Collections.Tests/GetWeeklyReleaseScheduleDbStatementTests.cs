@@ -64,7 +64,7 @@
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                await databaseContext.CreateTestCollectionAsync(UserId.Value, ChannelId.Value, QueueId.Value);
+                await databaseContext.CreateTestEntitiesAsync(UserId.Value, ChannelId.Value, QueueId.Value);
                 await databaseContext.Database.Connection.InsertAsync(SortedReleaseTimes);
             }
         }

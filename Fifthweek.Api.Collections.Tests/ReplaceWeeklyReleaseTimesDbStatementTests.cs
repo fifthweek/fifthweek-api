@@ -135,25 +135,25 @@
                 var random = new Random();
                 var creator = UserTests.UniqueEntity(random);
 
-                var subscription = BlogTests.UniqueEntity(random);
-                subscription.Creator = creator;
-                subscription.CreatorId = creator.Id;
+                var blog = BlogTests.UniqueEntity(random);
+                blog.Creator = creator;
+                blog.CreatorId = creator.Id;
 
                 var channel = ChannelTests.UniqueEntity(random);
                 channel.Id = ChannelId.Value;
-                channel.Blog = subscription;
-                channel.BlogId = subscription.Id;
+                channel.Blog = blog;
+                channel.BlogId = blog.Id;
 
-                var collection = QueueTests.UniqueEntity(random);
-                collection.Id = QueueId.Value;
-                collection.Channel = channel;
-                collection.ChannelId = channel.Id;
+                var queue = QueueTests.UniqueEntity(random);
+                queue.Id = QueueId.Value;
+                queue.Blog = blog;
+                queue.BlogId = blog.Id;
 
                 var weeklyReleaseTimes =
                     new[] { ExistingReleaseA, ExistingReleaseB, ExistingReleaseC }.Select(
                         _ => new WeeklyReleaseTime(QueueId.Value, (byte)_.Value));
 
-                databaseContext.Queues.Add(collection);
+                databaseContext.Queues.Add(queue);
                 await databaseContext.SaveChangesAsync();
 
                 await databaseContext.Database.Connection.InsertAsync(weeklyReleaseTimes);

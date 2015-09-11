@@ -45,7 +45,7 @@
         private readonly List<FifthweekUser> users = new List<FifthweekUser>();
         private readonly List<Blog> blogs = new List<Blog>();
         private readonly List<Channel> channels = new List<Channel>();
-        private readonly List<Queue> collections = new List<Queue>();
+        private readonly List<Queue> queues = new List<Queue>();
         private readonly List<WeeklyReleaseTime> weeklyReleaseTimes = new List<WeeklyReleaseTime>();
         private readonly List<Post> posts = new List<Post>();
         private readonly List<File> files = new List<File>();
@@ -133,7 +133,7 @@
                     await connection.InsertAsync(this.files, false);
                     await connection.InsertAsync(this.blogs, false);
                     await connection.InsertAsync(this.channels, false);
-                    await connection.InsertAsync(this.collections, false);
+                    await connection.InsertAsync(this.queues, false);
                     await connection.InsertAsync(this.weeklyReleaseTimes, false);
                     await connection.InsertAsync(this.posts, false);
                     await connection.InsertAsync(this.refreshTokens, false);
@@ -197,8 +197,6 @@
 
         private void CreateUsers()
         {
-            var blogIds = new List<Guid>();
-            var channelIds = new List<Guid>();
             for (var i = 0; i < Users; i++)
             {
                 var user = UserTests.UniqueEntity(Random);
@@ -215,12 +213,12 @@
 
                 if (i < Creators)
                 {
-                    this.CreateBlogs(user, blogIds, channelIds);
+                    this.CreateBlogs(user);
                 }
                 else
                 {
-                    this.CreateFreeAccess(blogIds, user);
-                    this.CreateSubscriptions(channelIds, user);
+                    this.CreateFreeAccess(user);
+                    this.CreateSubscriptions(user);
                 }
 
                 this.CreateRefreshTokens(user);
@@ -372,24 +370,24 @@
                     Guid.NewGuid(), "comment", "stripe", "taxamo"));
         }
 
-        private void CreateSubscriptions(List<Guid> channelIds, FifthweekUser user)
+        private void CreateSubscriptions(FifthweekUser user)
         {
-            var subscriptionIndicies = this.GenerageUniqueIndexes(channelIds.Count, Random.Next(0, SubscriptionsPerUser + 1));
+            var subscriptionIndicies = this.GenerageUniqueIndexes(this.channels.Count, Random.Next(0, SubscriptionsPerUser + 1));
 
             foreach (var channelIndex in subscriptionIndicies)
             {
-                var subscription = new ChannelSubscription(channelIds[channelIndex], null, user.Id, null, Random.Next(1, 500), DateTime.UtcNow.AddDays(-10 - Random.Next(0, 5)), DateTime.UtcNow.AddDays(Random.Next(1, 5)));
+                var subscription = new ChannelSubscription(this.channels[channelIndex].Id, null, user.Id, null, Random.Next(1, 500), DateTime.UtcNow.AddDays(-10 - Random.Next(0, 5)), DateTime.UtcNow.AddDays(Random.Next(1, 5)));
                 this.subscriptions.Add(subscription);
             }
         }
 
-        private void CreateFreeAccess(List<Guid> blogIds, FifthweekUser user)
+        private void CreateFreeAccess(FifthweekUser user)
         {
-            var freeAccessIndicies = this.GenerageUniqueIndexes(blogIds.Count, Random.Next(0, FreeAccessPerUser + 1));
+            var freeAccessIndicies = this.GenerageUniqueIndexes(this.blogs.Count, Random.Next(0, FreeAccessPerUser + 1));
 
             foreach (var blogIndex in freeAccessIndicies)
             {
-                var freeAccess = new FreeAccessUser(blogIds[blogIndex], user.Email);
+                var freeAccess = new FreeAccessUser(this.blogs[blogIndex].Id, user.Email);
                 this.freeAccessUsers.Add(freeAccess);
             }
         }
@@ -407,12 +405,14 @@
             }
         }
 
-        private void CreateBlogs(FifthweekUser creator, List<Guid> blogIds, List<Guid> channelIds)
+        private void CreateBlogs(FifthweekUser creator)
         {
+            var userBlogs = new List<Blog>();
+            var userChannels = new List<Channel>();
+            var userQueues = new List<Queue>();
             for (var blogIndex = 0; blogIndex < BlogsPerCreator; blogIndex++)
             {
                 var blog = BlogTests.UniqueEntity(Random);
-                blogIds.Add(blog.Id);
 
                 if (blog.HeaderImageFile != null)
                 {
@@ -424,13 +424,17 @@
 
                 blog.Creator = creator;
                 blog.CreatorId = creator.Id;
+                userBlogs.Add(blog);
                 this.blogs.Add(blog);
 
-                this.CreateChannels(blog, channelIds);
+                this.CreateChannels(blog, userChannels);
+                this.CreateQueues(blog, userQueues);
+                this.CreatePosts(blog, userChannels, userQueues);
+
             }
         }
 
-        private void CreateChannels(Blog blog, List<Guid> channelIds)
+        private void CreateChannels(Blog blog, List<Channel> userChannels)
         {
             for (var channelIndex = 0; channelIndex < ChannelsPerSubscription; channelIndex++)
             {
@@ -438,53 +442,48 @@
                 channel.Blog = blog;
                 channel.BlogId = blog.Id;
                 this.channels.Add(channel);
-                channelIds.Add(channel.Id);
-
-                this.CreateNotes(channel);
-                this.CreateCollections(channel);
+                userChannels.Add(channel);
             }
         }
 
-        private void CreateNotes(Channel channel)
+        private void CreateQueues(Blog blog, List<Queue> userQueues)
+        {
+            for (var i = 0; i < CollectionsPerChannel; i++)
+            {
+                var queue = QueueTests.UniqueEntity(Random);
+                queue.Blog = blog;
+                queue.BlogId = blog.Id;
+                this.queues.Add(queue);
+                userQueues.Add(queue);
+
+                // At least one weekly release time is required per collection.
+                var weeklyReleaseTime = WeeklyReleaseTimeTests.UniqueEntity(Random, queue.Id);
+                this.weeklyReleaseTimes.Add(weeklyReleaseTime);
+            }
+        }
+
+        private void CreatePosts(Blog blog, IReadOnlyList<Channel> userChannels, IReadOnlyList<Queue> userQueues)
         {
             for (var postIndex = 0; postIndex < NotesPerChannel; postIndex++)
             {
                 var post = PostTests.UniqueNote(Random);
-                post.Channel = channel;
-                post.ChannelId = channel.Id;
+                post.Channel = userChannels[postIndex % userChannels.Count];
+                post.ChannelId = userChannels[postIndex % userChannels.Count].Id;
+                post.Queue = userQueues[postIndex % userChannels.Count];
+                post.QueueId = userQueues[postIndex % userChannels.Count].Id;
                 this.posts.Add(post);
             }
-        }
 
-        private void CreateCollections(Channel channel)
-        {
-            for (var collectionIndex = 0; collectionIndex < CollectionsPerChannel; collectionIndex++)
-            {
-                var collection = QueueTests.UniqueEntity(Random);
-                collection.Channel = channel;
-                collection.ChannelId = channel.Id;
-                this.collections.Add(collection);
-
-                // At least one weekly release time is required per collection.
-                var weeklyReleaseTime = WeeklyReleaseTimeTests.UniqueEntity(Random, collection.Id);
-                this.weeklyReleaseTimes.Add(weeklyReleaseTime);
-                
-                this.CreateFileAndImagePosts(collection);
-            }
-        }
-
-        private void CreateFileAndImagePosts(Queue queue)
-        {
             for (var postIndex = 0; postIndex < ImagesPerCollection; postIndex++)
             {
                 var post = PostTests.UniqueFileOrImage(Random);
-                post.Channel = queue.Channel;
-                post.ChannelId = queue.Channel.Id;
-                post.Queue = queue;
-                post.QueueId = queue.Id;
+                post.Channel = userChannels[postIndex % userChannels.Count];
+                post.ChannelId = userChannels[postIndex % userChannels.Count].Id;
+                post.Queue = userQueues[postIndex % userChannels.Count];
+                post.QueueId = userQueues[postIndex % userChannels.Count].Id;
 
                 var file = FileTests.UniqueEntity(Random);
-                file.UserId = queue.Channel.Blog.Creator.Id;
+                file.UserId = blog.Creator.Id;
                 post.Image = file;
                 post.ImageId = file.Id;
 
@@ -495,13 +494,13 @@
             for (var postIndex = 0; postIndex < FilesPerCollection; postIndex++)
             {
                 var post = PostTests.UniqueFileOrImage(Random);
-                post.Channel = queue.Channel;
-                post.ChannelId = queue.Channel.Id;
-                post.Queue = queue;
-                post.QueueId = queue.Id;
+                post.Channel = userChannels[postIndex % userChannels.Count];
+                post.ChannelId = userChannels[postIndex % userChannels.Count].Id;
+                post.Queue = userQueues[postIndex % userChannels.Count];
+                post.QueueId = userQueues[postIndex % userChannels.Count].Id;
 
                 var file = FileTests.UniqueEntity(Random);
-                file.UserId = queue.Channel.Blog.Creator.Id;
+                file.UserId = blog.Creator.Id;
                 post.File = file;
                 post.FileId = file.Id;
 

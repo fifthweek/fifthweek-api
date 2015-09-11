@@ -39,7 +39,7 @@
           Post.Fields.Comment,
           Post.Fields.FileId,
           Post.Fields.ImageId,
-          Post.Fields.QueueId,
+          Post.Fields.Id,
           Channel.Table,
           Channel.Fields.Id,
           Channel.Fields.BlogId,

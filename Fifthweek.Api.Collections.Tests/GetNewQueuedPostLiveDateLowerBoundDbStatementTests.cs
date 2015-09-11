@@ -5,6 +5,7 @@
     using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
@@ -24,7 +25,6 @@
         private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly DateTime Now = DateTime.SpecifyKind(new SqlDateTime(DateTime.UtcNow).Value, DateTimeKind.Utc);
         private static readonly DateTime LatestQueuedPostTime = DateTime.SpecifyKind(new SqlDateTime(Now.AddDays(100)).Value, DateTimeKind.Utc);
-        private static readonly DateTime CollectionLowerBound = DateTime.SpecifyKind(new SqlDateTime(Now.AddDays(50)).Value, DateTimeKind.Utc);
 
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private GetNewQueuedPostLiveDateLowerBoundDbStatement target;
@@ -53,14 +53,13 @@
         }
 
         [TestMethod]
-        public async Task WhenCollectionLowerBoundHasPassed_AndNoPostsExist_ItShouldReturnNow()
+        public async Task WhenNoPostsExist_ItShouldReturnNow()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(
-                    testDatabase,
-                    setCollectionLowerBoundInFuture: false);
+                    testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.ExecuteAsync(QueueId, Now);
@@ -73,14 +72,13 @@
         }
 
         [TestMethod]
-        public async Task WhenCollectionLowerBoundHasPassed_AndLivePostsExist_ItShouldReturnNow()
+        public async Task WhenLivePostsExist_ItShouldReturnNow()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(
                     testDatabase,
-                    setCollectionLowerBoundInFuture: false,
                     createLivePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -94,14 +92,13 @@
         }
 
         [TestMethod]
-        public async Task WhenCollectionLowerBoundHasPassed_AndScheduledPostsExist_ItShouldReturnNow()
+        public async Task WhenScheduledPostsExist_ItShouldReturnNow()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(
                     testDatabase,
-                    setCollectionLowerBoundInFuture: false,
                     createLivePosts: true,
                     createScheduledPosts: true);
                 await testDatabase.TakeSnapshotAsync();
@@ -116,14 +113,13 @@
         }
 
         [TestMethod]
-        public async Task WhenCollectionLowerBoundHasPassed_AndAllQueuedPostAreLive_ItShouldReturnNow()
+        public async Task WhenAllQueuedPostAreLive_ItShouldReturnNow()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(
                     testDatabase,
-                    setCollectionLowerBoundInFuture: false,
                     createLivePosts: true,
                     createScheduledPosts: true,
                     createLiveQueuedPosts: true);
@@ -139,128 +135,13 @@
         }
 
         [TestMethod]
-        public async Task WhenCollectionLowerBoundIsInFuture_AndNoPostsExist_ItShouldReturnCollectionLowerBound()
+        public async Task WhenQueuedPostsExist_ItShouldReturnLiveDateOfLatestQueuedPost()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(
                     testDatabase,
-                    setCollectionLowerBoundInFuture: true);
-                await testDatabase.TakeSnapshotAsync();
-
-                var result = await this.target.ExecuteAsync(QueueId, Now);
-
-                Assert.AreEqual(result, CollectionLowerBound);
-                Assert.AreEqual(result.Kind, DateTimeKind.Utc);
-
-                return ExpectedSideEffects.None;
-            });
-        }
-
-        [TestMethod]
-        public async Task WhenCollectionLowerBoundIsInFuture_AndLivePostsExist_ItShouldReturnCollectionLowerBound()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
-                await this.CreateEntitiesAsync(
-                    testDatabase,
-                    setCollectionLowerBoundInFuture: true,
-                    createLivePosts: true);
-                await testDatabase.TakeSnapshotAsync();
-
-                var result = await this.target.ExecuteAsync(QueueId, Now);
-
-                Assert.AreEqual(result, CollectionLowerBound);
-                Assert.AreEqual(result.Kind, DateTimeKind.Utc);
-
-                return ExpectedSideEffects.None;
-            });
-        }
-
-        [TestMethod]
-        public async Task WhenCollectionLowerBoundIsInFuture_AndScheduledPostsExist_ItShouldReturnCollectionLowerBound()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
-                await this.CreateEntitiesAsync(
-                    testDatabase,
-                    setCollectionLowerBoundInFuture: true,
-                    createLivePosts: true,
-                    createScheduledPosts: true);
-                await testDatabase.TakeSnapshotAsync();
-
-                var result = await this.target.ExecuteAsync(QueueId, Now);
-
-                Assert.AreEqual(result, CollectionLowerBound);
-                Assert.AreEqual(result.Kind, DateTimeKind.Utc);
-
-                return ExpectedSideEffects.None;
-            });
-        }
-
-        [TestMethod]
-        public async Task WhenCollectionLowerBoundIsInFuture_AndAllQueuedPostAreLive_ItShouldReturnCollectionLowerBound()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
-                await this.CreateEntitiesAsync(
-                    testDatabase,
-                    setCollectionLowerBoundInFuture: true,
-                    createLivePosts: true,
-                    createScheduledPosts: true,
-                    createLiveQueuedPosts: true);
-                await testDatabase.TakeSnapshotAsync();
-
-                var result = await this.target.ExecuteAsync(QueueId, Now);
-
-                Assert.AreEqual(result, CollectionLowerBound);
-                Assert.AreEqual(result.Kind, DateTimeKind.Utc);
-
-                return ExpectedSideEffects.None;
-            });
-        }
-
-        [TestMethod]
-        public async Task WhenQueuedPostsExist_AndLatestPostExceedsCollectionLowerBound_ItShouldReturnLiveDateOfLatestQueuedPost()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
-                await this.CreateEntitiesAsync(
-                    testDatabase,
-                    setCollectionLowerBoundInFuture: false,
-                    createLivePosts: true,
-                    createScheduledPosts: true,
-                    createLiveQueuedPosts: true,
-                    createQueuedPosts: true);
-                await testDatabase.TakeSnapshotAsync();
-
-                var result = await this.target.ExecuteAsync(QueueId, Now);
-
-                Assert.AreEqual(result, LatestQueuedPostTime);
-                Assert.AreEqual(result.Kind, DateTimeKind.Utc);
-
-                return ExpectedSideEffects.None;
-            });
-        }
-
-        /// <summary>
-        /// This decision was made lightly. It's a scenario that could potentially occur, so just wanted to write a test for the
-        /// sake of specifying some predictable and deterministic behaviour.
-        /// </summary>
-        [TestMethod]
-        public async Task WhenQueuedPostsExist_AndLatestPostPreceedsCollectionLowerBound_ItShouldReturnLiveDateOfLatestQueuedPost()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
-                await this.CreateEntitiesAsync(
-                    testDatabase,
-                    setCollectionLowerBoundInFuture: true,
                     createLivePosts: true,
                     createScheduledPosts: true,
                     createLiveQueuedPosts: true,
@@ -278,7 +159,6 @@
 
         private async Task CreateEntitiesAsync(
             TestDatabaseContext testDatabase,
-            bool setCollectionLowerBoundInFuture,
             bool createLivePosts = false,
             bool createScheduledPosts = false,
             bool createLiveQueuedPosts = false,
@@ -289,17 +169,10 @@
             using (var databaseContext = testDatabase.CreateContext())
             {
                 var random = new Random();
-                var collection = QueueTests.UniqueEntityWithForeignEntities(
+                await databaseContext.CreateTestEntitiesAsync(
                     UserId.Value,
                     ChannelId.Value,
                     QueueId.Value);
-
-                collection.QueueExclusiveLowerBound = setCollectionLowerBoundInFuture 
-                    ? CollectionLowerBound
-                    : Now.AddDays(random.Next(30) * -1);
-
-                databaseContext.Queues.Add(collection);
-                await databaseContext.SaveChangesAsync();
 
                 var posts = new List<Post>();
                 if (createLivePosts)
@@ -308,8 +181,7 @@
                     {
                         var post = PostTests.UniqueFileOrImage(random);
                         post.ChannelId = ChannelId.Value;
-                        post.QueueId = QueueId.Value;
-                        post.ScheduledByQueue = false;
+                        post.QueueId = null;
                         post.LiveDate = Now.AddDays(random.Next(30) * -1);
                         posts.Add(post);
                     }
@@ -321,8 +193,7 @@
                     {
                         var post = PostTests.UniqueFileOrImage(random);
                         post.ChannelId = ChannelId.Value;
-                        post.QueueId = QueueId.Value;
-                        post.ScheduledByQueue = false;
+                        post.QueueId = null;
                         post.LiveDate = Now.AddDays(random.Next(30));
                         posts.Add(post);
                     }
@@ -335,7 +206,6 @@
                         var post = PostTests.UniqueFileOrImage(random);
                         post.ChannelId = ChannelId.Value;
                         post.QueueId = QueueId.Value;
-                        post.ScheduledByQueue = true;
                         post.LiveDate = Now.AddDays(random.Next(30) * -1);
                         posts.Add(post);
                     }
@@ -348,7 +218,6 @@
                         var post = PostTests.UniqueFileOrImage(random);
                         post.ChannelId = ChannelId.Value;
                         post.QueueId = QueueId.Value;
-                        post.ScheduledByQueue = true;
                         post.LiveDate = i == 0 ? LatestQueuedPostTime : Now.AddDays(random.Next(30));
                         posts.Add(post);
                     }

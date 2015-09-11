@@ -4,7 +4,9 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence;
@@ -17,57 +19,51 @@
     using Moq;
 
     [TestClass]
-    public class ReviseNoteCommandHandlerTests : PersistenceTestsBase
+    public class RevisePostCommandHandlerTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
+        private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
+        private static readonly ValidComment Comment = ValidComment.Parse("Hey peeps!");
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
-        private static readonly ValidNote Note = ValidNote.Parse("Hey peeps!");
-        private static readonly ReviseNoteCommand Command = new ReviseNoteCommand(Requester, PostId, ChannelId, Note);
-        private Mock<IChannelSecurity> channelSecurity;
+        private static readonly FileId FileId = new FileId(Guid.NewGuid());
+        private static readonly FileId ImageId = new FileId(Guid.NewGuid());
+        private static readonly RevisePostCommand Command = new RevisePostCommand(Requester, PostId, FileId, ImageId, Comment);
         private Mock<IPostSecurity> postSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
-        private ReviseNoteCommandHandler target;
+        private Mock<IScheduleGarbageCollectionStatement> scheduleGarbageCollection;
+        private RevisePostCommandHandler target;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.channelSecurity = new Mock<IChannelSecurity>();
             this.postSecurity = new Mock<IPostSecurity>();
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
 
             // Give potentially side-effective components strict mock behaviour.
             this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
+            this.scheduleGarbageCollection = new Mock<IScheduleGarbageCollectionStatement>(MockBehavior.Strict);
 
             this.InitializeTarget(this.connectionFactory.Object);
         }
 
         public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new ReviseNoteCommandHandler(
+            this.target = new RevisePostCommandHandler(
                 this.requesterSecurity.Object,
-                this.channelSecurity.Object,
                 this.postSecurity.Object,
-                connectionFactory);
+                connectionFactory,
+                this.scheduleGarbageCollection.Object);
         }
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
-            await this.target.HandleAsync(new ReviseNoteCommand(Requester.Unauthenticated, PostId, ChannelId, Note));
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
-        public async Task WhenNotAllowedToWriteToChannel_ItShouldThrowUnauthorizedException()
-        {
-            this.channelSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, ChannelId)).Throws<UnauthorizedException>();
-
-            await this.target.HandleAsync(Command);
+            await this.target.HandleAsync(new RevisePostCommand(Requester.Unauthenticated, PostId, FileId, ImageId, Comment));
         }
 
         [TestMethod]
@@ -84,8 +80,9 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
+                this.scheduleGarbageCollection.Setup(_ => _.ExecuteAsync()).Returns(Task.FromResult(0));
                 this.InitializeTarget(testDatabase);
-                await this.CreateChannelAsync(UserId, ChannelId, testDatabase, createPost: true);
+                await this.CreateCollectionAsync(testDatabase, createPost: true);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -100,8 +97,9 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
+                this.scheduleGarbageCollection.Setup(_ => _.ExecuteAsync()).Returns(Task.FromResult(0));
                 this.InitializeTarget(testDatabase);
-                await this.CreateChannelAsync(UserId, ChannelId, testDatabase, createPost: false);
+                await this.CreateCollectionAsync(testDatabase, createPost: false);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.HandleAsync(Command);
@@ -111,20 +109,25 @@
         }
 
         [TestMethod]
-        public async Task WhenPostExists_ItShouldUpdate()
+        public async Task WhenPostExists_ItShouldUpdateAndScheduleGarbageCollection()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
+                this.scheduleGarbageCollection.Setup(_ => _.ExecuteAsync()).Returns(Task.FromResult(0)).Verifiable();
                 this.InitializeTarget(testDatabase);
-                await this.CreateChannelAsync(UserId, ChannelId, testDatabase, createPost: true);
+                await this.CreateCollectionAsync(testDatabase, createPost: true);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.HandleAsync(Command);
 
+                this.scheduleGarbageCollection.Verify();
+
                 var expectedPost = new Post(PostId.Value)
                 {
                     ChannelId = ChannelId.Value,
-                    Comment = Note.Value
+                    QueueId = QueueId.Value,
+                    FileId = FileId.Value,
+                    Comment = Comment.Value
                 };
 
                 return new ExpectedSideEffects
@@ -142,17 +145,23 @@
             });
         }
 
-        private async Task CreateChannelAsync(UserId newUserId, ChannelId newChannelId, TestDatabaseContext testDatabase, bool createPost)
+        private async Task CreateCollectionAsync(TestDatabaseContext testDatabase, bool createPost)
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                await databaseContext.CreateTestChannelAsync(newUserId.Value, newChannelId.Value);
+                await databaseContext.CreateTestEntitiesAsync(UserId.Value, ChannelId.Value, QueueId.Value);
 
                 if (createPost)
                 {
-                    var post = PostTests.UniqueNote(new Random());
+                    var existingFileId = Guid.NewGuid();
+                    await databaseContext.CreateTestFileWithExistingUserAsync(UserId.Value, existingFileId);
+                    await databaseContext.CreateTestFileWithExistingUserAsync(UserId.Value, FileId.Value);
+
+                    var post = PostTests.UniqueFileOrImage(new Random());
                     post.Id = PostId.Value;
-                    post.ChannelId = newChannelId.Value;
+                    post.ChannelId = ChannelId.Value;
+                    post.QueueId = QueueId.Value;
+                    post.FileId = existingFileId;
                     await databaseContext.Database.Connection.InsertAsync(post);    
                 }
             }

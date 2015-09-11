@@ -41,7 +41,7 @@
                             DateTime.UtcNow)),
                     });
 
-        private static readonly UserState UserState = new UserState(UserAccessSignatures, null, null, null, null);
+        private static readonly UserState UserState = new UserState(UserAccessSignatures, null, null, null);
 
         private UserStateController target;
         private Mock<IQueryHandler<GetUserStateQuery, UserState>> getUserState;

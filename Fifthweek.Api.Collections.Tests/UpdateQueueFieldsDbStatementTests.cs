@@ -75,9 +75,8 @@
                     {
                         Expected = actual =>
                         {
-                            expectedCollection.QueueExclusiveLowerBound = actual.QueueExclusiveLowerBound;
                             expectedCollection.CreationDate = actual.CreationDate;
-                            expectedCollection.ChannelId = actual.ChannelId;
+                            expectedCollection.BlogId = actual.BlogId;
                             return expectedCollection;
                         }
                     }
@@ -92,19 +91,19 @@
                 var random = new Random();
                 var creator = UserTests.UniqueEntity(random);
 
-                var subscription = BlogTests.UniqueEntity(random);
-                subscription.Creator = creator;
-                subscription.CreatorId = creator.Id;
+                var blog = BlogTests.UniqueEntity(random);
+                blog.Creator = creator;
+                blog.CreatorId = creator.Id;
 
                 var orignalChannel = ChannelTests.UniqueEntity(random);
                 orignalChannel.Id = ChannelId.Value;
-                orignalChannel.Blog = subscription;
-                orignalChannel.BlogId = subscription.Id;
+                orignalChannel.Blog = blog;
+                orignalChannel.BlogId = blog.Id;
 
                 var collection = QueueTests.UniqueEntity(random);
                 collection.Id = QueueId.Value;
-                collection.Channel = orignalChannel;
-                collection.ChannelId = orignalChannel.Id;
+                collection.Blog = blog;
+                collection.BlogId = blog.Id;
 
                 databaseContext.Queues.Add(collection);
                 await databaseContext.SaveChangesAsync();

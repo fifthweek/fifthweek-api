@@ -8,7 +8,7 @@
     public partial class ValidIntroduction : Introduction
     {
         public static readonly string ForbiddenCharacters = "\r\n\t";
-        public static readonly int MinLength = 15; // Must be at least a few words.
+        public static readonly int MinLength = 1;
         public static readonly int MaxLength = 250; // Approximately 3 lines of content at 750px in Lato Regular 18px.
 
         private const string ForbiddenCharacterMessage = "Must not contain new lines or tabs";

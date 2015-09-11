@@ -20,7 +20,6 @@
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
         private static readonly BlogName Name = new BlogName("name");
-        private static readonly Tagline Tagline = new Tagline("tagline");
         private static readonly DateTime CreationDate = DateTime.UtcNow;
         private static readonly Introduction Introduction = new Introduction("intro");
         private static readonly BlogDescription Description = new BlogDescription("description");
@@ -52,10 +51,10 @@
         [TestMethod]
         public async Task WhenNoBlogExists_ItShouldReturnNull()
         {
-            this.getBlogChannelsAndCollections.Setup(v => v.ExecuteAsync(BlogId))
+            this.getBlogChannelsAndCollections.Setup(v => v.ExecuteAsync(CreatorId))
                 .ReturnsAsync(null);
 
-            var result = await this.target.HandleAsync(new GetBlogChannelsAndQueuesQuery(BlogId));
+            var result = await this.target.HandleAsync(new GetBlogChannelsAndQueuesQuery(CreatorId));
 
             Assert.IsNull(result);
         }
@@ -69,21 +68,20 @@
                         BlogId,
                         CreatorId,
                         Name,
-                        Tagline,
                         Introduction,
                         CreationDate,
                         null,
                         null,
-                        null),
+                        null,
+                        new List<QueueResult>()),
                     new List<ChannelResult>());
-            this.getBlogChannelsAndCollections.Setup(v => v.ExecuteAsync(BlogId))
+            this.getBlogChannelsAndCollections.Setup(v => v.ExecuteAsync(CreatorId))
                 .ReturnsAsync(databaseResult);
 
-            var result = await this.target.HandleAsync(new GetBlogChannelsAndQueuesQuery(BlogId));
+            var result = await this.target.HandleAsync(new GetBlogChannelsAndQueuesQuery(CreatorId));
 
             Assert.AreEqual(BlogId, result.Blog.BlogId);
             Assert.AreEqual(Name, result.Blog.Name);
-            Assert.AreEqual(Tagline, result.Blog.Tagline);
             Assert.AreEqual(Introduction, result.Blog.Introduction);
             Assert.AreEqual(CreationDate, result.Blog.CreationDate);
             Assert.AreEqual(null, result.Blog.HeaderImage);
@@ -102,15 +100,15 @@
                         BlogId,
                         CreatorId,
                         Name,
-                        Tagline,
                         Introduction,
                         CreationDate,
                         HeaderFileId,
                         ExternalVideoUrl,
-                        Description),
+                        Description,
+                        new List<QueueResult>()),
                     new List<ChannelResult>());
 
-            this.getBlogChannelsAndCollections.Setup(v => v.ExecuteAsync(BlogId))
+            this.getBlogChannelsAndCollections.Setup(v => v.ExecuteAsync(CreatorId))
                 .ReturnsAsync(databaseResult);
 
             var fileInformation = new FileInformation(HeaderFileId, "container");
@@ -118,11 +116,10 @@
                 v => v.GetFileInformationAsync(null, HeaderFileId, FilePurposes.ProfileHeaderImage))
                 .ReturnsAsync(fileInformation);
 
-            var result = await this.target.HandleAsync(new GetBlogChannelsAndQueuesQuery(BlogId));
+            var result = await this.target.HandleAsync(new GetBlogChannelsAndQueuesQuery(CreatorId));
 
             Assert.AreEqual(BlogId, result.Blog.BlogId);
             Assert.AreEqual(Name, result.Blog.Name);
-            Assert.AreEqual(Tagline, result.Blog.Tagline);
             Assert.AreEqual(Introduction, result.Blog.Introduction);
             Assert.AreEqual(CreationDate, result.Blog.CreationDate);
             Assert.AreEqual(fileInformation, result.Blog.HeaderImage);

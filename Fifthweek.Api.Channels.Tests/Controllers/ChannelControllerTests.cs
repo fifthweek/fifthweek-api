@@ -25,7 +25,6 @@
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly ValidChannelName ChannelName = ValidChannelName.Parse("Premium");
-        private static readonly ValidChannelDescription ChannelDescription = ValidChannelDescription.Parse("Premium");
         private static readonly ValidChannelPrice Price = ValidChannelPrice.Parse(10);
 
         private Mock<ICommandHandler<CreateChannelCommand>> createChannel;
@@ -49,8 +48,8 @@
         [TestMethod]
         public async Task WhenPostingChannel_ItShouldIssueCreateChannelCommand()
         {
-            var data = new NewChannelData(BlogId, ChannelName.Value, ChannelDescription.Value, Price.Value, IsVisibleToNonSubscribers);
-            var command = new CreateChannelCommand(Requester, ChannelId, BlogId, ChannelName, ChannelDescription, Price, IsVisibleToNonSubscribers);
+            var data = new NewChannelData(BlogId, ChannelName.Value, Price.Value, IsVisibleToNonSubscribers);
+            var command = new CreateChannelCommand(Requester, ChannelId, BlogId, ChannelName, Price, IsVisibleToNonSubscribers);
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(ChannelId.Value);
@@ -72,8 +71,8 @@
         [TestMethod]
         public async Task WhenPuttingChannel_ItShouldIssueUpdateChannelCommand()
         {
-            var data = new UpdatedChannelData(ChannelName.Value, ChannelDescription.Value, Price.Value, true);
-            var command = new UpdateChannelCommand(Requester, ChannelId, ChannelName, ChannelDescription, Price, true);
+            var data = new UpdatedChannelData(ChannelName.Value, Price.Value, true);
+            var command = new UpdateChannelCommand(Requester, ChannelId, ChannelName, Price, true);
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.updateChannel.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();

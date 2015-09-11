@@ -9,6 +9,7 @@
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Controllers;
@@ -29,6 +30,7 @@
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
+        private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly DateTime? Origin = DateTime.UtcNow;
         private static readonly bool SearchForwards = true;
         private Mock<ICommandHandler<DeletePostCommand>> deletePost;
@@ -42,6 +44,8 @@
         private Mock<IQueryHandler<GetCommentsQuery, CommentsResult>> getComments;
         private Mock<ICommandHandler<LikePostCommand>> likePost;
         private Mock<ICommandHandler<DeleteLikeCommand>> deleteLike;
+        private Mock<ICommandHandler<PostToChannelCommand>> postToChannel;
+        private Mock<ICommandHandler<RevisePostCommand>> revisePost;
         private Mock<IRequesterContext> requesterContext;
         private Mock<ITimestampCreator> timestampCreator;
         private Mock<IGuidCreator> guidCreator;
@@ -61,6 +65,8 @@
             this.getComments = new Mock<IQueryHandler<GetCommentsQuery, CommentsResult>>();
             this.likePost = new Mock<ICommandHandler<LikePostCommand>>();
             this.deleteLike = new Mock<ICommandHandler<DeleteLikeCommand>>();
+            this.postToChannel = new Mock<ICommandHandler<PostToChannelCommand>>();
+            this.revisePost = new Mock<ICommandHandler<RevisePostCommand>>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.timestampCreator = new Mock<ITimestampCreator>();
             this.guidCreator = new Mock<IGuidCreator>();
@@ -76,6 +82,8 @@
                 this.getComments.Object,
                 this.likePost.Object,
                 this.deleteLike.Object,
+                this.postToChannel.Object,
+                this.revisePost.Object,
                 this.requesterContext.Object,
                 this.timestampCreator.Object,
                 this.guidCreator.Object);
@@ -85,7 +93,7 @@
         public async Task WhenGettingCreatorBacklog_ItShouldReturnResultFromCreatorBacklogQuery()
         {
             var query = new GetCreatorBacklogQuery(Requester, UserId);
-            var queryResult = new[] { new GetCreatorBacklogQueryResult(PostId, ChannelId, QueueId, new Comment(""), null, null, null, null, false, DateTime.UtcNow) };
+            var queryResult = new[] { new GetCreatorBacklogQueryResult(PostId, ChannelId, QueueId, new Comment(""), null, null, null, null, DateTime.UtcNow) };
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.getCreatorBacklog.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
@@ -103,53 +111,20 @@
         }
 
         [TestMethod]
-        public async Task WhenGettingCreatorNewsfeed_ItShouldReturnResultFromNewsfeedQuery()
-        {
-            var query = new GetNewsfeedQuery(Requester, UserId, null, null, null, false, NonNegativeInt.Parse(10), PositiveInt.Parse(5));
-            var requestData = new CreatorNewsfeedPaginationData { Count = 5, StartIndex = 10 };
-
-            var now = DateTime.UtcNow;
-            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, BlogId, ChannelId, QueueId, new Comment(string.Empty), null, null, null, null, now, 0, 0, false) }, 10);
-            var expectedResult = new[] { new GetCreatorNewsfeedQueryResult(PostId, ChannelId, QueueId, new Comment(string.Empty), null, null, null, null, now) };
-
-            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
-            this.getNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
-
-            var result = await this.target.GetCreatorNewsfeed(UserId.Value.EncodeGuid(), requestData);
-
-            CollectionAssert.AreEqual(expectedResult, result.ToList());
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(BadRequestException))]
-        public async Task WhenGettingCreatorNewsfeed_WithoutSpecifyingCreatorId_ItShouldThrowBadRequestException()
-        {
-            await this.target.GetCreatorNewsfeed(string.Empty, new CreatorNewsfeedPaginationData());
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(BadRequestException))]
-        public async Task WhenGettingCreatorNewsfeed_WithoutSpecifyingPagination_ItShouldThrowBadRequestException()
-        {
-            await this.target.GetCreatorNewsfeed(UserId.Value.EncodeGuid(), null);
-        }
-
-        [TestMethod]
         public async Task WhenGettingNewsfeed_ItShouldReturnResultFromNewsfeedQuery()
         {
-            var query = new GetNewsfeedQuery(Requester, UserId, new[] { ChannelId }, new[] { QueueId }, Origin, SearchForwards, NonNegativeInt.Parse(10), PositiveInt.Parse(5));
+            var query = new GetNewsfeedQuery(Requester, UserId, new[] { ChannelId }, Origin, SearchForwards, NonNegativeInt.Parse(10), PositiveInt.Parse(5));
             var requestData = new NewsfeedFilter 
             { 
                 CreatorId = UserId.Value.EncodeGuid(), 
                 ChannelId = ChannelId.Value.EncodeGuid(),
-                CollectionId = QueueId.Value.EncodeGuid(),
                 Origin = Origin,
                 SearchForwards = SearchForwards,
                 Count = 5, 
                 StartIndex = 10 
             };
 
-            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, BlogId, ChannelId, QueueId, new Comment(string.Empty), null, null, null, null, DateTime.UtcNow, 0, 0, false) }, 10);
+            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, BlogId, ChannelId, new Comment(string.Empty), null, null, null, null, DateTime.UtcNow, 0, 0, false) }, 10);
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.getNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
@@ -164,6 +139,60 @@
         public async Task WhenGettingNewsfeed_WithoutSpecifyingFilter_ItShouldThrowBadRequestException()
         {
             await this.target.GetNewsfeed(null);
+        }
+
+        [TestMethod]
+        public async Task WhenPostingToChannel_ItShouldIssuePostFileCommand()
+        {
+            var timestamp = DateTime.UtcNow;
+            this.timestampCreator.Setup(v => v.Now()).Returns(timestamp);
+
+            var data = new NewPostData(ChannelId, FileId, null, null, null, QueueId);
+            var command = new PostToChannelCommand(Requester, PostId, ChannelId, FileId, null, null, null, QueueId, timestamp);
+
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
+            this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
+            this.postToChannel.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
+
+            await this.target.PostPost(data);
+
+            this.postToChannel.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenPostingToChannel_WithoutSpecifyingNewFileData_ItShouldThrowBadRequestException()
+        {
+            await this.target.PostPost(null);
+        }
+
+        [TestMethod]
+        public async Task WhenPuttingPost_ItShouldIssuePostFileCommand()
+        {
+            var data = new RevisedPostData(FileId, null, null);
+            var command = new RevisePostCommand(Requester, PostId, FileId, null, null);
+
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
+            this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
+            this.revisePost.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
+
+            await this.target.PutPost(PostId.Value.EncodeGuid(), data);
+
+            this.postToChannel.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenPuttingPost_WithoutSpecifyingRevisedFileId_ItShouldThrowBadRequestException()
+        {
+            await this.target.PutPost(string.Empty, new RevisedPostData(FileId, null, null));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenPuttingPost_WithoutSpecifyingRevisedFileData_ItShouldThrowBadRequestException()
+        {
+            await this.target.PutPost(PostId.Value.EncodeGuid(), null);
         }
 
         [TestMethod]
@@ -219,11 +248,11 @@
         public async Task WhenReschedulingWithQueue_ItShouldIssueRescheduleWithQueueCommand()
         {
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
-            this.rescheduleWithQueue.Setup(_ => _.HandleAsync(new RescheduleWithQueueCommand(Requester, PostId)))
+            this.rescheduleWithQueue.Setup(_ => _.HandleAsync(new RescheduleWithQueueCommand(Requester, PostId, QueueId)))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.target.PostToQueue(PostId.Value.EncodeGuid());
+            await this.target.PostToQueue(PostId.Value.EncodeGuid(), QueueId.Value.EncodeGuid());
 
             this.rescheduleForNow.Verify();
         }
@@ -232,7 +261,14 @@
         [ExpectedException(typeof(BadRequestException))]
         public async Task WhenReschedulingWithQueue_WithoutSpecifyingPostId_ItShouldThrowBadRequestException()
         {
-            await this.target.PostToQueue(string.Empty);
+            await this.target.PostToQueue(string.Empty, QueueId.Value.EncodeGuid());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenReschedulingWithQueue_WithoutSpecifyingQueueId_ItShouldThrowBadRequestException()
+        {
+            await this.target.PostToQueue(PostId.Value.EncodeGuid(), string.Empty);
         }
 
         [TestMethod]

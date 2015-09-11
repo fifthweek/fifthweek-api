@@ -27,7 +27,6 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly ValidChannelName Name = ValidChannelName.Parse("Bat puns");
-        private static readonly ValidChannelDescription Description = ValidChannelDescription.Parse("Bat puns\nBadPuns");
         private static readonly ValidChannelPrice Price = ValidChannelPrice.Parse(10);
         private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
 
@@ -57,10 +56,10 @@
                 this.InitializeTarget(testDatabase);
 
                 await this.CreateChannelAsync(testDatabase);
-                await this.target.ExecuteAsync(UserId, ChannelId, Name, Description, Price, IsVisibleToNonSubscribers, Now);
+                await this.target.ExecuteAsync(UserId, ChannelId, Name, Price, IsVisibleToNonSubscribers, Now);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(UserId, ChannelId, Name, Description, Price, IsVisibleToNonSubscribers, Now);
+                await this.target.ExecuteAsync(UserId, ChannelId, Name, Price, IsVisibleToNonSubscribers, Now);
 
                 return ExpectedSideEffects.None;
             });
@@ -75,13 +74,12 @@
                 var channel = await this.CreateChannelAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(UserId, ChannelId, Name, Description, Price, IsVisibleToNonSubscribers, Now);
+                await this.target.ExecuteAsync(UserId, ChannelId, Name, Price, IsVisibleToNonSubscribers, Now);
 
                 var expectedChannel = new Channel(ChannelId.Value)
                 {
                     IsVisibleToNonSubscribers = IsVisibleToNonSubscribers,
                     Name = Name.Value,
-                    Description = Description.Value,
                     Price = Price.Value,
                     PriceLastSetDate = Now,
                     BlogId = channel.BlogId,
@@ -107,7 +105,7 @@
 
                 this.requestSnapshot.VerifyConnectionDisposed(trackingDatabase);
 
-                await this.target.ExecuteAsync(UserId, ChannelId, Name, Description, Price, IsVisibleToNonSubscribers, Now);
+                await this.target.ExecuteAsync(UserId, ChannelId, Name, Price, IsVisibleToNonSubscribers, Now);
 
                 this.requestSnapshot.VerifyCalledWith(UserId, SnapshotType.CreatorChannels);
 
@@ -115,7 +113,6 @@
                 {
                     IsVisibleToNonSubscribers = IsVisibleToNonSubscribers,
                     Name = Name.Value,
-                    Description = Description.Value,
                     Price = Price.Value,
                     PriceLastSetDate = Now,
                     BlogId = channel.BlogId,
@@ -142,7 +139,7 @@
                 this.requestSnapshot.ThrowException();
 
                 await ExpectedException.AssertExceptionAsync<SnapshotException>(
-                    () => this.target.ExecuteAsync(UserId, ChannelId, Name, Description, Price, IsVisibleToNonSubscribers, Now));
+                    () => this.target.ExecuteAsync(UserId, ChannelId, Name, Price, IsVisibleToNonSubscribers, Now));
 
                 return ExpectedSideEffects.TransactionAborted;
             });
@@ -157,13 +154,12 @@
                 var channel = await this.CreateChannelAsync(testDatabase, createAsDefaultChannel: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(UserId, ChannelId, Name, Description, Price, false, Now);
+                await this.target.ExecuteAsync(UserId, ChannelId, Name, Price, false, Now);
 
                 var expectedChannel = new Channel(ChannelId.Value)
                 {
                     IsVisibleToNonSubscribers = true,
                     Name = Name.Value,
-                    Description = Description.Value,
                     Price = Price.Value,
                     PriceLastSetDate = Now,
                     BlogId = channel.BlogId,
@@ -190,7 +186,6 @@
                     UserId, 
                     ChannelId, 
                     Name, 
-                    Description, 
                     ValidChannelPrice.Parse(channel.Price), 
                     IsVisibleToNonSubscribers,
                     Now);
@@ -199,7 +194,6 @@
                 {
                     IsVisibleToNonSubscribers = IsVisibleToNonSubscribers,
                     Name = Name.Value,
-                    Description = Description.Value,
                     Price = channel.Price,
                     PriceLastSetDate = channel.PriceLastSetDate,
                     BlogId = channel.BlogId,

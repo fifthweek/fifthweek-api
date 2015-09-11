@@ -24,7 +24,6 @@
     {
         private static readonly DateTime Now = DateTime.UtcNow;
 
-        private static readonly CreatorName Name = new CreatorName("name");
         private static readonly Username Username = new Username("username");
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
@@ -50,7 +49,6 @@
                 await this.CreateDataAsync(
                     testDatabase,
                     UserId,
-                    Name,
                     Username,
                     Email,
                     FileId,
@@ -64,7 +62,6 @@
                 var result = await this.target.ExecuteAsync(UserId);
 
                 var expectedResult = new GetAccountSettingsDbResult(
-                    Name,
                     Username,
                     Email,
                     FileId,
@@ -88,7 +85,6 @@
                 await this.CreateDataAsync(
                     testDatabase,
                     UserId,
-                    Name,
                     Username,
                     Email,
                     null,
@@ -102,48 +98,9 @@
                 var result = await this.target.ExecuteAsync(UserId);
 
                 var expectedResult = new GetAccountSettingsDbResult(
-                    Name,
                     Username,
                     Email,
                     null,
-                    0,
-                    PaymentStatus.None,
-                    false,
-                    null);
-
-                Assert.AreEqual(expectedResult, result);
-
-                return ExpectedSideEffects.None;
-            });
-        }
-
-        [TestMethod]
-        public async Task WhenGetAccountSettingsCalledAndNoNameExists_ItShouldGetAccountSettingsFromTheDatabase()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.target = new GetAccountSettingsDbStatement(testDatabase);
-                await this.CreateDataAsync(
-                    testDatabase,
-                    UserId,
-                    null,
-                    Username,
-                    Email,
-                    FileId,
-                    0,
-                    false,
-                    false,
-                    false);
-
-                await testDatabase.TakeSnapshotAsync();
-
-                var result = await this.target.ExecuteAsync(UserId);
-
-                var expectedResult = new GetAccountSettingsDbResult(
-                    null,
-                    Username,
-                    Email,
-                    FileId,
                     0,
                     PaymentStatus.None,
                     false,
@@ -164,7 +121,6 @@
                 await this.CreateDataAsync(
                     testDatabase,
                     UserId,
-                    Name,
                     Username,
                     Email,
                     FileId,
@@ -178,7 +134,6 @@
                 var result = await this.target.ExecuteAsync(UserId);
 
                 var expectedResult = new GetAccountSettingsDbResult(
-                    Name,
                     Username,
                     Email,
                     FileId,
@@ -202,7 +157,6 @@
                 await this.CreateDataAsync(
                     testDatabase,
                     UserId,
-                    Name,
                     Username,
                     Email,
                     FileId,
@@ -216,7 +170,6 @@
                 var result = await this.target.ExecuteAsync(UserId);
 
                 var expectedResult = new GetAccountSettingsDbResult(
-                    Name,
                     Username,
                     Email,
                     FileId,
@@ -240,7 +193,6 @@
                 await this.CreateDataAsync(
                     testDatabase,
                     UserId,
-                    Name,
                     Username,
                     Email,
                     FileId,
@@ -254,7 +206,6 @@
                 var result = await this.target.ExecuteAsync(UserId);
 
                 var expectedResult = new GetAccountSettingsDbResult(
-                    Name,
                     Username,
                     Email,
                     FileId,
@@ -278,7 +229,6 @@
                 await this.CreateDataAsync(
                     testDatabase,
                     UserId,
-                    Name,
                     Username,
                     Email,
                     FileId,
@@ -314,7 +264,6 @@
                 await this.CreateDataAsync(
                     testDatabase,
                     UserId,
-                    Name,
                     Username,
                     Email,
                     FileId,
@@ -328,7 +277,6 @@
                 var result = await this.target.ExecuteAsync(UserId);
 
                 var expectedResult = new GetAccountSettingsDbResult(
-                    Name,
                     Username,
                     Email,
                     FileId,
@@ -346,7 +294,6 @@
         private async Task CreateDataAsync(
             TestDatabaseContext testDatabase, 
             UserId userId, 
-            CreatorName name, 
             Username username, 
             Email email, 
             FileId fileId, 
@@ -360,11 +307,6 @@
             user.Id = userId.Value;
             user.Email = email.Value;
             user.UserName = username.Value;
-
-            if (name != null)
-            {
-                user.Name = name.Value;
-            }
 
             using (var databaseContext = testDatabase.CreateContext())
             {

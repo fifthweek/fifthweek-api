@@ -28,7 +28,6 @@
         private static readonly UserId UserId3 = UserId.Random();
 
         private static readonly Username Username1 = new Username("Username");
-        private static readonly CreatorName CreatorName1 = new CreatorName("CreatorName");
         private static readonly Email Email1 = new Email("a@b.com");
         private static readonly bool EmailConfirmed1 = true;
 
@@ -63,7 +62,6 @@
                             Days * 4,
                             (Days * 2) - 5,
                             Username1,
-                            CreatorName1,
                             Email1,
                             EmailConfirmed1),
                         new GetAllCreatorRevenuesResult.Creator(
@@ -73,14 +71,12 @@
                             (Days * 3) - 10,
                             null,
                             null,
-                            null,
                             false),
                         new GetAllCreatorRevenuesResult.Creator(
                             UserId3,
                             100,
                             0,
                             100,
-                            null,
                             null,
                             null,
                             false)
@@ -118,7 +114,6 @@
                 var user = UserTests.UniqueEntity(random);
                 user.Id = UserId1.Value;
                 user.UserName = Username1.Value;
-                user.Name = CreatorName1.Value;
                 user.Email = Email1.Value;
                 user.EmailConfirmed = EmailConfirmed1;
                 context.Users.Add(user);

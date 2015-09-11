@@ -25,8 +25,7 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
-        private static readonly ValidCreatorName Name = ValidCreatorName.Parse("Phil the Cat");
-        private static readonly UpdateCreatorAccountSettingsCommand Command = new UpdateCreatorAccountSettingsCommand(Requester, UserId, Name);
+        private static readonly UpdateCreatorAccountSettingsCommand Command = new UpdateCreatorAccountSettingsCommand(Requester, UserId);
         private Mock<IUserManager> userManager;
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
@@ -39,7 +38,7 @@
             this.requesterSecurity.SetupFor(Requester);
             this.userManager = new Mock<IUserManager>(MockBehavior.Strict);
             this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
-            this.target = new UpdateCreatorAccountSettingsCommandHandler(this.requesterSecurity.Object, this.userManager.Object, this.connectionFactory.Object);
+            this.target = new UpdateCreatorAccountSettingsCommandHandler(this.requesterSecurity.Object, this.userManager.Object);
         }
 
         [TestMethod]
@@ -55,8 +54,7 @@
         {
             await this.target.HandleAsync(new UpdateCreatorAccountSettingsCommand(
                 Requester.Unauthenticated,
-                UserId,
-                Name));
+                UserId));
         }
 
         [TestMethod]
@@ -65,8 +63,7 @@
         {
             await this.target.HandleAsync(new UpdateCreatorAccountSettingsCommand(
                 Requester,
-                new UserId(Guid.NewGuid()),
-                Name));
+                new UserId(Guid.NewGuid())));
         }
 
         [TestMethod]
@@ -74,7 +71,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateCreatorAccountSettingsCommandHandler(this.requesterSecurity.Object, this.userManager.Object, testDatabase);
+                this.target = new UpdateCreatorAccountSettingsCommandHandler(this.requesterSecurity.Object, this.userManager.Object);
 
                 var expectedUser = await this.CreateUserAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -86,12 +83,7 @@
 
                 this.userManager.Verify();
 
-                expectedUser.Name = Name.Value;
-
-                return new ExpectedSideEffects
-                {
-                    Update = expectedUser
-                };
+                return ExpectedSideEffects.None;
             });
         }
 
@@ -100,7 +92,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateCreatorAccountSettingsCommandHandler(this.requesterSecurity.Object, this.userManager.Object, testDatabase);
+                this.target = new UpdateCreatorAccountSettingsCommandHandler(this.requesterSecurity.Object, this.userManager.Object);
 
                 var expectedUser = await this.CreateUserAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -109,12 +101,7 @@
 
                 await this.target.HandleAsync(Command);
 
-                expectedUser.Name = Name.Value;
-
-                return new ExpectedSideEffects
-                {
-                    Update = expectedUser
-                };
+                return ExpectedSideEffects.None;
             });
         }
 
@@ -123,7 +110,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateCreatorAccountSettingsCommandHandler(this.requesterSecurity.Object, this.userManager.Object, testDatabase);
+                this.target = new UpdateCreatorAccountSettingsCommandHandler(this.requesterSecurity.Object, this.userManager.Object);
                 this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.Creator)).ReturnsAsync(true);
 
                 await this.CreateUserAsync(testDatabase);

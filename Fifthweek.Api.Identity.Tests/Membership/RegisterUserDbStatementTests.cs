@@ -32,7 +32,6 @@
             ExampleWork = "testing.fifthweek.com",
             Password = "TestPassword",
             Username = "test_username",
-            CreatorName = "creator name"
         }.Parse();
 
         private Mock<IUserManager> userManager;
@@ -64,7 +63,6 @@
                     RegistrationData.Username,
                     RegistrationData.Email,
                     RegistrationData.ExampleWork,
-                    RegistrationData.CreatorName,
                     RegistrationData.Password,
                     TimeStamp);
         }
@@ -78,7 +76,6 @@
                     null,
                     RegistrationData.Email,
                     RegistrationData.ExampleWork,
-                    RegistrationData.CreatorName,
                     RegistrationData.Password,
                     TimeStamp);
         }
@@ -92,7 +89,6 @@
                     RegistrationData.Username,
                     null,
                     RegistrationData.ExampleWork,
-                    RegistrationData.CreatorName,
                     RegistrationData.Password,
                     TimeStamp);
         }
@@ -106,7 +102,6 @@
                     RegistrationData.Username,
                     RegistrationData.Email,
                     RegistrationData.ExampleWork,
-                    RegistrationData.CreatorName,
                     null,
                     TimeStamp);
         }
@@ -128,7 +123,6 @@
                     RegistrationData.Username,
                     RegistrationData.Email,
                     RegistrationData.ExampleWork,
-                    RegistrationData.CreatorName,
                     RegistrationData.Password,
                     TimeStamp);
 
@@ -138,7 +132,6 @@
                     UserName = RegistrationData.Username.Value,
                     Email = RegistrationData.Email.Value,
                     ExampleWork = RegistrationData.ExampleWork,
-                    Name = RegistrationData.CreatorName.Value,
                     RegistrationDate = TimeStamp,
                     LastSignInDate = SqlDateTime.MinValue.Value,
                     LastAccessTokenDate = SqlDateTime.MinValue.Value,
@@ -179,7 +172,6 @@
                     RegistrationData.Username,
                     RegistrationData.Email,
                     RegistrationData.ExampleWork,
-                    RegistrationData.CreatorName,
                     RegistrationData.Password,
                     TimeStamp);
 
@@ -191,7 +183,6 @@
                     UserName = RegistrationData.Username.Value,
                     Email = RegistrationData.Email.Value,
                     ExampleWork = RegistrationData.ExampleWork,
-                    Name = RegistrationData.CreatorName.Value,
                     RegistrationDate = TimeStamp,
                     LastSignInDate = SqlDateTime.MinValue.Value,
                     LastAccessTokenDate = SqlDateTime.MinValue.Value,
@@ -232,7 +223,6 @@
                         RegistrationData.Username,
                         RegistrationData.Email,
                         RegistrationData.ExampleWork,
-                        RegistrationData.CreatorName,
                         RegistrationData.Password,
                         TimeStamp));
 
@@ -257,7 +247,6 @@
                     RegistrationData.Username,
                     RegistrationData.Email,
                     null,
-                    RegistrationData.CreatorName,
                     RegistrationData.Password,
                     TimeStamp);
 
@@ -267,55 +256,6 @@
                     UserName = RegistrationData.Username.Value,
                     Email = RegistrationData.Email.Value,
                     ExampleWork = null,
-                    Name = RegistrationData.CreatorName.Value,
-                    RegistrationDate = TimeStamp,
-                    LastSignInDate = SqlDateTime.MinValue.Value,
-                    LastAccessTokenDate = SqlDateTime.MinValue.Value,
-                    PasswordHash = hashedPassword,
-                };
-
-                return new ExpectedSideEffects
-                {
-                    Insert = new WildcardEntity<FifthweekUser>(expectedUser)
-                    {
-                        Expected = actual =>
-                        {
-                            expectedUser.SecurityStamp = actual.SecurityStamp;
-                            return expectedUser;
-                        }
-                    }
-                };
-            });
-        }
-
-        [TestMethod]
-        public async Task WhenRegisteringANewUserWithNoCreatorName_ItShouldAddTheUserToTheDatabase()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase, this.requestSnapshot);
-
-                var hashedPassword = RegistrationData.Password + "1";
-                this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
-
-                await testDatabase.TakeSnapshotAsync();
-
-                await this.target.ExecuteAsync(
-                    UserId,
-                    RegistrationData.Username,
-                    RegistrationData.Email,
-                    RegistrationData.ExampleWork,
-                    null,
-                    RegistrationData.Password,
-                    TimeStamp);
-
-                var expectedUser = new FifthweekUser
-                {
-                    Id = UserId.Value,
-                    UserName = RegistrationData.Username.Value,
-                    Email = RegistrationData.Email.Value,
-                    ExampleWork = RegistrationData.ExampleWork,
-                    Name = null,
                     RegistrationDate = TimeStamp,
                     LastSignInDate = SqlDateTime.MinValue.Value,
                     LastAccessTokenDate = SqlDateTime.MinValue.Value,
@@ -351,7 +291,6 @@
                     RegistrationData.Username,
                     RegistrationData.Email,
                     RegistrationData.ExampleWork,
-                    RegistrationData.CreatorName,
                     RegistrationData.Password,
                     TimeStamp);
 
@@ -362,7 +301,6 @@
                     RegistrationData.Username,
                     RegistrationData.Email,
                     RegistrationData.ExampleWork,
-                    RegistrationData.CreatorName,
                     RegistrationData.Password,
                     TimeStamp);
 
@@ -391,7 +329,6 @@
                         RegistrationData.Username,
                         RegistrationData.Email,
                         RegistrationData.ExampleWork,
-                        RegistrationData.CreatorName,
                         RegistrationData.Password,
                         TimeStamp);
                 });
@@ -424,7 +361,6 @@
                         RegistrationData.Username,
                         RegistrationData.Email,
                         RegistrationData.ExampleWork,
-                        RegistrationData.CreatorName,
                         RegistrationData.Password,
                         TimeStamp);
                 });

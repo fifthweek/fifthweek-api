@@ -8,6 +8,7 @@
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,11 +22,13 @@
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly DateTime ScheduledPostTime = DateTime.UtcNow.AddDays(100);
         private static readonly RescheduleForTimeCommand Command = new RescheduleForTimeCommand(Requester, PostId, ScheduledPostTime);
+        private static readonly DateTime Now = DateTime.UtcNow;
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IPostSecurity> postSecurity;
         private Mock<ISetPostLiveDateDbStatement> setBacklogPostLiveDateToNow;
-        private Mock<IDefragmentQueueIfRequiredDbStatement> removeFromQueueIfRequired;
+        private Mock<IDefragmentQueueIfRequiredDbStatement> defragmentQueueIfRequired;
+        private Mock<ITimestampCreator> timestampCreator;
         private RescheduleForTimeCommandHandler target;
 
         [TestInitialize]
@@ -34,16 +37,19 @@
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
             this.postSecurity = new Mock<IPostSecurity>();
+            this.timestampCreator = new Mock<ITimestampCreator>();
+            this.timestampCreator.Setup(v => v.Now()).Returns(Now);
 
             // Mock potentially side-effecting components with strict behaviour.            
             this.setBacklogPostLiveDateToNow = new Mock<ISetPostLiveDateDbStatement>(MockBehavior.Strict);
-            this.removeFromQueueIfRequired = new Mock<IDefragmentQueueIfRequiredDbStatement>(MockBehavior.Strict);
+            this.defragmentQueueIfRequired = new Mock<IDefragmentQueueIfRequiredDbStatement>(MockBehavior.Strict);
 
             this.target = new RescheduleForTimeCommandHandler(
                 this.requesterSecurity.Object, 
                 this.postSecurity.Object, 
                 this.setBacklogPostLiveDateToNow.Object,
-                this.removeFromQueueIfRequired.Object);
+                this.defragmentQueueIfRequired.Object,
+                this.timestampCreator.Object);
         }
 
         [TestMethod]
@@ -65,7 +71,7 @@
         [TestMethod]
         public async Task ItShouldSetBacklogPostLiveDateToNow()
         {
-            this.removeFromQueueIfRequired.SetupFor(PostId);
+            this.defragmentQueueIfRequired.SetupFor(PostId);
             this.setBacklogPostLiveDateToNow.Setup(_ => _.ExecuteAsync(PostId, ScheduledPostTime, It.Is<DateTime>(now => now.Kind == DateTimeKind.Utc)))
                 .Returns(Task.FromResult(0))
                 .Verifiable();

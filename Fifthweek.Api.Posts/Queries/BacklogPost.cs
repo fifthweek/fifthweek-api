@@ -27,8 +27,6 @@
         [Optional]
         public FileId ImageId { get; private set; }
 
-        public bool ScheduledByQueue { get; private set; }
-
         public DateTime LiveDate { get; private set; }
 
         [Optional]

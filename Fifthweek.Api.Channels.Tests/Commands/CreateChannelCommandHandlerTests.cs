@@ -28,9 +28,8 @@
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly ValidChannelName Name = ValidChannelName.Parse("Bat puns");
-        private static readonly ValidChannelDescription Description = ValidChannelDescription.Parse("It's just a load of really, really bat puns! *bad");
         private static readonly ValidChannelPrice Price = ValidChannelPrice.Parse(10);
-        private static readonly CreateChannelCommand Command = new CreateChannelCommand(Requester, ChannelId, BlogId, Name, Description, Price, IsVisibleToNonSubscribers);
+        private static readonly CreateChannelCommand Command = new CreateChannelCommand(Requester, ChannelId, BlogId, Name, Price, IsVisibleToNonSubscribers);
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IBlogSecurity> subscriptionSecurity;
@@ -68,7 +67,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task ItShouldRequireUserIsAuthenticated()
         {
-            await this.target.HandleAsync(new CreateChannelCommand(Requester.Unauthenticated, ChannelId, BlogId, Name, Description, Price, IsVisibleToNonSubscribers));
+            await this.target.HandleAsync(new CreateChannelCommand(Requester.Unauthenticated, ChannelId, BlogId, Name, Price, IsVisibleToNonSubscribers));
         }
 
         [TestMethod]
@@ -112,7 +111,6 @@
                     BlogId.Value,
                     null,
                     Name.Value,
-                    Description.Value,
                     Price.Value,
                     IsVisibleToNonSubscribers,
                     default(DateTime),
@@ -155,7 +153,6 @@
                     BlogId.Value,
                     null,
                     Name.Value,
-                    Description.Value,
                     Price.Value,
                     IsVisibleToNonSubscribers,
                     default(DateTime),

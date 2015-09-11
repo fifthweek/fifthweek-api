@@ -126,13 +126,12 @@
             {
                 var userId = Guid.NewGuid();
                 var channelId = Guid.NewGuid();
-                await databaseContext.CreateTestCollectionAsync(userId, channelId, QueueId.Value);
+                await databaseContext.CreateTestEntitiesAsync(userId, channelId, QueueId.Value);
 
                 var post = PostTests.UniqueFileOrImage(new Random());
                 post.Id = PostId.Value;
                 post.ChannelId = channelId;
-                post.QueueId = QueueId.Value;
-                post.ScheduledByQueue = queuePost;
+                post.QueueId = queuePost ? QueueId.Value : (Guid?)null;
                 post.LiveDate = liveDateInFuture ? Now.AddDays(1) : Now.AddDays(-1);
                 await databaseContext.Database.Connection.InsertAsync(post);
             }

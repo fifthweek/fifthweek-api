@@ -132,7 +132,6 @@
                 Assert.AreEqual(ExternalVideoUrl, result.Blog.Video.Value);
                 Assert.AreEqual(Introduction, result.Blog.Introduction.Value);
                 Assert.AreEqual(Name, result.Blog.BlogName.Value);
-                Assert.AreEqual(Tagline, result.Blog.Tagline.Value);
 
                 Assert.IsNotNull(result);
                 Assert.AreEqual(3, result.Channels.Count);
@@ -143,7 +142,6 @@
 
                 foreach (var channel in result.Channels)
                 {
-                    Assert.AreEqual(Description, channel.Description);
                     Assert.AreEqual(IsVisibleToNonSubscribers, channel.IsVisibleToNonSubscribers);
                     Assert.AreEqual(Name, channel.Name);
                     Assert.AreEqual(Price, channel.Price);
@@ -244,7 +242,6 @@
             blog.ExternalVideoUrl = ExternalVideoUrl;
             blog.Introduction = Introduction;
             blog.Name = Name;
-            blog.Tagline = Tagline;
 
             using (var connection = testDatabase.CreateConnection())
             {
@@ -287,7 +284,6 @@
         {
             channel.BlogId = BlogId.Value;
             channel.CreationDate = CreationDate;
-            channel.Description = Description;
             channel.IsVisibleToNonSubscribers = IsVisibleToNonSubscribers;
             channel.Name = Name;
             channel.Price = Price;

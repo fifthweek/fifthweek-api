@@ -4,6 +4,7 @@
     using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Commands;
     using Fifthweek.Api.Collections.Shared;
@@ -24,16 +25,15 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
-        private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
+        private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly ValidQueueName Name = ValidQueueName.Parse("Bat puns");
         private static readonly HourOfWeek InitialWeeklyReleaseTime = HourOfWeek.Parse(27);
-        private static readonly CreateQueueCommand Command = new CreateQueueCommand(Requester, QueueId, ChannelId, Name, InitialWeeklyReleaseTime);
+        private static readonly CreateQueueCommand Command = new CreateQueueCommand(Requester, QueueId, BlogId, Name, InitialWeeklyReleaseTime);
         private static readonly DateTime DefaultQueueLowerBound = new DateTime(2015, 5, 31, 23, 59, 0, DateTimeKind.Utc);
 
         private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<IChannelSecurity> channelSecurity;
+        private Mock<IBlogSecurity> blogSecurity;
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
-        private Mock<IRandom> random;
         private CreateQueueCommandHandler target;
 
         [TestInitialize]
@@ -41,8 +41,7 @@
         {
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
-            this.channelSecurity = new Mock<IChannelSecurity>();
-            this.random = new Mock<IRandom>();
+            this.blogSecurity = new Mock<IBlogSecurity>();
 
             // Give potentially side-effective components strict mock behaviour.
             this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
@@ -52,7 +51,7 @@
 
         public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new CreateQueueCommandHandler(this.requesterSecurity.Object, this.channelSecurity.Object, connectionFactory);
+            this.target = new CreateQueueCommandHandler(this.requesterSecurity.Object, this.blogSecurity.Object, connectionFactory);
         }
 
         [TestMethod]
@@ -66,14 +65,14 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task ItShouldRequireUserIsAuthenticated()
         {
-            await this.target.HandleAsync(new CreateQueueCommand(Requester.Unauthenticated, QueueId, ChannelId, Name, InitialWeeklyReleaseTime));
+            await this.target.HandleAsync(new CreateQueueCommand(Requester.Unauthenticated, QueueId, BlogId, Name, InitialWeeklyReleaseTime));
         }
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task ItShouldRequireUserHasWriteAccessToChannel()
         {
-            this.channelSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, ChannelId)).Throws<UnauthorizedException>();
+            this.blogSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, BlogId)).Throws<UnauthorizedException>();
 
             await this.target.HandleAsync(Command);
         }
@@ -107,10 +106,9 @@
 
                 var expectedCollection = new Queue(
                     QueueId.Value,
-                    ChannelId.Value,
+                    BlogId.Value,
                     null,
                     Name.Value,
-                    new SqlDateTime(DefaultQueueLowerBound).Value, 
                     default(DateTime));
 
                 return new ExpectedSideEffects
@@ -156,7 +154,7 @@
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                await databaseContext.CreateTestChannelAsync(UserId.Value, ChannelId.Value);
+                await databaseContext.CreateTestChannelAsync(UserId.Value, BlogId.Value);
             }
         }
     } 

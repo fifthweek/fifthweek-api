@@ -30,7 +30,6 @@
         private static readonly ValidUsername Username = ValidUsername.Parse("username");
         private static readonly ValidPassword Password = ValidPassword.Parse("passw0rd");
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
-        private static readonly ValidCreatorName Name = ValidCreatorName.Parse("name");
         private static readonly string ContainerName = "containerName";
         private static readonly string BlobName = "blobName";
         private static readonly string FileUri = "uri";
@@ -90,7 +89,7 @@
         {
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId, Now);
 
-            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, FileInformation, AccountBalance, PaymentStatus, HasPaymentInformation, 1m, null);
+            var expectedResult = new GetAccountSettingsResult(Username, Email, FileInformation, AccountBalance, PaymentStatus, HasPaymentInformation, 1m, null);
 
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
                 .ReturnsAsync(expectedResult)
@@ -108,7 +107,7 @@
         {
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId, Now);
 
-            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, 1m, null);
+            var expectedResult = new GetAccountSettingsResult(Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, 1m, null);
             
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
                 .ReturnsAsync(expectedResult)
@@ -219,15 +218,12 @@
         [TestMethod]
         public async Task WhenPutCreatorInformationIsCalled_ItShouldCallTheCommandHandler()
         {
-            var command = new UpdateCreatorAccountSettingsCommand(Requester, RequestedUserId, Name);
+            var command = new UpdateCreatorAccountSettingsCommand(Requester, RequestedUserId);
             this.promoteUserToCreator.Setup(v => v.HandleAsync(command))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            var updatedAccountSettings = new CreatorInformation
-            {
-                Name = Name.Value,
-            };
+            var updatedAccountSettings = new CreatorInformation();
 
             await this.target.PutCreatorInformation(RequestedUserId.Value.EncodeGuid(), updatedAccountSettings);
 

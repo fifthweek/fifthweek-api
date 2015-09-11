@@ -110,7 +110,7 @@
 
                 await this.target.ExecuteAsync(PostId, NewDate, Now);
 
-                post.ScheduledByQueue = false;
+                post.QueueId = null;
                 post.LiveDate = new SqlDateTime(ClippedDate).Value;
 
                 return new ExpectedSideEffects
@@ -151,7 +151,7 @@
 
                 await this.target.ExecuteAsync(PostId, NewDate, Now);
 
-                post.ScheduledByQueue = false;
+                post.QueueId = null;
                 post.LiveDate = new SqlDateTime(ClippedDate).Value;
 
                 return new ExpectedSideEffects
@@ -166,14 +166,13 @@
             using (var databaseContext = testDatabase.CreateContext())
             {
                 var channelId = Guid.NewGuid();
-                var collectionId = Guid.NewGuid();
-                await databaseContext.CreateTestCollectionAsync(Guid.NewGuid(), channelId, collectionId);
+                var queueId = Guid.NewGuid();
+                await databaseContext.CreateTestEntitiesAsync(Guid.NewGuid(), channelId, queueId);
 
                 var post = PostTests.UniqueFileOrImage(new Random());
                 post.Id = PostId.Value;
                 post.ChannelId = channelId;
-                post.QueueId = collectionId;
-                post.ScheduledByQueue = scheduledByQueue;
+                post.QueueId = scheduledByQueue ? queueId : (Guid?)null;
                 post.LiveDate = Now.AddDays(liveDateInFuture ? 10 : -10);
                 await databaseContext.Database.Connection.InsertAsync(post);
             }

@@ -101,11 +101,11 @@
             channels.Add(channel);
             await connection.InsertAsync(channels);
 
-            var collections = new List<Queue>();
-            var collection = QueueTests.UniqueEntity(random);
-            collection.ChannelId = channel.Id;
-            collections.Add(collection);
-            await connection.InsertAsync(collections);
+            var queues = new List<Queue>();
+            var queue = QueueTests.UniqueEntity(random);
+            queue.BlogId = blog.Id;
+            queues.Add(queue);
+            await connection.InsertAsync(queues);
             
             var files = new List<File>();
             var file = FileTests.UniqueEntity(random);
@@ -192,7 +192,7 @@
                 .Concat(userRoles)
                 .Concat(blogs)
                 .Concat(channels)
-                .Concat(collections)
+                .Concat(queues)
                 .Concat(files)
                 .Concat(posts)
                 .Concat(channelSubscriptions)

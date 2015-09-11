@@ -9,6 +9,7 @@
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,12 +22,14 @@
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
-        private static readonly RescheduleWithQueueCommand Command = new RescheduleWithQueueCommand(Requester, PostId);
+        private static readonly DateTime Now = DateTime.UtcNow;
+        private static readonly RescheduleWithQueueCommand Command = new RescheduleWithQueueCommand(Requester, PostId, QueueId);
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IPostSecurity> postSecurity;
-        private Mock<ITryGetUnqueuedPostCollectionDbStatement> tryGetUnqueuedPostCollection;
         private Mock<IMovePostToQueueDbStatement> moveBacklogPostToQueue;
+        private Mock<IDefragmentQueueIfRequiredDbStatement> defragmentQueueIfRequired;
+        private Mock<ITimestampCreator> timestampCreator;
         private RescheduleWithQueueCommandHandler target;
 
         [TestInitialize]
@@ -35,23 +38,26 @@
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
             this.postSecurity = new Mock<IPostSecurity>();
-            this.tryGetUnqueuedPostCollection = new Mock<ITryGetUnqueuedPostCollectionDbStatement>();
+            this.timestampCreator = new Mock<ITimestampCreator>();
+            this.timestampCreator.Setup(v => v.Now()).Returns(Now);
 
             // Mock potentially side-effecting components with strict behaviour.            
             this.moveBacklogPostToQueue = new Mock<IMovePostToQueueDbStatement>(MockBehavior.Strict);
+            this.defragmentQueueIfRequired = new Mock<IDefragmentQueueIfRequiredDbStatement>(MockBehavior.Strict);
 
             this.target = new RescheduleWithQueueCommandHandler(
                 this.requesterSecurity.Object, 
-                this.postSecurity.Object, 
-                this.tryGetUnqueuedPostCollection.Object,
-                this.moveBacklogPostToQueue.Object);
+                this.postSecurity.Object,
+                this.moveBacklogPostToQueue.Object,
+                this.defragmentQueueIfRequired.Object,
+                this.timestampCreator.Object);
         }
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
-            await this.target.HandleAsync(new RescheduleWithQueueCommand(Requester.Unauthenticated, PostId));
+            await this.target.HandleAsync(new RescheduleWithQueueCommand(Requester.Unauthenticated, PostId, QueueId));
         }
 
         [TestMethod]
@@ -64,20 +70,9 @@
         }
 
         [TestMethod]
-        public async Task WhenPostIsNotScheduledInCollection_ItShouldHaveNoEffect()
-        {
-            this.tryGetUnqueuedPostCollection.Setup(_ => _.ExecuteAsync(PostId))
-                .ReturnsAsync(null);
-
-            await this.target.HandleAsync(Command);
-        }
-
-        [TestMethod]
         public async Task WhenPostIsScheduledInCollection_ItShouldMovePostToQueue()
         {
-            this.tryGetUnqueuedPostCollection.Setup(_ => _.ExecuteAsync(PostId))
-                .ReturnsAsync(QueueId);
-
+            this.defragmentQueueIfRequired.SetupFor(PostId);
             this.moveBacklogPostToQueue.Setup(_ => _.ExecuteAsync(PostId, QueueId))
                 .Returns(Task.FromResult(0))
                 .Verifiable();

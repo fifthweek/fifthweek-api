@@ -22,7 +22,6 @@
     [TestClass]
     public class GetAccountSettingsQueryHandlerTests
     {
-        private static readonly CreatorName Name = new CreatorName("name");
         private static readonly Username Username = new Username("username");
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
@@ -78,14 +77,14 @@
         public async Task WhenCalled_ItShouldCallTheAccountRepository()
         {
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, null))
+                .ReturnsAsync(new GetAccountSettingsDbResult(Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, null))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
 
             this.getAccountSettings.Verify();
 
-            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, Payments.Constants.DefaultCreatorPercentage, null);
+            var expectedResult = new GetAccountSettingsResult(Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, Payments.Constants.DefaultCreatorPercentage, null);
 
             Assert.AreEqual(expectedResult, result);
         }
@@ -96,7 +95,7 @@
             const string ContainerName = "containerName";
 
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, FileId, AccountBalance, PaymentStatus, HasPaymentInformation, null));
+                .ReturnsAsync(new GetAccountSettingsDbResult(Username, Email, FileId, AccountBalance, PaymentStatus, HasPaymentInformation, null));
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(null, FileId, FilePurposes.ProfileImage))
                 .ReturnsAsync(new FileInformation(FileId, ContainerName));
@@ -104,7 +103,6 @@
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
 
             var expectedResult = new GetAccountSettingsResult(
-                Name, 
                 Username, 
                 Email, 
                 new FileInformation(FileId, ContainerName), 
@@ -124,7 +122,7 @@
 
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
                 .ReturnsAsync(new GetAccountSettingsDbResult(
-                    Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
+                    Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
@@ -132,7 +130,6 @@
             this.getAccountSettings.Verify();
 
             var expectedResult = new GetAccountSettingsResult(
-                Name, 
                 Username,
                 Email,
                 null,
@@ -153,7 +150,7 @@
 
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
                 .ReturnsAsync(new GetAccountSettingsDbResult(
-                    Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
+                    Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
@@ -161,7 +158,6 @@
             this.getAccountSettings.Verify();
 
             var expectedResult = new GetAccountSettingsResult(
-                Name,
                 Username,
                 Email,
                 null,
@@ -182,7 +178,7 @@
 
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
                 .ReturnsAsync(new GetAccountSettingsDbResult(
-                    Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
+                    Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
@@ -190,7 +186,6 @@
             this.getAccountSettings.Verify();
 
             var expectedResult = new GetAccountSettingsResult(
-                Name,
                 Username,
                 Email,
                 null,
@@ -211,7 +206,7 @@
 
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
                 .ReturnsAsync(new GetAccountSettingsDbResult(
-                    Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
+                    Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
@@ -219,7 +214,6 @@
             this.getAccountSettings.Verify();
 
             var expectedResult = new GetAccountSettingsResult(
-                Name,
                 Username, 
                 Email,
                 null,
@@ -240,7 +234,7 @@
 
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
                 .ReturnsAsync(new GetAccountSettingsDbResult(
-                    Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
+                    Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
@@ -248,7 +242,6 @@
             this.getAccountSettings.Verify();
 
             var expectedResult = new GetAccountSettingsResult(
-                Name, 
                 Username, 
                 Email, 
                 null,

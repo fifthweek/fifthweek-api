@@ -19,14 +19,12 @@
                 null,
                 null,
                 "Note " + random.Next(),
-                false,
                 new SqlDateTime(DateTime.UtcNow.AddDays((random.NextDouble() * -1000) + (random.NextDouble() * 1000))).Value,
                 new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -1000)).Value);
         }
 
         public static Post UniqueFileOrImage(Random random)
         {
-            var isQueued = random.Next(2) == 0;
             var hasComment = random.Next(2) == 0;
 
             return new Post(
@@ -40,7 +38,6 @@
                 null,
                 null,
                 hasComment ? "Comment " + random.Next() : null,
-                isQueued,
                 new SqlDateTime(DateTime.UtcNow.AddDays((random.NextDouble() * -1000) + (random.NextDouble() * 1000))).Value,
                 new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -1000)).Value);
         }

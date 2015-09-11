@@ -4,6 +4,7 @@
     using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement.Shared;
@@ -19,11 +20,12 @@
     using Moq;
 
     [TestClass]
-    public class PostToCollectionDbSubStatementTests : PersistenceTestsBase
+    public class PostToChannelDbSubStatementTests : PersistenceTestsBase
     {
         private const int QueuedPostCount = 3;
 
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly QueueId DifferentQueueId = new QueueId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
@@ -67,7 +69,7 @@
                 await testDatabase.TakeSnapshotAsync();
                 this.scheduledDateClipping.Setup(_ => _.Apply(Now, Now)).Returns(Now);
 
-                var givenPost = UnscheduledPostWithoutChannel();
+                var givenPost = UnscheduledPost();
                 givenPost.Comment = null;
 
                 await this.target.SchedulePostAsync(givenPost, Now, Now);
@@ -76,7 +78,6 @@
                 {
                     _.ChannelId = ChannelId.Value;
                     _.LiveDate = new SqlDateTime(Now).Value;
-                    _.ScheduledByQueue = false;
                 });
 
                 return new ExpectedSideEffects
@@ -99,7 +100,7 @@
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var givenPost = UnscheduledPostWithoutChannel();
+                var givenPost = UnscheduledPost();
 
                 await this.target.SchedulePostAsync(givenPost, scheduleDate, Now);
 
@@ -107,7 +108,6 @@
                 {
                     _.ChannelId = ChannelId.Value;
                     _.LiveDate = new SqlDateTime(clippedDate).Value;
-                    _.ScheduledByQueue = false;
                 });
 
                 return new ExpectedSideEffects
@@ -129,14 +129,14 @@
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var givenPost = UnscheduledPostWithoutChannel();
+                var givenPost = UnscheduledPost();
+                givenPost.QueueId = QueueId.Value;
                 await this.target.QueuePostAsync(givenPost);
 
                 var expectedPost = givenPost.Copy(_ =>
                 {
                     _.ChannelId = ChannelId.Value;
                     _.LiveDate = new SqlDateTime(uniqueLiveDate).Value;
-                    _.ScheduledByQueue = true;
                 });
 
                 return new ExpectedSideEffects
@@ -159,14 +159,14 @@
                 await this.CreatePostAsync(testDatabase, sharedLiveDate, scheduledByQueue: true, differentCollection: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                var givenPost = UnscheduledPostWithoutChannel();
+                var givenPost = UnscheduledPost();
+                givenPost.QueueId = QueueId.Value;
                 await this.target.QueuePostAsync(givenPost);
 
                 var expectedPost = givenPost.Copy(_ =>
                 {
                     _.ChannelId = ChannelId.Value;
                     _.LiveDate = new SqlDateTime(sharedLiveDate).Value;
-                    _.ScheduledByQueue = true;
                 });
 
                 return new ExpectedSideEffects
@@ -189,14 +189,14 @@
                 await this.CreatePostAsync(testDatabase, sharedLiveDate, scheduledByQueue: false, differentCollection: false);
                 await testDatabase.TakeSnapshotAsync();
 
-                var givenPost = UnscheduledPostWithoutChannel();
+                var givenPost = UnscheduledPost();
+                givenPost.QueueId = QueueId.Value;
                 await this.target.QueuePostAsync(givenPost);
 
                 var expectedPost = givenPost.Copy(_ =>
                 {
                     _.ChannelId = ChannelId.Value;
                     _.LiveDate = new SqlDateTime(sharedLiveDate).Value;
-                    _.ScheduledByQueue = true;
                 });
 
                 return new ExpectedSideEffects
@@ -221,7 +221,7 @@
 
                 await ExpectedException.AssertExceptionAsync<OptimisticConcurrencyException>(() =>
                 {
-                    return this.target.QueuePostAsync(UnscheduledPostWithoutChannel());            
+                    return this.target.QueuePostAsync(UnscheduledPost());            
                 });
                 
                 return ExpectedSideEffects.None;
@@ -239,29 +239,28 @@
 
                 this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
-                await this.target.QueuePostAsync(UnscheduledPostWithoutChannel());
+                await this.target.QueuePostAsync(UnscheduledPost());
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.QueuePostAsync(UnscheduledPostWithoutChannel());
+                await this.target.QueuePostAsync(UnscheduledPost());
 
                 return ExpectedSideEffects.None;
             });
         }
 
-        private static Post UnscheduledPostWithoutChannel()
+        private static Post UnscheduledPost()
         {
             return new Post(
                 PostId.Value,
-                default(Guid), 
+                ChannelId.Value, 
                 null,
-                QueueId.Value,
+                null,
                 null,
                 null,
                 null,
                 FileId.Value,
                 null,
                 Comment.Value,
-                false,
                 default(DateTime),
                 new SqlDateTime(Now).Value); 
         }
@@ -273,16 +272,15 @@
                 if (differentCollection)
                 {
                     var collection = QueueTests.UniqueEntity(Random);
-                    collection.Id = DifferentCollectionId.Value;
-                    collection.ChannelId = ChannelId.Value;
+                    collection.Id = DifferentQueueId.Value;
+                    collection.BlogId = BlogId.Value;
                     await databaseContext.Database.Connection.InsertAsync(collection);
                 }
 
                 var post = PostTests.UniqueFileOrImage(Random);
                 post.ChannelId = ChannelId.Value;
-                post.QueueId = differentCollection ? DifferentCollectionId.Value : QueueId.Value;
+                post.QueueId = scheduledByQueue ? (differentCollection ? DifferentQueueId.Value : QueueId.Value) : (Guid?)null;
                 post.FileId = FileId.Value; // Reuse same file across each post. Not realistic, but doesn't matter for this test.
-                post.ScheduledByQueue = scheduledByQueue;
                 post.LiveDate = liveDate;
                 await databaseContext.Database.Connection.InsertAsync(post);
             }
@@ -292,7 +290,7 @@
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                await databaseContext.CreateTestCollectionAsync(UserId.Value, ChannelId.Value, QueueId.Value);
+                await databaseContext.CreateTestEntitiesAsync(UserId.Value, ChannelId.Value, QueueId.Value, BlogId.Value);
                 await databaseContext.CreateTestFileWithExistingUserAsync(UserId.Value, FileId.Value);
 
                 if (createQueuedPosts)
@@ -303,7 +301,6 @@
                         post.ChannelId = ChannelId.Value;
                         post.QueueId = QueueId.Value;
                         post.FileId = FileId.Value; // Reuse same file across each post. Not realistic, but doesn't matter for this test.
-                        post.ScheduledByQueue = true;
                         post.LiveDate = DateTime.UtcNow.AddDays(i);
                         await databaseContext.Database.Connection.InsertAsync(post);
                     }

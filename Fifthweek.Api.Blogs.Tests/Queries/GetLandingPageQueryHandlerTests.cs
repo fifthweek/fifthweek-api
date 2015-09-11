@@ -21,7 +21,6 @@
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
         private static readonly BlogName Name = new BlogName("name");
-        private static readonly Tagline Tagline = new Tagline("tagline");
         private static readonly DateTime CreationDate = DateTime.UtcNow;
         private static readonly Introduction Introduction = new Introduction("intro");
         private static readonly BlogDescription Description = new BlogDescription("description");
@@ -72,12 +71,12 @@
                         BlogId,
                         CreatorId,
                         Name,
-                        Tagline,
                         Introduction,
                         CreationDate,
                         null,
                         null,
-                        null),
+                        null,
+                        new List<QueueResult>()),
                     new List<ChannelResult>());
 
             this.getLandingPage.Setup(v => v.ExecuteAsync(Username))
@@ -89,7 +88,6 @@
             Assert.AreEqual(null, result.ProfileImage);
             Assert.AreEqual(BlogId, result.Blog.BlogId);
             Assert.AreEqual(Name, result.Blog.Name);
-            Assert.AreEqual(Tagline, result.Blog.Tagline);
             Assert.AreEqual(Introduction, result.Blog.Introduction);
             Assert.AreEqual(CreationDate, result.Blog.CreationDate);
             Assert.AreEqual(null, result.Blog.HeaderImage);
@@ -109,12 +107,12 @@
                         BlogId,
                         CreatorId,
                         Name,
-                        Tagline,
                         Introduction,
                         CreationDate,
                         HeaderFileId,
                         ExternalVideoUrl,
-                        Description),
+                        Description,
+                        new List<QueueResult>()),
                     new List<ChannelResult>());
 
             this.getLandingPage.Setup(v => v.ExecuteAsync(Username))
@@ -136,7 +134,6 @@
             Assert.AreEqual(ProfileImageFileId, result.ProfileImage.FileId);
             Assert.AreEqual(BlogId, result.Blog.BlogId);
             Assert.AreEqual(Name, result.Blog.Name);
-            Assert.AreEqual(Tagline, result.Blog.Tagline);
             Assert.AreEqual(Introduction, result.Blog.Introduction);
             Assert.AreEqual(CreationDate, result.Blog.CreationDate);
             Assert.AreEqual(headerFileInformation, result.Blog.HeaderImage);

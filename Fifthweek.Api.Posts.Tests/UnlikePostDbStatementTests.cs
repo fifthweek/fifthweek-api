@@ -95,7 +95,7 @@
             using (var databaseContext = testDatabase.CreateContext())
             {
                 var random = new Random();
-                await databaseContext.CreateTestCollectionAsync(CreatorId.Value, ChannelId.Value, QueueId.Value);
+                await databaseContext.CreateTestEntitiesAsync(CreatorId.Value, ChannelId.Value, QueueId.Value);
                 await databaseContext.CreateTestFileWithExistingUserAsync(CreatorId.Value, FileId.Value);
 
                 var post = PostTests.UniqueFileOrImage(random);

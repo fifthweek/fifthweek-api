@@ -134,7 +134,6 @@
                     // Required fields. Set to a value that is equal across all elements.
                     _.PostId = new PostId(Guid.Empty);
                     _.ChannelId = new ChannelId(Guid.Empty);
-                    _.ScheduledByQueue = false;
 
                     // Non required fields.
                     _.Comment = null;
@@ -198,24 +197,25 @@
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                var channels = new Dictionary<ChannelId, List<QueueId>>();
+                var channels = new List<ChannelId>();
+                var queues = new List<QueueId>();
                 var files = new List<FileId>();
                 var images = new List<FileId>();
                 var channelEntities = new List<Channel>();
-                var collectionEntities = new List<Queue>();
+                var queueEntities = new List<Queue>();
                 var postEntities = new List<Post>();
 
                 if (createLivePosts)
                 {
                     var channelId = new ChannelId(Guid.NewGuid());
-                    var collectionId = new QueueId(Guid.NewGuid());
-                    channels.Add(channelId, new List<QueueId>(new[] { collectionId }));
-
+                    var queueId = new QueueId(Guid.NewGuid());
+                    channels.Add(channelId);
+                    queues.Add(queueId);
                     for (var i = 1; i <= 10; i++)
                     {
                         var post = PostTests.UniqueFileOrImage(Random);
                         post.ChannelId = channelId.Value;
-                        post.QueueId = collectionId.Value;
+                        post.QueueId = queueId.Value;
                         post.LiveDate = DateTime.UtcNow.AddDays(i * -1);
                         postEntities.Add(post);
                     }
@@ -235,14 +235,14 @@
                             images.Add(backlogPost.ImageId);
                         }
 
-                        if (!channels.ContainsKey(backlogPost.ChannelId))
+                        if (!channels.Contains(backlogPost.ChannelId))
                         {
-                            channels.Add(backlogPost.ChannelId, new List<QueueId>());
+                            channels.Add(backlogPost.ChannelId);
                         }
 
                         if (backlogPost.QueueId != null)
                         {
-                            channels[backlogPost.ChannelId].Add(backlogPost.QueueId);
+                            queues.Add(backlogPost.QueueId);
                         }
 
                         postEntities.Add(new Post(
@@ -256,30 +256,27 @@
                             backlogPost.ImageId == null ? (Guid?)null : backlogPost.ImageId.Value,
                             null,
                             backlogPost.Comment == null ? null : backlogPost.Comment.Value,
-                            backlogPost.ScheduledByQueue,
                             backlogPost.LiveDate,
                             backlogPost.CreationDate));
                     }
                 }
 
-                foreach (var channelKvp in channels)
+                foreach (var channelId in channels)
                 {
-                    var channelId = channelKvp.Key;
-
                     var channel = ChannelTests.UniqueEntity(Random);
                     channel.Id = channelId.Value;
                     channel.BlogId = BlogId.Value;
 
                     channelEntities.Add(channel);
+                }
 
-                    foreach (var collectionId in channelKvp.Value)
-                    {
-                        var collection = QueueTests.UniqueEntity(Random);
-                        collection.Id = collectionId.Value;
-                        collection.ChannelId = channelId.Value;
+                foreach (var queueId in queues)
+                {
+                    var queue = QueueTests.UniqueEntity(Random);
+                    queue.Id = queueId.Value;
+                    queue.BlogId = BlogId.Value;
 
-                        collectionEntities.Add(collection);
-                    }
+                    queueEntities.Add(queue);
                 }
 
                 var fileEntities = files.Select(fileId =>
@@ -307,7 +304,7 @@
                 });
                 await databaseContext.CreateTestBlogAsync(UserId.Value, BlogId.Value);
                 await databaseContext.Database.Connection.InsertAsync(channelEntities);
-                await databaseContext.Database.Connection.InsertAsync(collectionEntities);
+                await databaseContext.Database.Connection.InsertAsync(queueEntities);
                 await databaseContext.Database.Connection.InsertAsync(fileEntities);
                 await databaseContext.Database.Connection.InsertAsync(imageEntities);
                 await databaseContext.Database.Connection.InsertAsync(postEntities);
@@ -329,9 +326,9 @@
                 for (var channelIndex = 0; channelIndex < ChannelCount; channelIndex++)
                 {
                     var channelId = new ChannelId(Guid.NewGuid());
-                    for (var collectionIndex = 0; collectionIndex < CollectionsPerChannel; collectionIndex++)
+                    for (var queueIndex = 0; queueIndex < CollectionsPerChannel; queueIndex++)
                     {
-                        var collectionId = collectionIndex == 0 ? null : new QueueId(Guid.NewGuid());
+                        var queueId = queueIndex == 0 ? null : new QueueId(Guid.NewGuid());
                         for (var i = 0; i < Posts; i++)
                         {
                             var creationDate = new SqlDateTime(liveDate.AddMinutes(i)).Value;
@@ -340,11 +337,10 @@
                             new BacklogPost(
                                 new PostId(Guid.NewGuid()),
                                 channelId,
-                                collectionId,
+                                i % 2 == 0 ? queueId: null,
                                 i % 2 == 0 ? Comment : null,
                                 i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
                                 i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
-                                i % 2 == 0,
                                 liveDate,
                                 i % 3 == 1 ? FileName : null,
                                 i % 3 == 1 ? FileExtension : null,

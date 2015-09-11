@@ -147,7 +147,6 @@
                 Assert.AreEqual(item.Input.ChannelId, item.Output.ChannelId);
                 Assert.AreEqual(item.Input.QueueId, item.Output.QueueId);
                 Assert.AreEqual(item.Input.Comment, item.Output.Comment);
-                Assert.AreEqual(item.Input.ScheduledByQueue, item.Output.ScheduledByQueue);
                 Assert.AreEqual(item.Input.LiveDate, item.Output.LiveDate);
             }
         }
@@ -176,11 +175,10 @@
                             new BacklogPost(
                                 new PostId(Guid.NewGuid()),
                                 channelId,
-                                collectionId,
+                                i % 2 == 0 ? collectionId : null,
                                 i % 2 == 0 ? Comment : null,
                                 i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
                                 i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
-                                i % 2 == 0,
                                 liveDate,
                                 i % 3 == 1 ? FileName : null,
                                 i % 3 == 1 ? FileExtension : null,

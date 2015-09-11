@@ -25,10 +25,11 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
+        private static readonly ChannelId FirstChannelId = new ChannelId(Guid.NewGuid());
         private static readonly ValidBlogName BlogName = ValidBlogName.Parse("Lawrence");
-        private static readonly ValidTagline Tagline = ValidTagline.Parse("Web Comics and More");
+        private static readonly ValidIntroduction Introduction = ValidIntroduction.Parse("Introduction");
         private static readonly ValidChannelPrice BasePrice = ValidChannelPrice.Parse(10);
-        private static readonly CreateBlogCommand Command = new CreateBlogCommand(Requester, BlogId, BlogName, Tagline, BasePrice);
+        private static readonly CreateBlogCommand Command = new CreateBlogCommand(Requester, BlogId, FirstChannelId, BlogName, Introduction, BasePrice);
         private Mock<IBlogSecurity> blogSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
         private MockRequestSnapshotService requestSnapshotService;
@@ -52,7 +53,7 @@
 
             this.target = new CreateBlogCommandHandler(this.blogSecurity.Object, this.requesterSecurity.Object, connectionFactory.Object, this.requestSnapshotService);
 
-            await this.target.HandleAsync(new CreateBlogCommand(Requester.Unauthenticated, BlogId, BlogName, Tagline, BasePrice));
+            await this.target.HandleAsync(new CreateBlogCommand(Requester.Unauthenticated, BlogId, FirstChannelId, BlogName, Introduction, BasePrice));
         }
 
         [TestMethod]
@@ -100,7 +101,6 @@
                     UserId.Value,
                     null,
                     BlogName.Value,
-                    Tagline.Value,
                     ValidIntroduction.Default.Value,
                     null,
                     null,
@@ -131,11 +131,10 @@
                 await this.ExecuteSuccessfully(testDatabase);
 
                 var expectedChannel = new Channel(
-                BlogId.Value, // The default channel uses the blog ID.
+                FirstChannelId.Value,
                 BlogId.Value,
                 null,
-                "Basic Subscription",
-                "Exclusive News Feed" + Environment.NewLine + "Early Updates on New Releases",
+                BlogName.Value,
                 BasePrice.Value,
                 true,
                 DateTime.MinValue,

@@ -35,7 +35,7 @@
             ExampleWork = "testing.fifthweek.com",
             Password = "TestPassword",
             Username = "test_username",
-            CreatorName = "creator name"
+            RegisterAsCreator = true
         }.Parse();
 
         private static readonly RegistrationData.Parsed NonCreatorTestUserRegistrationData = new RegistrationData
@@ -52,7 +52,7 @@
             ExampleWork = "testing.fifthweek.com",
             Password = "TestPassword",
             Username = "test_username",
-            CreatorName = "creator name"
+            RegisterAsCreator = true
         }.Parse();
 
         private static readonly RegisterUserCommand CreatorCommand = new RegisterUserCommand(
@@ -61,8 +61,7 @@
             CreatorRegistrationData.Email,
             CreatorRegistrationData.Username,
             CreatorRegistrationData.Password,
-            true,
-            CreatorRegistrationData.CreatorName);
+            true);
 
         private static readonly RegisterUserCommand NonCreatorCommand = new RegisterUserCommand(
             UserId,
@@ -70,8 +69,7 @@
             NonCreatorRegistrationData.Email,
             NonCreatorRegistrationData.Username,
             NonCreatorRegistrationData.Password,
-            false,
-            null);
+            false);
 
         private static readonly RegisterUserCommand CreatorTestUserCommand = new RegisterUserCommand(
             UserId,
@@ -79,8 +77,7 @@
             CreatorTestUserRegistrationData.Email,
             CreatorTestUserRegistrationData.Username,
             CreatorTestUserRegistrationData.Password,
-            true,
-            CreatorTestUserRegistrationData.CreatorName);
+            true);
 
         private static readonly RegisterUserCommand NonCreatorTestUserCommand = new RegisterUserCommand(
             UserId,
@@ -88,8 +85,7 @@
             NonCreatorTestUserRegistrationData.Email,
             NonCreatorTestUserRegistrationData.Username,
             NonCreatorTestUserRegistrationData.Password,
-            false,
-            null);
+            false);
 
         private Mock<IRegisterUserDbStatement> registerUser;
         private Mock<IReservedUsernameService> reservedUsernames;
@@ -120,7 +116,7 @@
         {
             this.reservedUsernames.Setup(v => v.AssertNotReserved(NonCreatorCommand.Username)).Verifiable();
 
-            this.registerUser.Setup(v => v.ExecuteAsync(UserId, NonCreatorRegistrationData.Username, NonCreatorRegistrationData.Email, NonCreatorRegistrationData.ExampleWork, null, NonCreatorRegistrationData.Password, It.IsAny<DateTime>()))
+            this.registerUser.Setup(v => v.ExecuteAsync(UserId, NonCreatorRegistrationData.Username, NonCreatorRegistrationData.Email, NonCreatorRegistrationData.ExampleWork, NonCreatorRegistrationData.Password, It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(0)).Verifiable();
 
             await this.target.HandleAsync(NonCreatorCommand);
@@ -134,7 +130,7 @@
         {
             this.reservedUsernames.Setup(v => v.AssertNotReserved(CreatorCommand.Username)).Verifiable();
 
-            this.registerUser.Setup(v => v.ExecuteAsync(UserId, CreatorRegistrationData.Username, CreatorRegistrationData.Email, CreatorRegistrationData.ExampleWork, CreatorRegistrationData.CreatorName, CreatorRegistrationData.Password, It.IsAny<DateTime>()))
+            this.registerUser.Setup(v => v.ExecuteAsync(UserId, CreatorRegistrationData.Username, CreatorRegistrationData.Email, CreatorRegistrationData.ExampleWork, CreatorRegistrationData.Password, It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(0)).Verifiable();
 
             this.userManager.Setup(v => v.AddToRoleAsync(UserId.Value, FifthweekRole.Creator)).ReturnsAsync(new IdentityResult()).Verifiable();
@@ -151,7 +147,7 @@
         {
             this.reservedUsernames.Setup(v => v.AssertNotReserved(NonCreatorCommand.Username)).Verifiable();
 
-            this.registerUser.Setup(v => v.ExecuteAsync(UserId, NonCreatorTestUserRegistrationData.Username, NonCreatorTestUserRegistrationData.Email, NonCreatorTestUserRegistrationData.ExampleWork, null, NonCreatorTestUserRegistrationData.Password, It.IsAny<DateTime>()))
+            this.registerUser.Setup(v => v.ExecuteAsync(UserId, NonCreatorTestUserRegistrationData.Username, NonCreatorTestUserRegistrationData.Email, NonCreatorTestUserRegistrationData.ExampleWork, NonCreatorTestUserRegistrationData.Password, It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(0)).Verifiable();
 
             this.userManager.Setup(v => v.AddToRoleAsync(UserId.Value, FifthweekRole.TestUser)).ReturnsAsync(new IdentityResult()).Verifiable();
@@ -168,7 +164,7 @@
         {
             this.reservedUsernames.Setup(v => v.AssertNotReserved(CreatorCommand.Username)).Verifiable();
 
-            this.registerUser.Setup(v => v.ExecuteAsync(UserId, CreatorTestUserRegistrationData.Username, CreatorTestUserRegistrationData.Email, CreatorTestUserRegistrationData.ExampleWork, CreatorTestUserRegistrationData.CreatorName, CreatorTestUserRegistrationData.Password, It.IsAny<DateTime>()))
+            this.registerUser.Setup(v => v.ExecuteAsync(UserId, CreatorTestUserRegistrationData.Username, CreatorTestUserRegistrationData.Email, CreatorTestUserRegistrationData.ExampleWork, CreatorTestUserRegistrationData.Password, It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(0)).Verifiable();
 
             this.userManager.Setup(v => v.AddToRoleAsync(UserId.Value, FifthweekRole.Creator)).ReturnsAsync(new IdentityResult()).Verifiable();

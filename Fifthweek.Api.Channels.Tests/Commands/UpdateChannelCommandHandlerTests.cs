@@ -23,9 +23,8 @@
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly ValidChannelName Name = ValidChannelName.Parse("Bat puns");
-        private static readonly ValidChannelDescription Description = ValidChannelDescription.Parse("Bat puns\nBadPuns");
         private static readonly ValidChannelPrice Price = ValidChannelPrice.Parse(10);
-        private static readonly UpdateChannelCommand Command = new UpdateChannelCommand(Requester, ChannelId, Name, Description, Price, IsVisibleToNonSubscribers);
+        private static readonly UpdateChannelCommand Command = new UpdateChannelCommand(Requester, ChannelId, Name, Price, IsVisibleToNonSubscribers);
         
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IChannelSecurity> channelSecurity;
@@ -56,7 +55,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task ItShouldRequireUserIsAuthenticated()
         {
-            await this.target.HandleAsync(new UpdateChannelCommand(Requester.Unauthenticated, ChannelId, Name, Description, Price, IsVisibleToNonSubscribers));
+            await this.target.HandleAsync(new UpdateChannelCommand(Requester.Unauthenticated, ChannelId, Name, Price, IsVisibleToNonSubscribers));
         }
 
         [TestMethod]
@@ -75,7 +74,6 @@
                 UserId,
                 ChannelId,
                 Name,
-                Description,
                 Price,
                 IsVisibleToNonSubscribers,
                 It.Is<DateTime>(dt => dt.Kind == DateTimeKind.Utc)))

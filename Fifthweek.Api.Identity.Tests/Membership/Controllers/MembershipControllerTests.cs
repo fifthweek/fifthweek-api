@@ -24,7 +24,6 @@
         private const string Token = "Password Token";
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly ValidUsername Username = ValidUsername.Parse(UsernameValue);
-        private static readonly ValidCreatorName CreatorName = ValidCreatorName.Parse("creator name");
         private Mock<IRequesterContext> requesterContext;
         private Mock<ICommandHandler<RegisterUserCommand>> registerUser;
         private Mock<ICommandHandler<RequestPasswordResetCommand>> requestPasswordReset;
@@ -66,7 +65,6 @@
         public async Task WhenPostingUserRegistration_ItShouldIssueRegisterUserCommand()
         {
             var registration = NewRegistrationData();
-            registration.CreatorName = null;
 
             var command = new RegisterUserCommand(
                 UserId,
@@ -74,8 +72,7 @@
                 ValidEmail.Parse(registration.Email),
                 ValidUsername.Parse(registration.Username),
                 ValidPassword.Parse(registration.Password),
-                false,
-                null);
+                false);
 
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(UserId.Value);
             this.registerUser.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
@@ -97,8 +94,7 @@
                 ValidEmail.Parse(registration.Email),
                 ValidUsername.Parse(registration.Username),
                 ValidPassword.Parse(registration.Password),
-                true,
-                CreatorName);
+                true);
 
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(UserId.Value);
             this.registerUser.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
@@ -286,7 +282,6 @@
                 Email = "test@test.com",
                 Username = "test_username",
                 Password = "TestPassword",
-                CreatorName = CreatorName.Value,
             };
         }
 

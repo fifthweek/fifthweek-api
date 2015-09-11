@@ -115,21 +115,21 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireUserId()
         {
-            await this.target.ExecuteAsync(null, CreatorId, ChannelIds, CollectionIds[0], Now, Now, false, StartIndex, Count);
+            await this.target.ExecuteAsync(null, CreatorId, ChannelIds, Now, Now, false, StartIndex, Count);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireStartIndex()
         {
-            await this.target.ExecuteAsync(SubscribedUserId, CreatorId, ChannelIds, CollectionIds[0], Now, Now, false, null, Count);
+            await this.target.ExecuteAsync(SubscribedUserId, CreatorId, ChannelIds, Now, Now, false, null, Count);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireCount()
         {
-            await this.target.ExecuteAsync(SubscribedUserId, CreatorId, ChannelIds, CollectionIds[0], Now, Now, false, StartIndex, null);
+            await this.target.ExecuteAsync(SubscribedUserId, CreatorId, ChannelIds, Now, Now, false, StartIndex, null);
         }
 
         [TestMethod]
@@ -143,7 +143,7 @@
 
                 await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts, expectedAccountBalance) =>
                 {
-                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, collectionIds, Now, origin, searchForwards, startIndex, count);
+                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, Now, origin, searchForwards, startIndex, count);
 
                     foreach (var newsfeedPost in result.Posts)
                     {
@@ -166,7 +166,7 @@
 
                 await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts, expectedAccountBalance) =>
                 {
-                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, collectionIds, Now, origin, searchForwards, startIndex, count);
+                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, Now, origin, searchForwards, startIndex, count);
 
                     CollectionAssert.AreEquivalent(expectedPosts.ToList(), result.Posts.ToList());
                 });
@@ -186,7 +186,7 @@
 
                 await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts, expectedAccountBalance) =>
                 {
-                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, collectionIds, Now, origin, searchForwards, startIndex, count);
+                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, Now, origin, searchForwards, startIndex, count);
                     Assert.AreEqual(expectedAccountBalance, result.AccountBalance);
                 });
 
@@ -205,7 +205,7 @@
 
                 await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts, expectedAccountBalance) =>
                 {
-                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, collectionIds, Now, origin, searchForwards, startIndex, count);
+                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, Now, origin, searchForwards, startIndex, count);
 
                     foreach (var item in result.Posts)
                     {
@@ -229,7 +229,7 @@
 
                 await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts, expectedAccountBalance) =>
                 {
-                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, collectionIds, Now, origin, searchForwards, startIndex, count);
+                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, Now, origin, searchForwards, startIndex, count);
 
                     Func<NewsfeedPost, NewsfeedPost> removeSortInsensitiveValues = post => post.Copy(_ =>
                     {
@@ -250,7 +250,6 @@
                         _.ImageSize = null;
                         _.ImageRenderWidth = null;
                         _.ImageRenderHeight = null;
-                        _.QueueId = null;
                     });
 
                     var expectedOrder = expectedPosts.Select(removeSortInsensitiveValues).ToList();
@@ -274,7 +273,7 @@
 
                 await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts, expectedAccountBalance) =>
                 {
-                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, collectionIds, Now, origin, searchForwards, startIndex, count);
+                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, Now, origin, searchForwards, startIndex, count);
                     Assert.AreEqual(result.Posts.Count, 0);
                 });
 
@@ -293,7 +292,7 @@
 
                 await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts, expectedAccountBalance) =>
                 {
-                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, collectionIds, Now, origin, searchForwards, startIndex, count);
+                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, Now, origin, searchForwards, startIndex, count);
                     Assert.AreEqual(result.Posts.Count, 0);
                 });
 
@@ -410,38 +409,6 @@
             await parameterizedTest(
                 SubscribedUserId, GuestListUserId, new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 10);
 
-            // Filter by collection for creator.
-            await parameterizedTest(
-                CreatorId, CreatorId, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.QueueId)).ToList(), 0);
-
-            // Filter by collection.
-            await parameterizedTest(
-                SubscribedUserId, null, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.QueueId)).ToList(), 10);
-
-            // Filter by valid collection and creator combination.
-            await parameterizedTest(
-                SubscribedUserId, CreatorId, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.QueueId)).ToList(), 10);
-
-            // Filter by invalid collection and creator combination.
-            await parameterizedTest(
-                SubscribedUserId, GuestListUserId, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 10);
-
-            // Filter by valid channel and collection combination.
-            await parameterizedTest(
-                SubscribedUserId, null, new[] { ChannelIds[0] }, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.QueueId)).ToList(), 10);
-
-            // Filter by invalid channel and collection combination.
-            await parameterizedTest(
-                SubscribedUserId, null, new[] { ChannelIds[1] }, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 10);
-
-            // Filter by valid creator, channel and collection combination.
-            await parameterizedTest(
-                SubscribedUserId, CreatorId, new[] { ChannelIds[0] }, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.QueueId)).ToList(), 10);
-
-            // Filter by invalid creator, channel and collection combination.
-            await parameterizedTest(
-                SubscribedUserId, GuestListUserId, new[] { ChannelIds[0] }, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 10);
-
             // Search forwards from now.
             await parameterizedTest(
                 CreatorId, CreatorId, null, null, Now, true, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 0);
@@ -472,11 +439,12 @@
                 var calculatedAccountBalances = new List<CalculatedAccountBalance>();
                 var freeAccessUsers = new List<FreeAccessUser>();
                 
-                var channels = new Dictionary<ChannelId, List<QueueId>>();
+                var channels = new List<ChannelId>();
+                var queues = new List<QueueId>();
                 var files = new List<FileId>();
                 var images = new List<FileId>();
                 var channelEntities = new List<Channel>();
-                var collectionEntities = new List<Queue>();
+                var queueEntities = new List<Queue>();
                 var postEntities = new List<Post>();
                 var origins = new List<UserPaymentOrigin>();
                 var likes = new List<Like>();
@@ -540,28 +508,22 @@
                             images.Add(newsfeedPost.ImageId);
                         }
 
-                        if (!channels.ContainsKey(newsfeedPost.ChannelId))
+                        if (!channels.Contains(newsfeedPost.ChannelId))
                         {
-                            channels.Add(newsfeedPost.ChannelId, new List<QueueId>());
-                        }
-
-                        if (newsfeedPost.QueueId != null)
-                        {
-                            channels[newsfeedPost.ChannelId].Add(newsfeedPost.QueueId);
+                            channels.Add(newsfeedPost.ChannelId);
                         }
 
                         postEntities.Add(new Post(
                             newsfeedPost.PostId.Value,
                             newsfeedPost.ChannelId.Value,
                             null,
-                            newsfeedPost.QueueId == null ? (Guid?)null : newsfeedPost.QueueId.Value,
+                            (Guid?)null,
                             null,
                             newsfeedPost.FileId == null ? (Guid?)null : newsfeedPost.FileId.Value,
                             null,
                             newsfeedPost.ImageId == null ? (Guid?)null : newsfeedPost.ImageId.Value,
                             null,
                             newsfeedPost.Comment == null ? null : newsfeedPost.Comment.Value,
-                            Random.Next(2) == 0,
                             newsfeedPost.LiveDate,
                             newsfeedPost.CreationDate));
 
@@ -591,25 +553,23 @@
                     }
                 }
 
-                foreach (var channelKvp in channels)
+                foreach (var channelId in channels)
                 {
-                    var channelId = channelKvp.Key;
-
                     var channel = ChannelTests.UniqueEntity(Random);
                     channel.Id = channelId.Value;
                     channel.BlogId = BlogId.Value;
                     channel.Price = ChannelPrice;
 
                     channelEntities.Add(channel);
+                }
 
-                    foreach (var collectionId in channelKvp.Value)
-                    {
-                        var collection = QueueTests.UniqueEntity(Random);
-                        collection.Id = collectionId.Value;
-                        collection.ChannelId = channelId.Value;
+                foreach (var queueId in queues)
+                {
+                    var queue = QueueTests.UniqueEntity(Random);
+                    queue.Id = queueId.Value;
+                    queue.BlogId = BlogId.Value;
 
-                        collectionEntities.Add(collection);
-                    }
+                    queueEntities.Add(queue);
                 }
 
                 var fileEntities = files.Select(fileId =>
@@ -638,7 +598,7 @@
 
                 await databaseContext.CreateTestBlogAsync(CreatorId.Value, BlogId.Value);
                 await databaseContext.Database.Connection.InsertAsync(channelEntities);
-                await databaseContext.Database.Connection.InsertAsync(collectionEntities);
+                await databaseContext.Database.Connection.InsertAsync(queueEntities);
                 await databaseContext.Database.Connection.InsertAsync(fileEntities);
                 await databaseContext.Database.Connection.InsertAsync(imageEntities);
                 await databaseContext.Database.Connection.InsertAsync(postEntities);
@@ -695,7 +655,6 @@
                             new PostId(Guid.NewGuid()),
                             BlogId,
                             channelId,
-                            collectionId,
                             i % 2 == 0 ? Comment : null,
                             i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
                             i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
@@ -771,7 +730,6 @@
                     v.PostId,
                     v.BlogId,
                     v.ChannelId,
-                    v.QueueId,
                     v.Comment,
                     v.FileId,
                     v.ImageId,

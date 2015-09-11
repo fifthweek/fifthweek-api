@@ -29,6 +29,7 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
+        private static readonly ChannelId FirstChannelId = new ChannelId(Guid.NewGuid());
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
         private static readonly Username Username = new Username("username");
         private Mock<ICommandHandler<CreateBlogCommand>> createBlog;
@@ -64,7 +65,7 @@
         public async Task WhenPostingBlog_ItShouldIssueCreateBlogCommand()
         {
             var data = NewCreateBlogData();
-            var command = NewCreateBlogCommand(UserId, BlogId, data);
+            var command = NewCreateBlogCommand(UserId, BlogId, FirstChannelId, data);
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(BlogId.Value);
@@ -153,14 +154,13 @@
                 new BlogWithFileInformation(
                     BlogId,
                     new BlogName("name"),
-                    new BlogName("name"),
-                    new Tagline("tagline"),
                     new Introduction("intro"),
                     Now,
                     null,
                     null,
                     null,
-                    new List<ChannelResult>()));
+                    new List<ChannelResult>(),
+                    new List<QueueResult>()));
         }
 
         public static NewBlogData NewCreateBlogData()
@@ -168,7 +168,6 @@
             return new NewBlogData
             {
                 Name = "Captain Phil",
-                Tagline = "Web Comics And More",
                 BasePrice = 50
             };
         }
@@ -176,13 +175,15 @@
         public static CreateBlogCommand NewCreateBlogCommand(
             UserId userId,
             BlogId blogId,
+            ChannelId firstChannelId,
             NewBlogData data)
         {
             return new CreateBlogCommand(
                 Requester.Authenticated(userId),
                 blogId,
+                firstChannelId,
                 ValidBlogName.Parse(data.Name),
-                ValidTagline.Parse(data.Tagline),
+                ValidIntroduction.Parse(data.Introduction),
                 ValidChannelPrice.Parse(data.BasePrice));
         }
 
@@ -191,7 +192,6 @@
             return new UpdatedBlogData
             {
                 Name = "Captain Phil",
-                Tagline = "Web Comics And More",
                 Introduction = "Blog introduction",
                 HeaderImageFileId = HeaderImageFileId,
                 Video = "http://youtube.com/3135",
@@ -208,7 +208,6 @@
                 Requester.Authenticated(userId),
                 blogId,
                 ValidBlogName.Parse(data.Name),
-                ValidTagline.Parse(data.Tagline),
                 ValidIntroduction.Parse(data.Introduction),
                 ValidBlogDescription.Parse(data.Description),
                 data.HeaderImageFileId,

@@ -124,12 +124,10 @@
     <Compile Include="UpdateFreeAccessUsersDbStatementTests.cs" />
     <Compile Include="ValidBlogDescriptionTests.cs" />
     <Compile Include="ValidExternalVideoUrlTests.cs" />
-    <Compile Include="Queries\GetCreatorStatusQueryHandlerTests.cs" />
     <Compile Include="ValidBlogNameTests.cs" />
     <Compile Include="BlogOwnershipTests.cs" />
     <Compile Include="BlogSecurityTests.cs" />
     <Compile Include="ValidIntroductionTests.cs" />
-    <Compile Include="ValidTaglineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

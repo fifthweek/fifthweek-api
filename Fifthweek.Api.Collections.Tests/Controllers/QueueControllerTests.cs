@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using System.Web.Http.Results;
 
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Commands;
     using Fifthweek.Api.Collections.Controllers;
@@ -25,7 +26,7 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
-        private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
+        private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly ValidQueueName QueueName = ValidQueueName.Parse("Bat puns");
         private static readonly WeeklyReleaseSchedule WeeklyReleaseSchedule = WeeklyReleaseSchedule.Parse(new[] { HourOfWeek.Parse(0) });
         private Mock<ICommandHandler<CreateQueueCommand>> createCollection;
@@ -64,8 +65,8 @@
             const byte HourOfWeekValue = 42;
             var initialWeeklyReleaseTime = HourOfWeek.Parse(HourOfWeekValue);
             this.random.Setup(_ => _.Next(Shared.HourOfWeek.MinValue, Shared.HourOfWeek.MaxValue + 1)).Returns(HourOfWeekValue);
-            var data = new NewQueueData(ChannelId, QueueName.Value);
-            var command = new CreateQueueCommand(Requester, QueueId, ChannelId, QueueName, initialWeeklyReleaseTime);
+            var data = new NewQueueData(BlogId, QueueName.Value);
+            var command = new CreateQueueCommand(Requester, QueueId, BlogId, QueueName, initialWeeklyReleaseTime);
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(QueueId.Value);

@@ -96,7 +96,6 @@
     <Compile Include="Controllers\QueueControllerTests.cs" />
     <Compile Include="DefragmentQueueDbStatementTests.cs" />
     <Compile Include="DeleteQueueDbStatementTests.cs" />
-    <Compile Include="GetQueueLowerBoundDbStatementTests.cs" />
     <Compile Include="GetLiveDateOfNewQueuedPostDbStatementTests.cs" />
     <Compile Include="GetNewQueuedPostLiveDateLowerBoundDbStatementTests.cs" />
     <Compile Include="GetWeeklyReleaseScheduleDbStatementTests.cs" />
@@ -113,6 +112,10 @@
     <Compile Include="ValidQueueNameTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Blogs.Shared\Fifthweek.Api.Blogs.Shared.csproj">
+      <Project>{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}</Project>
+      <Name>Fifthweek.Api.Blogs.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
       <Project>{df1bb4e7-5315-4e5c-ba73-6dfa4d9e7564}</Project>
       <Name>Fifthweek.Api.Channels.Shared</Name>

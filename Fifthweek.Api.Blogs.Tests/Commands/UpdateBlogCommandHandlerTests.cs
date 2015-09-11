@@ -25,7 +25,6 @@
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly ValidBlogName BlogName = ValidBlogName.Parse("Lawrence");
-        private static readonly ValidTagline Tagline = ValidTagline.Parse("Web Comics and More");
         private static readonly ValidIntroduction Introduction = ValidIntroduction.Default;
         private static readonly ValidBlogDescription Description = ValidBlogDescription.Parse("Hello all!");
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
@@ -34,7 +33,6 @@
             Requester,
             BlogId,
             BlogName,
-            Tagline,
             Introduction,
             Description,
             HeaderImageFileId,
@@ -43,7 +41,6 @@
             Requester,
             BlogId,
             BlogName,
-            Tagline,
             Introduction,
             Description,
             null,
@@ -76,7 +73,6 @@
                 Requester.Unauthenticated,
                 BlogId,
                 BlogName,
-                Tagline,
                 Introduction,
                 Description,
                 HeaderImageFileId,
@@ -149,7 +145,6 @@
                     UserId.Value,
                     null,
                     BlogName.Value,
-                    Tagline.Value,
                     Introduction.Value,
                     Description.Value,
                     Video.Value,
@@ -180,7 +175,6 @@
                     UserId.Value,
                     null,
                     BlogName.Value,
-                    Tagline.Value,
                     Introduction.Value,
                     Description.Value,
                     Video.Value,

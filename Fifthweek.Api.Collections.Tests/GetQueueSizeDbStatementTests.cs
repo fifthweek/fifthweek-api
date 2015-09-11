@@ -143,7 +143,7 @@
             {
                 var userId = Guid.NewGuid();
                 var channelId = Guid.NewGuid();
-                await databaseContext.CreateTestCollectionAsync(userId, channelId, QueueId.Value);
+                await databaseContext.CreateTestEntitiesAsync(userId, channelId, QueueId.Value);
             }
         }
 
@@ -153,15 +153,14 @@
             {
                 var userId = Guid.NewGuid();
                 var channelId = Guid.NewGuid();
-                await databaseContext.CreateTestCollectionAsync(userId, channelId, QueueId.Value);
+                await databaseContext.CreateTestEntitiesAsync(userId, channelId, QueueId.Value);
 
                 var posts = new List<Post>();
                 for (var i = 0; i < PostCount; i++)
                 {
                     var post = PostTests.UniqueFileOrImage(Random);
                     post.ChannelId = channelId;
-                    post.QueueId = QueueId.Value;
-                    post.ScheduledByQueue = queuePosts;
+                    post.QueueId = queuePosts ? QueueId.Value : (Guid?)null;
                     post.LiveDate = queueInFuture ? Now.AddDays(1) : Now.AddDays(-1);
                     posts.Add(post);
                 }
@@ -176,11 +175,11 @@
             {
                 var userId = Guid.NewGuid();
                 var channelId = Guid.NewGuid();
-                await databaseContext.CreateTestCollectionAsync(userId, channelId, QueueId.Value);
+                var entities = await databaseContext.CreateTestEntitiesAsync(userId, channelId, QueueId.Value);
 
-                var otherCollection = QueueTests.UniqueEntity(Random);
-                otherCollection.ChannelId = channelId;
-                await databaseContext.Database.Connection.InsertAsync(otherCollection);
+                var otherQueue = QueueTests.UniqueEntity(Random);
+                otherQueue.BlogId = entities.Blog.Id;
+                await databaseContext.Database.Connection.InsertAsync(otherQueue);
 
                 var posts = new List<Post>();
 
@@ -188,8 +187,7 @@
                 {
                     var post = PostTests.UniqueFileOrImage(Random);
                     post.ChannelId = channelId;
-                    post.QueueId = otherCollection.Id;
-                    post.ScheduledByQueue = true;
+                    post.QueueId = otherQueue.Id;
                     post.LiveDate = Now.AddDays(1);
                     posts.Add(post);
                 }

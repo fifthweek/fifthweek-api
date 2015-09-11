@@ -8,6 +8,7 @@
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -20,11 +21,13 @@
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly RescheduleForNowCommand Command = new RescheduleForNowCommand(Requester, PostId);
+        private static readonly DateTime Now = DateTime.UtcNow;
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IPostSecurity> postSecurity;
         private Mock<ISetPostLiveDateDbStatement> setBacklogPostLiveDateToNow;
         private Mock<IDefragmentQueueIfRequiredDbStatement> removeFromQueueIfRequired;
+        private Mock<ITimestampCreator> timestampCreator;
         private RescheduleForNowCommandHandler target;
 
         [TestInitialize]
@@ -33,6 +36,8 @@
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
             this.postSecurity = new Mock<IPostSecurity>();
+            this.timestampCreator = new Mock<ITimestampCreator>();
+            this.timestampCreator.Setup(v => v.Now()).Returns(Now);
 
             // Mock potentially side-effecting components with strict behaviour.            
             this.setBacklogPostLiveDateToNow = new Mock<ISetPostLiveDateDbStatement>(MockBehavior.Strict);
@@ -42,7 +47,8 @@
                 this.requesterSecurity.Object, 
                 this.postSecurity.Object, 
                 this.setBacklogPostLiveDateToNow.Object,
-                this.removeFromQueueIfRequired.Object);
+                this.removeFromQueueIfRequired.Object,
+                this.timestampCreator.Object);
         }
 
         [TestMethod]

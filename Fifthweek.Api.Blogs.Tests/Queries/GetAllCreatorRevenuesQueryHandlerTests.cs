@@ -77,8 +77,8 @@
 
             var expectedResult = new GetAllCreatorRevenuesResult(new List<GetAllCreatorRevenuesResult.Creator> 
             {
-                new GetAllCreatorRevenuesResult.Creator(UserId.Random(), 1, 2, 3, new Username("username"), new CreatorName("creatorName"), new Email("email@mail.com"), true),
-                new GetAllCreatorRevenuesResult.Creator(UserId.Random(), 4, 5, 6, new Username("username2"), new CreatorName("creatorName2"), new Email("email2@mail.com"), false),
+                new GetAllCreatorRevenuesResult.Creator(UserId.Random(), 1, 2, 3, new Username("username"), new Email("email@mail.com"), true),
+                new GetAllCreatorRevenuesResult.Creator(UserId.Random(), 4, 5, 6, new Username("username2"), new Email("email2@mail.com"), false),
             });
 
             this.getAllCreatorRevenuesDbStatement.Setup(v => v.ExecuteAsync(ReleasableRevenueDate))

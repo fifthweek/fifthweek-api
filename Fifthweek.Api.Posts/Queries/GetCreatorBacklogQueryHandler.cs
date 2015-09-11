@@ -68,7 +68,6 @@
                     file == null ? null : new FileSourceInformation(post.FileName, post.FileExtension, this.mimeTypeMap.GetMimeType(post.FileExtension), post.FileSize ?? 0, null),
                     image,
                     image == null ? null : new FileSourceInformation(post.ImageName, post.ImageExtension, this.mimeTypeMap.GetMimeType(post.ImageExtension), post.ImageSize ?? 0, imageRenderSize),
-                    post.ScheduledByQueue,
                     post.LiveDate);
                 
                 result.Add(completePost);

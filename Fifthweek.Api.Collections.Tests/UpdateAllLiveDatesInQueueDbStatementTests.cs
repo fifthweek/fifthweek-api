@@ -272,17 +272,17 @@
                 file.UserId = user.Id;
                 await databaseContext.Database.Connection.InsertAsync(file);
 
-                var subscription = BlogTests.UniqueEntity(Random);
-                subscription.CreatorId = user.Id;
-                await databaseContext.Database.Connection.InsertAsync(subscription);
+                var blog = BlogTests.UniqueEntity(Random);
+                blog.CreatorId = user.Id;
+                await databaseContext.Database.Connection.InsertAsync(blog);
 
                 var channel = ChannelTests.UniqueEntity(Random);
-                channel.BlogId = subscription.Id;
+                channel.BlogId = blog.Id;
                 await databaseContext.Database.Connection.InsertAsync(channel);
 
                 var collection = QueueTests.UniqueEntity(Random);
                 collection.Id = queueId.Value;
-                collection.ChannelId = channel.Id;
+                collection.BlogId = blog.Id;
                 await databaseContext.Database.Connection.InsertAsync(collection);
 
                 var notes = new List<Post>();
@@ -300,9 +300,8 @@
                 {
                     var post = PostTests.UniqueFileOrImage(Random);
                     post.ChannelId = channel.Id;
-                    post.QueueId = queueId.Value;
+                    post.QueueId = scheduledByQueue ? queueId.Value : (Guid?)null;
                     post.FileId = file.Id;
-                    post.ScheduledByQueue = scheduledByQueue;
                     post.LiveDate = liveDate;
 
                     // Clip dates as we will be comparing from these entities.

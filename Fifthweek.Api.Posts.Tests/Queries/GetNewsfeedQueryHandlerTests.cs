@@ -88,7 +88,7 @@
         {
             this.requesterSecurity.Setup(_ => _.AuthenticateAsync(Requester.Unauthenticated)).Throws<UnauthorizedException>();
 
-            await this.target.HandleAsync(new GetNewsfeedQuery(Requester.Unauthenticated, CreatorId, ChannelIds, CollectionIds, Origin, SearchForwards, StartIndex, Count));
+            await this.target.HandleAsync(new GetNewsfeedQuery(Requester.Unauthenticated, CreatorId, ChannelIds, Origin, SearchForwards, StartIndex, Count));
         }
 
         [TestMethod]
@@ -96,8 +96,8 @@
         public async Task ItShouldPropogateExceptionsFromGetCreatorBacklogDbStatement()
         {
             this.requesterSecurity.Setup(_ => _.AuthenticateAsync(Requester)).ReturnsAsync(UserId);
-            this.getNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, CollectionIds, It.IsAny<DateTime>(), Origin.Value, SearchForwards, StartIndex, Count)).ThrowsAsync(new DivideByZeroException());
-            await this.target.HandleAsync(new GetNewsfeedQuery(Requester, CreatorId, ChannelIds, CollectionIds, Origin, SearchForwards, StartIndex, Count));
+            this.getNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, It.IsAny<DateTime>(), Origin.Value, SearchForwards, StartIndex, Count)).ThrowsAsync(new DivideByZeroException());
+            await this.target.HandleAsync(new GetNewsfeedQuery(Requester, CreatorId, ChannelIds, Origin, SearchForwards, StartIndex, Count));
         }
 
         [TestMethod]
@@ -105,13 +105,13 @@
         {
             this.requesterSecurity.Setup(_ => _.AuthenticateAsync(Requester)).ReturnsAsync(UserId);
 
-            this.getNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, CollectionIds, It.IsAny<DateTime>(), Origin.Value, SearchForwards, StartIndex, Count))
+            this.getNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, It.IsAny<DateTime>(), Origin.Value, SearchForwards, StartIndex, Count))
                 .ReturnsAsync(new GetNewsfeedDbResult(NewsfeedPosts, 10));
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(It.IsAny<ChannelId>(), It.IsAny<FileId>(), It.IsAny<string>()))
                 .Returns<ChannelId, FileId, string>((c, f, p) => Task.FromResult(new FileInformation(f, c.ToString())));
 
-            var result = await this.target.HandleAsync(new GetNewsfeedQuery(Requester, CreatorId, ChannelIds, CollectionIds, Origin, SearchForwards, StartIndex, Count));
+            var result = await this.target.HandleAsync(new GetNewsfeedQuery(Requester, CreatorId, ChannelIds, Origin, SearchForwards, StartIndex, Count));
 
             Assert.AreEqual(10, result.AccountBalance);
             Assert.AreEqual(NewsfeedPosts.Count, result.Posts.Count);
@@ -139,7 +139,6 @@
 
                 Assert.AreEqual(item.Input.PostId, item.Output.PostId);
                 Assert.AreEqual(item.Input.ChannelId, item.Output.ChannelId);
-                Assert.AreEqual(item.Input.QueueId, item.Output.QueueId);
                 Assert.AreEqual(item.Input.Comment, item.Output.Comment);
                 Assert.AreEqual(item.Input.LiveDate, item.Output.LiveDate);
             }
@@ -152,7 +151,7 @@
 
             DateTime nowDate = DateTime.MinValue;
             DateTime originDate = DateTime.MaxValue;
-            this.getNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, CollectionIds, It.IsAny<DateTime>(), It.IsAny<DateTime>(), SearchForwards, StartIndex, Count))
+            this.getNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, It.IsAny<DateTime>(), It.IsAny<DateTime>(), SearchForwards, StartIndex, Count))
                 .Callback<UserId, UserId, IReadOnlyList<ChannelId>, IReadOnlyList<QueueId>, DateTime, DateTime, bool, NonNegativeInt, PositiveInt>(
                 (a, b, c, d, now, origin, e, f, g) => 
                 {
@@ -164,7 +163,7 @@
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(It.IsAny<ChannelId>(), It.IsAny<FileId>(), It.IsAny<string>()))
                 .Returns<ChannelId, FileId, string>((c, f, p) => Task.FromResult(new FileInformation(f, c.ToString())));
 
-            await this.target.HandleAsync(new GetNewsfeedQuery(Requester, CreatorId, ChannelIds, CollectionIds, null, SearchForwards, StartIndex, Count));
+            await this.target.HandleAsync(new GetNewsfeedQuery(Requester, CreatorId, ChannelIds, null, SearchForwards, StartIndex, Count));
 
             Assert.AreEqual(nowDate, originDate);
         }
@@ -195,7 +194,6 @@
                             new PostId(Guid.NewGuid()),
                             BlogId,
                             channelId,
-                            collectionId,
                             i % 2 == 0 ? Comment : null,
                             i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
                             i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,

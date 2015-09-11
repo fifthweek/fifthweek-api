@@ -33,8 +33,6 @@
         [Optional]
         public FileSourceInformation ImageSource { get; private set; }
 
-        public bool ScheduledByQueue { get; private set; }
-
         public DateTime LiveDate { get; private set; }
     }
 }

@@ -114,7 +114,7 @@
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                await databaseContext.CreateTestCollectionAsync(newUserId.Value, Guid.NewGuid(), newQueueId.Value);
+                await databaseContext.CreateTestEntitiesAsync(newUserId.Value, Guid.NewGuid(), newQueueId.Value);
             }
         }
     }
