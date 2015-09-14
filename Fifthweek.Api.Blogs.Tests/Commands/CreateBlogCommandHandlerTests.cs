@@ -101,7 +101,7 @@
                     UserId.Value,
                     null,
                     BlogName.Value,
-                    ValidIntroduction.Default.Value,
+                    Introduction.Value,
                     null,
                     null,
                     null,

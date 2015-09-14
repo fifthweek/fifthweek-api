@@ -88,6 +88,7 @@
         public async Task WhenPostingRegistrations_ItShouldIssueRegisterUserCommand()
         {
             var registration = NewRegistrationData();
+            registration.RegisterAsCreator = true;
             var command = new RegisterUserCommand(
                 UserId,
                 registration.ExampleWork,

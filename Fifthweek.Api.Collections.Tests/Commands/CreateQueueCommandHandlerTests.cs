@@ -154,7 +154,7 @@
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                await databaseContext.CreateTestChannelAsync(UserId.Value, BlogId.Value);
+                await databaseContext.CreateTestBlogAsync(UserId.Value, BlogId.Value);
             }
         }
     } 

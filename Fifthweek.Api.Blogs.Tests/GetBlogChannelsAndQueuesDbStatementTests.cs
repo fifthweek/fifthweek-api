@@ -124,8 +124,7 @@
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public async Task WhenGettingANonExistantBlog_ItShouldThrowAnException()
+        public async Task WhenGettingANonExistantBlog_ItShouldReturnNull()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
@@ -134,7 +133,9 @@
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(new UserId(Guid.NewGuid()));
+                var result = await this.target.ExecuteAsync(new UserId(Guid.NewGuid()));
+
+                Assert.IsNull(result);
 
                 return ExpectedSideEffects.None;
             });

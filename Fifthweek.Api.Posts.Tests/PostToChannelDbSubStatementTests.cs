@@ -219,9 +219,11 @@
                 await this.CreatePostAsync(testDatabase, sharedLiveDate, scheduledByQueue: true, differentCollection: false);
                 await testDatabase.TakeSnapshotAsync();
 
+                var givenPost = UnscheduledPost();
+                givenPost.QueueId = QueueId.Value;
                 await ExpectedException.AssertExceptionAsync<OptimisticConcurrencyException>(() =>
                 {
-                    return this.target.QueuePostAsync(UnscheduledPost());            
+                    return this.target.QueuePostAsync(givenPost);            
                 });
                 
                 return ExpectedSideEffects.None;
@@ -239,10 +241,13 @@
 
                 this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
-                await this.target.QueuePostAsync(UnscheduledPost());
+          
+                var givenPost = UnscheduledPost();
+                givenPost.QueueId = QueueId.Value;
+         
+                await this.target.QueuePostAsync(givenPost);
                 await testDatabase.TakeSnapshotAsync();
-
-                await this.target.QueuePostAsync(UnscheduledPost());
+                await this.target.QueuePostAsync(givenPost);
 
                 return ExpectedSideEffects.None;
             });

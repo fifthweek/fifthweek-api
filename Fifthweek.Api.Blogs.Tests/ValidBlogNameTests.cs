@@ -76,9 +76,9 @@
         }
 
         [TestMethod]
-        public void ItShouldNotAllowBlogNamesOver25Characters()
+        public void ItShouldNotAllowBlogNamesOver50Characters()
         {
-            this.AssertMaxLength(25);
+            this.AssertMaxLength(50);
         }
 
         [TestMethod]

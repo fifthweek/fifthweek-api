@@ -15,7 +15,7 @@
     {
         private static readonly string DeleteSql = string.Format(
             @"
-            UPDATE {0} q SET q.{1}=NULL WHERE q.{1}=@QueueId
+            UPDATE {0} SET {1}=NULL WHERE {1}=@QueueId;
             DELETE FROM {2} WHERE {3} = @QueueId;",
             Post.Table,
             Post.Fields.QueueId,

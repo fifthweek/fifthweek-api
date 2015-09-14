@@ -127,6 +127,7 @@
                     ChannelId = ChannelId.Value,
                     QueueId = QueueId.Value,
                     FileId = FileId.Value,
+                    ImageId = ImageId.Value,
                     Comment = Comment.Value
                 };
 
@@ -156,6 +157,7 @@
                     var existingFileId = Guid.NewGuid();
                     await databaseContext.CreateTestFileWithExistingUserAsync(UserId.Value, existingFileId);
                     await databaseContext.CreateTestFileWithExistingUserAsync(UserId.Value, FileId.Value);
+                    await databaseContext.CreateTestFileWithExistingUserAsync(UserId.Value, ImageId.Value);
 
                     var post = PostTests.UniqueFileOrImage(new Random());
                     post.Id = PostId.Value;

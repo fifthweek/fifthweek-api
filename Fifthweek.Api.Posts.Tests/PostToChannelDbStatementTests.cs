@@ -154,7 +154,7 @@
         [TestMethod]
         public async Task ItShouldAllowFilesAndImagesAndComments()
         {
-            this.subStatements.Setup(_ => _.SchedulePostAsync(CommentedImage, null, Now)).Returns(Task.FromResult(0)).Verifiable();
+            this.subStatements.Setup(_ => _.SchedulePostAsync(CommentedFileAndImage, null, Now)).Returns(Task.FromResult(0)).Verifiable();
 
             await this.target.ExecuteAsync(PostId, ChannelId, Comment, null, null, FileId, ImageId, Now);
 

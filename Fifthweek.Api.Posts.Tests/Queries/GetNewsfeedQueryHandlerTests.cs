@@ -152,8 +152,8 @@
             DateTime nowDate = DateTime.MinValue;
             DateTime originDate = DateTime.MaxValue;
             this.getNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, It.IsAny<DateTime>(), It.IsAny<DateTime>(), SearchForwards, StartIndex, Count))
-                .Callback<UserId, UserId, IReadOnlyList<ChannelId>, IReadOnlyList<QueueId>, DateTime, DateTime, bool, NonNegativeInt, PositiveInt>(
-                (a, b, c, d, now, origin, e, f, g) => 
+                .Callback<UserId, UserId, IReadOnlyList<ChannelId>, DateTime, DateTime, bool, NonNegativeInt, PositiveInt>(
+                (a, b, c, now, origin, e, f, g) => 
                 {
                     nowDate = now;
                     originDate = origin;

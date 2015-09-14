@@ -184,24 +184,19 @@
             using (var databaseContext = testDatabase.CreateContext())
             {
                 var channel = await databaseContext.Channels.SingleAsync(v => v.Id == ChannelId.Value);
-                var collection = await databaseContext.Queues.SingleAsync(v => v.Id == QueueId.Value);
                 var subscription = await databaseContext.ChannelSubscriptions.SingleAsync(v => v.ChannelId == ChannelId.Value && v.UserId == CreatorId.Value);
                 var post = await databaseContext.Posts.SingleAsync(v => v.Id == PostId.Value);
                 var comment = await databaseContext.Comments.SingleAsync(v => v.Id == CommentId.Value);
                 var like = await databaseContext.Likes.SingleAsync(v => v.UserId == UserId.Value && v.PostId == PostId.Value);
-                var weeklyReleaseTimes = await databaseContext.WeeklyReleaseTimes.Where(v => v.QueueId == QueueId.Value).ToListAsync();
 
                 var result = new List<IIdentityEquatable>
                 {
                     channel,
-                    collection,
                     post,
                     subscription,
                     comment,
                     like,
                 };
-
-                result.AddRange(weeklyReleaseTimes);
 
                 return result;
             }

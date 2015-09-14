@@ -27,10 +27,10 @@ namespace Fifthweek.Api.Posts
 
         private static readonly string WherePostNotInQueue = string.Format(
             @"
-            EXISTS (SELECT * 
+            NOT EXISTS (SELECT * 
                     FROM    {0} WITH (UPDLOCK, HOLDLOCK)
                     WHERE   {1} = @{1}
-                    AND     {2} != @{2})",
+                    AND     {2} = @{2})",
             Post.Table,
             Post.Fields.Id,
             Post.Fields.QueueId);
@@ -64,7 +64,7 @@ namespace Fifthweek.Api.Posts
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var failedConditionIndex = await connection.UpdateAsync(parameters);
-                var concurrencyFailure = failedConditionIndex == 0 || failedConditionIndex == 1;
+                var concurrencyFailure = failedConditionIndex == 0;
 
                 if (concurrencyFailure)
                 {

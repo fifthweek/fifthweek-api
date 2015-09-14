@@ -24,7 +24,7 @@
         private static readonly string BlogIdQuery = string.Format(
             @"  DECLARE @BlogId uniqueidentifier;
                 SELECT TOP 1 @BlogId = {0}
-                FROM {1} WHERE {2}=@UserId ORDER BY blog.{3} DESC;",
+                FROM {1} WHERE {2}=@UserId ORDER BY {3} DESC;",
             Blog.Fields.Id,
             Blog.Table,
             Blog.Fields.CreatorId,
@@ -57,7 +57,7 @@
             Queue.Fields.Id,
             Queue.Fields.BlogId);
 
-        private static readonly string Query = BlogQuery + ChannelsQuery + QueuesQuery + WeeklyReleaseScheduleQuery;
+        private static readonly string Query = BlogIdQuery + BlogQuery + ChannelsQuery + QueuesQuery + WeeklyReleaseScheduleQuery;
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 

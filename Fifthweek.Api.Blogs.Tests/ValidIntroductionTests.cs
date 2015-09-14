@@ -72,7 +72,7 @@
         [TestMethod]
         public void ItShouldNotAllowIntroductionsUnder15Characters()
         {
-            this.AssertMinLength(15);
+            this.AssertMinLength(1);
         }
 
         [TestMethod]

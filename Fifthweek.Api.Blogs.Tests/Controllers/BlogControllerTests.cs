@@ -68,7 +68,7 @@
             var command = NewCreateBlogCommand(UserId, BlogId, FirstChannelId, data);
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
-            this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(BlogId.Value);
+            this.guidCreator.Setup(_ => _.CreateSqlSequential()).ReturnsInOrder(BlogId.Value, FirstChannelId.Value);
             this.createBlog.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
             var result = await this.target.PostBlog(data);
@@ -168,6 +168,7 @@
             return new NewBlogData
             {
                 Name = "Captain Phil",
+                Introduction = "Phil Facts",
                 BasePrice = 50
             };
         }

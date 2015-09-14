@@ -90,6 +90,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509111552242_ChangeCollectionsToQueuesAndSimplifyBlogFields.cs" />
+    <Compile Include="Migrations\201509111552242_ChangeCollectionsToQueuesAndSimplifyBlogFields.Designer.cs">
+      <DependentUpon>201509111552242_ChangeCollectionsToQueuesAndSimplifyBlogFields.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201509111613509_ChangeCollectionsToQueuesAndSimplifyBlogFieldsPart2.cs" />
+    <Compile Include="Migrations\201509111613509_ChangeCollectionsToQueuesAndSimplifyBlogFieldsPart2.Designer.cs">
+      <DependentUpon>201509111613509_ChangeCollectionsToQueuesAndSimplifyBlogFieldsPart2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Queue.cs" />
     <Compile Include="DapperExtensions.cs" />
     <Compile Include="DapperTypeHandlerRegistration.cs" />
@@ -595,6 +603,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509030951261_CreateCommentAndLikeTables.resx">
       <DependentUpon>201509030951261_CreateCommentAndLikeTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509111552242_ChangeCollectionsToQueuesAndSimplifyBlogFields.resx">
+      <DependentUpon>201509111552242_ChangeCollectionsToQueuesAndSimplifyBlogFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509111613509_ChangeCollectionsToQueuesAndSimplifyBlogFieldsPart2.resx">
+      <DependentUpon>201509111613509_ChangeCollectionsToQueuesAndSimplifyBlogFieldsPart2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

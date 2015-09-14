@@ -71,25 +71,28 @@
         }
 
         [TestMethod]
-        public async Task ItShouldDeleteCollection()
+        public async Task ItShouldDeleteQueue()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.InitializeTarget(testDatabase);
-                await this.CreateEntitiesAsync(testDatabase);
+                var post = await this.CreateEntitiesAsync(testDatabase);
                 var expectedDeletions = await this.GetExpectedDeletionsAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
+
+                var expectedPost = post.Copy(_ => _.QueueId = null);
 
                 await this.target.ExecuteAsync(QueueId);
 
                 return new ExpectedSideEffects
                 {
                     Deletes = expectedDeletions,
+                    Update = expectedPost,
                 };
             });
         }
 
-        private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase)
+        private async Task<Post> CreateEntitiesAsync(TestDatabaseContext testDatabase)
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
@@ -123,6 +126,8 @@
 
                 var weeklyReleaseTimes = WeeklyReleaseTimeTests.GenerateSortedWeeklyReleaseTimes(QueueId.Value, 3);
                 await databaseContext.Database.Connection.InsertAsync(weeklyReleaseTimes);
+
+                return post;
             }
         }
 
@@ -131,17 +136,11 @@
             using (var databaseContext = testDatabase.CreateContext())
             {
                 var queue = await databaseContext.Queues.SingleAsync(v => v.Id == QueueId.Value);
-                var post = await databaseContext.Posts.SingleAsync(v => v.Id == PostId.Value);
                 var weeklyReleaseTimes = await databaseContext.WeeklyReleaseTimes.Where(v => v.QueueId == QueueId.Value).ToListAsync();
-                var comment = await databaseContext.Comments.SingleAsync(v => v.Id == CommentId.Value);
-                var like = await databaseContext.Likes.SingleAsync(v => v.UserId == UserId.Value && v.PostId == PostId.Value);
 
                 var result = new List<IIdentityEquatable>
                 {
                     queue,
-                    post,
-                    comment,
-                    like,
                 };
 
                 result.AddRange(weeklyReleaseTimes);

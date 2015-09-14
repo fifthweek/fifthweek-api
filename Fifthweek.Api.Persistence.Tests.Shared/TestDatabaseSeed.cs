@@ -469,8 +469,8 @@
                 var post = PostTests.UniqueNote(Random);
                 post.Channel = userChannels[postIndex % userChannels.Count];
                 post.ChannelId = userChannels[postIndex % userChannels.Count].Id;
-                post.Queue = userQueues[postIndex % userChannels.Count];
-                post.QueueId = userQueues[postIndex % userChannels.Count].Id;
+                post.Queue = userQueues[postIndex % userQueues.Count];
+                post.QueueId = userQueues[postIndex % userQueues.Count].Id;
                 this.posts.Add(post);
             }
 
@@ -479,8 +479,8 @@
                 var post = PostTests.UniqueFileOrImage(Random);
                 post.Channel = userChannels[postIndex % userChannels.Count];
                 post.ChannelId = userChannels[postIndex % userChannels.Count].Id;
-                post.Queue = userQueues[postIndex % userChannels.Count];
-                post.QueueId = userQueues[postIndex % userChannels.Count].Id;
+                post.Queue = userQueues[postIndex % userQueues.Count];
+                post.QueueId = userQueues[postIndex % userQueues.Count].Id;
 
                 var file = FileTests.UniqueEntity(Random);
                 file.UserId = blog.Creator.Id;
@@ -496,8 +496,8 @@
                 var post = PostTests.UniqueFileOrImage(Random);
                 post.Channel = userChannels[postIndex % userChannels.Count];
                 post.ChannelId = userChannels[postIndex % userChannels.Count].Id;
-                post.Queue = userQueues[postIndex % userChannels.Count];
-                post.QueueId = userQueues[postIndex % userChannels.Count].Id;
+                post.Queue = userQueues[postIndex % userQueues.Count];
+                post.QueueId = userQueues[postIndex % userQueues.Count].Id;
 
                 var file = FileTests.UniqueEntity(Random);
                 file.UserId = blog.Creator.Id;
