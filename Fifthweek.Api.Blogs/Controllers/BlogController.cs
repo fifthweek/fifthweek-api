@@ -25,7 +25,7 @@
         private readonly IGuidCreator guidCreator;
 
         [Route("")]
-        public async Task<BlogId> PostBlog(NewBlogData blogData)
+        public async Task<NewBlogResult> PostBlog(NewBlogData blogData)
         {
             blogData.AssertBodyProvided("blogData");
             var blog = blogData.Parse();
@@ -39,10 +39,9 @@
                 newBlogId,
                 firstChannelId,
                 blog.Name,
-                blog.Introduction,
                 blog.BasePrice));
 
-            return newBlogId;
+            return new NewBlogResult(newBlogId, firstChannelId);
         }
 
         [Route("{blogId}")]

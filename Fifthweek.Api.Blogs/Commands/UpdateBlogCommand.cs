@@ -14,6 +14,7 @@
 
         public ValidBlogName BlogName { get; private set; }
 
+        [Optional]
         public ValidIntroduction Introduction { get; private set; }
 
         [Optional]

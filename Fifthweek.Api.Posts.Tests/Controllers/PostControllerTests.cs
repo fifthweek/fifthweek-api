@@ -252,7 +252,7 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.target.PostToQueue(PostId.Value.EncodeGuid(), QueueId.Value.EncodeGuid());
+            await this.target.PutQueue(PostId.Value.EncodeGuid(), QueueId.Value.EncodeGuid());
 
             this.rescheduleForNow.Verify();
         }
@@ -261,14 +261,14 @@
         [ExpectedException(typeof(BadRequestException))]
         public async Task WhenReschedulingWithQueue_WithoutSpecifyingPostId_ItShouldThrowBadRequestException()
         {
-            await this.target.PostToQueue(string.Empty, QueueId.Value.EncodeGuid());
+            await this.target.PutQueue(string.Empty, QueueId.Value.EncodeGuid());
         }
 
         [TestMethod]
         [ExpectedException(typeof(BadRequestException))]
         public async Task WhenReschedulingWithQueue_WithoutSpecifyingQueueId_ItShouldThrowBadRequestException()
         {
-            await this.target.PostToQueue(PostId.Value.EncodeGuid(), string.Empty);
+            await this.target.PutQueue(PostId.Value.EncodeGuid(), string.Empty);
         }
 
         [TestMethod]

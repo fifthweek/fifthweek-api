@@ -98,6 +98,10 @@
     <Compile Include="Migrations\201509111613509_ChangeCollectionsToQueuesAndSimplifyBlogFieldsPart2.Designer.cs">
       <DependentUpon>201509111613509_ChangeCollectionsToQueuesAndSimplifyBlogFieldsPart2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509151814448_MakeIntroductionOptional.cs" />
+    <Compile Include="Migrations\201509151814448_MakeIntroductionOptional.Designer.cs">
+      <DependentUpon>201509151814448_MakeIntroductionOptional.cs</DependentUpon>
+    </Compile>
     <Compile Include="Queue.cs" />
     <Compile Include="DapperExtensions.cs" />
     <Compile Include="DapperTypeHandlerRegistration.cs" />
@@ -609,6 +613,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509111613509_ChangeCollectionsToQueuesAndSimplifyBlogFieldsPart2.resx">
       <DependentUpon>201509111613509_ChangeCollectionsToQueuesAndSimplifyBlogFieldsPart2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509151814448_MakeIntroductionOptional.resx">
+      <DependentUpon>201509151814448_MakeIntroductionOptional.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

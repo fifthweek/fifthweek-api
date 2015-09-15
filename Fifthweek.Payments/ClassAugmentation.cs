@@ -3768,7 +3768,7 @@ namespace Fifthweek.Payments.Services.Administration
         public partial class Item 
         {
             public Item(
-                System.Guid id,
+                System.Guid recordId,
                 Fifthweek.Api.Identity.Shared.Membership.UserId accountOwnerId,
                 Fifthweek.Api.Identity.Shared.Membership.Username accountOwnerUsername,
                 Fifthweek.Api.Identity.Shared.Membership.UserId counterpartyId,
@@ -3783,9 +3783,9 @@ namespace Fifthweek.Payments.Services.Administration
                 System.String stripeChargeId,
                 System.String taxamoTransactionKey)
             {
-                if (id == null)
+                if (recordId == null)
                 {
-                    throw new ArgumentNullException("id");
+                    throw new ArgumentNullException("recordId");
                 }
 
                 if (accountOwnerId == null)
@@ -3818,7 +3818,7 @@ namespace Fifthweek.Payments.Services.Administration
                     throw new ArgumentNullException("transactionReference");
                 }
 
-                this.Id = id;
+                this.RecordId = recordId;
                 this.AccountOwnerId = accountOwnerId;
                 this.AccountOwnerUsername = accountOwnerUsername;
                 this.CounterpartyId = counterpartyId;
@@ -6364,7 +6364,7 @@ namespace Fifthweek.Payments.Services.Administration
         {
             public override string ToString()
             {
-                return string.Format("Item({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, \"{11}\", \"{12}\", \"{13}\")", this.Id == null ? "null" : this.Id.ToString(), this.AccountOwnerId == null ? "null" : this.AccountOwnerId.ToString(), this.AccountOwnerUsername == null ? "null" : this.AccountOwnerUsername.ToString(), this.CounterpartyId == null ? "null" : this.CounterpartyId.ToString(), this.CounterpartyUsername == null ? "null" : this.CounterpartyUsername.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.Amount == null ? "null" : this.Amount.ToString(), this.AccountType == null ? "null" : this.AccountType.ToString(), this.TransactionType == null ? "null" : this.TransactionType.ToString(), this.TransactionReference == null ? "null" : this.TransactionReference.ToString(), this.InputDataReference == null ? "null" : this.InputDataReference.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.StripeChargeId == null ? "null" : this.StripeChargeId.ToString(), this.TaxamoTransactionKey == null ? "null" : this.TaxamoTransactionKey.ToString());
+                return string.Format("Item({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, \"{11}\", \"{12}\", \"{13}\")", this.RecordId == null ? "null" : this.RecordId.ToString(), this.AccountOwnerId == null ? "null" : this.AccountOwnerId.ToString(), this.AccountOwnerUsername == null ? "null" : this.AccountOwnerUsername.ToString(), this.CounterpartyId == null ? "null" : this.CounterpartyId.ToString(), this.CounterpartyUsername == null ? "null" : this.CounterpartyUsername.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.Amount == null ? "null" : this.Amount.ToString(), this.AccountType == null ? "null" : this.AccountType.ToString(), this.TransactionType == null ? "null" : this.TransactionType.ToString(), this.TransactionReference == null ? "null" : this.TransactionReference.ToString(), this.InputDataReference == null ? "null" : this.InputDataReference.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.StripeChargeId == null ? "null" : this.StripeChargeId.ToString(), this.TaxamoTransactionKey == null ? "null" : this.TaxamoTransactionKey.ToString());
             }
             
             public override bool Equals(object obj)
@@ -6392,7 +6392,7 @@ namespace Fifthweek.Payments.Services.Administration
                 unchecked
                 {
                     int hashCode = 0;
-                    hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.RecordId != null ? this.RecordId.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.AccountOwnerId != null ? this.AccountOwnerId.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.AccountOwnerUsername != null ? this.AccountOwnerUsername.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.CounterpartyId != null ? this.CounterpartyId.GetHashCode() : 0);
@@ -6412,7 +6412,7 @@ namespace Fifthweek.Payments.Services.Administration
             
             protected bool Equals(Item other)
             {
-                if (!object.Equals(this.Id, other.Id))
+                if (!object.Equals(this.RecordId, other.RecordId))
                 {
                     return false;
                 }

@@ -29,7 +29,7 @@
         private static readonly ValidBlogName BlogName = ValidBlogName.Parse("Lawrence");
         private static readonly ValidIntroduction Introduction = ValidIntroduction.Parse("Introduction");
         private static readonly ValidChannelPrice BasePrice = ValidChannelPrice.Parse(10);
-        private static readonly CreateBlogCommand Command = new CreateBlogCommand(Requester, BlogId, FirstChannelId, BlogName, Introduction, BasePrice);
+        private static readonly CreateBlogCommand Command = new CreateBlogCommand(Requester, BlogId, FirstChannelId, BlogName, BasePrice);
         private Mock<IBlogSecurity> blogSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
         private MockRequestSnapshotService requestSnapshotService;
@@ -53,7 +53,7 @@
 
             this.target = new CreateBlogCommandHandler(this.blogSecurity.Object, this.requesterSecurity.Object, connectionFactory.Object, this.requestSnapshotService);
 
-            await this.target.HandleAsync(new CreateBlogCommand(Requester.Unauthenticated, BlogId, FirstChannelId, BlogName, Introduction, BasePrice));
+            await this.target.HandleAsync(new CreateBlogCommand(Requester.Unauthenticated, BlogId, FirstChannelId, BlogName, BasePrice));
         }
 
         [TestMethod]
@@ -101,7 +101,7 @@
                     UserId.Value,
                     null,
                     BlogName.Value,
-                    Introduction.Value,
+                    null,
                     null,
                     null,
                     null,

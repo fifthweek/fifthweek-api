@@ -2612,16 +2612,16 @@ namespace Fifthweek.Api.Posts.Controllers
         public partial class Item 
         {
             public Item(
-                Fifthweek.Api.Posts.Shared.CommentId id,
+                Fifthweek.Api.Posts.Shared.CommentId commentId,
                 Fifthweek.Api.Posts.Shared.PostId postId,
                 Fifthweek.Api.Identity.Shared.Membership.UserId userId,
                 Fifthweek.Api.Identity.Shared.Membership.Username username,
                 Fifthweek.Api.Posts.Shared.Comment content,
                 System.DateTime creationDate)
             {
-                if (id == null)
+                if (commentId == null)
                 {
-                    throw new ArgumentNullException("id");
+                    throw new ArgumentNullException("commentId");
                 }
 
                 if (postId == null)
@@ -2649,7 +2649,7 @@ namespace Fifthweek.Api.Posts.Controllers
                     throw new ArgumentNullException("creationDate");
                 }
 
-                this.Id = id;
+                this.CommentId = commentId;
                 this.PostId = postId;
                 this.UserId = userId;
                 this.Username = username;
@@ -5188,7 +5188,7 @@ namespace Fifthweek.Api.Posts.Controllers
         {
             public override string ToString()
             {
-                return string.Format("Item({0}, {1}, {2}, {3}, {4}, {5})", this.Id == null ? "null" : this.Id.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Content == null ? "null" : this.Content.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+                return string.Format("Item({0}, {1}, {2}, {3}, {4}, {5})", this.CommentId == null ? "null" : this.CommentId.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Content == null ? "null" : this.Content.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
             }
             
             public override bool Equals(object obj)
@@ -5216,7 +5216,7 @@ namespace Fifthweek.Api.Posts.Controllers
                 unchecked
                 {
                     int hashCode = 0;
-                    hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.CommentId != null ? this.CommentId.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
@@ -5228,7 +5228,7 @@ namespace Fifthweek.Api.Posts.Controllers
             
             protected bool Equals(Item other)
             {
-                if (!object.Equals(this.Id, other.Id))
+                if (!object.Equals(this.CommentId, other.CommentId))
                 {
                     return false;
                 }

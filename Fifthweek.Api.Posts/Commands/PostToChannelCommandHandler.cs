@@ -25,22 +25,25 @@
 
             if (command.FileId == null && command.ImageId == null && command.Comment == null)
             {
-                throw new BadRequestException("Some content must be provided.");
+                throw new BadRequestException("Please provide some content.");
             }
 
             var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
 
-            await this.queueSecurity.AssertWriteAllowedAsync(authenticatedUserId, command.QueueId);
-
-            await this.fileSecurity.AssertReferenceAllowedAsync(authenticatedUserId, command.FileId);
+            if (command.QueueId != null)
+            {
+                await this.queueSecurity.AssertWriteAllowedAsync(authenticatedUserId, command.QueueId);
+            }
 
             if (command.FileId != null)
             {
+                await this.fileSecurity.AssertReferenceAllowedAsync(authenticatedUserId, command.FileId);
                 await this.postFileTypeChecks.AssertValidForFilePostAsync(command.FileId);
             }
 
             if (command.ImageId != null)
             {
+                await this.fileSecurity.AssertReferenceAllowedAsync(authenticatedUserId, command.ImageId);
                 await this.postFileTypeChecks.AssertValidForImagePostAsync(command.ImageId);
             }
 

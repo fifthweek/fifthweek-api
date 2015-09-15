@@ -47,7 +47,7 @@
                         }
                         else
                         {
-                            throw new Exception("Multiple body parameters detected.");
+                            throw new Exception("Multiple body parameters detected for " + methodInfo.Name);
                         }
                     }
 

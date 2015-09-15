@@ -27,7 +27,7 @@
         [MaxLength(50)] // See: ValidBlogName.MaxLength
         public string Name { get; set; }
 
-        [Required]
+        [Optional]
         [MaxLength(250)] // See: ValidIntroduction.MaxLength
         public string Introduction { get; set; }
         

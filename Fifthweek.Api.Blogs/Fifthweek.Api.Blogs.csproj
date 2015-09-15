@@ -105,6 +105,7 @@
     <Compile Include="Controllers\ChannelSubscriptionDataWithChannelId.cs" />
     <Compile Include="Controllers\ChannelSubscriptionDataWithoutChannelId.cs" />
     <Compile Include="Controllers\FreeAccessUsersData.cs" />
+    <Compile Include="Controllers\NewBlogResult.cs" />
     <Compile Include="Controllers\PutFreeAccessUsersResult.cs" />
     <Compile Include="Controllers\SubscriptionController.cs" />
     <Compile Include="Controllers\UpdatedBlogSubscriptionData.cs" />

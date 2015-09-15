@@ -73,7 +73,7 @@
 
             var result = await this.target.PostBlog(data);
 
-            Assert.AreEqual(command.NewBlogId, result);
+            Assert.AreEqual(new NewBlogResult(command.NewBlogId, command.FirstChannelId), result);
             this.createBlog.Verify();
         }
 
@@ -168,7 +168,6 @@
             return new NewBlogData
             {
                 Name = "Captain Phil",
-                Introduction = "Phil Facts",
                 BasePrice = 50
             };
         }
@@ -184,7 +183,6 @@
                 blogId,
                 firstChannelId,
                 ValidBlogName.Parse(data.Name),
-                ValidIntroduction.Parse(data.Introduction),
                 ValidChannelPrice.Parse(data.BasePrice));
         }
 

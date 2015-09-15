@@ -47,7 +47,7 @@
         }
 
         [Route("newsfeed")]
-        public async Task<GetNewsfeedQueryResult> GetNewsfeed(NewsfeedFilter filterData)
+        public async Task<GetNewsfeedQueryResult> GetNewsfeed([FromUri]NewsfeedFilter filterData)
         {
             filterData.AssertUrlParameterProvided("filter");
             var filter = filterData.Parse();
@@ -71,7 +71,7 @@
         }
 
         [Route("")]
-        public async Task PostPost(NewPostData postData)
+        public async Task PostPost([FromBody]NewPostData postData)
         {
             postData.AssertBodyProvided("postData");
             var post = postData.Parse();
@@ -93,7 +93,7 @@
         }
 
         [Route("{postId}")]
-        public async Task PutPost(string postId, RevisedPostData postData)
+        public async Task PutPost(string postId, [FromBody]RevisedPostData postData)
         {
             postId.AssertUrlParameterProvided("postId");
             postData.AssertBodyProvided("postData");
@@ -122,7 +122,7 @@
         }
 
         [Route("queues/{queueId}")]
-        public async Task PostNewQueueOrder(string queueId, IEnumerable<PostId> newQueueOrder)
+        public async Task PostNewQueueOrder(string queueId, [FromBody]IEnumerable<PostId> newQueueOrder)
         {
             queueId.AssertUrlParameterProvided("queueId");
             newQueueOrder.AssertBodyProvided("newQueueOrder");
@@ -133,8 +133,8 @@
             await this.reorderQueue.HandleAsync(new ReorderQueueCommand(requester, queueIdObject, newQueueOrder.ToList()));
         }
 
-        [Route("queued")]
-        public async Task PostToQueue(string postId, string queueId)
+        [Route("{postId}/queue")]
+        public async Task PutQueue(string postId, [FromBody]string queueId)
         {
             postId.AssertUrlParameterProvided("postId");
             queueId.AssertBodyProvided("queueId");
@@ -147,7 +147,7 @@
         }
 
         [Route("live")]
-        public async Task PostToLive(string postId)
+        public async Task PostToLive([FromBody]string postId)
         {
             postId.AssertBodyProvided("postId");
             var parsedPostId = new PostId(postId.DecodeGuid());
@@ -157,7 +157,7 @@
         }
 
         [Route("{postId}/liveDate")]
-        public async Task PutLiveDate(string postId, DateTime newLiveDate)
+        public async Task PutLiveDate(string postId, [FromBody]DateTime newLiveDate)
         {
             postId.AssertUrlParameterProvided("postId");
             newLiveDate.AssertUtc("newLiveDate");
@@ -169,7 +169,7 @@
         }
 
         [Route("{postId}/comments")]
-        public async Task PostComment(string postId, CommentData comment)
+        public async Task PostComment(string postId, [FromBody]CommentData comment)
         {
             postId.AssertUrlParameterProvided("postId");
             comment.AssertBodyProvided("comment");

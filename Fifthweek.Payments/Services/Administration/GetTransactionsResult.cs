@@ -18,7 +18,7 @@ namespace Fifthweek.Payments.Services.Administration
         [AutoEqualityMembers]
         public partial class Item
         {
-            public Guid Id { get; set; }
+            public Guid RecordId { get; set; }
 
             public UserId AccountOwnerId { get; set; }
 

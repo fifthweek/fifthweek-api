@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 10/09/2015 13:32:09 (UTC)
-//// Mapped solution in 31s
+//// Generated on 15/09/2015 18:22:43 (UTC)
+//// Mapped solution in 18.94s
 
 
 namespace Fifthweek.Api.Persistence
@@ -41,11 +41,6 @@ namespace Fifthweek.Api.Persistence
             if (name == null)
             {
                 throw new ArgumentNullException("name");
-            }
-
-            if (introduction == null)
-            {
-                throw new ArgumentNullException("introduction");
             }
 
             if (creationDate == null)

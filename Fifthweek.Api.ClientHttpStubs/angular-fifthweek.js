@@ -35,7 +35,6 @@ angular.module('webApp').factory('channelStub',
     // newChannelData = {
     //   blogId: 'Base64Guid',
     //   name: '',
-    //   description: '',
     //   price: 0,
     //   isVisibleToNonSubscribers: false
     // }
@@ -49,7 +48,6 @@ angular.module('webApp').factory('channelStub',
     // channelId = 'Base64Guid'
     // channelData = {
     //   name: '',
-    //   description: '',
     //   price: 0,
     //   isVisibleToNonSubscribers: false
     // }
@@ -69,51 +67,51 @@ angular.module('webApp').factory('channelStub',
     return service;
   });
 
-angular.module('webApp').factory('collectionStub',
+angular.module('webApp').factory('queueStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 
     var apiBaseUri = fifthweekConstants.apiBaseUri;
     var service = {};
 
-    // newCollectionData = {
-    //   channelId: 'Base64Guid',
+    // newQueueData = {
+    //   blogId: 'Base64Guid',
     //   name: ''
     // }
     // result = {
-    //   collectionId: 'Base64Guid',
+    //   queueId: 'Base64Guid',
     //   defaultWeeklyReleaseTime: 0
     // }
-    service.postCollection = function(newCollectionData) {
-      return $http.post(utilities.fixUri(apiBaseUri + 'collections'), newCollectionData).catch(function(response) {
+    service.postQueue = function(newQueueData) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'queues'), newQueueData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
-    // collectionId = 'Base64Guid'
-    // collectionData = {
+    // queueId = 'Base64Guid'
+    // queueData = {
     //   name: '',
     //   weeklyReleaseSchedule: [
     //     0
     //   ]
     // }
-    service.putCollection = function(collectionId, collectionData) {
-      return $http.put(utilities.fixUri(apiBaseUri + 'collections/' + encodeURIComponent(collectionId)), collectionData).catch(function(response) {
+    service.putQueue = function(queueId, queueData) {
+      return $http.put(utilities.fixUri(apiBaseUri + 'queues/' + encodeURIComponent(queueId)), queueData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
-    // collectionId = 'Base64Guid'
-    service.deleteCollection = function(collectionId) {
-      return $http.delete(utilities.fixUri(apiBaseUri + 'collections/' + encodeURIComponent(collectionId))).catch(function(response) {
+    // queueId = 'Base64Guid'
+    service.deleteQueue = function(queueId) {
+      return $http.delete(utilities.fixUri(apiBaseUri + 'queues/' + encodeURIComponent(queueId))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
-    // collectionId = 'Base64Guid'
+    // queueId = 'Base64Guid'
     // result = '2015-12-25T14:45:05Z'
-    service.getLiveDateOfNewQueuedPost = function(collectionId) {
-      return $http.get(utilities.fixUri(apiBaseUri + 'collections/' + encodeURIComponent(collectionId) + '/newQueuedPostLiveDate')).catch(function(response) {
+    service.getLiveDateOfNewQueuedPost = function(queueId) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'queues/' + encodeURIComponent(queueId) + '/newQueuedPostLiveDate')).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -147,7 +145,6 @@ angular.module('webApp').factory('accountSettingsStub',
 
     // userId = 'Base64Guid'
     // result = {
-    //   name: '', /* optional */
     //   username: '',
     //   email: '',
     //   profileImage: { /* optional */
@@ -181,7 +178,6 @@ angular.module('webApp').factory('accountSettingsStub',
 
     // userId = 'Base64Guid'
     // creatorInformation = {
-    //   name: ''
     // }
     service.putCreatorInformation = function(userId, creatorInformation) {
       return $http.put(utilities.fixUri(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId) + '/creatorInformation'), creatorInformation).catch(function(response) {
@@ -204,7 +200,7 @@ angular.module('webApp').factory('membershipStub',
     //   email: '',
     //   username: '',
     //   password: '',
-    //   creatorName: '' /* optional */
+    //   registerAsCreator: false
     // }
     service.postRegistration = function(registrationData) {
       return $http.post(utilities.fixUri(apiBaseUri + 'membership/registrations'), registrationData).catch(function(response) {
@@ -293,7 +289,7 @@ angular.module('webApp').factory('logStub',
     return service;
   });
 
-angular.module('webApp').factory('postsStub',
+angular.module('webApp').factory('postStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 
@@ -305,7 +301,7 @@ angular.module('webApp').factory('postsStub',
     //   {
     //     postId: 'Base64Guid',
     //     channelId: 'Base64Guid',
-    //     collectionId: 'Base64Guid', /* optional */
+    //     queueId: 'Base64Guid', /* optional */
     //     comment: '', /* optional */
     //     file: { /* optional */
     //       fileId: 'Base64Guid',
@@ -335,7 +331,6 @@ angular.module('webApp').factory('postsStub',
     //         height: 0
     //       }
     //     },
-    //     scheduledByQueue: false,
     //     liveDate: '2015-12-25T14:45:05Z'
     //   }
     // ]
@@ -345,58 +340,9 @@ angular.module('webApp').factory('postsStub',
       });
     };
 
-    // creatorId = 'Base64Guid'
-    // newsfeedPaginationData = {
-    //   startIndex: 0,
-    //   count: 0
-    // }
-    // result = [
-    //   {
-    //     postId: 'Base64Guid',
-    //     channelId: 'Base64Guid',
-    //     collectionId: 'Base64Guid', /* optional */
-    //     comment: '', /* optional */
-    //     file: { /* optional */
-    //       fileId: 'Base64Guid',
-    //       containerName: ''
-    //     },
-    //     fileSource: { /* optional */
-    //       fileName: '',
-    //       fileExtension: '',
-    //       contentType: '',
-    //       size: 0,
-    //       renderSize: { /* optional */
-    //         width: 0,
-    //         height: 0
-    //       }
-    //     },
-    //     image: { /* optional */
-    //       fileId: 'Base64Guid',
-    //       containerName: ''
-    //     },
-    //     imageSource: { /* optional */
-    //       fileName: '',
-    //       fileExtension: '',
-    //       contentType: '',
-    //       size: 0,
-    //       renderSize: { /* optional */
-    //         width: 0,
-    //         height: 0
-    //       }
-    //     },
-    //     liveDate: '2015-12-25T14:45:05Z'
-    //   }
-    // ]
-    service.getCreatorNewsfeed = function(creatorId, newsfeedPaginationData) {
-      return $http.get(utilities.fixUri(apiBaseUri + 'posts/creatorNewsfeed/' + encodeURIComponent(creatorId) + '?' + (newsfeedPaginationData.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(newsfeedPaginationData.startIndex) + '&') + (newsfeedPaginationData.count === undefined ? '' : 'count=' + encodeURIComponent(newsfeedPaginationData.count) + '&'))).catch(function(response) {
-        return $q.reject(utilities.getHttpError(response));
-      });
-    };
-
-    // filter = {
+    // filterData = {
     //   creatorId: 'Base64Guid', /* optional */
     //   channelId: 'Base64Guid', /* optional */
-    //   collectionId: 'Base64Guid', /* optional */
     //   origin: '2015-12-25T14:45:05Z', /* optional */
     //   searchForwards: false,
     //   startIndex: 0,
@@ -409,7 +355,6 @@ angular.module('webApp').factory('postsStub',
     //       postId: 'Base64Guid',
     //       blogId: 'Base64Guid',
     //       channelId: 'Base64Guid',
-    //       collectionId: 'Base64Guid', /* optional */
     //       comment: '', /* optional */
     //       file: { /* optional */
     //         fileId: 'Base64Guid',
@@ -439,13 +384,42 @@ angular.module('webApp').factory('postsStub',
     //           height: 0
     //         }
     //       },
-    //       liveDate: '2015-12-25T14:45:05Z'
+    //       liveDate: '2015-12-25T14:45:05Z',
+    //       likesCount: 0,
+    //       commentsCount: 0,
+    //       hasLiked: false
     //     }
     //   ],
     //   accountBalance: 0
     // }
-    service.getNewsfeed = function(filter) {
-      return $http.get(utilities.fixUri(apiBaseUri + 'posts/newsfeed?' + (filter.creatorId === undefined ? '' : 'creatorId=' + encodeURIComponent(filter.creatorId) + '&') + (filter.channelId === undefined ? '' : 'channelId=' + encodeURIComponent(filter.channelId) + '&') + (filter.collectionId === undefined ? '' : 'collectionId=' + encodeURIComponent(filter.collectionId) + '&') + (filter.origin === undefined ? '' : 'origin=' + encodeURIComponent(filter.origin) + '&') + (filter.searchForwards === undefined ? '' : 'searchForwards=' + encodeURIComponent(filter.searchForwards) + '&') + (filter.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(filter.startIndex) + '&') + (filter.count === undefined ? '' : 'count=' + encodeURIComponent(filter.count) + '&'))).catch(function(response) {
+    service.getNewsfeed = function(filterData) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'posts/newsfeed?' + (filterData.creatorId === undefined ? '' : 'creatorId=' + encodeURIComponent(filterData.creatorId) + '&') + (filterData.channelId === undefined ? '' : 'channelId=' + encodeURIComponent(filterData.channelId) + '&') + (filterData.origin === undefined ? '' : 'origin=' + encodeURIComponent(filterData.origin) + '&') + (filterData.searchForwards === undefined ? '' : 'searchForwards=' + encodeURIComponent(filterData.searchForwards) + '&') + (filterData.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(filterData.startIndex) + '&') + (filterData.count === undefined ? '' : 'count=' + encodeURIComponent(filterData.count) + '&'))).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // postData = {
+    //   channelId: 'Base64Guid',
+    //   fileId: 'Base64Guid', /* optional */
+    //   imageId: 'Base64Guid', /* optional */
+    //   comment: '', /* optional */
+    //   scheduledPostTime: '2015-12-25T14:45:05Z', /* optional */
+    //   queueId: 'Base64Guid' /* optional */
+    // }
+    service.postPost = function(postData) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'posts'), postData).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // postId = 'Base64Guid'
+    // postData = {
+    //   fileId: 'Base64Guid', /* optional */
+    //   imageId: 'Base64Guid', /* optional */
+    //   comment: '' /* optional */
+    // }
+    service.putPost = function(postId, postData) {
+      return $http.put(utilities.fixUri(apiBaseUri + 'posts/' + encodeURIComponent(postId)), postData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -457,19 +431,20 @@ angular.module('webApp').factory('postsStub',
       });
     };
 
-    // collectionId = 'Base64Guid'
+    // queueId = 'Base64Guid'
     // newQueueOrder = [
     //   'Base64Guid'
     // ]
-    service.postNewQueueOrder = function(collectionId, newQueueOrder) {
-      return $http.post(utilities.fixUri(apiBaseUri + 'posts/queues/' + encodeURIComponent(collectionId)), newQueueOrder).catch(function(response) {
+    service.postNewQueueOrder = function(queueId, newQueueOrder) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'posts/queues/' + encodeURIComponent(queueId)), newQueueOrder).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
     // postId = 'Base64Guid'
-    service.postToQueue = function(postId) {
-      return $http.post(utilities.fixUri(apiBaseUri + 'posts/queued'), JSON.stringify(postId)).catch(function(response) {
+    // queueId = 'Base64Guid'
+    service.putQueue = function(postId, queueId) {
+      return $http.put(utilities.fixUri(apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/queue'), JSON.stringify(queueId)).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -503,7 +478,7 @@ angular.module('webApp').factory('postsStub',
     // result = {
     //   comments: [
     //     {
-    //       id: 'Base64Guid',
+    //       commentId: 'Base64Guid',
     //       postId: 'Base64Guid',
     //       userId: 'Base64Guid',
     //       username: '',
@@ -528,76 +503,6 @@ angular.module('webApp').factory('postsStub',
     // postId = 'Base64Guid'
     service.deleteLike = function(postId) {
       return $http.delete(utilities.fixUri(apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/likes')).catch(function(response) {
-        return $q.reject(utilities.getHttpError(response));
-      });
-    };
-
-    // noteData = {
-    //   channelId: 'Base64Guid',
-    //   note: '',
-    //   scheduledPostTime: '2015-12-25T14:45:05Z' /* optional */
-    // }
-    service.postNote = function(noteData) {
-      return $http.post(utilities.fixUri(apiBaseUri + 'posts/notes'), noteData).catch(function(response) {
-        return $q.reject(utilities.getHttpError(response));
-      });
-    };
-
-    // postId = 'Base64Guid'
-    // noteData = {
-    //   channelId: 'Base64Guid',
-    //   note: ''
-    // }
-    service.putNote = function(postId, noteData) {
-      return $http.put(utilities.fixUri(apiBaseUri + 'posts/notes/' + encodeURIComponent(postId)), noteData).catch(function(response) {
-        return $q.reject(utilities.getHttpError(response));
-      });
-    };
-
-    // imageData = {
-    //   collectionId: 'Base64Guid',
-    //   fileId: 'Base64Guid',
-    //   comment: '', /* optional */
-    //   scheduledPostTime: '2015-12-25T14:45:05Z', /* optional */
-    //   isQueued: false
-    // }
-    service.postImage = function(imageData) {
-      return $http.post(utilities.fixUri(apiBaseUri + 'posts/images'), imageData).catch(function(response) {
-        return $q.reject(utilities.getHttpError(response));
-      });
-    };
-
-    // postId = 'Base64Guid'
-    // imageData = {
-    //   imageFileId: 'Base64Guid',
-    //   comment: '' /* optional */
-    // }
-    service.putImage = function(postId, imageData) {
-      return $http.put(utilities.fixUri(apiBaseUri + 'posts/images/' + encodeURIComponent(postId)), imageData).catch(function(response) {
-        return $q.reject(utilities.getHttpError(response));
-      });
-    };
-
-    // fileData = {
-    //   collectionId: 'Base64Guid',
-    //   fileId: 'Base64Guid',
-    //   comment: '', /* optional */
-    //   scheduledPostTime: '2015-12-25T14:45:05Z', /* optional */
-    //   isQueued: false
-    // }
-    service.postFile = function(fileData) {
-      return $http.post(utilities.fixUri(apiBaseUri + 'posts/files'), fileData).catch(function(response) {
-        return $q.reject(utilities.getHttpError(response));
-      });
-    };
-
-    // postId = 'Base64Guid'
-    // fileData = {
-    //   fileId: 'Base64Guid',
-    //   comment: '' /* optional */
-    // }
-    service.putFile = function(postId, fileData) {
-      return $http.put(utilities.fixUri(apiBaseUri + 'posts/files/' + encodeURIComponent(postId)), fileData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -702,10 +607,12 @@ angular.module('webApp').factory('blogStub',
 
     // blogData = {
     //   name: '',
-    //   tagline: '',
     //   basePrice: 0
     // }
-    // result = 'Base64Guid'
+    // result = {
+    //   blogId: 'Base64Guid',
+    //   channelId: 'Base64Guid'
+    // }
     service.postBlog = function(blogData) {
       return $http.post(utilities.fixUri(apiBaseUri + 'blogs'), blogData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
@@ -715,7 +622,6 @@ angular.module('webApp').factory('blogStub',
     // blogId = 'Base64Guid'
     // blogData = {
     //   name: '',
-    //   tagline: '',
     //   introduction: '',
     //   headerImageFileId: 'Base64Guid', /* optional */
     //   video: '', /* optional */
@@ -736,9 +642,7 @@ angular.module('webApp').factory('blogStub',
     //   },
     //   blog: {
     //     blogId: 'Base64Guid',
-    //     blogName: '',
     //     name: '',
-    //     tagline: '',
     //     introduction: '',
     //     creationDate: '2015-12-25T14:45:05Z',
     //     headerImage: { /* optional */
@@ -751,18 +655,16 @@ angular.module('webApp').factory('blogStub',
     //       {
     //         channelId: 'Base64Guid',
     //         name: '',
-    //         description: '',
     //         price: 0,
-    //         isDefault: false,
-    //         isVisibleToNonSubscribers: false,
-    //         collections: [
-    //           {
-    //             collectionId: 'Base64Guid',
-    //             name: '',
-    //             weeklyReleaseSchedule: [
-    //               0
-    //             ]
-    //           }
+    //         isVisibleToNonSubscribers: false
+    //       }
+    //     ],
+    //     queues: [
+    //       {
+    //         queueId: 'Base64Guid',
+    //         name: '',
+    //         weeklyReleaseSchedule: [
+    //           0
     //         ]
     //       }
     //     ]
@@ -814,7 +716,6 @@ angular.module('webApp').factory('blogStub',
     //       releasedRevenue: 0,
     //       releasableRevenue: 0,
     //       username: '', /* optional */
-    //       name: '', /* optional */
     //       email: '', /* optional */
     //       emailConfirmed: false
     //     }
@@ -900,12 +801,7 @@ angular.module('webApp').factory('userStateStub',
     //       }
     //     ]
     //   },
-    //   creatorStatus: { /* optional */
-    //     blogId: 'Base64Guid', /* optional */
-    //     mustWriteFirstPost: false
-    //   },
     //   accountSettings: { /* optional */
-    //     name: '', /* optional */
     //     username: '',
     //     email: '',
     //     profileImage: { /* optional */
@@ -920,9 +816,7 @@ angular.module('webApp').factory('userStateStub',
     //   },
     //   blog: { /* optional */
     //     blogId: 'Base64Guid',
-    //     blogName: '',
     //     name: '',
-    //     tagline: '',
     //     introduction: '',
     //     creationDate: '2015-12-25T14:45:05Z',
     //     headerImage: { /* optional */
@@ -935,18 +829,16 @@ angular.module('webApp').factory('userStateStub',
     //       {
     //         channelId: 'Base64Guid',
     //         name: '',
-    //         description: '',
     //         price: 0,
-    //         isDefault: false,
-    //         isVisibleToNonSubscribers: false,
-    //         collections: [
-    //           {
-    //             collectionId: 'Base64Guid',
-    //             name: '',
-    //             weeklyReleaseSchedule: [
-    //               0
-    //             ]
-    //           }
+    //         isVisibleToNonSubscribers: false
+    //       }
+    //     ],
+    //     queues: [
+    //       {
+    //         queueId: 'Base64Guid',
+    //         name: '',
+    //         weeklyReleaseSchedule: [
+    //           0
     //         ]
     //       }
     //     ]
@@ -972,13 +864,7 @@ angular.module('webApp').factory('userStateStub',
     //             isDefault: false,
     //             priceLastSetDate: '2015-12-25T14:45:05Z',
     //             subscriptionStartDate: '2015-12-25T14:45:05Z',
-    //             isVisibleToNonSubscribers: false,
-    //             collections: [
-    //               {
-    //                 collectionId: 'Base64Guid',
-    //                 name: ''
-    //               }
-    //             ]
+    //             isVisibleToNonSubscribers: false
     //           }
     //         ]
     //       }
@@ -1012,12 +898,7 @@ angular.module('webApp').factory('userStateStub',
     //       }
     //     ]
     //   },
-    //   creatorStatus: { /* optional */
-    //     blogId: 'Base64Guid', /* optional */
-    //     mustWriteFirstPost: false
-    //   },
     //   accountSettings: { /* optional */
-    //     name: '', /* optional */
     //     username: '',
     //     email: '',
     //     profileImage: { /* optional */
@@ -1032,9 +913,7 @@ angular.module('webApp').factory('userStateStub',
     //   },
     //   blog: { /* optional */
     //     blogId: 'Base64Guid',
-    //     blogName: '',
     //     name: '',
-    //     tagline: '',
     //     introduction: '',
     //     creationDate: '2015-12-25T14:45:05Z',
     //     headerImage: { /* optional */
@@ -1047,18 +926,16 @@ angular.module('webApp').factory('userStateStub',
     //       {
     //         channelId: 'Base64Guid',
     //         name: '',
-    //         description: '',
     //         price: 0,
-    //         isDefault: false,
-    //         isVisibleToNonSubscribers: false,
-    //         collections: [
-    //           {
-    //             collectionId: 'Base64Guid',
-    //             name: '',
-    //             weeklyReleaseSchedule: [
-    //               0
-    //             ]
-    //           }
+    //         isVisibleToNonSubscribers: false
+    //       }
+    //     ],
+    //     queues: [
+    //       {
+    //         queueId: 'Base64Guid',
+    //         name: '',
+    //         weeklyReleaseSchedule: [
+    //           0
     //         ]
     //       }
     //     ]
@@ -1084,13 +961,7 @@ angular.module('webApp').factory('userStateStub',
     //             isDefault: false,
     //             priceLastSetDate: '2015-12-25T14:45:05Z',
     //             subscriptionStartDate: '2015-12-25T14:45:05Z',
-    //             isVisibleToNonSubscribers: false,
-    //             collections: [
-    //               {
-    //                 collectionId: 'Base64Guid',
-    //                 name: ''
-    //               }
-    //             ]
+    //             isVisibleToNonSubscribers: false
     //           }
     //         ]
     //       }
@@ -1200,7 +1071,7 @@ angular.module('webApp').factory('paymentsStub',
     // result = {
     //   records: [
     //     {
-    //       id: 'Base64Guid',
+    //       recordId: 'Base64Guid',
     //       accountOwnerId: 'Base64Guid',
     //       accountOwnerUsername: '', /* optional */
     //       counterpartyId: 'Base64Guid', /* optional */

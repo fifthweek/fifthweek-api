@@ -122,7 +122,7 @@ describe('channel stub', function() {
   });
 });
 
-describe('collection stub', function() {
+describe('queue stub', function() {
   'use strict';
 
   var fifthweekConstants;
@@ -138,7 +138,7 @@ describe('collection stub', function() {
     $httpBackend = $injector.get('$httpBackend');
     $rootScope = $injector.get('$rootScope');
     utilities = $injector.get('utilities');
-    target = $injector.get('collectionStub');
+    target = $injector.get('queueStub');
   }));
 
   afterEach(function() {
@@ -146,14 +146,14 @@ describe('collection stub', function() {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should post collection', function() {
-    var newCollectionData = 'value-body';
+  it('should post queue', function() {
+    var newQueueData = 'value-body';
 
     var responseData = 'response data';
-    $httpBackend.expectPOST(utilities.fixUri(fifthweekConstants.apiBaseUri + 'collections', newCollectionData)).respond(200, responseData);
+    $httpBackend.expectPOST(utilities.fixUri(fifthweekConstants.apiBaseUri + 'queues', newQueueData)).respond(200, responseData);
 
     var result = null;
-    target.postCollection(newCollectionData).then(function(response) { result = response.data; });
+    target.postQueue(newQueueData).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();
@@ -161,15 +161,15 @@ describe('collection stub', function() {
     expect(result).toBe(responseData);
   });
 
-  it('should put collection', function() {
-    var collectionId = 'value0';
-    var collectionData = 'value-body';
+  it('should put queue', function() {
+    var queueId = 'value0';
+    var queueData = 'value-body';
 
     var responseData = 'response data';
-    $httpBackend.expectPUT(utilities.fixUri(fifthweekConstants.apiBaseUri + 'collections/' + encodeURIComponent(collectionId), collectionData)).respond(200, responseData);
+    $httpBackend.expectPUT(utilities.fixUri(fifthweekConstants.apiBaseUri + 'queues/' + encodeURIComponent(queueId), queueData)).respond(200, responseData);
 
     var result = null;
-    target.putCollection(collectionId, collectionData).then(function(response) { result = response.data; });
+    target.putQueue(queueId, queueData).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();
@@ -177,14 +177,14 @@ describe('collection stub', function() {
     expect(result).toBe(responseData);
   });
 
-  it('should delete collection', function() {
-    var collectionId = 'value0';
+  it('should delete queue', function() {
+    var queueId = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectDELETE(utilities.fixUri(fifthweekConstants.apiBaseUri + 'collections/' + encodeURIComponent(collectionId))).respond(200, responseData);
+    $httpBackend.expectDELETE(utilities.fixUri(fifthweekConstants.apiBaseUri + 'queues/' + encodeURIComponent(queueId))).respond(200, responseData);
 
     var result = null;
-    target.deleteCollection(collectionId).then(function(response) { result = response.data; });
+    target.deleteQueue(queueId).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();
@@ -193,13 +193,13 @@ describe('collection stub', function() {
   });
 
   it('should get live date of new queued post', function() {
-    var collectionId = 'value0';
+    var queueId = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectGET(utilities.fixUri(fifthweekConstants.apiBaseUri + 'collections/' + encodeURIComponent(collectionId) + '/newQueuedPostLiveDate')).respond(200, responseData);
+    $httpBackend.expectGET(utilities.fixUri(fifthweekConstants.apiBaseUri + 'queues/' + encodeURIComponent(queueId) + '/newQueuedPostLiveDate')).respond(200, responseData);
 
     var result = null;
-    target.getLiveDateOfNewQueuedPost(collectionId).then(function(response) { result = response.data; });
+    target.getLiveDateOfNewQueuedPost(queueId).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();
@@ -491,7 +491,7 @@ describe('log stub', function() {
   });
 });
 
-describe('posts stub', function() {
+describe('post stub', function() {
   'use strict';
 
   var fifthweekConstants;
@@ -507,7 +507,7 @@ describe('posts stub', function() {
     $httpBackend = $injector.get('$httpBackend');
     $rootScope = $injector.get('$rootScope');
     utilities = $injector.get('utilities');
-    target = $injector.get('postsStub');
+    target = $injector.get('postStub');
   }));
 
   afterEach(function() {
@@ -530,18 +530,21 @@ describe('posts stub', function() {
     expect(result).toBe(responseData);
   });
 
-  it('should get creator newsfeed', function() {
-    var creatorId = 'value0';
-    var newsfeedPaginationData = {
-      startIndex: 'value1-0',
-      count: 'value1-1',
+  it('should get newsfeed', function() {
+    var filterData = {
+      creatorId: 'value0-0',
+      channelId: 'value0-1',
+      origin: 'value0-2',
+      searchForwards: 'value0-3',
+      startIndex: 'value0-4',
+      count: 'value0-5',
     };
 
     var responseData = 'response data';
-    $httpBackend.expectGET(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/creatorNewsfeed/' + encodeURIComponent(creatorId) + '?' + (newsfeedPaginationData.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(newsfeedPaginationData.startIndex) + '&') + (newsfeedPaginationData.count === undefined ? '' : 'count=' + encodeURIComponent(newsfeedPaginationData.count) + '&'))).respond(200, responseData);
+    $httpBackend.expectGET(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/newsfeed?' + (filterData.creatorId === undefined ? '' : 'creatorId=' + encodeURIComponent(filterData.creatorId) + '&') + (filterData.channelId === undefined ? '' : 'channelId=' + encodeURIComponent(filterData.channelId) + '&') + (filterData.origin === undefined ? '' : 'origin=' + encodeURIComponent(filterData.origin) + '&') + (filterData.searchForwards === undefined ? '' : 'searchForwards=' + encodeURIComponent(filterData.searchForwards) + '&') + (filterData.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(filterData.startIndex) + '&') + (filterData.count === undefined ? '' : 'count=' + encodeURIComponent(filterData.count) + '&'))).respond(200, responseData);
 
     var result = null;
-    target.getCreatorNewsfeed(creatorId, newsfeedPaginationData).then(function(response) { result = response.data; });
+    target.getNewsfeed(filterData).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();
@@ -549,22 +552,30 @@ describe('posts stub', function() {
     expect(result).toBe(responseData);
   });
 
-  it('should get newsfeed', function() {
-    var filter = {
-      creatorId: 'value0-0',
-      channelId: 'value0-1',
-      collectionId: 'value0-2',
-      origin: 'value0-3',
-      searchForwards: 'value0-4',
-      startIndex: 'value0-5',
-      count: 'value0-6',
-    };
+  it('should post post', function() {
+    var postData = 'value-body';
 
     var responseData = 'response data';
-    $httpBackend.expectGET(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/newsfeed?' + (filter.creatorId === undefined ? '' : 'creatorId=' + encodeURIComponent(filter.creatorId) + '&') + (filter.channelId === undefined ? '' : 'channelId=' + encodeURIComponent(filter.channelId) + '&') + (filter.collectionId === undefined ? '' : 'collectionId=' + encodeURIComponent(filter.collectionId) + '&') + (filter.origin === undefined ? '' : 'origin=' + encodeURIComponent(filter.origin) + '&') + (filter.searchForwards === undefined ? '' : 'searchForwards=' + encodeURIComponent(filter.searchForwards) + '&') + (filter.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(filter.startIndex) + '&') + (filter.count === undefined ? '' : 'count=' + encodeURIComponent(filter.count) + '&'))).respond(200, responseData);
+    $httpBackend.expectPOST(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts', postData)).respond(200, responseData);
 
     var result = null;
-    target.getNewsfeed(filter).then(function(response) { result = response.data; });
+    target.postPost(postData).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should put post', function() {
+    var postId = 'value0';
+    var postData = 'value-body';
+
+    var responseData = 'response data';
+    $httpBackend.expectPUT(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/' + encodeURIComponent(postId), postData)).respond(200, responseData);
+
+    var result = null;
+    target.putPost(postId, postData).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();
@@ -588,14 +599,14 @@ describe('posts stub', function() {
   });
 
   it('should post new queue order', function() {
-    var collectionId = 'value0';
+    var queueId = 'value0';
     var newQueueOrder = 'value-body';
 
     var responseData = 'response data';
-    $httpBackend.expectPOST(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/queues/' + encodeURIComponent(collectionId), newQueueOrder)).respond(200, responseData);
+    $httpBackend.expectPOST(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/queues/' + encodeURIComponent(queueId), newQueueOrder)).respond(200, responseData);
 
     var result = null;
-    target.postNewQueueOrder(collectionId, newQueueOrder).then(function(response) { result = response.data; });
+    target.postNewQueueOrder(queueId, newQueueOrder).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();
@@ -603,14 +614,15 @@ describe('posts stub', function() {
     expect(result).toBe(responseData);
   });
 
-  it('should post to queue', function() {
-    var postId = 'value-body';
+  it('should put queue', function() {
+    var postId = 'value0';
+    var queueId = 'value-body';
 
     var responseData = 'response data';
-    $httpBackend.expectPOST(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/queued', JSON.stringify(postId))).respond(200, responseData);
+    $httpBackend.expectPUT(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/queue', JSON.stringify(queueId))).respond(200, responseData);
 
     var result = null;
-    target.postToQueue(postId).then(function(response) { result = response.data; });
+    target.putQueue(postId, queueId).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();
@@ -703,99 +715,6 @@ describe('posts stub', function() {
 
     var result = null;
     target.deleteLike(postId).then(function(response) { result = response.data; });
-
-    $httpBackend.flush();
-    $rootScope.$apply();
-
-    expect(result).toBe(responseData);
-  });
-
-  it('should post note', function() {
-    var noteData = 'value-body';
-
-    var responseData = 'response data';
-    $httpBackend.expectPOST(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/notes', noteData)).respond(200, responseData);
-
-    var result = null;
-    target.postNote(noteData).then(function(response) { result = response.data; });
-
-    $httpBackend.flush();
-    $rootScope.$apply();
-
-    expect(result).toBe(responseData);
-  });
-
-  it('should put note', function() {
-    var postId = 'value0';
-    var noteData = 'value-body';
-
-    var responseData = 'response data';
-    $httpBackend.expectPUT(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/notes/' + encodeURIComponent(postId), noteData)).respond(200, responseData);
-
-    var result = null;
-    target.putNote(postId, noteData).then(function(response) { result = response.data; });
-
-    $httpBackend.flush();
-    $rootScope.$apply();
-
-    expect(result).toBe(responseData);
-  });
-
-  it('should post image', function() {
-    var imageData = 'value-body';
-
-    var responseData = 'response data';
-    $httpBackend.expectPOST(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/images', imageData)).respond(200, responseData);
-
-    var result = null;
-    target.postImage(imageData).then(function(response) { result = response.data; });
-
-    $httpBackend.flush();
-    $rootScope.$apply();
-
-    expect(result).toBe(responseData);
-  });
-
-  it('should put image', function() {
-    var postId = 'value0';
-    var imageData = 'value-body';
-
-    var responseData = 'response data';
-    $httpBackend.expectPUT(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/images/' + encodeURIComponent(postId), imageData)).respond(200, responseData);
-
-    var result = null;
-    target.putImage(postId, imageData).then(function(response) { result = response.data; });
-
-    $httpBackend.flush();
-    $rootScope.$apply();
-
-    expect(result).toBe(responseData);
-  });
-
-  it('should post file', function() {
-    var fileData = 'value-body';
-
-    var responseData = 'response data';
-    $httpBackend.expectPOST(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/files', fileData)).respond(200, responseData);
-
-    var result = null;
-    target.postFile(fileData).then(function(response) { result = response.data; });
-
-    $httpBackend.flush();
-    $rootScope.$apply();
-
-    expect(result).toBe(responseData);
-  });
-
-  it('should put file', function() {
-    var postId = 'value0';
-    var fileData = 'value-body';
-
-    var responseData = 'response data';
-    $httpBackend.expectPUT(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/files/' + encodeURIComponent(postId), fileData)).respond(200, responseData);
-
-    var result = null;
-    target.putFile(postId, fileData).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();

@@ -40,7 +40,7 @@
                 authenticatedUserId.Value,
                 null,
                 command.BlogName.Value,
-                command.Introduction.Value,
+                null,
                 null,
                 null,
                 null,

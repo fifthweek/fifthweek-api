@@ -15,7 +15,7 @@ namespace Fifthweek.Api.Posts.Controllers
         [AutoConstructor, AutoEqualityMembers]
         public partial class Item
         {
-            public CommentId Id { get;  private set; }
+            public CommentId CommentId { get;  private set; }
 
             public PostId PostId { get; private set; }
 
