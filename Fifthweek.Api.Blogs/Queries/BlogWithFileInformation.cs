@@ -16,6 +16,7 @@
         
         public BlogName Name { get; private set; }
 
+        [Optional]
         public Introduction Introduction { get; private set; }
 
         public DateTime CreationDate { get; private set; }

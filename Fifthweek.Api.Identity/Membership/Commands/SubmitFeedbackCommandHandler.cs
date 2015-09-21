@@ -8,28 +8,28 @@
     using Fifthweek.Shared;
 
     [AutoConstructor]
-    public partial class RegisterInterestCommandHandler : ICommandHandler<RegisterInterestCommand>
+    public partial class SubmitFeedbackCommandHandler : ICommandHandler<SubmitFeedbackCommand>
     {
         private readonly IFifthweekActivityReporter activityReporter;
         private readonly IExceptionHandler exceptionHandler;
 
-        public async Task HandleAsync(RegisterInterestCommand command)
+        public async Task HandleAsync(SubmitFeedbackCommand command)
         {
             command.AssertNotNull("command");
 
             try
             {
-                if (command.Email.Value.EndsWith(Core.Constants.TestEmailDomain))
+                if (command.Email != null && command.Email.Value.EndsWith(Core.Constants.TestEmailDomain))
                 {
                     return;
                 }
 
                 await this.activityReporter.ReportActivityAsync(
-                        string.Format("Registered Interest: {0}, {1}", command.Name, command.Email.Value));
+                    string.Format("Feedback: {0}, {1}", command.Email == null ? "Anonymous" : command.Email.Value, command.Message.Value));
             }
             catch (Exception t)
             {
-                this.exceptionHandler.ReportExceptionAsync(new Exception("Failed to register interest: " + command, t));
+                this.exceptionHandler.ReportExceptionAsync(new Exception("Failed to submit feedback: " + command, t));
             }
         }
     }

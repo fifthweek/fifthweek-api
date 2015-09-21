@@ -11,6 +11,7 @@
     using Fifthweek.Api.Identity.Membership.Queries;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Membership.Commands;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -30,7 +31,7 @@
         private Mock<ICommandHandler<ConfirmPasswordResetCommand>> confirmPasswordReset;
         private Mock<IQueryHandler<IsUsernameAvailableQuery, bool>> isUsernameAvailable;
         private Mock<IQueryHandler<IsPasswordResetTokenValidQuery, bool>> isPasswordResetTokenValid;
-        private Mock<ICommandHandler<RegisterInterestCommand>> registerInterest;
+        private Mock<ICommandHandler<SubmitFeedbackCommand>> registerInterest;
         private Mock<ICommandHandler<SendIdentifiedUserInformationCommand>> sendIdentifiedUserInformation;
         private Mock<IGuidCreator> guidCreator;
         private MembershipController controller;
@@ -44,7 +45,7 @@
             this.confirmPasswordReset = new Mock<ICommandHandler<ConfirmPasswordResetCommand>>();
             this.isUsernameAvailable = new Mock<IQueryHandler<IsUsernameAvailableQuery, bool>>();
             this.isPasswordResetTokenValid = new Mock<IQueryHandler<IsPasswordResetTokenValidQuery, bool>>();
-            this.registerInterest = new Mock<ICommandHandler<RegisterInterestCommand>>();
+            this.registerInterest = new Mock<ICommandHandler<SubmitFeedbackCommand>>();
             this.sendIdentifiedUserInformation = new Mock<ICommandHandler<SendIdentifiedUserInformationCommand>>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(Guid.Empty);
@@ -180,16 +181,32 @@
         }
 
         [TestMethod]
-        public async Task WhenPostingRegisteredInterest_ItShouldIssueRegisterInterestCommand()
+        public async Task WhenPostingFeedback_ItShouldIssueSubmitFeedbackCommand()
         {
-            var registration = NewRegisteredInterestData();
-            var command = new RegisterInterestCommand(
-                registration.Name,
+            var registration = NewFeedbackData();
+            var command = new SubmitFeedbackCommand(
+                ValidComment.Parse(registration.Message),
                 ValidEmail.Parse(registration.Email));
 
             this.registerInterest.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
 
-            var result = await this.controller.PostRegisteredInterestAsync(registration);
+            var result = await this.controller.PostFeedbackAsync(registration);
+
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            this.registerInterest.Verify(v => v.HandleAsync(command));
+        }
+
+        [TestMethod]
+        public async Task WhenPostingAnonymousFeedback_ItShouldIssueSubmitFeedbackCommand()
+        {
+            var registration = NewAnonymousFeedbackData();
+            var command = new SubmitFeedbackCommand(
+                ValidComment.Parse(registration.Message),
+                null);
+
+            this.registerInterest.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
+
+            var result = await this.controller.PostFeedbackAsync(registration);
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
             this.registerInterest.Verify(v => v.HandleAsync(command));
@@ -286,12 +303,20 @@
             };
         }
 
-        public static RegisterInterestData NewRegisteredInterestData()
+        public static FeedbackData NewFeedbackData()
         {
-            return new RegisterInterestData
+            return new FeedbackData
             {
-                Name = "phil",
+                Message = "phil",
                 Email = "test@test.com"
+            };
+        }
+
+        public static FeedbackData NewAnonymousFeedbackData()
+        {
+            return new FeedbackData
+            {
+                Message = "phil"
             };
         }
 

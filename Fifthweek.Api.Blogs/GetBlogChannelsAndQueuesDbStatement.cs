@@ -111,7 +111,7 @@
                 new BlogId(blog.Id),
                 new UserId(blog.CreatorId),
                 new BlogName(blog.Name),
-                new Introduction(blog.Introduction),
+                blog.Introduction == null ? null : new Introduction(blog.Introduction),
                 DateTime.SpecifyKind(blog.CreationDate, DateTimeKind.Utc),
                 blog.HeaderImageFileId == null ? null : new FileId(blog.HeaderImageFileId.Value),
                 blog.ExternalVideoUrl == null ? null : new ExternalVideoUrl(blog.ExternalVideoUrl),
@@ -147,6 +147,7 @@
 
             public BlogName BlogName { get; private set; }
 
+            [Optional]
             public Introduction Introduction { get; private set; }
 
             public DateTime CreationDate { get; private set; }

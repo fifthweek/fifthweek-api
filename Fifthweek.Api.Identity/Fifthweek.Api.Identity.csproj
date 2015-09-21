@@ -104,8 +104,8 @@
     </Compile>
     <Compile Include="Membership\Commands\UpdateCreatorAccountSettingsCommand.cs" />
     <Compile Include="Membership\Commands\UpdateCreatorAccountSettingsCommandHandler.cs" />
-    <Compile Include="Membership\Commands\RegisterInterestCommand.cs" />
-    <Compile Include="Membership\Commands\RegisterInterestCommandHandler.cs" />
+    <Compile Include="Membership\Commands\SubmitFeedbackCommand.cs" />
+    <Compile Include="Membership\Commands\SubmitFeedbackCommandHandler.cs" />
     <Compile Include="Membership\Commands\SendIdentifiedUserInformationCommand.cs" />
     <Compile Include="Membership\Commands\SendIdentifiedUserInformationCommandHandler.cs" />
     <Compile Include="Membership\Commands\UpdateAccountSettingsCommand.cs" />
@@ -113,7 +113,7 @@
     <Compile Include="Membership\Controllers\AccountSettingsController.cs" />
     <Compile Include="Membership\Controllers\CreatorInformation.cs" />
     <Compile Include="Membership\Controllers\IdentifiedUserData.cs" />
-    <Compile Include="Membership\Controllers\RegisterInterestData.cs" />
+    <Compile Include="Membership\Controllers\FeedbackData.cs" />
     <Compile Include="Membership\Controllers\UpdatedAccountSettings.cs" />
     <Compile Include="Membership\GetAccountSettingsDbStatement.cs" />
     <Compile Include="Membership\GetAccountSettingsResult.cs" />
@@ -227,6 +227,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
       <Project>{9c18bee3-fab5-4a00-8a94-a1faea370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Posts.Shared\Fifthweek.Api.Posts.Shared.csproj">
+      <Project>{493FC9F2-6A6B-46C0-9BC9-83F8A3B60F9E}</Project>
+      <Name>Fifthweek.Api.Posts.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
       <Project>{770f450e-2166-4269-bec1-df59aa16b1e8}</Project>

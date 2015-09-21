@@ -420,14 +420,14 @@ describe('membership stub', function() {
     expect(result).toBe(responseData);
   });
 
-  it('should post registered interest', function() {
-    var registerInterestData = 'value-body';
+  it('should post feedback', function() {
+    var feedbackData = 'value-body';
 
     var responseData = 'response data';
-    $httpBackend.expectPOST(utilities.fixUri(fifthweekConstants.apiBaseUri + 'membership/registeredInterest', registerInterestData)).respond(200, responseData);
+    $httpBackend.expectPOST(utilities.fixUri(fifthweekConstants.apiBaseUri + 'membership/feedback', feedbackData)).respond(200, responseData);
 
     var result = null;
-    target.postRegisteredInterest(registerInterestData).then(function(response) { result = response.data; });
+    target.postFeedback(feedbackData).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();

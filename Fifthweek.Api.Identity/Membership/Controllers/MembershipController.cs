@@ -19,7 +19,7 @@
         private readonly ICommandHandler<RegisterUserCommand> registerUser;
         private readonly ICommandHandler<RequestPasswordResetCommand> requestPasswordReset;
         private readonly ICommandHandler<ConfirmPasswordResetCommand> confirmPasswordReset;
-        private readonly ICommandHandler<RegisterInterestCommand> registerInterest;
+        private readonly ICommandHandler<SubmitFeedbackCommand> submitFeedback;
         private readonly ICommandHandler<SendIdentifiedUserInformationCommand> sendIdentifiedUserInformation;
         private readonly IQueryHandler<IsUsernameAvailableQuery, bool> isUsernameAvailable;
         private readonly IQueryHandler<IsPasswordResetTokenValidQuery, bool> isPasswordResetTokenValid;
@@ -122,19 +122,19 @@
             return this.NotFound();
         }
 
-        // POST membership/registeredInterest
+        // POST membership/feedback
         [AllowAnonymous]
-        [Route("registeredInterest")]
-        public async Task<IHttpActionResult> PostRegisteredInterestAsync(RegisterInterestData registerInterestData)
+        [Route("feedback")]
+        public async Task<IHttpActionResult> PostFeedbackAsync(FeedbackData feedbackData)
         {
-            registerInterestData.AssertBodyProvided("registerInterestData");
-            var data = registerInterestData.Parse();
+            feedbackData.AssertBodyProvided("feedbackData");
+            var data = feedbackData.Parse();
 
-            var command = new RegisterInterestCommand(
-                data.Name,
+            var command = new SubmitFeedbackCommand(
+                data.Message,
                 data.Email);
 
-            await this.registerInterest.HandleAsync(command);
+            await this.submitFeedback.HandleAsync(command);
             return this.Ok();
         }
 

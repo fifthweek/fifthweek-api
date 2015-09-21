@@ -10,7 +10,7 @@
         [Parsed(typeof(ValidBlogName))]
         public string Name { get; set; }
 
-        [Parsed(typeof(ValidIntroduction))]
+        [Optional, Parsed(typeof(ValidIntroduction))]
         public string Introduction { get; set; }
 
         [Optional]

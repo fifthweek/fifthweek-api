@@ -108,7 +108,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Membership\Commands\UpdateCreatorAccountSettingsCommandHandlerTests.cs" />
-    <Compile Include="Membership\Commands\RegisterInterestCommandHandlerTests.cs" />
+    <Compile Include="Membership\Commands\SubmitFeedbackCommandHandlerTests.cs" />
     <Compile Include="Membership\Commands\RegisterUserCommandHandlerTests.cs" />
     <Compile Include="Membership\Commands\ConfirmPasswordResetCommandHandlerTests.cs" />
     <Compile Include="Membership\Commands\RequestPasswordResetCommandHandlerTests.cs" />
@@ -196,6 +196,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
       <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Posts.Shared\Fifthweek.Api.Posts.Shared.csproj">
+      <Project>{493FC9F2-6A6B-46C0-9BC9-83F8A3B60F9E}</Project>
+      <Name>Fifthweek.Api.Posts.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Payments.SnapshotCreation\Fifthweek.Payments.SnapshotCreation.csproj">
       <Project>{81bcf480-639c-42c6-adcf-2e5c97dee750}</Project>

@@ -244,12 +244,12 @@ angular.module('webApp').factory('membershipStub',
       });
     };
 
-    // registerInterestData = {
-    //   name: '',
-    //   email: ''
+    // feedbackData = {
+    //   message: '',
+    //   email: '' /* optional */
     // }
-    service.postRegisteredInterest = function(registerInterestData) {
-      return $http.post(utilities.fixUri(apiBaseUri + 'membership/registeredInterest'), registerInterestData).catch(function(response) {
+    service.postFeedback = function(feedbackData) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'membership/feedback'), feedbackData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -643,7 +643,7 @@ angular.module('webApp').factory('blogStub',
     //   blog: {
     //     blogId: 'Base64Guid',
     //     name: '',
-    //     introduction: '',
+    //     introduction: '', /* optional */
     //     creationDate: '2015-12-25T14:45:05Z',
     //     headerImage: { /* optional */
     //       fileId: 'Base64Guid',
@@ -817,7 +817,7 @@ angular.module('webApp').factory('userStateStub',
     //   blog: { /* optional */
     //     blogId: 'Base64Guid',
     //     name: '',
-    //     introduction: '',
+    //     introduction: '', /* optional */
     //     creationDate: '2015-12-25T14:45:05Z',
     //     headerImage: { /* optional */
     //       fileId: 'Base64Guid',
@@ -914,7 +914,7 @@ angular.module('webApp').factory('userStateStub',
     //   blog: { /* optional */
     //     blogId: 'Base64Guid',
     //     name: '',
-    //     introduction: '',
+    //     introduction: '', /* optional */
     //     creationDate: '2015-12-25T14:45:05Z',
     //     headerImage: { /* optional */
     //       fileId: 'Base64Guid',

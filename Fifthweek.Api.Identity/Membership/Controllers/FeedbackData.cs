@@ -1,14 +1,16 @@
 ﻿namespace Fifthweek.Api.Identity.Membership.Controllers
 {
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers]
-    public partial class RegisterInterestData
+    public partial class FeedbackData
     {
-        public string Name { get; set; }
+        [Parsed(typeof(ValidComment))]
+        public string Message { get; set; }
 
-        [Parsed(typeof(ValidEmail))]
+        [Optional, Parsed(typeof(ValidEmail))]
         public string Email { get; set; }
     }
 }

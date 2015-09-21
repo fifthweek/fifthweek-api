@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 15/09/2015 18:05:39 (UTC)
-//// Mapped solution in 16.04s
+//// Generated on 21/09/2015 08:49:21 (UTC)
+//// Mapped solution in 70.45s
 
 
 namespace Fifthweek.Api.Blogs
@@ -1337,11 +1337,6 @@ namespace Fifthweek.Api.Blogs
                     throw new ArgumentNullException("blogName");
                 }
 
-                if (introduction == null)
-                {
-                    throw new ArgumentNullException("introduction");
-                }
-
                 if (creationDate == null)
                 {
                     throw new ArgumentNullException("creationDate");
@@ -2108,11 +2103,6 @@ namespace Fifthweek.Api.Blogs.Queries
             if (name == null)
             {
                 throw new ArgumentNullException("name");
-            }
-
-            if (introduction == null)
-            {
-                throw new ArgumentNullException("introduction");
             }
 
             if (creationDate == null)
@@ -6992,11 +6982,6 @@ namespace Fifthweek.Api.Blogs.Controllers
                     throw new ArgumentNullException("name");
                 }
 
-                if (introduction == null)
-                {
-                    throw new ArgumentNullException("introduction");
-                }
-
                 this.Name = name;
                 this.Introduction = introduction;
                 this.HeaderImageFileId = headerImageFileId;
@@ -7058,12 +7043,6 @@ namespace Fifthweek.Api.Blogs.Controllers
 
                     modelStateDictionary.Add("Introduction", modelState);
                 }
-            }
-            else
-            {
-                var modelState = new System.Web.Http.ModelBinding.ModelState();
-                modelState.Errors.Add("Value required");
-                modelStateDictionary.Add("Introduction", modelState);
             }
 
             ValidExternalVideoUrl parsed2 = null;
