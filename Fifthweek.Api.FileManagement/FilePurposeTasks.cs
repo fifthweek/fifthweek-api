@@ -21,14 +21,14 @@
                 FilePurposes.ProfileImage,
                 new CreateThumbnailsTask(
                     new Thumbnail(
-                        600, 
-                        600,
-                        "header",
+                        300, 
+                        300,
+                        "preview",
                         ResizeBehaviour.CropToAspectRatio, 
                         new Thumbnail(
-                            300, 
-                            300,
-                            "preview",
+                            216, 
+                            216,
+                            "header",
                             ResizeBehaviour.CropToAspectRatio, 
                                 new Thumbnail(
                                     64, 
@@ -54,8 +54,8 @@
                 FilePurposes.PostImage,
                 new CreateThumbnailsTask(
                     new Thumbnail(
-                        1200,
-                        16000,
+                        1890,
+                        1440,
                         "feed",
                         ResizeBehaviour.MaintainAspectRatio,
                         new Thumbnail(

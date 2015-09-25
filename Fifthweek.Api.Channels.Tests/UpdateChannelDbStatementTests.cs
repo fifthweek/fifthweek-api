@@ -146,7 +146,7 @@
         }
 
         [TestMethod]
-        public async Task ItShouldNotAllowDefaultChannelToBeHidden()
+        public async Task ItShouldAllowDefaultChannelToBeHidden()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
@@ -158,7 +158,7 @@
 
                 var expectedChannel = new Channel(ChannelId.Value)
                 {
-                    IsVisibleToNonSubscribers = true,
+                    IsVisibleToNonSubscribers = false,
                     Name = Name.Value,
                     Price = Price.Value,
                     PriceLastSetDate = Now,

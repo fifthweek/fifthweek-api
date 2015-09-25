@@ -96,7 +96,7 @@
 
                 logger.Info("Processing: " + sw.ElapsedMilliseconds);
                 result = new CreateThumbnailSetResult(image.Width, image.Height);
-                await this.ProcessThumbnailItems(message.Items, cache, image, jobData, cancellationToken);
+                await this.ProcessThumbnailItems(message.Items, cache, image, jobData, logger, cancellationToken);
                 logger.Info("ProcessingComplete: " + sw.ElapsedMilliseconds);
             }
 
@@ -206,6 +206,7 @@
             Dictionary<ThumbnailDefinition, ThumbnailSetItemData> cache, 
             MagickImage image, 
             JobData jobData, 
+            ILogger logger,
             CancellationToken cancellationToken)
         {
             if (items == null)
@@ -235,11 +236,13 @@
                         itemData.BlockBlob.Metadata[WidthHeaderKey] = image.Width.ToString();
                         itemData.BlockBlob.Metadata[HeightHeaderKey] = image.Height.ToString();
                         
+                        logger.Info("Committing " + itemImage.Width + "x" + itemImage.Height);
+                        
                         await Task.Factory.FromAsync(outputStream.BeginCommit(null, null), outputStream.EndCommit);
                     }
                 }
 
-                await this.ProcessThumbnailItems(item.Children, cache, itemImage, jobData, cancellationToken);
+                await this.ProcessThumbnailItems(item.Children, cache, itemImage, jobData, logger, cancellationToken);
             }
         }
 

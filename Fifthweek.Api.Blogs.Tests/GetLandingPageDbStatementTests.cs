@@ -92,7 +92,7 @@
         }
 
         [TestMethod]
-        public async Task WhenChannelsDoNotExist_ItShouldReturnNull()
+        public async Task WhenChannelsDoNotExist_ItShouldReturnTheResult()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
@@ -103,7 +103,20 @@
 
                 var result = await this.target.ExecuteAsync(Username);
 
-                Assert.IsNull(result);
+                Assert.AreEqual(CreatorId, result.UserId);
+                Assert.AreEqual(ProfileFileId, result.ProfileImageFileId);
+
+                Assert.AreEqual(BlogId, result.Blog.BlogId);
+                Assert.AreEqual(CreatorId, result.Blog.CreatorId);
+                Assert.AreEqual(HeaderFileId, result.Blog.HeaderImageFileId);
+                Assert.AreEqual(CreationDate, result.Blog.CreationDate);
+                Assert.AreEqual(Description, result.Blog.Description.Value);
+                Assert.AreEqual(ExternalVideoUrl, result.Blog.Video.Value);
+                Assert.AreEqual(Introduction, result.Blog.Introduction.Value);
+                Assert.AreEqual(Name, result.Blog.BlogName.Value);
+
+                Assert.IsNotNull(result.Channels);
+                Assert.AreEqual(0, result.Channels.Count);
 
                 return ExpectedSideEffects.None;
             });
@@ -133,7 +146,7 @@
                 Assert.AreEqual(Introduction, result.Blog.Introduction.Value);
                 Assert.AreEqual(Name, result.Blog.BlogName.Value);
 
-                Assert.IsNotNull(result);
+                Assert.IsNotNull(result.Channels);
                 Assert.AreEqual(3, result.Channels.Count);
 
                 Assert.IsNotNull(result.Channels.FirstOrDefault(v => v.ChannelId.Equals(ChannelId1)));

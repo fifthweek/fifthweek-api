@@ -75,11 +75,6 @@
                 }
             }
 
-            if (channels.Count == 0)
-            {
-                return null;
-            }
-
             var user = users.SingleOrDefault();
 
             if (user == null)

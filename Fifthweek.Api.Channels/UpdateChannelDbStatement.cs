@@ -23,17 +23,7 @@
             SET 
                 {1} = @Name, 
                 {2} = @Price,
-                {4} = 
-                (
-                    CASE
-                        WHEN 
-                            {6} != {7}
-                        THEN
-                             @IsVisibleToNonSubscribers
-                        ELSE
-                            {4}
-                    END
-                ),
+                {4} = @IsVisibleToNonSubscribers,
                 {5} =
                 (
                     CASE
