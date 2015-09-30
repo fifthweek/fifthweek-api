@@ -89,9 +89,9 @@
         }
 
         [TestMethod]
-        public void ItShouldNotAllowDescriptionsOver2000Characters()
+        public void ItShouldNotAllowDescriptionsOver50000Characters()
         {
-            this.AssertMaxLength(2000);
+            this.AssertMaxLength(50000);
         }
 
         protected override ValidBlogDescription Parse(string value)

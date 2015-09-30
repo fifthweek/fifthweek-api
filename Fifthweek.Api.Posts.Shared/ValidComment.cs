@@ -9,7 +9,7 @@
     public partial class ValidComment : Comment
     {
         public static readonly int MinLength = 1;
-        public static readonly int MaxLength = 2000; // Some of the longer comments on Tumblr are over 1000 characters.
+        public static readonly int MaxLength = 50000; // Some of the longer comments on Tumblr are over 1000 characters.
 
         private ValidComment(string value)
             : base(value)

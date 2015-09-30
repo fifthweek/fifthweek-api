@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.EndToEndTestMailboxes.Tests
 {
     using System;
+    using System.Net.Mail;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
@@ -20,6 +21,7 @@
         private const string Subject = "Meow";
         private const string Body = "Paw-some";
 
+        private static readonly MailAddress FromAddress = new MailAddress("a@b.com", "name");
         private static readonly MailboxName MailboxName = MailboxName.Parse("wd_1234567890123");
 
         private Mock<ISendEmailService> baseService;
@@ -60,7 +62,7 @@
         [TestMethod]
         public async Task ItShouldForwardNormalUsersToBaseService()
         {
-            this.baseService.Setup(_ => _.SendEmailAsync(NormalUser, Subject, Body)).Returns(Task.FromResult(0)).Verifiable();
+            this.baseService.Setup(_ => _.SendEmailAsync(null, NormalUser, Subject, Body)).Returns(Task.FromResult(0)).Verifiable();
 
             await this.target.SendEmailAsync(NormalUser, Subject, Body);
 
@@ -68,11 +70,31 @@
         }
 
         [TestMethod]
+        public async Task ItShouldForwardNormalUsersToBaseService2()
+        {
+            this.baseService.Setup(_ => _.SendEmailAsync(FromAddress, NormalUser, Subject, Body)).Returns(Task.FromResult(0)).Verifiable();
+
+            await this.target.SendEmailAsync(FromAddress, NormalUser, Subject, Body);
+
+            this.baseService.Verify();
+        }
+
+        [TestMethod]
         public async Task ItShouldForwardNonAutomatedTestUsersToBaseService()
         {
-            this.baseService.Setup(_ => _.SendEmailAsync(NonAutomatedTestUser, Subject, Body)).Returns(Task.FromResult(0)).Verifiable();
+            this.baseService.Setup(_ => _.SendEmailAsync(null, NonAutomatedTestUser, Subject, Body)).Returns(Task.FromResult(0)).Verifiable();
 
             await this.target.SendEmailAsync(NonAutomatedTestUser, Subject, Body);
+
+            this.baseService.Verify();
+        }
+
+        [TestMethod]
+        public async Task ItShouldForwardNonAutomatedTestUsersToBaseService2()
+        {
+            this.baseService.Setup(_ => _.SendEmailAsync(FromAddress, NonAutomatedTestUser, Subject, Body)).Returns(Task.FromResult(0)).Verifiable();
+
+            await this.target.SendEmailAsync(FromAddress, NonAutomatedTestUser, Subject, Body);
 
             this.baseService.Verify();
         }
@@ -83,6 +105,16 @@
             this.setLatestMessage.Setup(_ => _.ExecuteAsync(MailboxName, Subject, Body)).Returns(Task.FromResult(0)).Verifiable();
 
             await this.target.SendEmailAsync(AutomatedTestUser, Subject, Body);
+
+            this.setLatestMessage.Verify();
+        }
+
+        [TestMethod]
+        public async Task ItShouldForwardAutomatedTestUsersToDbStatement2()
+        {
+            this.setLatestMessage.Setup(_ => _.ExecuteAsync(MailboxName, Subject, Body)).Returns(Task.FromResult(0)).Verifiable();
+
+            await this.target.SendEmailAsync(FromAddress, AutomatedTestUser, Subject, Body);
 
             this.setLatestMessage.Verify();
         }

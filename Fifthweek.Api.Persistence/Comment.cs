@@ -29,7 +29,7 @@
         [Required, Optional, NonEquatable]
         public FifthweekUser User { get; set; }
 
-        [MaxLength(2000)]
+        [MaxLength(50000)]
         public string Content { get; set; }
 
         [Required, Index("PostIdAndCreationDate", Order = 2)]

@@ -183,26 +183,13 @@
         [TestMethod]
         public async Task WhenPostingFeedback_ItShouldIssueSubmitFeedbackCommand()
         {
+            var requester = Requester.Authenticated(UserId.Random());
+            this.requesterContext.Setup(v => v.GetRequesterAsync()).ReturnsAsync(requester);
+            
             var registration = NewFeedbackData();
             var command = new SubmitFeedbackCommand(
-                ValidComment.Parse(registration.Message),
-                ValidEmail.Parse(registration.Email));
-
-            this.registerInterest.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
-
-            var result = await this.controller.PostFeedbackAsync(registration);
-
-            Assert.IsInstanceOfType(result, typeof(OkResult));
-            this.registerInterest.Verify(v => v.HandleAsync(command));
-        }
-
-        [TestMethod]
-        public async Task WhenPostingAnonymousFeedback_ItShouldIssueSubmitFeedbackCommand()
-        {
-            var registration = NewAnonymousFeedbackData();
-            var command = new SubmitFeedbackCommand(
-                ValidComment.Parse(registration.Message),
-                null);
+                requester,
+                ValidComment.Parse(registration.Message));
 
             this.registerInterest.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
 
@@ -308,7 +295,6 @@
             return new FeedbackData
             {
                 Message = "phil",
-                Email = "test@test.com"
             };
         }
 

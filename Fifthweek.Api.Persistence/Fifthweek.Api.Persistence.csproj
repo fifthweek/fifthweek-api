@@ -102,6 +102,10 @@
     <Compile Include="Migrations\201509151814448_MakeIntroductionOptional.Designer.cs">
       <DependentUpon>201509151814448_MakeIntroductionOptional.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509291647558_IncreaseLongFormTextFieldSizes.cs" />
+    <Compile Include="Migrations\201509291647558_IncreaseLongFormTextFieldSizes.Designer.cs">
+      <DependentUpon>201509291647558_IncreaseLongFormTextFieldSizes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Queue.cs" />
     <Compile Include="DapperExtensions.cs" />
     <Compile Include="DapperTypeHandlerRegistration.cs" />
@@ -616,6 +620,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509151814448_MakeIntroductionOptional.resx">
       <DependentUpon>201509151814448_MakeIntroductionOptional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509291647558_IncreaseLongFormTextFieldSizes.resx">
+      <DependentUpon>201509291647558_IncreaseLongFormTextFieldSizes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

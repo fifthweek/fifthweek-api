@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.EndToEndTestMailboxes
 {
     using System.Linq;
+    using System.Net.Mail;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
@@ -18,6 +19,11 @@
 
         public Task SendEmailAsync(string to, string subject, string message)
         {
+            return this.SendEmailAsync(null, to, subject, message);
+        }
+
+        public Task SendEmailAsync(MailAddress from, string to, string subject, string message)
+        {
             to.AssertNotNull("to");
             subject.AssertNotNull("subject");
             message.AssertNotNull("message");
@@ -28,7 +34,7 @@
                 return this.setLatestMessage.ExecuteAsync(mailboxName, subject, message);
             }
 
-            return this.baseService.SendEmailAsync(to, subject, message);
+            return this.baseService.SendEmailAsync(from, to, subject, message);
         }
     }
 }

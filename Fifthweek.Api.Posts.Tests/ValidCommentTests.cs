@@ -74,9 +74,9 @@
         }
 
         [TestMethod]
-        public void ItShouldNotAllowCommentsOver2000Characters()
+        public void ItShouldNotAllowCommentsOver50000Characters()
         {
-            this.AssertMaxLength(2000);
+            this.AssertMaxLength(50000);
         }
 
         [TestMethod]

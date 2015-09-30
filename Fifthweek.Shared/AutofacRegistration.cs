@@ -11,6 +11,7 @@
             builder.RegisterType<ApplicationRandom>().As<IRandom>();
             builder.RegisterType<GuidCreator>().As<IGuidCreator>();
             builder.RegisterType<TimestampCreator>().As<ITimestampCreator>();
+            builder.RegisterType<MarkdownRenderer>().As<IMarkdownRenderer>();
         }
     }
 }

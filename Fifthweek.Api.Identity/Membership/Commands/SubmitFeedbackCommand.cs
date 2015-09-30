@@ -7,9 +7,8 @@
     [AutoConstructor, AutoEqualityMembers]
     public partial class SubmitFeedbackCommand
     {
-        public ValidComment Message { get; private set; }
+        public Requester Requester { get; private set; }
 
-        [Optional]
-        public ValidEmail Email { get; private set; }
+        public ValidComment Message { get; private set; }
     }
 }

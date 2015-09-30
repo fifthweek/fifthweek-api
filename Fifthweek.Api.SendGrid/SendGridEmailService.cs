@@ -2,6 +2,7 @@
 {
     using System;
     using System.Net;
+    using System.Net.Mail;
     using System.Threading.Tasks;
 
     using Fifthweek.Shared;
@@ -15,6 +16,19 @@
             Environment.GetEnvironmentVariable("SENDGRID_PASSWORD"));
 
         public Task SendEmailAsync(
+            string to,
+            string subject,
+            string content)
+        {
+            return this.SendEmailAsync(
+                null,
+                to,
+                subject,
+                content);
+        }
+
+        public Task SendEmailAsync(
+            MailAddress from,
             string to,
             string subject,
             string content)
@@ -36,7 +50,7 @@
 
             var message = new SendGridMessage();
             message.AddTo(to);
-            message.From = Constants.FifthweekEmailAddress;
+            message.From = from ?? Constants.FifthweekEmailAddress;
             message.Subject = subject;
             message.Html = content;
 

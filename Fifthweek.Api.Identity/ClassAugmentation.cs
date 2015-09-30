@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 18/09/2015 17:10:28 (UTC)
-//// Mapped solution in 16.04s
+//// Generated on 30/09/2015 14:14:36 (UTC)
+//// Mapped solution in 22.76s
 
 
 namespace Fifthweek.Api.Identity.Membership.Commands
@@ -22,6 +22,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class ConfirmPasswordResetCommand 
     {
@@ -68,20 +69,26 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class SubmitFeedbackCommand 
     {
         public SubmitFeedbackCommand(
-            Fifthweek.Api.Posts.Shared.ValidComment message,
-            Fifthweek.Api.Identity.Shared.Membership.ValidEmail email)
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            Fifthweek.Api.Posts.Shared.ValidComment message)
         {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
             if (message == null)
             {
                 throw new ArgumentNullException("message");
             }
 
+            this.Requester = requester;
             this.Message = message;
-            this.Email = email;
         }
     }
 }
@@ -102,16 +109,41 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class SubmitFeedbackCommandHandler 
     {
         public SubmitFeedbackCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Api.Identity.Membership.IGetAccountSettingsDbStatement getAccountSettings,
             Fifthweek.Api.Core.IFifthweekActivityReporter activityReporter,
+            Fifthweek.Shared.IMarkdownRenderer markdownRenderer,
+            Fifthweek.Shared.ISendEmailService sendEmailService,
             Fifthweek.Shared.IExceptionHandler exceptionHandler)
         {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (getAccountSettings == null)
+            {
+                throw new ArgumentNullException("getAccountSettings");
+            }
+
             if (activityReporter == null)
             {
                 throw new ArgumentNullException("activityReporter");
+            }
+
+            if (markdownRenderer == null)
+            {
+                throw new ArgumentNullException("markdownRenderer");
+            }
+
+            if (sendEmailService == null)
+            {
+                throw new ArgumentNullException("sendEmailService");
             }
 
             if (exceptionHandler == null)
@@ -119,7 +151,11 @@ namespace Fifthweek.Api.Identity.Membership.Commands
                 throw new ArgumentNullException("exceptionHandler");
             }
 
+            this.requesterSecurity = requesterSecurity;
+            this.getAccountSettings = getAccountSettings;
             this.activityReporter = activityReporter;
+            this.markdownRenderer = markdownRenderer;
+            this.sendEmailService = sendEmailService;
             this.exceptionHandler = exceptionHandler;
         }
     }
@@ -141,6 +177,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class RegisterUserCommand 
     {
@@ -203,6 +240,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class RegisterUserCommandHandler 
     {
@@ -249,6 +287,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class RequestPasswordResetCommand 
     {
@@ -278,6 +317,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class RequestPasswordResetCommandHandler 
     {
@@ -317,6 +357,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class SendIdentifiedUserInformationCommand 
     {
@@ -367,6 +408,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class SendIdentifiedUserInformationCommandHandler 
     {
@@ -406,6 +448,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class UpdateAccountSettingsCommand 
     {
@@ -470,6 +513,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class UpdateAccountSettingsCommandHandler 
     {
@@ -523,6 +567,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class UpdateCreatorAccountSettingsCommand 
     {
@@ -562,6 +607,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class UpdateCreatorAccountSettingsCommandHandler 
     {
@@ -2604,6 +2650,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class ConfirmPasswordResetCommand 
     {
@@ -2682,12 +2729,13 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class SubmitFeedbackCommand 
     {
         public override string ToString()
         {
-            return string.Format("SubmitFeedbackCommand({0}, {1})", this.Message == null ? "null" : this.Message.ToString(), this.Email == null ? "null" : this.Email.ToString());
+            return string.Format("SubmitFeedbackCommand({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.Message == null ? "null" : this.Message.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2715,20 +2763,20 @@ namespace Fifthweek.Api.Identity.Membership.Commands
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Message != null ? this.Message.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
                 return hashCode;
             }
         }
         
         protected bool Equals(SubmitFeedbackCommand other)
         {
-            if (!object.Equals(this.Message, other.Message))
+            if (!object.Equals(this.Requester, other.Requester))
             {
                 return false;
             }
         
-            if (!object.Equals(this.Email, other.Email))
+            if (!object.Equals(this.Message, other.Message))
             {
                 return false;
             }
@@ -2754,6 +2802,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class RegisterUserCommand 
     {
@@ -2850,6 +2899,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class RequestPasswordResetCommand 
     {
@@ -2922,6 +2972,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class SendIdentifiedUserInformationCommand 
     {
@@ -3012,6 +3063,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class UpdateAccountSettingsCommand 
     {
@@ -3114,6 +3166,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using System.Net.Mail;
 
     public partial class UpdateCreatorAccountSettingsCommand 
     {
@@ -5149,7 +5202,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
     {
         public override string ToString()
         {
-            return string.Format("FeedbackData(\"{0}\", \"{1}\")", this.Message == null ? "null" : this.Message.ToString(), this.Email == null ? "null" : this.Email.ToString());
+            return string.Format("FeedbackData(\"{0}\")", this.Message == null ? "null" : this.Message.ToString());
         }
         
         public override bool Equals(object obj)
@@ -5178,7 +5231,6 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Message != null ? this.Message.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -5186,11 +5238,6 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
         protected bool Equals(FeedbackData other)
         {
             if (!object.Equals(this.Message, other.Message))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Email, other.Email))
             {
                 return false;
             }
@@ -5576,8 +5623,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
         public class Parsed
         {
             public Parsed(
-                ValidComment message,
-                ValidEmail email)
+                ValidComment message)
             {
                 if (message == null)
                 {
@@ -5585,12 +5631,9 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 }
 
                 this.Message = message;
-                this.Email = email;
             }
         
             public ValidComment Message { get; private set; }
-        
-            public ValidEmail Email { get; private set; }
         }
     }
 
@@ -5622,30 +5665,13 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 modelStateDictionary.Add("Message", modelState);
             }
 
-            ValidEmail parsed1 = null;
-            if (!ValidEmail.IsEmpty(target.Email))
-            {
-                System.Collections.Generic.IReadOnlyCollection<string> parsed1Errors;
-                if (!ValidEmail.TryParse(target.Email, out parsed1, out parsed1Errors))
-                {
-                    var modelState = new System.Web.Http.ModelBinding.ModelState();
-                    foreach (var errorMessage in parsed1Errors)
-                    {
-                        modelState.Errors.Add(errorMessage);
-                    }
-
-                    modelStateDictionary.Add("Email", modelState);
-                }
-            }
-
             if (!modelStateDictionary.IsValid)
             {
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
             }
         
             return new FeedbackData.Parsed(
-                parsed0,
-                parsed1);
+                parsed0);
         }    
     }
 }

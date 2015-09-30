@@ -17,10 +17,10 @@
         {
         }
 
-        [Required, Key]
+        [Required, Key, Index("IX_DTA_GetNewsfeed", Order = 2)]
         public Guid Id { get; set; }
 
-        [Required, Index]
+        [Required, Index, Index("IX_DTA_GetNewsfeed", Order = 0)]
         public Guid ChannelId { get; set; }
 
         [Required, Optional, NonEquatable]
@@ -32,26 +32,26 @@
         [Optional, NonEquatable]
         public Queue Queue { get; set; }
 
-        [Optional]
+        [Optional, Index, Index("IX_DTA_GetNewsfeed", Order = 3)]
         public Guid? FileId { get; set; }
 
         [Optional, NonEquatable]
         public File File { get; set; }
 
-        [Optional]
+        [Optional, Index, Index("IX_DTA_GetNewsfeed", Order = 4)]
         public Guid? ImageId { get; set; }
 
         [Optional, NonEquatable]
         public File Image { get; set; }
 
         [Optional]
-        [MaxLength(2000)] // Maximum of the two: ValidComment.MaxLength & ValidNote.MaxLength
+        [MaxLength(50000)] // ValidComment.MaxLength
         public string Comment { get; set; }
 
-        [Required]
+        [Required, Index("IX_DTA_GetNewsfeed", Order = 1)]
         public DateTime LiveDate { get; set; }
 
-        [Required]
+        [Required, Index("IX_DTA_GetNewsfeed", Order = 5)]
         public DateTime CreationDate { get; set; }
     }
 }

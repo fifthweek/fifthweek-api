@@ -9,8 +9,5 @@
     {
         [Parsed(typeof(ValidComment))]
         public string Message { get; set; }
-
-        [Optional, Parsed(typeof(ValidEmail))]
-        public string Email { get; set; }
     }
 }

@@ -34,6 +34,9 @@
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="CommonMark">
+      <HintPath>..\packages\CommonMark.NET.0.9.1\lib\net45\CommonMark.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -85,10 +88,12 @@
     <Compile Include="IFifthweekRetryOnTransientErrorHandler.cs" />
     <Compile Include="IGuidCreator.cs" />
     <Compile Include="IHtmlLinter.cs" />
+    <Compile Include="IMarkdownRenderer.cs" />
     <Compile Include="IMimeTypeMap.cs" />
     <Compile Include="IRandom.cs" />
     <Compile Include="ISendEmailService.cs" />
     <Compile Include="ITimestampCreator.cs" />
+    <Compile Include="MarkdownRenderer.cs" />
     <Compile Include="MimeTypeMap.cs" />
     <Compile Include="NonNegativeInt.cs" />
     <Compile Include="OptimisticConcurrencyException.cs" />

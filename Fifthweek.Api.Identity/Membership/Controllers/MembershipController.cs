@@ -130,9 +130,11 @@
             feedbackData.AssertBodyProvided("feedbackData");
             var data = feedbackData.Parse();
 
+            var requester = await this.requesterContext.GetRequesterAsync();
+
             var command = new SubmitFeedbackCommand(
-                data.Message,
-                data.Email);
+                requester,
+                data.Message);
 
             await this.submitFeedback.HandleAsync(command);
             return this.Ok();

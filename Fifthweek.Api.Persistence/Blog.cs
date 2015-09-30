@@ -32,7 +32,7 @@
         public string Introduction { get; set; }
         
         [Optional]
-        [MaxLength(2000)] // See: ValidDescription.MaxLength
+        [MaxLength(50000)] // See: ValidDescription.MaxLength
         public string Description { get; set; }
 
         [Optional]

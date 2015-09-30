@@ -6,7 +6,7 @@
     public partial class ValidBlogDescription : BlogDescription
     {
         public static readonly int MinLength = 1;
-        public static readonly int MaxLength = 2000; // Seems to be the maximum size used on other sites for landing page blubs.
+        public static readonly int MaxLength = 50000; // Seems to be the maximum size used on other sites for landing page blubs.
 
         private ValidBlogDescription(string value)
             : base(value)
