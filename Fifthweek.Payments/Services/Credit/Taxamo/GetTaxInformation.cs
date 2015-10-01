@@ -55,9 +55,9 @@
             var countryDetected = this.IsCountryDetected(result);
             
             return new TaxamoCalculationResult(
-                AmountInMinorDenomination.FromMajorDenomination(result.Transaction.Amount.Value),
-                AmountInMinorDenomination.FromMajorDenomination(result.Transaction.TotalAmount.Value),
-                AmountInMinorDenomination.FromMajorDenomination(result.Transaction.TaxAmount.Value),
+                result.Transaction.Amount == null ? null : AmountInMinorDenomination.FromMajorDenomination(result.Transaction.Amount.Value),
+                result.Transaction.TotalAmount == null ? null : AmountInMinorDenomination.FromMajorDenomination(result.Transaction.TotalAmount.Value),
+                result.Transaction.TaxAmount == null ? null : AmountInMinorDenomination.FromMajorDenomination(result.Transaction.TaxAmount.Value),
                 result.Transaction.TransactionLines[0].TaxRate,
                 result.Transaction.TransactionLines[0].TaxName,
                 result.Transaction.TaxEntityName,

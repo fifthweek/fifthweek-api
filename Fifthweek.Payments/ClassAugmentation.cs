@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 31/07/2015 16:30:33 (UTC)
-//// Mapped solution in 19.75s
+//// Generated on 01/10/2015 11:16:21 (UTC)
+//// Mapped solution in 24.93s
 
 namespace Fifthweek.Payments.Services.Credit
 {
@@ -24,6 +24,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class AmountInMinorDenomination 
@@ -109,6 +110,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class AmountInMinorDenomination 
     {
@@ -393,6 +395,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class ApplyUserCredit 
     {
@@ -463,6 +466,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class ClearPaymentStatusDbStatement 
     {
@@ -498,6 +502,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class CommitCreditToDatabase 
     {
@@ -538,8 +543,6 @@ namespace Fifthweek.Payments.Services.Credit
 {
     using System;
     using System.Linq;
-
-    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
     using System.Runtime.ExceptionServices;
@@ -556,11 +559,12 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class CommitTestUserCreditToDatabase 
     {
         public CommitTestUserCreditToDatabase(
-            ITimestampCreator timestampCreator,
+            Fifthweek.Shared.ITimestampCreator timestampCreator,
             Fifthweek.Payments.Services.Credit.ISetTestUserAccountBalanceDbStatement setTestUserAccountBalance)
         {
             if (timestampCreator == null)
@@ -598,6 +602,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class FailPaymentStatusDbStatement 
     {
@@ -633,6 +638,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class GetUserPaymentOriginDbStatement 
     {
@@ -668,6 +674,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class GetUsersRequiringPaymentRetryDbStatement 
     {
@@ -703,6 +710,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class GetUserWeeklySubscriptionsCost 
     {
@@ -738,6 +746,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class IncrementPaymentStatusDbStatement 
     {
@@ -773,6 +782,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class InitializeCreditRequest 
     {
@@ -822,6 +832,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class InitializeCreditRequestResult 
     {
@@ -864,6 +875,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class PerformCreditRequest 
     {
@@ -899,6 +911,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class SaveCustomerCreditToLedgerDbStatement 
     {
@@ -941,6 +954,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class SetTestUserAccountBalanceDbStatement 
     {
@@ -976,6 +990,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement 
     {
@@ -1113,6 +1128,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class StripeTransactionResult 
     {
@@ -1340,21 +1356,6 @@ namespace Fifthweek.Payments.Services.Credit.Taxamo
             System.String countryName,
             System.Collections.Generic.IReadOnlyList<Fifthweek.Payments.Services.Credit.Taxamo.TaxamoCalculationResult.PossibleCountry> possibleCountries)
         {
-            if (amount == null)
-            {
-                throw new ArgumentNullException("amount");
-            }
-
-            if (totalAmount == null)
-            {
-                throw new ArgumentNullException("totalAmount");
-            }
-
-            if (taxAmount == null)
-            {
-                throw new ArgumentNullException("taxAmount");
-            }
-
             this.Amount = amount;
             this.TotalAmount = totalAmount;
             this.TaxAmount = taxAmount;
@@ -1426,8 +1427,6 @@ namespace Fifthweek.Payments.Services.Credit
 {
     using System;
     using System.Linq;
-
-    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
     using System.Runtime.ExceptionServices;
@@ -1444,6 +1443,8 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
+    using System.Threading;
 
     public partial class TopUpUserAccountsWithCredit 
     {
@@ -1453,7 +1454,7 @@ namespace Fifthweek.Payments.Services.Credit
             Fifthweek.Payments.Services.Credit.IGetUserWeeklySubscriptionsCost getUserWeeklySubscriptionsCost,
             Fifthweek.Payments.Services.Credit.IIncrementPaymentStatusDbStatement incrementPaymentStatus,
             Fifthweek.Payments.Services.Credit.IGetUserPaymentOriginDbStatement getUserPaymentOrigin,
-            ITimestampCreator timestampCreator,
+            Fifthweek.Shared.ITimestampCreator timestampCreator,
             Fifthweek.Shared.IGuidCreator guidCreator)
         {
             if (getUsersRequiringPaymentRetry == null)
@@ -1521,6 +1522,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class UserPaymentOriginResult 
     {
@@ -2566,11 +2568,13 @@ namespace Fifthweek.Payments.Services
     using Fifthweek.Payments.Shared;
     using Fifthweek.Api.Azure;
     using Fifthweek.Payments.Pipeline;
+    using System.Diagnostics;
+    using Fifthweek.WebJobs.Shared;
 
     public partial class ProcessAllPayments 
     {
         public ProcessAllPayments(
-            ITimestampCreator timestampCreator,
+            Fifthweek.Shared.ITimestampCreator timestampCreator,
             Fifthweek.Payments.Services.IGetAllSubscribersDbStatement getAllSubscribers,
             Fifthweek.Payments.Services.IProcessPaymentsForSubscriber processPaymentsForSubscriber,
             Fifthweek.Payments.Services.IUpdateAccountBalancesDbStatement updateAccountBalances,
@@ -2722,6 +2726,7 @@ namespace Fifthweek.Payments.Services
     using Fifthweek.Payments.Shared;
     using Fifthweek.Api.Azure;
     using Fifthweek.Payments.Pipeline;
+    using Fifthweek.WebJobs.Shared;
 
     public partial class ProcessPaymentsForSubscriber 
     {
@@ -3911,6 +3916,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class AmountInMinorDenomination 
     {
@@ -4373,6 +4379,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class InitializeCreditRequestResult 
     {
@@ -4448,6 +4455,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class StripeTransactionResult 
     {
@@ -4820,6 +4828,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Collections.Generic;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Azure;
 
     public partial class UserPaymentOriginResult 
     {

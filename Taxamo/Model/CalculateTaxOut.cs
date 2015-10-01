@@ -1,4 +1,5 @@
 namespace Taxamo.Model {
+    using System.Linq;
     using System.Runtime.Serialization;
     using System.Text;
 
@@ -39,6 +40,6 @@ namespace Taxamo.Model {
     }
 
 }
-  
+
   
 }

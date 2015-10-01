@@ -1,5 +1,6 @@
 namespace Taxamo.Model {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.Serialization;
     using System.Text;
 
@@ -10,7 +11,11 @@ namespace Taxamo.Model {
   /// </summary>
   [DataContract]
   public class Transaction {
-    
+
+    /* Transaction data with tax calculated */
+    [DataMember(Name = "errors", EmitDefaultValue = false)]
+    public string[] Errors { get; set; }
+
     /* Date and time of transaction confirmation. */
     [DataMember(Name="confirm_timestamp", EmitDefaultValue=false)]
     public string ConfirmTimestamp { get; set; }
@@ -241,8 +246,21 @@ namespace Taxamo.Model {
     public override string ToString()  {
       var sb = new StringBuilder();
       sb.Append("class Transaction {\n");
-      
-      sb.Append("  ConfirmTimestamp: ").Append(this.ConfirmTimestamp).Append("\n");
+
+        sb.Append("  Errors: ");
+        if (this.Errors == null)
+        {
+            sb.Append("null\n");
+        }
+        else
+        {
+            sb
+                .Append("[")
+                .Append(string.Join(",", this.Errors.Select(v => "'" + v + "'")))
+                .Append("]\n");
+        }
+
+        sb.Append("  ConfirmTimestamp: ").Append(this.ConfirmTimestamp).Append("\n");
       
       sb.Append("  DeductedTaxAmount: ").Append(this.DeductedTaxAmount).Append("\n");
       

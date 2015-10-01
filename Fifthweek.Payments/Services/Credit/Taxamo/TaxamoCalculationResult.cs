@@ -7,10 +7,13 @@ namespace Fifthweek.Payments.Services.Credit.Taxamo
     [AutoConstructor, AutoEqualityMembers]
     public partial class TaxamoCalculationResult
     {
+        [Optional]
         public AmountInMinorDenomination Amount { get; private set; }
 
+        [Optional]
         public AmountInMinorDenomination TotalAmount { get; private set; }
 
+        [Optional]
         public AmountInMinorDenomination TaxAmount { get; private set; }
 
         [Optional]

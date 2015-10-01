@@ -293,7 +293,15 @@ namespace Taxamo.Api {
 
       // make the HTTP request
       IRestResponse response = (IRestResponse) await this.apiClient.CallApiAsync(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-      if (((int)response.StatusCode) >= 400) {
+	     if (((int)response.StatusCode) == 400)
+	     {
+             // This is to get around an API change where insufficient evidence now returns a 
+             // 400 error code but all the data we need is still there.
+             var transaction = (Transaction)this.apiClient.Deserialize(response.Content, typeof(Transaction));
+	         return new CalculateTaxOut { Transaction = transaction };
+	     }
+	   
+        if (((int)response.StatusCode) >= 400) {
         throw new ApiException ((int)response.StatusCode, "Error calling CalculateTax: " + response.Content, response.Content);
       }
       return (CalculateTaxOut) this.apiClient.Deserialize(response.Content, typeof(CalculateTaxOut));
