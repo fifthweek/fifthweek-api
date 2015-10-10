@@ -156,8 +156,8 @@
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 3), CreatorId.Value, CreatorId.Value, StartTimeInclusive.AddDays(1), 0.9m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId1, dataId, null, null, null), 
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 4), SubscriberId.Value, CreatorId.Value, StartTimeInclusive.AddDays(2), -2m, LedgerAccountType.FifthweekCredit, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 5), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(2), 2m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment ,transactionId2, dataId, null, null, null), 
-                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 6), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(2), -1.4m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
-                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 7), CreatorId.Value, CreatorId.Value, StartTimeInclusive.AddDays(2), 1.4m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 6), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(2), -1.6m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 7), CreatorId.Value, CreatorId.Value, StartTimeInclusive.AddDays(2), 1.6m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 8), SubscriberId.Value, CreatorId.Value, StartTimeInclusive.AddDays(3), 0m, LedgerAccountType.FifthweekCredit, LedgerTransactionType.SubscriptionPayment, transactionId3, dataId, null, null, null), 
                 },
                 actualCommittedRecords.ToList());
@@ -216,8 +216,8 @@
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 3), CreatorId.Value, CreatorId.Value, StartTimeInclusive.AddDays(1), 0.9m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId1, dataId, null, null, null), 
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 4), SubscriberId.Value, CreatorId.Value, StartTimeInclusive.AddDays(2), -2m, LedgerAccountType.FifthweekCredit, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 5), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(2), 2m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
-                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 6), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(2), -1.4m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
-                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 7), CreatorId.Value, CreatorId.Value, StartTimeInclusive.AddDays(2), 1.4m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 6), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(2), -1.6m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 7), CreatorId.Value, CreatorId.Value, StartTimeInclusive.AddDays(2), 1.6m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 8), SubscriberId.Value, CreatorId.Value, StartTimeInclusive.AddDays(3), 0m, LedgerAccountType.FifthweekCredit, LedgerTransactionType.SubscriptionPayment, transactionId3, dataId, null, null, null), 
                 },
                 actualCommittedRecords.ToList());
@@ -274,8 +274,8 @@
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 3), CreatorId.Value, CreatorId.Value, StartTimeInclusive.AddDays(1), 0.9m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId1, dataId, null, null, null), 
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 4), SubscriberId.Value, CreatorId.Value, StartTimeInclusive.AddDays(2), -2m, LedgerAccountType.FifthweekCredit, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 5), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(2), 2m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
-                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 6), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(2), -1.4m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
-                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 7), CreatorId.Value, CreatorId.Value, StartTimeInclusive.AddDays(2), 1.4m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 6), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(2), -1.6m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 7), CreatorId.Value, CreatorId.Value, StartTimeInclusive.AddDays(2), 1.6m, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment, transactionId2, dataId, null, null, null), 
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 8), SubscriberId.Value, CreatorId.Value, StartTimeInclusive.AddDays(3), 0m, LedgerAccountType.FifthweekCredit, LedgerTransactionType.SubscriptionPayment, transactionId3, dataId, null, null, null), 
                 },
                 actualCommittedRecords.ToList());
