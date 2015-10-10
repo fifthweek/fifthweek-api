@@ -28,7 +28,7 @@
     using Comment = Fifthweek.Api.Posts.Shared.Comment;
 
     [TestClass]
-    public class GetNewsfeedDbStatementTests : PersistenceTestsBase
+    public class GetPreviewNewsfeedDbStatementTests : PersistenceTestsBase
     {
         // 1 in 3 chance of coincidental ordering being correct, yielding a false positive when implementation fails to order explicitly.
         const int ChannelsPerCreator = 3;
@@ -36,24 +36,10 @@
         const int Posts = 6;
         
         private static readonly UserId UnsubscribedUserId = new UserId(Guid.NewGuid());
-        private static readonly UserId SubscribedLowPriceUserId = new UserId(Guid.NewGuid());
-        private static readonly UserId SubscribedHighPriceUserId = new UserId(Guid.NewGuid());
-        private static readonly UserId SubscribedUserId = new UserId(Guid.NewGuid());
-        private static readonly UserId SubscribedUserIdNoBalance = new UserId(Guid.NewGuid());
-        private static readonly UserId SubscribedUserIdZeroBalance = new UserId(Guid.NewGuid());
-        private static readonly UserId SubscribedUserIdZeroBalancePaymentInProgress = new UserId(Guid.NewGuid());
-        private static readonly UserId GuestListUserId = new UserId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
         private static readonly List<UserId> UserIds = new List<UserId>
         {
             UnsubscribedUserId,
-            SubscribedLowPriceUserId,
-            SubscribedHighPriceUserId,
-            SubscribedUserId,
-            SubscribedUserIdNoBalance,
-            SubscribedUserIdZeroBalance,
-            SubscribedUserIdZeroBalancePaymentInProgress,
-            GuestListUserId,
             CreatorId,
         };
         private static readonly List<ChannelId> ChannelIds;
@@ -61,7 +47,7 @@
         private static readonly NonNegativeInt StartIndex = NonNegativeInt.Parse(10);
         private static readonly PositiveInt Count = PositiveInt.Parse(5);
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
-        private static readonly Comment Comment = new Comment("Hey guys!");
+        private static readonly Comment Comment = new Comment(new string(Enumerable.Repeat<char>('x', 1000).ToArray()));
         private static readonly Random Random = new Random();
         private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
         private static readonly string FileName = "FileName";
@@ -73,7 +59,7 @@
         private static readonly IReadOnlyList<NewsfeedPost> SortedNewsfeedPosts;
         private static readonly IReadOnlyList<NewsfeedPost> SortedLiveNewsfeedPosts;
 
-        static GetNewsfeedDbStatementTests()
+        static GetPreviewNewsfeedDbStatementTests()
         {
             ChannelIds = new List<ChannelId>();
             CollectionIds = new List<List<QueueId>>();
@@ -99,7 +85,7 @@
         
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
 
-        private GetNewsfeedDbStatement target;
+        private GetPreviewNewsfeedDbStatement target;
 
         [TestInitialize]
         public void Initialize()
@@ -108,28 +94,21 @@
 
             this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.target = new GetNewsfeedDbStatement(this.connectionFactory.Object);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public async Task ItShouldRequireUserId()
-        {
-            await this.target.ExecuteAsync(null, CreatorId, ChannelIds, Now, Now, false, StartIndex, Count);
+            this.target = new GetPreviewNewsfeedDbStatement(this.connectionFactory.Object);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireStartIndex()
         {
-            await this.target.ExecuteAsync(SubscribedUserId, CreatorId, ChannelIds, Now, Now, false, null, Count);
+            await this.target.ExecuteAsync(UnsubscribedUserId, CreatorId, ChannelIds, Now, Now, false, null, Count);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireCount()
         {
-            await this.target.ExecuteAsync(SubscribedUserId, CreatorId, ChannelIds, Now, Now, false, StartIndex, null);
+            await this.target.ExecuteAsync(UnsubscribedUserId, CreatorId, ChannelIds, Now, Now, false, StartIndex, null);
         }
 
         [TestMethod]
@@ -137,7 +116,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetNewsfeedDbStatement(testDatabase);
+                this.target = new GetPreviewNewsfeedDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -160,7 +139,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetNewsfeedDbStatement(testDatabase);
+                this.target = new GetPreviewNewsfeedDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -176,30 +155,11 @@
         }
 
         [TestMethod]
-        public async Task ItShouldReturnExpectedAccountBalances()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.target = new GetNewsfeedDbStatement(testDatabase);
-                await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
-                await testDatabase.TakeSnapshotAsync();
-
-                await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts, expectedAccountBalance) =>
-                {
-                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, Now, origin, searchForwards, startIndex, count);
-                    Assert.AreEqual(expectedAccountBalance, result.AccountBalance);
-                });
-
-                return ExpectedSideEffects.None;
-            });
-        }
-
-        [TestMethod]
         public async Task ItShouldReturnPostsWithDatesAsUtc()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetNewsfeedDbStatement(testDatabase);
+                this.target = new GetPreviewNewsfeedDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -223,7 +183,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetNewsfeedDbStatement(testDatabase);
+                this.target = new GetPreviewNewsfeedDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -267,7 +227,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetNewsfeedDbStatement(testDatabase);
+                this.target = new GetPreviewNewsfeedDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase, createLivePosts: false, createFuturePosts: false);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -286,7 +246,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetNewsfeedDbStatement(testDatabase);
+                this.target = new GetPreviewNewsfeedDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase, createLivePosts: false, createFuturePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -355,35 +315,11 @@
 
             // Unsubscribed.
             await parameterizedTest(
-                UnsubscribedUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 0);
+                UnsubscribedUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts, 0);
 
-            // Subscribed at correct price.
+            // Logged out.
             await parameterizedTest(
-                SubscribedUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList(), 10);
-
-            // Subscribed at low price.
-            await parameterizedTest(
-                SubscribedLowPriceUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 10);
-
-            // Subscribed at high price.
-            await parameterizedTest(
-                SubscribedHighPriceUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList(), 10);
-
-            // Subscribed at zero, but on free access list.
-            await parameterizedTest(
-                GuestListUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList(), 0);
-
-            // Subscribed with no balance.
-            await parameterizedTest(
-                SubscribedUserIdNoBalance, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 0);
-
-            // Subscribed with zero balance.
-            await parameterizedTest(
-                SubscribedUserIdZeroBalance, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 0);
-
-            // Subscribed with zero balance but retrying billing.
-            await parameterizedTest(
-                SubscribedUserIdZeroBalancePaymentInProgress, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList(), 0);
+                null, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts, 0);
 
             // Filter by channel for creator.
             await parameterizedTest(
@@ -391,23 +327,19 @@
 
             // Filter by channel.
             await parameterizedTest(
-                SubscribedUserId, null, new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[0])).ToList(), 10);
+                UnsubscribedUserId, null, new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[0])).ToList(), 10);
 
             // Filter by channel 2.
             await parameterizedTest(
-                SubscribedUserId, null, new[] { ChannelIds[1] }, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[1])).ToList(), 10);
-
-            // Filter by unsubscribed channel 3.
-            await parameterizedTest(
-                SubscribedUserId, null, new[] { ChannelIds[2] }, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 10);
+                UnsubscribedUserId, null, new[] { ChannelIds[1] }, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[1])).ToList(), 10);
 
             // Filter by valid channel and creator combination.
             await parameterizedTest(
-                SubscribedUserId, CreatorId, new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[0])).ToList(), 10);
+                UnsubscribedUserId, CreatorId, new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[0])).ToList(), 10);
 
             // Filter by invalid channel and creator combination.
             await parameterizedTest(
-                SubscribedUserId, GuestListUserId, new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 10);
+                UnsubscribedUserId, UserId.Random(), new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 10);
 
             // Search forwards from now.
             await parameterizedTest(
@@ -427,13 +359,6 @@
             using (var databaseContext = testDatabase.CreateContext())
             {
                 await this.CreateUserAsync(databaseContext, UnsubscribedUserId);
-                await this.CreateUserAsync(databaseContext, SubscribedUserId);
-                await this.CreateUserAsync(databaseContext, SubscribedLowPriceUserId);
-                await this.CreateUserAsync(databaseContext, SubscribedHighPriceUserId);
-                await this.CreateUserAsync(databaseContext, SubscribedUserIdNoBalance);
-                await this.CreateUserAsync(databaseContext, SubscribedUserIdZeroBalance);
-                await this.CreateUserAsync(databaseContext, SubscribedUserIdZeroBalancePaymentInProgress);
-                await this.CreateUserAsync(databaseContext, GuestListUserId);
 
                 var channelSubscriptions = new List<ChannelSubscription>();
                 var calculatedAccountBalances = new List<CalculatedAccountBalance>();
@@ -452,40 +377,6 @@
 
                 if (createLivePosts || createFuturePosts)
                 {
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserId.Value, null, ChannelPrice, Now, Now));
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserId.Value, null, ChannelPrice, Now, Now));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserId.Value, LedgerAccountType.FifthweekCredit, Now, 10));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserId.Value, LedgerAccountType.FifthweekCredit, Now.AddDays(-1), 0));
-
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserIdNoBalance.Value, null, ChannelPrice, Now, Now));
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserIdNoBalance.Value, null, ChannelPrice, Now, Now));
-                    origins.Add(new UserPaymentOrigin(SubscribedUserIdNoBalance.Value, null, null, default(PaymentOriginKeyType), null, null, null, null, PaymentStatus.Failed));
-
-                    // The query should round down to zero for account balance.
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserIdZeroBalance.Value, null, ChannelPrice, Now, Now));
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserIdZeroBalance.Value, null, ChannelPrice, Now, Now));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalance.Value, LedgerAccountType.FifthweekCredit, Now.AddDays(-1), 10));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalance.Value, LedgerAccountType.FifthweekCredit, Now, 0.8m));
-
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserIdZeroBalancePaymentInProgress.Value, null, ChannelPrice, Now, Now));
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserIdZeroBalancePaymentInProgress.Value, null, ChannelPrice, Now, Now));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalancePaymentInProgress.Value, LedgerAccountType.FifthweekCredit, Now.AddDays(-1), 10));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalancePaymentInProgress.Value, LedgerAccountType.FifthweekCredit, Now, 0.8m));
-                    origins.Add(new UserPaymentOrigin(SubscribedUserIdZeroBalancePaymentInProgress.Value, null, null, default(PaymentOriginKeyType), null, null, null, null, PaymentStatus.Retry1));
-
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedLowPriceUserId.Value, null, ChannelPrice / 2, Now, Now));
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedLowPriceUserId.Value, null, ChannelPrice / 2, Now, Now));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedLowPriceUserId.Value, LedgerAccountType.FifthweekCredit, Now, 10));
-                    
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedHighPriceUserId.Value, null, ChannelPrice * 2, Now, Now));
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedHighPriceUserId.Value, null, ChannelPrice * 2, Now, Now));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedHighPriceUserId.Value, LedgerAccountType.FifthweekCredit, Now, 10));
-                    
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, GuestListUserId.Value, null, 0, Now, Now));
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, GuestListUserId.Value, null, 0, Now, Now));
-
-                    freeAccessUsers.Add(new FreeAccessUser(BlogId.Value, GuestListUserId.Value + "@test.com"));
-
                     foreach (var newsfeedPost in SortedNewsfeedPosts)
                     {
                         if (createLivePosts && !createFuturePosts && newsfeedPost.LiveDate > Now)
@@ -655,7 +546,7 @@
                             new PostId(Guid.NewGuid()),
                             BlogId,
                             channelId,
-                            i % 2 == 0 ? Comment : null,
+                            i % 3 == 0 ? Comment : null,
                             i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
                             i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
                             liveDate,
@@ -667,8 +558,8 @@
                             i % 3 == 2 ? FileSize : (long?)null,
                             i % 3 == 2 ? FileWidth : (int?)null,
                             i % 3 == 2 ? FileHeight : (int?)null,
-                            i % (UserIds.Count / 2),
-                            i % UserIds.Count,
+                            1,
+                            1,
                             false,
                             creationDate));
                     }
@@ -730,7 +621,7 @@
                     v.PostId,
                     v.BlogId,
                     v.ChannelId,
-                    v.Comment,
+                    v.Comment == null ? null : new Comment(v.Comment.Value.Substring(0, GetPreviewNewsfeedDbStatement.MaxCommentLength.Value)),
                     v.FileId,
                     v.ImageId,
                     v.LiveDate,
@@ -744,7 +635,7 @@
                     v.ImageRenderHeight,
                     v.LikesCount,
                     v.CommentsCount,
-                    UserIds.IndexOf(userId) < v.LikesCount,
+                    userId != null && UserIds.IndexOf(userId) < v.LikesCount,
                     v.CreationDate)).ToList();
             }
         }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/04/2015 14:30:40 (UTC)
-//// Mapped solution in 7.99s
+//// Generated on 09/10/2015 15:35:40 (UTC)
+//// Mapped solution in 15.08s
 
 
 namespace Fifthweek.WebJobs.Thumbnails.Shared
@@ -56,6 +56,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class ThumbnailDefinition 
     {
@@ -64,6 +65,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
             System.Int32 width,
             System.Int32 height,
             Fifthweek.WebJobs.Thumbnails.Shared.ResizeBehaviour resizeBehaviour,
+            Fifthweek.WebJobs.Thumbnails.Shared.ProcessingBehaviour processingBehaviour,
             System.Collections.Generic.List<Fifthweek.WebJobs.Thumbnails.Shared.ThumbnailDefinition> children)
         {
             if (outputBlobName == null)
@@ -86,10 +88,16 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
                 throw new ArgumentNullException("resizeBehaviour");
             }
 
+            if (processingBehaviour == null)
+            {
+                throw new ArgumentNullException("processingBehaviour");
+            }
+
             this.OutputBlobName = outputBlobName;
             this.Width = width;
             this.Height = height;
             this.ResizeBehaviour = resizeBehaviour;
+            this.ProcessingBehaviour = processingBehaviour;
             this.Children = children;
         }
     }
@@ -196,12 +204,13 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class ThumbnailDefinition 
     {
         public override string ToString()
         {
-            return string.Format("ThumbnailDefinition(\"{0}\", {1}, {2}, {3}, {4})", this.OutputBlobName == null ? "null" : this.OutputBlobName.ToString(), this.Width == null ? "null" : this.Width.ToString(), this.Height == null ? "null" : this.Height.ToString(), this.ResizeBehaviour == null ? "null" : this.ResizeBehaviour.ToString(), this.Children == null ? "null" : this.Children.ToString());
+            return string.Format("ThumbnailDefinition(\"{0}\", {1}, {2}, {3}, {4}, {5})", this.OutputBlobName == null ? "null" : this.OutputBlobName.ToString(), this.Width == null ? "null" : this.Width.ToString(), this.Height == null ? "null" : this.Height.ToString(), this.ResizeBehaviour == null ? "null" : this.ResizeBehaviour.ToString(), this.ProcessingBehaviour == null ? "null" : this.ProcessingBehaviour.ToString(), this.Children == null ? "null" : this.Children.ToString());
         }
         
         public override bool Equals(object obj)
@@ -233,6 +242,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
                 hashCode = (hashCode * 397) ^ (this.Width != null ? this.Width.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Height != null ? this.Height.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ResizeBehaviour != null ? this.ResizeBehaviour.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ProcessingBehaviour != null ? this.ProcessingBehaviour.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Children != null 
         			? this.Children.Aggregate(0, (previous, current) => 
         				{ 
@@ -264,6 +274,11 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
             }
         
             if (!object.Equals(this.ResizeBehaviour, other.ResizeBehaviour))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ProcessingBehaviour, other.ProcessingBehaviour))
             {
                 return false;
             }

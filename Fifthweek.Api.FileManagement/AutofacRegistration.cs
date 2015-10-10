@@ -21,6 +21,7 @@
             builder.RegisterType<FileSecurity>().As<IFileSecurity>();
             builder.RegisterType<GetFileExtensionDbStatement>().As<IGetFileExtensionDbStatement>();
             builder.RegisterType<ScheduleGarbageCollectionStatement>().As<IScheduleGarbageCollectionStatement>();
+            builder.RegisterType<GetAccessSignatureExpiryInformation>().As<IGetAccessSignatureExpiryInformation>();
         }
     }
 }

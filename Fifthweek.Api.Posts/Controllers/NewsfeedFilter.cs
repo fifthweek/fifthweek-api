@@ -27,5 +27,7 @@
 
         [Parsed(typeof(PositiveInt))]
         public int Count { get; set; }
+
+        public bool IsPreview { get; set; }
     }
 }

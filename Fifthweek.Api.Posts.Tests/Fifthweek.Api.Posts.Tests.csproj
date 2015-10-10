@@ -101,6 +101,7 @@
     <Compile Include="DeletePostDbStatementTests.cs" />
     <Compile Include="GetCommentsDbStatementTests.cs" />
     <Compile Include="GetCreatorBacklogDbStatementTests.cs" />
+    <Compile Include="GetPreviewNewsfeedDbStatementTests.cs" />
     <Compile Include="GetNewsfeedDbStatementTests.cs" />
     <Compile Include="LikePostDbStatementTests.cs" />
     <Compile Include="MovePostToQueueDbStatementTests.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="PostToChannelDbStatementTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetCommentsQueryHandlerTests.cs" />
+    <Compile Include="Queries\GetPreviewNewsfeedQueryHandlerTests.cs" />
     <Compile Include="Queries\GetNewsfeedQueryHandlerTests.cs" />
     <Compile Include="Queries\GetCreatorBacklogQueryHandlerTests.cs" />
     <Compile Include="Commands\RescheduleForNowCommandHandlerTests.cs" />
@@ -128,6 +130,10 @@
     <ProjectReference Include="..\Fifthweek.Api.AssemblyResolution\Fifthweek.Api.AssemblyResolution.csproj">
       <Project>{47648FEB-DCEB-4151-8B98-EFE1388F11FD}</Project>
       <Name>Fifthweek.Api.AssemblyResolution</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Azure\Fifthweek.Api.Azure.csproj">
+      <Project>{ABC43617-3AAA-4B7A-B4DC-D10E023F1846}</Project>
+      <Name>Fifthweek.Api.Azure</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Blogs.Shared\Fifthweek.Api.Blogs.Shared.csproj">
       <Project>{b2d572a4-86c5-4f16-ab6a-ce87a63e08dd}</Project>

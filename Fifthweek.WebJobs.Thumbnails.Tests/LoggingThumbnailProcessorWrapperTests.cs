@@ -36,6 +36,7 @@
                     200,
                     100,
                     ResizeBehaviour.MaintainAspectRatio,
+                    ProcessingBehaviour.Darken,
                     null)
             },
             false);

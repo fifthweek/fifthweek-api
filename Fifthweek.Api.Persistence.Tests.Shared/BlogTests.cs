@@ -23,9 +23,13 @@
                 new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -100)).Value);
         }
 
-        public static Task CreateTestBlogAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newBlogId, Guid? headerImageFileId = null)
+        public static Task CreateTestBlogAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newBlogId, Guid? headerImageFileId = null, Random random = null)
         {
-            var random = new Random();
+            if (random == null)
+            {
+                random = new Random();
+            }
+
             var creator = UserTests.UniqueEntity(random);
             creator.Id = newUserId;
 

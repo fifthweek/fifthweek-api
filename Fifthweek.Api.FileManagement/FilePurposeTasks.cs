@@ -62,12 +62,13 @@
                             600,
                             600,
                             "preview",
-                            ResizeBehaviour.MaintainAspectRatio,
-                            new Thumbnail(
-                                332,
-                                250,
-                                "queue",
-                                ResizeBehaviour.CropToAspectRatio)))));
+                            ResizeBehaviour.MaintainAspectRatio),
+                        new Thumbnail(
+                            1200,
+                            1200,
+                            Shared.Constants.PostPreviewImageThumbnailName,
+                            ResizeBehaviour.CropToAspectRatio,
+                            ProcessingBehaviour.Darken))));
 
             Add(FilePurposes.PostFile);
         }

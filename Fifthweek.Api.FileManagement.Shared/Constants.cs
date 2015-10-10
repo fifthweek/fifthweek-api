@@ -4,8 +4,10 @@
 
     public class Constants
     {
-        // If you're thinking about moving this to the Shared project, consider using IBlobLocationGenerator instead.
+        // If you're thinking about moving this to the Fifthweek.Shared project, consider using IBlobLocationGenerator instead.
         public const string PublicFileBlobContainerName = "public";
+
+        public const string PostPreviewImageThumbnailName = "post-preview";
 
         public static readonly TimeSpan WriteSignatureTimeSpan = TimeSpan.FromHours(1);
         public static readonly TimeSpan PrivateReadSignatureTimeSpan = TimeSpan.FromHours(1);

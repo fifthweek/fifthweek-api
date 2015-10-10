@@ -11,6 +11,7 @@
         public void Register(ContainerBuilder builder)
         {
             builder.RegisterType<GetNewsfeedDbStatement>().As<IGetNewsfeedDbStatement>();
+            builder.RegisterType<GetPreviewNewsfeedDbStatement>().As<IGetPreviewNewsfeedDbStatement>();
             builder.RegisterType<GetCreatorBacklogDbStatement>().As<IGetCreatorBacklogDbStatement>();
             builder.RegisterType<DeletePostDbStatement>().As<IDeletePostDbStatement>();
             builder.RegisterType<PostToChannelDbStatement>().As<IPostToChannelDbStatement>();

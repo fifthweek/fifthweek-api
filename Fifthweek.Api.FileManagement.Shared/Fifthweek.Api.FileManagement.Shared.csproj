@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccessSignatureExpiryInformation.cs" />
     <Compile Include="BlobLocation.cs" />
     <Compile Include="BlobLocationGenerator.cs" />
     <Compile Include="ClassAugmentation.cs">
@@ -60,6 +61,7 @@
     <Compile Include="IBlobLocationGenerator.cs" />
     <Compile Include="IFileInformationAggregator.cs" />
     <Compile Include="IFileSecurity.cs" />
+    <Compile Include="IGetAccessSignatureExpiryInformation.cs" />
     <Compile Include="IGetFileExtensionDbStatement.cs" />
     <Compile Include="IScheduleGarbageCollectionStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

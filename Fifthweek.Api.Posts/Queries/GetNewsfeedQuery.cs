@@ -11,7 +11,7 @@
     using Fifthweek.Shared;
 
     [AutoConstructor, AutoEqualityMembers]
-    public partial class GetNewsfeedQuery : IQuery<GetNewsfeedQueryResult>
+    public partial class GetNewsfeedQuery : IQuery<GetNewsfeedQueryResult>, IQuery<GetPreviewNewsfeedQueryResult>
     {
         public Requester Requester { get; private set; }
 

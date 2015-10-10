@@ -20,6 +20,8 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
 
         public ResizeBehaviour ResizeBehaviour { get; set; }
 
+        public ProcessingBehaviour ProcessingBehaviour { get; set; }
+
         [Optional]
         public List<ThumbnailDefinition> Children { get; set; }
     }

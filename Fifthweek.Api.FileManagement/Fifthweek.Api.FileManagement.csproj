@@ -107,6 +107,7 @@
     <Compile Include="FileTasks\IFileTask.cs" />
     <Compile Include="FileTasks\Thumbnail.cs" />
     <Compile Include="FileTasks\CreateThumbnailsTask.cs" />
+    <Compile Include="GetAccessSignatureExpiryInformation.cs" />
     <Compile Include="GetFileWaitingForUploadDbStatement.cs" />
     <Compile Include="IAddNewFileDbStatement.cs" />
     <Compile Include="IFileProcessor.cs" />

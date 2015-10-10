@@ -40,6 +40,7 @@
                     200,
                     100,
                     ResizeBehaviour.MaintainAspectRatio,
+                    ProcessingBehaviour.Darken,
                     null)
             },
             false);
@@ -55,6 +56,7 @@
                     200,
                     100,
                     ResizeBehaviour.MaintainAspectRatio,
+                    ProcessingBehaviour.Darken,
                     null)
             },
             true);
@@ -70,6 +72,7 @@
                     200,
                     100,
                     ResizeBehaviour.MaintainAspectRatio,
+                    ProcessingBehaviour.Darken,
                     new List<ThumbnailDefinition>
                     {
                         new ThumbnailDefinition(
@@ -77,6 +80,7 @@
                             100,
                             50,
                             ResizeBehaviour.MaintainAspectRatio,
+                            ProcessingBehaviour.Darken,
                             null)
                     })
             },
@@ -93,12 +97,14 @@
                     200,
                     100,
                     ResizeBehaviour.MaintainAspectRatio,
+                    ProcessingBehaviour.Darken,
                     null),
                 new ThumbnailDefinition(
                     OutputBlobName2,
                     100,
                     50,
                     ResizeBehaviour.MaintainAspectRatio,
+                    ProcessingBehaviour.Darken,
                     null)
             },
             false);
@@ -181,9 +187,9 @@
         {
             int width = -1;
             int height = -1;
-            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour))
-                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
-                    (a, b, c, d, e) =>
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour, Message.Items[0].ProcessingBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour, ProcessingBehaviour>(
+                    (a, b, c, d, e, f) =>
                     {
                         width = a.Width;
                         height = a.Height;
@@ -229,9 +235,9 @@
             int firstWidth = -1;
             int firstHeight = -1;
             var firstThumbnail = MessageWithChild.Items[0];
-            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, firstThumbnail.Width, firstThumbnail.Height, firstThumbnail.ResizeBehaviour))
-                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
-                    (a, b, c, d, e) =>
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, firstThumbnail.Width, firstThumbnail.Height, firstThumbnail.ResizeBehaviour, firstThumbnail.ProcessingBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour, ProcessingBehaviour>(
+                    (a, b, c, d, e, f) =>
                     { 
                         first = a;
                         firstWidth = a.Width;
@@ -243,9 +249,9 @@
             int secondWidth = -1;
             int secondHeight = -1;
             var secondThumbnail = MessageWithChild.Items[0].Children[0];
-            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream2, secondThumbnail.Width, secondThumbnail.Height, secondThumbnail.ResizeBehaviour))
-                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
-                    (a, b, c, d, e) => 
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream2, secondThumbnail.Width, secondThumbnail.Height, secondThumbnail.ResizeBehaviour, secondThumbnail.ProcessingBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour, ProcessingBehaviour>(
+                    (a, b, c, d, e, f) => 
                     { 
                         second = a;
                         secondWidth = a.Width;
@@ -287,9 +293,9 @@
             int firstWidth = -1;
             int firstHeight = -1;
             var firstThumbnail = MessageWithSibling.Items[0];
-            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, firstThumbnail.Width, firstThumbnail.Height, firstThumbnail.ResizeBehaviour))
-                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
-                    (a, b, c, d, e) => 
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, firstThumbnail.Width, firstThumbnail.Height, firstThumbnail.ResizeBehaviour, firstThumbnail.ProcessingBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour, ProcessingBehaviour>(
+                    (a, b, c, d, e, f) => 
                     {
                         first = a;
                         firstWidth = a.Width;
@@ -301,9 +307,9 @@
             int secondWidth = -1;
             int secondHeight = -1;
             var secondThumbnail = MessageWithSibling.Items[1];
-            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream2, secondThumbnail.Width, secondThumbnail.Height, secondThumbnail.ResizeBehaviour))
-                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
-                    (a, b, c, d, e) => 
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream2, secondThumbnail.Width, secondThumbnail.Height, secondThumbnail.ResizeBehaviour, secondThumbnail.ProcessingBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour, ProcessingBehaviour>(
+                    (a, b, c, d, e, f) => 
                     {
                         second = a;
                         secondWidth = a.Width;
@@ -343,8 +349,8 @@
             this.output.Setup(v => v.ExistsAsync(CancellationToken.None)).ReturnsAsync(true);
 
             MagickImage image = null;
-            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour))
-                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>((a, b, c, d, e) => image = a)
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour, Message.Items[0].ProcessingBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour, ProcessingBehaviour>((a, b, c, d, e, f) => image = a)
                 .Verifiable();
 
             using (var inputStream = SampleImagesLoader.Instance.LargeLandscape.Open())
@@ -386,9 +392,9 @@
         {
             var format = MagickFormat.Tiff;
             string mimeType = null;
-            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour))
-                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
-                    (a, b, c, d, e) =>
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour, Message.Items[0].ProcessingBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour, ProcessingBehaviour>(
+                    (a, b, c, d, e, f) =>
                     {
                         format = a.Format;
                         mimeType = a.FormatInfo.MimeType;
@@ -415,9 +421,9 @@
         public async Task WhenCreatingThumbnailFromImageWithNoColorProfile_ItShouldAddColorProfile()
         {
             bool profileExists = false;
-            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour))
-                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
-                    (a, b, c, d, e) =>
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour, Message.Items[0].ProcessingBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour, ProcessingBehaviour>(
+                    (a, b, c, d, e, f) =>
                     {
                         profileExists = a.GetColorProfile() != null;
                     })
@@ -443,9 +449,9 @@
         {
             int width = -1;
             int height = -1;
-            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour))
-                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
-                    (a, b, c, d, e) =>
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour, Message.Items[0].ProcessingBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour, ProcessingBehaviour>(
+                    (a, b, c, d, e, f) =>
                     {
                         width = a.Width;
                         height = a.Height;
@@ -486,9 +492,9 @@
         public async Task WhenCreatingThumbnailFromImageWithLowQuality_ItShouldNotAdjustQuality()
         {
             int quality = 0;
-            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour))
-                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
-                    (a, b, c, d, e) =>
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour, Message.Items[0].ProcessingBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour, ProcessingBehaviour>(
+                    (a, b, c, d, e, f) =>
                     {
                         quality = a.Quality;
                     })
@@ -513,9 +519,9 @@
         public async Task WhenCreatingThumbnailFromImageWithHighQuality_ItShouldSetQualityTo85()
         {
             int quality = 0;
-            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour))
-                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
-                    (a, b, c, d, e) =>
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour, Message.Items[0].ProcessingBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour, ProcessingBehaviour>(
+                    (a, b, c, d, e, f) =>
                     {
                         quality = a.Quality;
                     })

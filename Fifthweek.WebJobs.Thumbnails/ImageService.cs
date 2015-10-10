@@ -9,7 +9,7 @@
 
     public class ImageService : IImageService
     {
-        public void Resize(MagickImage input, Stream output, int width, int height, ResizeBehaviour resizeBehaviour)
+        public void Resize(MagickImage input, Stream output, int width, int height, ResizeBehaviour resizeBehaviour, ProcessingBehaviour processingBehaviour)
         {
             switch (resizeBehaviour)
             {
@@ -21,6 +21,13 @@
                     this.ResizeCropToAspectRatio(input, output, width, height);
                     break;
             }
+
+            if (processingBehaviour == ProcessingBehaviour.Darken)
+            {
+                input.Colorize(new MagickColor(0, 0, 0), new Percentage(50));
+            }
+
+            input.Write(output);
         }
 
         private void ResizeMaintainAspectRatio(MagickImage input, Stream output, int width, int height)
@@ -29,8 +36,6 @@
             {
                 input.Resize(width, height);
             }
-
-            input.Write(output);
         }
 
         private void ResizeCropToAspectRatio(MagickImage input, Stream output, int width, int height)
@@ -54,8 +59,6 @@
                     input.Crop((int)Math.Round(input.Width * desiredAspectRatio / currentAspectRatio), height);
                 }
             }
-
-            input.Write(output);
         }
     }
 }

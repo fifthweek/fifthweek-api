@@ -67,6 +67,41 @@ namespace Fifthweek.Api.Azure
             return Task.FromResult(new BlobSharedAccessInformation(containerName, blobName, blob.Uri.ToString(), token, expiry));
         }
 
+        public Task<BlobSharedAccessInformation> GetBlobSharedAccessInformationForReadingAsync(string containerName, string blobName, DateTime expiry)
+        {
+            containerName.AssertNotNull("containerName");
+            blobName.AssertNotNull("blobName");
+
+            if (expiry.Kind != DateTimeKind.Utc)
+            {
+                throw new InvalidOperationException("Expiry time must be in UTC");
+            }
+
+            var client = this.cloudStorageAccount.CreateCloudBlobClient();
+            var container = client.GetContainerReference(containerName);
+            var blob = container.GetBlockBlobReference(blobName);
+
+            var policy = new SharedAccessBlobPolicy
+            {
+                SharedAccessExpiryTime = expiry,
+                Permissions = SharedAccessBlobPermissions.Read
+            };
+
+            var token = blob.GetSharedAccessSignature(policy);
+
+            var blobUri = blob.Uri;
+            var cdnDomain = this.azureConfiguration.CdnDomain;
+            if (string.IsNullOrWhiteSpace(cdnDomain))
+            {
+                throw new InvalidOperationException("CDN domain has not been configured.");
+            }
+
+            var cdnUriBuilder = new UriBuilder(blobUri) { Host = cdnDomain };
+            var cdnUri = cdnUriBuilder.Uri.GetComponents(UriComponents.AbsoluteUri & ~UriComponents.Port, UriFormat.UriEscaped);
+
+            return Task.FromResult(new BlobSharedAccessInformation(containerName, blobName, cdnUri, token, expiry));
+        }
+
         public Task<BlobContainerSharedAccessInformation> GetBlobContainerSharedAccessInformationForReadingAsync(string containerName, DateTime expiry)
         {
             containerName.AssertNotNull("containerName");

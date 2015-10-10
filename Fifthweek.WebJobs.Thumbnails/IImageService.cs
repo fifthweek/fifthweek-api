@@ -8,6 +8,6 @@
 
     public interface IImageService
     {
-        void Resize(MagickImage input, Stream output, int width, int height, ResizeBehaviour resizeBehaviour);
+        void Resize(MagickImage input, Stream output, int width, int height, ResizeBehaviour resizeBehaviour, ProcessingBehaviour processingBehaviour);
     }
 }

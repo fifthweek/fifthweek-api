@@ -232,7 +232,7 @@
 
                     using (var outputStream = await itemData.BlockBlob.OpenWriteAsync(cancellationToken))
                     {
-                        this.imageService.Resize(itemImage, outputStream, item.Width, item.Height, item.ResizeBehaviour);
+                        this.imageService.Resize(itemImage, outputStream, item.Width, item.Height, item.ResizeBehaviour, item.ProcessingBehaviour);
                         itemData.BlockBlob.Metadata[WidthHeaderKey] = image.Width.ToString();
                         itemData.BlockBlob.Metadata[HeightHeaderKey] = image.Height.ToString();
                         

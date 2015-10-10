@@ -11,11 +11,17 @@
     public partial class Thumbnail
     {
         public Thumbnail(int width, int height, string alias, ResizeBehaviour resizeBehaviour, params Thumbnail[] children)
+            : this(width, height, alias, resizeBehaviour, ProcessingBehaviour.None, children)
+        {
+        }
+
+        public Thumbnail(int width, int height, string alias, ResizeBehaviour resizeBehaviour, ProcessingBehaviour processingBehaviour, params Thumbnail[] children)
         {
             this.Width = width;
             this.Height = height;
             this.Alias = alias;
             this.ResizeBehaviour = resizeBehaviour;
+            this.ProcessingBehaviour = processingBehaviour;
             this.Children = children == null ? new List<Thumbnail>() : children.ToList();
         }
 
@@ -27,6 +33,8 @@
 
         public ResizeBehaviour ResizeBehaviour { get; private set; }
 
+        public ProcessingBehaviour ProcessingBehaviour { get; private set; }
+
         public IReadOnlyList<Thumbnail> Children { get; private set; }
 
         public ThumbnailDefinition ToMessage(string blobName)
@@ -36,6 +44,7 @@
                 this.Width,
                 this.Height,
                 this.ResizeBehaviour,
+                this.ProcessingBehaviour,
                 this.Children.Select(v => v.ToMessage(blobName)).ToList());
 
             return outputMessage;

@@ -14,5 +14,7 @@ namespace Fifthweek.Api.Azure
         Task<long> GetBlobLengthAndSetPropertiesAsync(string containerName, string blobName, string contentType, TimeSpan cacheControlMaxAge);
 
         Task<BlobInformation> GetBlobInformationAsync(string containerName, string blobName);
+
+        Task<BlobSharedAccessInformation> GetBlobSharedAccessInformationForReadingAsync(string containerName, string blobName, DateTime expiry);
     }
 }

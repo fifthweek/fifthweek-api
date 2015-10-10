@@ -122,6 +122,7 @@
     <Compile Include="FileProcessorTests.cs" />
     <Compile Include="FilePurposeTasksTests.cs" />
     <Compile Include="FileTasks\ThumbnailSetFileTaskTests.cs" />
+    <Compile Include="GetAccessSignatureExpiryInformationTests.cs" />
     <Compile Include="GetFileExtensionDbStatementTests.cs" />
     <Compile Include="FileSecurityTests.cs" />
     <Compile Include="GetFileWaitingForUploadDbStatementTests.cs" />

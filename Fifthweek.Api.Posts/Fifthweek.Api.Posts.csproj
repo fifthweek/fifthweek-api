@@ -101,11 +101,13 @@
     <Compile Include="GetCommentsDbStatement.cs" />
     <Compile Include="GetCreatorBacklogDbStatement.cs" />
     <Compile Include="GetNewsfeedDbResult.cs" />
+    <Compile Include="GetPreviewNewsfeedDbStatement.cs" />
     <Compile Include="GetNewsfeedDbStatement.cs" />
     <Compile Include="ICommentOnPostDbStatement.cs" />
     <Compile Include="IGetCommentsDbStatement.cs" />
     <Compile Include="IGetCreatorBacklogDbStatement.cs" />
     <Compile Include="IGetNewsfeedDbStatement.cs" />
+    <Compile Include="IGetPreviewNewsfeedDbStatement.cs" />
     <Compile Include="IIsPostSubscriberDbStatement.cs" />
     <Compile Include="ILikePostDbStatement.cs" />
     <Compile Include="IMovePostToQueueDbStatement.cs" />
@@ -148,6 +150,8 @@
     <Compile Include="Queries\GetCommentsQueryHandler.cs" />
     <Compile Include="Queries\GetCreatorBacklogQueryResult.cs" />
     <Compile Include="Queries\GetNewsfeedQuery.cs" />
+    <Compile Include="Queries\GetPreviewNewsfeedQueryResult.cs" />
+    <Compile Include="Queries\GetPreviewNewsfeedQueryHandler.cs" />
     <Compile Include="Queries\GetNewsfeedQueryHandler.cs" />
     <Compile Include="Queries\GetNewsfeedQueryResult.cs" />
     <Compile Include="Queries\NewsfeedPost.cs" />

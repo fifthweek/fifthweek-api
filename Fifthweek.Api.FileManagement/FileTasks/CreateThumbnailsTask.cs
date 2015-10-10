@@ -10,8 +10,6 @@
     using Fifthweek.CodeGeneration;
     using Fifthweek.WebJobs.Thumbnails.Shared;
 
-    using Constants = Fifthweek.WebJobs.Thumbnails.Shared.Constants;
-
     [AutoEqualityMembers]
     public partial class CreateThumbnailsTask : IFileTask
     {
@@ -31,7 +29,7 @@
                 this.Items.Select(v => v.ToMessage(blobName)).ToList(),
                 false);
 
-            await queueService.AddMessageToQueueAsync(Constants.ThumbnailsQueueName, outputMessage);
+            await queueService.AddMessageToQueueAsync(Fifthweek.WebJobs.Thumbnails.Shared.Constants.ThumbnailsQueueName, outputMessage);
         }
     }
 }

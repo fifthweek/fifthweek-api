@@ -12,11 +12,11 @@
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
-    using Constants = Fifthweek.Api.FileManagement.Shared.Constants;
-
     [AutoConstructor]
     public partial class GetUserAccessSignaturesQueryHandler : IQueryHandler<GetUserAccessSignaturesQuery, UserAccessSignatures>
     {
+        private readonly ITimestampCreator timestampCreator;
+        private readonly IGetAccessSignatureExpiryInformation getAccessSignatureExpiryInformation;
         private readonly IBlobService blobService;
         private readonly IBlobLocationGenerator blobLocationGenerator;
         private readonly IRequesterSecurity requesterSecurity;
@@ -30,12 +30,12 @@
                 await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId);
             }
 
-            var now = DateTime.UtcNow;
-            var expiry = this.GetNextExpiry(now);
+            var now = this.timestampCreator.Now();
+            var expiry = this.getAccessSignatureExpiryInformation.Execute(now);
 
             // Get public files access information.
             var publicSignature = await this.blobService.GetBlobContainerSharedAccessInformationForReadingAsync(
-                Constants.PublicFileBlobContainerName, expiry.Public);
+                Shared.Constants.PublicFileBlobContainerName, expiry.Public);
 
             var privateSignatures = new List<UserAccessSignatures.PrivateAccessSignature>();
             if (query.RequestedUserId != null)
@@ -57,53 +57,6 @@
                 timeToLiveSeconds,
                 publicSignature,
                 privateSignatures);
-        }
-
-        internal DateTime GetNextExpiry(DateTime now, bool isPublic)
-        {
-            var baseTimeSpan 
-                = isPublic
-                ? Constants.PublicReadSignatureTimeSpan
-                : Constants.PrivateReadSignatureTimeSpan;
-
-            var expiry = this.RoundUp(now, baseTimeSpan);
-
-            if ((expiry - now) <= Constants.ReadSignatureMinimumExpiryTime)
-            {
-                expiry = expiry.Add(baseTimeSpan);
-            }
-
-            return expiry;
-        }
-
-        private ExpiryInformation GetNextExpiry(DateTime now)
-        {
-            return new ExpiryInformation(
-                this.GetNextExpiry(now, true),
-                this.GetNextExpiry(now, false));
-        }
-
-        private DateTime RoundUp(DateTime dt, TimeSpan d)
-        {
-            if (dt.Kind != DateTimeKind.Utc)
-            {
-                throw new InvalidOperationException("Expiry time must be in UTC");
-            }
-
-            return new DateTime(((dt.Ticks + d.Ticks - 1) / d.Ticks) * d.Ticks, DateTimeKind.Utc);
-        }
-
-        internal class ExpiryInformation
-        {
-            public ExpiryInformation(DateTime @public, DateTime @private)
-            {
-                this.Public = @public;
-                this.Private = @private;
-            }
-
-            public DateTime Public { get; private set; }
-
-            public DateTime Private { get; private set; }
         }
     }
 }

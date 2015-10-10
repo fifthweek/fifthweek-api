@@ -11,6 +11,7 @@
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,6 +22,7 @@
     [TestClass]
     public class GetUserAccessSignaturesQueryHandlerTests
     {
+        private static readonly DateTime Now = DateTime.UtcNow;
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly List<ChannelId> CreatorChannelIds = new List<ChannelId> { new ChannelId(Guid.NewGuid()), new ChannelId(Guid.NewGuid()) };
@@ -28,6 +30,8 @@
         
         private GetUserAccessSignaturesQueryHandler target;
 
+        private Mock<ITimestampCreator> timestampCreator;
+        private Mock<IGetAccessSignatureExpiryInformation> getAccessSignatureExpiryInformation;
         private Mock<IBlobService> blobService;
         private Mock<IBlobLocationGenerator> blobLocationGenerator;
         private Mock<IRequesterSecurity> requesterSecurity;
@@ -35,11 +39,17 @@
         [TestInitialize]
         public void TestInitialize()
         {
+            this.timestampCreator = new Mock<ITimestampCreator>();
+            this.getAccessSignatureExpiryInformation = new Mock<IGetAccessSignatureExpiryInformation>();
             this.blobService = new Mock<IBlobService>();
             this.blobLocationGenerator = new Mock<IBlobLocationGenerator>();
             this.requesterSecurity = new Mock<IRequesterSecurity>();
 
+            this.timestampCreator.Setup(v => v.Now()).Returns(Now);
+
             this.target = new GetUserAccessSignaturesQueryHandler(
+                this.timestampCreator.Object,
+                this.getAccessSignatureExpiryInformation.Object,
                 this.blobService.Object,
                 this.blobLocationGenerator.Object,
                 this.requesterSecurity.Object);
@@ -71,9 +81,14 @@
         [TestMethod]
         public async Task WhenUnauthenticated_ItShouldReturnAccessSignatureForPublicFiles()
         {
-            var filesInformation = new BlobContainerSharedAccessInformation("files", "uri", "sig", DateTime.UtcNow);
+            var expectedPublicExpiry = Now.AddDays(1);
+            var expectedPrivateExpiry = Now.AddDays(2);
+            this.getAccessSignatureExpiryInformation.Setup(v => v.Execute(Now))
+                .Returns(new AccessSignatureExpiryInformation(expectedPublicExpiry, expectedPrivateExpiry));
 
-            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(Constants.PublicFileBlobContainerName, It.IsAny<DateTime>()))
+            var filesInformation = new BlobContainerSharedAccessInformation("files", "uri", "sig", expectedPublicExpiry);
+
+            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(Constants.PublicFileBlobContainerName, expectedPublicExpiry))
                 .ReturnsAsync(filesInformation);
 
             var result = await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, null, CreatorChannelIds, SubscribedChannelIds));
@@ -87,9 +102,11 @@
         [TestMethod]
         public async Task WhenAuthenticated_ItShouldReturnAccessSignaturesForTheUser()
         {
-            var now = DateTime.UtcNow;
-            var expectedPublicExpiry = this.target.GetNextExpiry(now, true);
-            var expectedPrivateExpiry = this.target.GetNextExpiry(now, false);
+            var expectedPublicExpiry = Now.AddDays(1);
+            var expectedPrivateExpiry = Now.AddDays(2);
+            this.getAccessSignatureExpiryInformation.Setup(v => v.Execute(Now))
+                .Returns(new AccessSignatureExpiryInformation(expectedPublicExpiry, expectedPrivateExpiry));
+
             var publicFilesInformation = new BlobContainerSharedAccessInformation("files", "uri", "sig", expectedPublicExpiry);
 
             this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(Constants.PublicFileBlobContainerName, expectedPublicExpiry))
@@ -134,68 +151,6 @@
             Assert.AreEqual(creatorInformation1, result.PrivateSignatures[2].Information);
             Assert.AreEqual(SubscribedChannelIds[1], result.PrivateSignatures[3].ChannelId);
             Assert.AreEqual(creatorInformation2, result.PrivateSignatures[3].Information);
-        }
-
-        [TestMethod]
-        public async Task WhenGettingNextPublicExpiry_ItShouldReturnTheNextWholeWeekTakingMinimumExpiryIntoAccount()
-        {
-            DateTime result;
-            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00, DateTimeKind.Utc), true);
-            Assert.AreEqual(new DateTime(2015, 3, 23, 00, 00, 00, DateTimeKind.Utc), result);
-
-            result = this.target.GetNextExpiry(new DateTime(2015, 3, 22, 23, 30, 00, DateTimeKind.Utc), true);
-            Assert.AreEqual(new DateTime(2015, 3, 23, 00, 00, 00, DateTimeKind.Utc), result);
-
-            result = this.target.GetNextExpiry(new DateTime(2015, 3, 22, 23, 49, 59, DateTimeKind.Utc), true);
-            Assert.AreEqual(new DateTime(2015, 3, 23, 00, 00, 00, DateTimeKind.Utc), result);
-
-            result = this.target.GetNextExpiry(new DateTime(2015, 3, 22, 23, 50, 00, DateTimeKind.Utc), true);
-            Assert.AreEqual(new DateTime(2015, 3, 30, 00, 00, 00, DateTimeKind.Utc), result);
-        }
-
-        [TestMethod]
-        public async Task WhenGettingNextPrivateExpiry_ItShouldReturnTheNextWholeHourTakingMinimumExpiryIntoAccount()
-        {
-            DateTime result;
-            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00, DateTimeKind.Utc), false);
-            Assert.AreEqual(new DateTime(2015, 3, 18, 11, 00, 00, DateTimeKind.Utc), result);
-
-            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 30, 00, DateTimeKind.Utc), false);
-            Assert.AreEqual(new DateTime(2015, 3, 18, 11, 00, 00, DateTimeKind.Utc), result);
-
-            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 49, 59, DateTimeKind.Utc), false);
-            Assert.AreEqual(new DateTime(2015, 3, 18, 11, 00, 00, DateTimeKind.Utc), result);
-
-            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 50, 00, DateTimeKind.Utc), false);
-            Assert.AreEqual(new DateTime(2015, 3, 18, 12, 00, 00, DateTimeKind.Utc), result);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public async Task WhenGettingNextPublicExpiry_ItShouldExpectTimesAsUtc()
-        {
-            this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00), true);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public async Task WhenGettingNextPrivateExpiry_ItShouldExpectTimesAsUtc()
-        {
-            this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00), false);
-        }
-
-        [TestMethod]
-        public async Task WhenGettingNextPublicExpiry_ItShouldReturnTimesAsUtc()
-        {
-            var result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00, DateTimeKind.Utc), true);
-            Assert.AreEqual(DateTimeKind.Utc, result.Kind);
-        }
-
-        [TestMethod]
-        public async Task WhenGettingNextPrivateExpiry_ItShouldReturnTimesAsUtc()
-        {
-            var result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00, DateTimeKind.Utc), false);
-            Assert.AreEqual(DateTimeKind.Utc, result.Kind);
         }
     }
 }
