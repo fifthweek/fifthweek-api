@@ -29,7 +29,7 @@
                 random.Next(2) == 0,
                 dateCreated,
                 datePriceLastSet,
-                random.Next(2) == 0);
+                false);
         }
 
         public static async Task<IReadOnlyList<Channel>> CreateTestChannelsAsync(
