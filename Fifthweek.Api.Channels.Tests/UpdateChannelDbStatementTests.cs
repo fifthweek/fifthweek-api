@@ -83,7 +83,8 @@
                     Price = Price.Value,
                     PriceLastSetDate = Now,
                     BlogId = channel.BlogId,
-                    CreationDate = channel.CreationDate
+                    CreationDate = channel.CreationDate,
+                    IsDiscoverable = channel.IsDiscoverable,
                 };
 
                 return new ExpectedSideEffects
@@ -116,7 +117,8 @@
                     Price = Price.Value,
                     PriceLastSetDate = Now,
                     BlogId = channel.BlogId,
-                    CreationDate = channel.CreationDate
+                    CreationDate = channel.CreationDate,
+                    IsDiscoverable = channel.IsDiscoverable,
                 };
 
                 return new ExpectedSideEffects
@@ -163,7 +165,8 @@
                     Price = Price.Value,
                     PriceLastSetDate = Now,
                     BlogId = channel.BlogId,
-                    CreationDate = channel.CreationDate
+                    CreationDate = channel.CreationDate,
+                    IsDiscoverable = channel.IsDiscoverable,
                 };
 
                 return new ExpectedSideEffects
@@ -198,6 +201,7 @@
                     PriceLastSetDate = channel.PriceLastSetDate,
                     BlogId = channel.BlogId,
                     CreationDate = channel.CreationDate,
+                    IsDiscoverable = channel.IsDiscoverable,
                 };
 
                 return new ExpectedSideEffects

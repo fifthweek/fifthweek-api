@@ -114,7 +114,8 @@
                     Price.Value,
                     IsVisibleToNonSubscribers,
                     default(DateTime),
-                    default(DateTime));
+                    default(DateTime),
+                    false);
 
                 return new ExpectedSideEffects
                 {
@@ -156,7 +157,8 @@
                     Price.Value,
                     IsVisibleToNonSubscribers,
                     default(DateTime),
-                    default(DateTime));
+                    default(DateTime),
+                    false);
 
                 return new ExpectedSideEffects
                 {

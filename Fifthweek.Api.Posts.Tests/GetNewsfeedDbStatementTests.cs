@@ -357,6 +357,10 @@
             await parameterizedTest(
                 UnsubscribedUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 0);
 
+            // Subscribed at correct price, fetch from all subscriptions.
+            await parameterizedTest(
+                SubscribedUserId, null, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList(), 10);
+
             // Subscribed at correct price.
             await parameterizedTest(
                 SubscribedUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList(), 10);
@@ -624,7 +628,7 @@
         private static IEnumerable<NewsfeedPost> GetSortedNewsfeedPosts()
         {
             // Half the posts will be in the future relative to Now. Days move one day every two posts.
-            var day = ChannelsPerCreator * CollectionsPerChannel * Posts / 2;
+            var day = 0;
 
             var result = new List<NewsfeedPost>();
             for (var channelIndex = 0; channelIndex < ChannelsPerCreator; channelIndex++)
@@ -633,44 +637,47 @@
                 for (var collectionIndex = 0; collectionIndex < CollectionsPerChannel; collectionIndex++)
                 {
                     var collectionId = CollectionIds[channelIndex][collectionIndex];
-                    for (var i = 0; i < Posts * 2; i++)
+                    for (var i = 0; i < Posts; i++)
                     {
-                        DateTime liveDate;
-                        DateTime creationDate;
-                        if (i % 2 == 0)
+                        for (var isFuture = 0; isFuture < 2; ++isFuture)
                         {
-                            // Ensure we have one post that is `now` (i.e. AddDays(0)).
-                            liveDate = new SqlDateTime(Now.AddDays(day--)).Value;
-                            creationDate = liveDate;
-                        }
-                        else
-                        {
-                            liveDate = new SqlDateTime(Now.AddDays(day)).Value;
-                            creationDate = new SqlDateTime(liveDate.AddMinutes(-1)).Value;
-                        }
+                            var liveDate = new SqlDateTime(Now.AddDays((isFuture == 0 ? -1 : 1) * day)).Value;
+                            DateTime creationDate;
 
-                        result.Add(
-                        new NewsfeedPost(
-                            CreatorId,
-                            new PostId(Guid.NewGuid()),
-                            BlogId,
-                            channelId,
-                            i % 2 == 0 ? Comment : null,
-                            i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
-                            i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
-                            liveDate,
-                            i % 3 == 1 ? FileName : null,
-                            i % 3 == 1 ? FileExtension : null,
-                            i % 3 == 1 ? FileSize : (long?)null,
-                            i % 3 == 2 ? FileName : null,
-                            i % 3 == 2 ? FileExtension : null,
-                            i % 3 == 2 ? FileSize : (long?)null,
-                            i % 3 == 2 ? FileWidth : (int?)null,
-                            i % 3 == 2 ? FileHeight : (int?)null,
-                            i % (UserIds.Count / 2),
-                            i % UserIds.Count,
-                            false,
-                            creationDate));
+                            if (i % 2 == 0)
+                            {
+                                // Ensure we have one post that is `now` (i.e. AddDays(0)).
+                                creationDate = liveDate;
+                                day++;
+                            }
+                            else
+                            {
+                                creationDate = new SqlDateTime(liveDate.AddMinutes(-1)).Value;
+                            }
+
+                            result.Add(
+                            new NewsfeedPost(
+                                CreatorId,
+                                new PostId(Guid.NewGuid()),
+                                BlogId,
+                                channelId,
+                                i % 2 == 0 ? Comment : null,
+                                i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
+                                i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
+                                liveDate,
+                                i % 3 == 1 ? FileName : null,
+                                i % 3 == 1 ? FileExtension : null,
+                                i % 3 == 1 ? FileSize : (long?)null,
+                                i % 3 == 2 ? FileName : null,
+                                i % 3 == 2 ? FileExtension : null,
+                                i % 3 == 2 ? FileSize : (long?)null,
+                                i % 3 == 2 ? FileWidth : (int?)null,
+                                i % 3 == 2 ? FileHeight : (int?)null,
+                                i % (UserIds.Count / 2),
+                                i % UserIds.Count,
+                                false,
+                                creationDate));
+                        }
                     }
                 }
             }

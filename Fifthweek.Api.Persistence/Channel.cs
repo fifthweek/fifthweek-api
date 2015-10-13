@@ -37,5 +37,8 @@
 
         [Required]
         public DateTime PriceLastSetDate { get; set; }
+
+        [Required]
+        public bool IsDiscoverable { get; set; }
     }
 }

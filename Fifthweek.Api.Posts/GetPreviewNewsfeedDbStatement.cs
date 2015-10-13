@@ -54,7 +54,7 @@
             {
                 var query = new StringBuilder();
                 query.Append(GetNewsfeedDbStatement.GetSqlStart(requestorId, MaxCommentLength));
-                query.Append(GetNewsfeedDbStatement.CreateFilter(null, creatorId, requestedChannelIds, now, origin, searchForwards, startIndex, count));
+                query.Append(GetNewsfeedDbStatement.CreateFilter(null, creatorId, requestedChannelIds, now, origin, searchForwards, startIndex, count, true));
 
                 var entities = (await connection.QueryAsync<PreviewNewsfeedPost.Builder>(query.ToString(), parameters)).ToList();
                 ProcessNewsfeedResults(entities);

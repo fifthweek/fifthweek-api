@@ -106,6 +106,10 @@
     <Compile Include="Migrations\201509291647558_IncreaseLongFormTextFieldSizes.Designer.cs">
       <DependentUpon>201509291647558_IncreaseLongFormTextFieldSizes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201510131113469_AddIsDiscoverableFieldToChannel.cs" />
+    <Compile Include="Migrations\201510131113469_AddIsDiscoverableFieldToChannel.Designer.cs">
+      <DependentUpon>201510131113469_AddIsDiscoverableFieldToChannel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Queue.cs" />
     <Compile Include="DapperExtensions.cs" />
     <Compile Include="DapperTypeHandlerRegistration.cs" />
@@ -623,6 +627,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509291647558_IncreaseLongFormTextFieldSizes.resx">
       <DependentUpon>201509291647558_IncreaseLongFormTextFieldSizes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510131113469_AddIsDiscoverableFieldToChannel.resx">
+      <DependentUpon>201510131113469_AddIsDiscoverableFieldToChannel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

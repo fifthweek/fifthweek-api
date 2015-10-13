@@ -40,7 +40,8 @@
                 command.Price.Value,
                 command.IsVisibleToNonSubscribers,
                 now,
-                now);
+                now,
+                false);
 
 
             using (var transaction = TransactionScopeBuilder.CreateAsync())

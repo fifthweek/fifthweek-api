@@ -188,6 +188,11 @@
             AND channel.{0} IN @RequestedChannelIds",
             Channel.Fields.Id);
 
+        private static readonly string DiscoverableFilter = string.Format(
+            @"
+            AND channel.{0}=1",
+            Channel.Fields.IsDiscoverable);
+
         private static readonly string SqlEndBackwardsWithOrigin = string.Format(
             @"
             AND post.{0} <= @Origin",
@@ -264,25 +269,36 @@
             DateTime origin,
             bool searchForwards,
             NonNegativeInt startIndex,
-            PositiveInt count)
+            PositiveInt count,
+            bool onlyDiscoverableDefault)
         {
             var filter = new StringBuilder();
+
+            var onlyDiscoverable = onlyDiscoverableDefault;
 
             filter.Append(NowDateFilter);
 
             if (requestedChannelIds != null && requestedChannelIds.Count > 0)
             {
                 filter.Append(ChannelFilter);
+                onlyDiscoverable = false;
             }
 
             if (creatorId != null)
             {
                 filter.Append(CreatorFilter);
+                onlyDiscoverable = false;
             }
 
             if (requestorId != null && !requestorId.Equals(creatorId))
             {
                 filter.Append(SubscriptionFilter);
+                onlyDiscoverable = false;
+            }
+
+            if (onlyDiscoverable)
+            {
+                filter.Append(DiscoverableFilter);
             }
 
             if (searchForwards)
@@ -339,7 +355,7 @@
 
                 query.Append(GetSqlStart(requestorId));
 
-                query.Append(CreateFilter(requestorId, creatorId, requestedChannelIds, now, origin, searchForwards, startIndex, count));
+                query.Append(CreateFilter(requestorId, creatorId, requestedChannelIds, now, origin, searchForwards, startIndex, count, false));
 
                 query.Append(SqlEnd);
                 query.Append(SelectAccountBalance);

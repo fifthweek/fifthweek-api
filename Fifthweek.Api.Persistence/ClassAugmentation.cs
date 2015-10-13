@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 15/09/2015 18:22:43 (UTC)
-//// Mapped solution in 18.94s
+//// Generated on 13/10/2015 11:00:03 (UTC)
+//// Mapped solution in 11.87s
 
 
 namespace Fifthweek.Api.Persistence
@@ -80,7 +80,8 @@ namespace Fifthweek.Api.Persistence
             System.Int32 price,
             System.Boolean isVisibleToNonSubscribers,
             System.DateTime creationDate,
-            System.DateTime priceLastSetDate)
+            System.DateTime priceLastSetDate,
+            System.Boolean isDiscoverable)
         {
             if (id == null)
             {
@@ -117,6 +118,11 @@ namespace Fifthweek.Api.Persistence
                 throw new ArgumentNullException("priceLastSetDate");
             }
 
+            if (isDiscoverable == null)
+            {
+                throw new ArgumentNullException("isDiscoverable");
+            }
+
             this.Id = id;
             this.BlogId = blogId;
             this.Blog = blog;
@@ -125,6 +131,7 @@ namespace Fifthweek.Api.Persistence
             this.IsVisibleToNonSubscribers = isVisibleToNonSubscribers;
             this.CreationDate = creationDate;
             this.PriceLastSetDate = priceLastSetDate;
+            this.IsDiscoverable = isDiscoverable;
         }
     }
 }
@@ -1263,7 +1270,7 @@ namespace Fifthweek.Api.Persistence
     {
         public override string ToString()
         {
-            return string.Format("Channel({0}, {1}, \"{2}\", {3}, {4}, {5}, {6})", this.Id == null ? "null" : this.Id.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Price == null ? "null" : this.Price.ToString(), this.IsVisibleToNonSubscribers == null ? "null" : this.IsVisibleToNonSubscribers.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString(), this.PriceLastSetDate == null ? "null" : this.PriceLastSetDate.ToString());
+            return string.Format("Channel({0}, {1}, \"{2}\", {3}, {4}, {5}, {6}, {7})", this.Id == null ? "null" : this.Id.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Price == null ? "null" : this.Price.ToString(), this.IsVisibleToNonSubscribers == null ? "null" : this.IsVisibleToNonSubscribers.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString(), this.PriceLastSetDate == null ? "null" : this.PriceLastSetDate.ToString(), this.IsDiscoverable == null ? "null" : this.IsDiscoverable.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1298,6 +1305,7 @@ namespace Fifthweek.Api.Persistence
                 hashCode = (hashCode * 397) ^ (this.IsVisibleToNonSubscribers != null ? this.IsVisibleToNonSubscribers.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.PriceLastSetDate != null ? this.PriceLastSetDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsDiscoverable != null ? this.IsDiscoverable.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -1335,6 +1343,11 @@ namespace Fifthweek.Api.Persistence
             }
         
             if (!object.Equals(this.PriceLastSetDate, other.PriceLastSetDate))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.IsDiscoverable, other.IsDiscoverable))
             {
                 return false;
             }
@@ -3972,7 +3985,8 @@ namespace Fifthweek.Api.Persistence
             Price = 8, 
             IsVisibleToNonSubscribers = 16, 
             CreationDate = 32, 
-            PriceLastSetDate = 64
+            PriceLastSetDate = 64, 
+            IsDiscoverable = 128
         }
     }
 
@@ -3989,7 +4003,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.Id, entity.BlogId, entity.Name, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate
+                    entity.Id, entity.BlogId, entity.Name, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate, entity.IsDiscoverable
                 }).ToArray(),
                 transaction);
         }
@@ -4005,7 +4019,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.Id, entity.BlogId, entity.Name, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate
+                    entity.Id, entity.BlogId, entity.Name, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate, entity.IsDiscoverable
                 },
                 transaction);
         }
@@ -4050,7 +4064,7 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.Id, entity.BlogId, entity.Name, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate });
+                : new Dapper.DynamicParameters(new { entity.Id, entity.BlogId, entity.Name, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate, entity.IsDiscoverable });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -4074,7 +4088,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(Channel.Fields.Empty, fields), 
                 new 
                 {
-                    entity.Id, entity.BlogId, entity.Name, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate
+                    entity.Id, entity.BlogId, entity.Name, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate, entity.IsDiscoverable
                 },
                 transaction);
         }
@@ -4091,7 +4105,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.Id, entity.BlogId, entity.Name, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate
+                    entity.Id, entity.BlogId, entity.Name, entity.Price, entity.IsVisibleToNonSubscribers, entity.CreationDate, entity.PriceLastSetDate, entity.IsDiscoverable
                 },
                 transaction);
         }
@@ -4162,7 +4176,7 @@ namespace Fifthweek.Api.Persistence
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO Channels(Id, BlogId, Name, Price, IsVisibleToNonSubscribers, CreationDate, PriceLastSetDate) VALUES(@Id, @BlogId, @Name, @Price, @IsVisibleToNonSubscribers, @CreationDate, @PriceLastSetDate)";
+            const string insert = "INSERT INTO Channels(Id, BlogId, Name, Price, IsVisibleToNonSubscribers, CreationDate, PriceLastSetDate, IsDiscoverable) VALUES(@Id, @BlogId, @Name, @Price, @IsVisibleToNonSubscribers, @CreationDate, @PriceLastSetDate, @IsDiscoverable)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
@@ -4173,7 +4187,7 @@ namespace Fifthweek.Api.Persistence
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE Channels WITH (HOLDLOCK) as Target
-                USING (VALUES (@Id, @BlogId, @Name, @Price, @IsVisibleToNonSubscribers, @CreationDate, @PriceLastSetDate)) AS Source (Id, BlogId, Name, Price, IsVisibleToNonSubscribers, CreationDate, PriceLastSetDate)
+                USING (VALUES (@Id, @BlogId, @Name, @Price, @IsVisibleToNonSubscribers, @CreationDate, @PriceLastSetDate, @IsDiscoverable)) AS Source (Id, BlogId, Name, Price, IsVisibleToNonSubscribers, CreationDate, PriceLastSetDate, IsDiscoverable)
                 ON    (");
                 
             if (mergeOnFields == Channel.Fields.Empty)
@@ -4192,8 +4206,8 @@ namespace Fifthweek.Api.Persistence
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (Id, BlogId, Name, Price, IsVisibleToNonSubscribers, CreationDate, PriceLastSetDate)
-                    VALUES  (Source.Id, Source.BlogId, Source.Name, Source.Price, Source.IsVisibleToNonSubscribers, Source.CreationDate, Source.PriceLastSetDate);");
+                    INSERT  (Id, BlogId, Name, Price, IsVisibleToNonSubscribers, CreationDate, PriceLastSetDate, IsDiscoverable)
+                    VALUES  (Source.Id, Source.BlogId, Source.Name, Source.Price, Source.IsVisibleToNonSubscribers, Source.CreationDate, Source.PriceLastSetDate, Source.IsDiscoverable);");
             return sql.ToString();
         }
         
@@ -4244,6 +4258,11 @@ namespace Fifthweek.Api.Persistence
                 fieldNames.Add("PriceLastSetDate");
             }
         
+            if (fields.HasFlag(Channel.Fields.IsDiscoverable))
+            {
+                fieldNames.Add("IsDiscoverable");
+            }
+        
             return fieldNames;
         }
         
@@ -4286,6 +4305,11 @@ namespace Fifthweek.Api.Persistence
                 parameters.Add("PriceLastSetDate", entity.PriceLastSetDate);
             }
         
+            if (fields.HasFlag(Channel.Fields.IsDiscoverable) && (excludedFields == null || !excludedFields.Value.HasFlag(Channel.Fields.IsDiscoverable)))
+            {
+                parameters.Add("IsDiscoverable", entity.IsDiscoverable);
+            }
+        
             return parameters;
         }
         
@@ -4325,6 +4349,11 @@ namespace Fifthweek.Api.Persistence
             if (!fields.HasFlag(Channel.Fields.PriceLastSetDate))
             {
                 parameters.Add("PriceLastSetDate", entity.PriceLastSetDate);
+            }
+        
+            if (!fields.HasFlag(Channel.Fields.IsDiscoverable))
+            {
+                parameters.Add("IsDiscoverable", entity.IsDiscoverable);
             }
         
             return parameters;

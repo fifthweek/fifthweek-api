@@ -318,9 +318,21 @@
             await parameterizedTest(
                 UnsubscribedUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts, 0);
 
+            // Unsubscribed, fetch from all subscriptions (will ignore non-discoverable channel).
+            await parameterizedTest(
+                UnsubscribedUserId, null, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[1])).ToList(), 10);
+
             // Logged out.
             await parameterizedTest(
                 null, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts, 0);
+
+            // Logged out, fetch from all subscriptions (will ignore non-discoverable channel).
+            await parameterizedTest(
+                null, null, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[1])).ToList(), 10);
+
+            // Logged in as creator, filter by channel for creator (will ignore non-discoverable channel).
+            await parameterizedTest(
+                CreatorId, null, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[1])).ToList(), 0);
 
             // Filter by channel for creator.
             await parameterizedTest(
@@ -452,6 +464,7 @@
                     channel.Name = channelId.ToString();
                     channel.BlogId = BlogId.Value;
                     channel.Price = ChannelPrice;
+                    channel.IsDiscoverable = channelId != ChannelIds[1];
 
                     channelEntities.Add(channel);
                 }
@@ -517,7 +530,7 @@
         private static IEnumerable<PreviewNewsfeedPost> GetSortedNewsfeedPosts()
         {
             // Half the posts will be in the future relative to Now. Days move one day every two posts.
-            var day = ChannelsPerCreator * CollectionsPerChannel * Posts / 2;
+            var day = 0;
 
             var result = new List<PreviewNewsfeedPost>();
             for (var channelIndex = 0; channelIndex < ChannelsPerCreator; channelIndex++)
@@ -526,48 +539,51 @@
                 for (var collectionIndex = 0; collectionIndex < CollectionsPerChannel; collectionIndex++)
                 {
                     var collectionId = CollectionIds[channelIndex][collectionIndex];
-                    for (var i = 0; i < Posts * 2; i++)
+                    for (var i = 0; i < Posts; i++)
                     {
-                        DateTime liveDate;
-                        DateTime creationDate;
-                        if (i % 2 == 0)
+                        for (var isFuture = 0; isFuture < 2; ++isFuture)
                         {
-                            // Ensure we have one post that is `now` (i.e. AddDays(0)).
-                            liveDate = new SqlDateTime(Now.AddDays(day--)).Value;
-                            creationDate = liveDate;
-                        }
-                        else
-                        {
-                            liveDate = new SqlDateTime(Now.AddDays(day)).Value;
-                            creationDate = new SqlDateTime(liveDate.AddMinutes(-1)).Value;
-                        }
+                            var liveDate = new SqlDateTime(Now.AddDays((isFuture == 0 ? -1 : 1) * day)).Value;
+                            DateTime creationDate;
 
-                        result.Add(
-                        new PreviewNewsfeedPost(
-                            CreatorId,
-                            CreatorUsername,
-                            null,
-                            new PostId(Guid.NewGuid()),
-                            BlogId,
-                            BlogId.ToString(),
-                            channelId,
-                            channelId.ToString(),
-                            i % 3 == 0 ? Comment : null,
-                            i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
-                            i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
-                            liveDate,
-                            i % 3 == 1 ? FileName : null,
-                            i % 3 == 1 ? FileExtension : null,
-                            i % 3 == 1 ? FileSize : (long?)null,
-                            i % 3 == 2 ? FileName : null,
-                            i % 3 == 2 ? FileExtension : null,
-                            i % 3 == 2 ? FileSize : (long?)null,
-                            i % 3 == 2 ? FileWidth : (int?)null,
-                            i % 3 == 2 ? FileHeight : (int?)null,
-                            1,
-                            1,
-                            false,
-                            creationDate));
+                            if (i % 2 == 0)
+                            {
+                                // Ensure we have one post that is `now` (i.e. AddDays(0)).
+                                creationDate = liveDate;
+                                day++;
+                            }
+                            else
+                            {
+                                creationDate = new SqlDateTime(liveDate.AddMinutes(-1)).Value;
+                            }
+
+                            result.Add(
+                            new PreviewNewsfeedPost(
+                                CreatorId,
+                                CreatorUsername,
+                                null,
+                                new PostId(Guid.NewGuid()),
+                                BlogId,
+                                BlogId.ToString(),
+                                channelId,
+                                channelId.ToString(),
+                                i % 3 == 0 ? Comment : null,
+                                i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
+                                i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
+                                liveDate,
+                                i % 3 == 1 ? FileName : null,
+                                i % 3 == 1 ? FileExtension : null,
+                                i % 3 == 1 ? FileSize : (long?)null,
+                                i % 3 == 2 ? FileName : null,
+                                i % 3 == 2 ? FileExtension : null,
+                                i % 3 == 2 ? FileSize : (long?)null,
+                                i % 3 == 2 ? FileWidth : (int?)null,
+                                i % 3 == 2 ? FileHeight : (int?)null,
+                                1,
+                                1,
+                                false,
+                                creationDate));
+                        }
                     }
                 }
             }
