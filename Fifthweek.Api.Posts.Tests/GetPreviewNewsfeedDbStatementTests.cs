@@ -31,7 +31,7 @@
     public class GetPreviewNewsfeedDbStatementTests : PersistenceTestsBase
     {
         // 1 in 3 chance of coincidental ordering being correct, yielding a false positive when implementation fails to order explicitly.
-        const int ChannelsPerCreator = 3;
+        const int ChannelsPerCreator = 4;
         const int CollectionsPerChannel = 3;
         const int Posts = 6;
         
@@ -282,29 +282,32 @@
             var wrapper = new ParameterizedTestWrapper(parameterizedTest);
             parameterizedTest = wrapper.Execute;
 
+            var visibleSortedLiveNewsfeedPosts =
+                SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[3])).ToList();
+
             // No pagination.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts, 0);
+                CreatorId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, visibleSortedLiveNewsfeedPosts.ToList(), 0);
 
             // Paginate from start.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(0), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Take(10).ToList(), 0);
+                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(0), PositiveInt.Parse(10), visibleSortedLiveNewsfeedPosts.Take(10).ToList(), 0);
 
             // Paginate from middle with different page size and page index.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(5), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Skip(5).Take(10).ToList(), 0);
+                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(5), PositiveInt.Parse(10), visibleSortedLiveNewsfeedPosts.Skip(5).Take(10).ToList(), 0);
 
             // Paginate from middle with same page size and page index.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(10), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Skip(10).Take(10).ToList(), 0);
+                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(10), PositiveInt.Parse(10), visibleSortedLiveNewsfeedPosts.Skip(10).Take(10).ToList(), 0);
 
             // Paginate from near end, requesting up to last post.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(totalLivePosts - 10), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Skip(totalLivePosts - 10).Take(10).ToList(), 0);
+                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(totalLivePosts - 10), PositiveInt.Parse(10), visibleSortedLiveNewsfeedPosts.Skip(totalLivePosts - 10).Take(10).ToList(), 0);
 
             // Paginate from near end, requesting beyond last post.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(totalLivePosts - 5), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Skip(totalLivePosts - 5).Take(10).ToList(), 0);
+                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(totalLivePosts - 5), PositiveInt.Parse(10), visibleSortedLiveNewsfeedPosts.Skip(totalLivePosts - 5).Take(10).ToList(), 0);
 
             // Paginate from end, requesting beyond last post.
             await parameterizedTest(
@@ -316,23 +319,23 @@
 
             // Unsubscribed.
             await parameterizedTest(
-                UnsubscribedUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts, 0);
+                UnsubscribedUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, visibleSortedLiveNewsfeedPosts, 0);
 
             // Unsubscribed, fetch from all subscriptions (will ignore non-discoverable channel).
             await parameterizedTest(
-                UnsubscribedUserId, null, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[1])).ToList(), 10);
+                UnsubscribedUserId, null, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[0]) || v.ChannelId.Equals(ChannelIds[2])).ToList(), 10);
 
             // Logged out.
             await parameterizedTest(
-                null, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts, 0);
+                null, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, visibleSortedLiveNewsfeedPosts, 0);
 
             // Logged out, fetch from all subscriptions (will ignore non-discoverable channel).
             await parameterizedTest(
-                null, null, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[1])).ToList(), 10);
+                null, null, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[0]) || v.ChannelId.Equals(ChannelIds[2])).ToList(), 10);
 
             // Logged in as creator, filter by channel for creator (will ignore non-discoverable channel).
             await parameterizedTest(
-                CreatorId, null, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[1])).ToList(), 0);
+                CreatorId, null, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[0]) || v.ChannelId.Equals(ChannelIds[2])).ToList(), 0);
 
             // Filter by channel for creator.
             await parameterizedTest(
@@ -360,11 +363,11 @@
 
             // Search forwards from beginning.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, SqlDateTime.MinValue.Value, true, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Reverse().ToList(), 0);
+                CreatorId, CreatorId, null, null, SqlDateTime.MinValue.Value, true, noPaginationStart, noPaginationCount, visibleSortedLiveNewsfeedPosts.AsEnumerable().Reverse().ToList(), 0);
 
             // Paginate forwards from middle with different page size and page index.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, SqlDateTime.MinValue.Value, true, NonNegativeInt.Parse(5), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Reverse().Skip(5).Take(10).ToList(), 0);
+                CreatorId, CreatorId, null, null, SqlDateTime.MinValue.Value, true, NonNegativeInt.Parse(5), PositiveInt.Parse(10), visibleSortedLiveNewsfeedPosts.AsEnumerable().Reverse().Skip(5).Take(10).ToList(), 0);
         }
 
         private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase, bool createLivePosts, bool createFuturePosts)
@@ -465,6 +468,7 @@
                     channel.BlogId = BlogId.Value;
                     channel.Price = ChannelPrice;
                     channel.IsDiscoverable = channelId != ChannelIds[1];
+                    channel.IsVisibleToNonSubscribers = channelId != ChannelIds[3];
 
                     channelEntities.Add(channel);
                 }

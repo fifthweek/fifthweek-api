@@ -193,6 +193,11 @@
             AND channel.{0}=1",
             Channel.Fields.IsDiscoverable);
 
+        private static readonly string PreviewFilter = string.Format(
+            @"
+            AND channel.{0}=1",
+            Channel.Fields.IsVisibleToNonSubscribers);
+
         private static readonly string SqlEndBackwardsWithOrigin = string.Format(
             @"
             AND post.{0} <= @Origin",
@@ -270,11 +275,11 @@
             bool searchForwards,
             NonNegativeInt startIndex,
             PositiveInt count,
-            bool onlyDiscoverableDefault)
+            bool isPreview)
         {
             var filter = new StringBuilder();
 
-            var onlyDiscoverable = onlyDiscoverableDefault;
+            var onlyDiscoverable = isPreview;
 
             filter.Append(NowDateFilter);
 
@@ -299,6 +304,11 @@
             if (onlyDiscoverable)
             {
                 filter.Append(DiscoverableFilter);
+            }
+
+            if (isPreview)
+            {
+                filter.Append(PreviewFilter);
             }
 
             if (searchForwards)
