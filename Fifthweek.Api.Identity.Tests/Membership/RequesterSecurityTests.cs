@@ -56,6 +56,35 @@
             Assert.AreEqual(ImpersonatedUserId, userId);
         }
 
+        // TryAuthenticate
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenCallingTryAuthenticate_ItShouldThrowAnExceptionWhenRequesterIsNull()
+        {
+            await this.target.AuthenticateAsync(null);
+        }
+
+        [TestMethod]
+        public async Task WhenCallingTryAuthenticate_ItShouldReturnNullWhenNotAuthenticated()
+        {
+            var userId = await this.target.TryAuthenticateAsync(Requester.Unauthenticated);
+            Assert.IsNull(userId);
+        }
+
+        [TestMethod]
+        public async Task WhenCallingTryAuthenticate_ItShouldReturnIfAuthenticated()
+        {
+            var userId = await this.target.AuthenticateAsync(Requester);
+            Assert.AreEqual(UserId, userId);
+        }
+
+        [TestMethod]
+        public async Task WhenCallingTryAuthenticate_AndUsingImpersonation_ItShouldReturnUserIdId()
+        {
+            var userId = await this.target.AuthenticateAsync(Requester.Authenticated(ImpersonatedUserId, Requester.Authenticated(UserId, "role2"), "role"));
+            Assert.AreEqual(ImpersonatedUserId, userId);
+        }
+
         // AuthenticateAs
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]

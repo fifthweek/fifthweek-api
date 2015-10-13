@@ -245,8 +245,7 @@ angular.module('webApp').factory('membershipStub',
     };
 
     // feedbackData = {
-    //   message: '',
-    //   email: '' /* optional */
+    //   message: ''
     // }
     service.postFeedback = function(feedbackData) {
       return $http.post(utilities.fixUri(apiBaseUri + 'membership/feedback'), feedbackData).catch(function(response) {
@@ -394,6 +393,70 @@ angular.module('webApp').factory('postStub',
     // }
     service.getNewsfeed = function(filterData) {
       return $http.get(utilities.fixUri(apiBaseUri + 'posts/newsfeed?' + (filterData.creatorId === undefined ? '' : 'creatorId=' + encodeURIComponent(filterData.creatorId) + '&') + (filterData.channelId === undefined ? '' : 'channelId=' + encodeURIComponent(filterData.channelId) + '&') + (filterData.origin === undefined ? '' : 'origin=' + encodeURIComponent(filterData.origin) + '&') + (filterData.searchForwards === undefined ? '' : 'searchForwards=' + encodeURIComponent(filterData.searchForwards) + '&') + (filterData.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(filterData.startIndex) + '&') + (filterData.count === undefined ? '' : 'count=' + encodeURIComponent(filterData.count) + '&'))).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // filterData = {
+    //   creatorId: 'Base64Guid', /* optional */
+    //   channelId: 'Base64Guid', /* optional */
+    //   origin: '2015-12-25T14:45:05Z', /* optional */
+    //   searchForwards: false,
+    //   startIndex: 0,
+    //   count: 0
+    // }
+    // result = {
+    //   posts: [
+    //     {
+    //       creatorId: 'Base64Guid',
+    //       postId: 'Base64Guid',
+    //       blogId: 'Base64Guid',
+    //       channelId: 'Base64Guid',
+    //       comment: '', /* optional */
+    //       file: { /* optional */
+    //         fileId: 'Base64Guid',
+    //         containerName: ''
+    //       },
+    //       fileSource: { /* optional */
+    //         fileName: '',
+    //         fileExtension: '',
+    //         contentType: '',
+    //         size: 0,
+    //         renderSize: { /* optional */
+    //           width: 0,
+    //           height: 0
+    //         }
+    //       },
+    //       image: { /* optional */
+    //         fileId: 'Base64Guid',
+    //         containerName: ''
+    //       },
+    //       imageSource: { /* optional */
+    //         fileName: '',
+    //         fileExtension: '',
+    //         contentType: '',
+    //         size: 0,
+    //         renderSize: { /* optional */
+    //           width: 0,
+    //           height: 0
+    //         }
+    //       },
+    //       imageAccessInformation: { /* optional */
+    //         containerName: '',
+    //         blobName: '',
+    //         uri: '',
+    //         signature: '',
+    //         expiry: '2015-12-25T14:45:05Z'
+    //       },
+    //       liveDate: '2015-12-25T14:45:05Z',
+    //       likesCount: 0,
+    //       commentsCount: 0,
+    //       hasLiked: false
+    //     }
+    //   ]
+    // }
+    service.getPreviewNewsfeed = function(filterData) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'posts/previewNewsfeed?' + (filterData.creatorId === undefined ? '' : 'creatorId=' + encodeURIComponent(filterData.creatorId) + '&') + (filterData.channelId === undefined ? '' : 'channelId=' + encodeURIComponent(filterData.channelId) + '&') + (filterData.origin === undefined ? '' : 'origin=' + encodeURIComponent(filterData.origin) + '&') + (filterData.searchForwards === undefined ? '' : 'searchForwards=' + encodeURIComponent(filterData.searchForwards) + '&') + (filterData.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(filterData.startIndex) + '&') + (filterData.count === undefined ? '' : 'count=' + encodeURIComponent(filterData.count) + '&'))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -622,7 +685,7 @@ angular.module('webApp').factory('blogStub',
     // blogId = 'Base64Guid'
     // blogData = {
     //   name: '',
-    //   introduction: '',
+    //   introduction: '', /* optional */
     //   headerImageFileId: 'Base64Guid', /* optional */
     //   video: '', /* optional */
     //   description: '' /* optional */
@@ -1015,9 +1078,9 @@ angular.module('webApp').factory('paymentsStub',
     // result = {
     //   subscriptionsAmount: 0,
     //   calculation: {
-    //     amount: 0,
-    //     totalAmount: 0,
-    //     taxAmount: 0,
+    //     amount: 0, /* optional */
+    //     totalAmount: 0, /* optional */
+    //     taxAmount: 0, /* optional */
     //     taxRate: 0.0, /* optional */
     //     taxName: '', /* optional */
     //     taxEntityName: '', /* optional */

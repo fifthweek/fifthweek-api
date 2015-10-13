@@ -552,6 +552,28 @@ describe('post stub', function() {
     expect(result).toBe(responseData);
   });
 
+  it('should get preview newsfeed', function() {
+    var filterData = {
+      creatorId: 'value0-0',
+      channelId: 'value0-1',
+      origin: 'value0-2',
+      searchForwards: 'value0-3',
+      startIndex: 'value0-4',
+      count: 'value0-5',
+    };
+
+    var responseData = 'response data';
+    $httpBackend.expectGET(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/previewNewsfeed?' + (filterData.creatorId === undefined ? '' : 'creatorId=' + encodeURIComponent(filterData.creatorId) + '&') + (filterData.channelId === undefined ? '' : 'channelId=' + encodeURIComponent(filterData.channelId) + '&') + (filterData.origin === undefined ? '' : 'origin=' + encodeURIComponent(filterData.origin) + '&') + (filterData.searchForwards === undefined ? '' : 'searchForwards=' + encodeURIComponent(filterData.searchForwards) + '&') + (filterData.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(filterData.startIndex) + '&') + (filterData.count === undefined ? '' : 'count=' + encodeURIComponent(filterData.count) + '&'))).respond(200, responseData);
+
+    var result = null;
+    target.getPreviewNewsfeed(filterData).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
   it('should post post', function() {
     var postData = 'value-body';
 

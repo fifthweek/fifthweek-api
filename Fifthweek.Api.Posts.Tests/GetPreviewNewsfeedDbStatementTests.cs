@@ -37,6 +37,7 @@
         
         private static readonly UserId UnsubscribedUserId = new UserId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
+        private static readonly string CreatorUsername = Guid.NewGuid().ToString();
         private static readonly List<UserId> UserIds = new List<UserId>
         {
             UnsubscribedUserId,
@@ -56,8 +57,8 @@
         private static readonly int FileWidth = 800;
         private static readonly int FileHeight = 600;
         private static readonly int ChannelPrice = 10;
-        private static readonly IReadOnlyList<NewsfeedPost> SortedNewsfeedPosts;
-        private static readonly IReadOnlyList<NewsfeedPost> SortedLiveNewsfeedPosts;
+        private static readonly IReadOnlyList<PreviewNewsfeedPost> SortedNewsfeedPosts;
+        private static readonly IReadOnlyList<PreviewNewsfeedPost> SortedLiveNewsfeedPosts;
 
         static GetPreviewNewsfeedDbStatementTests()
         {
@@ -191,7 +192,7 @@
                 {
                     var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, Now, origin, searchForwards, startIndex, count);
 
-                    Func<NewsfeedPost, NewsfeedPost> removeSortInsensitiveValues = post => post.Copy(_ =>
+                    Func<PreviewNewsfeedPost, PreviewNewsfeedPost> removeSortInsensitiveValues = post => post.Copy(_ =>
                     {
                         // Required fields. Set to a value that is equal across all elements.
                         _.PostId = new PostId(Guid.Empty);
@@ -269,7 +270,7 @@
                  bool,
                  NonNegativeInt,
                  PositiveInt,
-                 IReadOnlyList<NewsfeedPost>,
+                 IReadOnlyList<PreviewNewsfeedPost>,
                  int,
                  Task> parameterizedTest)
         {
@@ -307,11 +308,11 @@
 
             // Paginate from end, requesting beyond last post.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(totalLivePosts), PositiveInt.Parse(1), new NewsfeedPost[0], 0);
+                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(totalLivePosts), PositiveInt.Parse(1), new PreviewNewsfeedPost[0], 0);
 
             // Paginate from beyond end, requesting beyond last post.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(totalLivePosts + 1), PositiveInt.Parse(1), new NewsfeedPost[0], 0);
+                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(totalLivePosts + 1), PositiveInt.Parse(1), new PreviewNewsfeedPost[0], 0);
 
             // Unsubscribed.
             await parameterizedTest(
@@ -339,11 +340,11 @@
 
             // Filter by invalid channel and creator combination.
             await parameterizedTest(
-                UnsubscribedUserId, UserId.Random(), new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 10);
+                UnsubscribedUserId, UserId.Random(), new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, new PreviewNewsfeedPost[0], 10);
 
             // Search forwards from now.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, true, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 0);
+                CreatorId, CreatorId, null, null, Now, true, noPaginationStart, noPaginationCount, new PreviewNewsfeedPost[0], 0);
 
             // Search forwards from beginning.
             await parameterizedTest(
@@ -448,6 +449,7 @@
                 {
                     var channel = ChannelTests.UniqueEntity(Random);
                     channel.Id = channelId.Value;
+                    channel.Name = channelId.ToString();
                     channel.BlogId = BlogId.Value;
                     channel.Price = ChannelPrice;
 
@@ -487,7 +489,7 @@
                     return file;
                 });
 
-                await databaseContext.CreateTestBlogAsync(CreatorId.Value, BlogId.Value, null, Random);
+                await databaseContext.CreateTestBlogAsync(CreatorId.Value, BlogId.Value, null, Random, CreatorUsername, BlogId.ToString());
                 await databaseContext.Database.Connection.InsertAsync(channelEntities);
                 await databaseContext.Database.Connection.InsertAsync(queueEntities);
                 await databaseContext.Database.Connection.InsertAsync(fileEntities);
@@ -512,12 +514,12 @@
             await databaseContext.SaveChangesAsync();
         }
 
-        private static IEnumerable<NewsfeedPost> GetSortedNewsfeedPosts()
+        private static IEnumerable<PreviewNewsfeedPost> GetSortedNewsfeedPosts()
         {
             // Half the posts will be in the future relative to Now. Days move one day every two posts.
             var day = ChannelsPerCreator * CollectionsPerChannel * Posts / 2;
 
-            var result = new List<NewsfeedPost>();
+            var result = new List<PreviewNewsfeedPost>();
             for (var channelIndex = 0; channelIndex < ChannelsPerCreator; channelIndex++)
             {
                 var channelId = ChannelIds[channelIndex];
@@ -541,11 +543,15 @@
                         }
 
                         result.Add(
-                        new NewsfeedPost(
+                        new PreviewNewsfeedPost(
                             CreatorId,
+                            CreatorUsername,
+                            null,
                             new PostId(Guid.NewGuid()),
                             BlogId,
+                            BlogId.ToString(),
                             channelId,
+                            channelId.ToString(),
                             i % 3 == 0 ? Comment : null,
                             i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
                             i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
@@ -571,7 +577,7 @@
 
         private class ParameterizedTestWrapper
         {
-            private readonly Func<UserId, UserId, IReadOnlyList<ChannelId>, IReadOnlyList<QueueId>, DateTime, bool, NonNegativeInt, PositiveInt, IReadOnlyList<NewsfeedPost>, int, Task> parameterizedTest;
+            private readonly Func<UserId, UserId, IReadOnlyList<ChannelId>, IReadOnlyList<QueueId>, DateTime, bool, NonNegativeInt, PositiveInt, IReadOnlyList<PreviewNewsfeedPost>, int, Task> parameterizedTest;
 
             public ParameterizedTestWrapper(Func<UserId,
                  UserId,
@@ -581,7 +587,7 @@
                  bool,
                  NonNegativeInt,
                  PositiveInt,
-                 IReadOnlyList<NewsfeedPost>,
+                 IReadOnlyList<PreviewNewsfeedPost>,
                  int,
                  Task> parameterizedTest)
             {
@@ -597,7 +603,7 @@
                 bool searchForwards,
                 NonNegativeInt startIndex,
                 PositiveInt count,
-                IReadOnlyList<NewsfeedPost> expectedPosts,
+                IReadOnlyList<PreviewNewsfeedPost> expectedPosts,
                 int expectedAccountBalance)
             {
                 expectedPosts = this.GetPostsForUser(expectedPosts, userId);
@@ -614,13 +620,17 @@
                     expectedAccountBalance);
             }
 
-            private IReadOnlyList<NewsfeedPost> GetPostsForUser(IReadOnlyList<NewsfeedPost> posts, UserId userId)
+            private IReadOnlyList<PreviewNewsfeedPost> GetPostsForUser(IReadOnlyList<PreviewNewsfeedPost> posts, UserId userId)
             {
-                return posts.Select(v => new NewsfeedPost(
+                return posts.Select(v => new PreviewNewsfeedPost(
                     v.CreatorId,
+                    v.Username,
+                    v.ProfileImageFileId,
                     v.PostId,
                     v.BlogId,
+                    v.BlogName,
                     v.ChannelId,
+                    v.ChannelName,
                     v.Comment == null ? null : new Comment(v.Comment.Value.Substring(0, GetPreviewNewsfeedDbStatement.MaxCommentLength.Value)),
                     v.FileId,
                     v.ImageId,

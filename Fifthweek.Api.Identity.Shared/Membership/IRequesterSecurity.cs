@@ -28,5 +28,7 @@ namespace Fifthweek.Api.Identity.Shared.Membership
         Task AssertInAllRolesAsync(Requester requester, params string[] roles);
 
         Task AssertInAllRolesAsync(Requester requester, IEnumerable<string> roles);
+
+        Task<UserId> TryAuthenticateAsync(Requester requester);
     }
 }

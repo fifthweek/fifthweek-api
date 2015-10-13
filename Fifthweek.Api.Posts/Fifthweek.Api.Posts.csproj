@@ -101,6 +101,7 @@
     <Compile Include="GetCommentsDbStatement.cs" />
     <Compile Include="GetCreatorBacklogDbStatement.cs" />
     <Compile Include="GetNewsfeedDbResult.cs" />
+    <Compile Include="GetPreviewNewsfeedDbResult.cs" />
     <Compile Include="GetPreviewNewsfeedDbStatement.cs" />
     <Compile Include="GetNewsfeedDbStatement.cs" />
     <Compile Include="ICommentOnPostDbStatement.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Queries\BacklogPost.cs" />
     <Compile Include="Queries\GetCreatorBacklogQuery.cs" />
     <Compile Include="Queries\GetCreatorBacklogQueryHandler.cs" />
+    <Compile Include="Queries\PreviewNewsfeedPost.cs" />
     <Compile Include="Queries\RenderSize.cs" />
     <Compile Include="DefragmentQueueIfRequiredDbStatement.cs" />
     <Compile Include="ScheduledDateClippingFunction.cs" />

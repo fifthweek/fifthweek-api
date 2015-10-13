@@ -10,7 +10,7 @@ namespace Fifthweek.Api.Posts
 
     public interface IGetPreviewNewsfeedDbStatement
     {
-        Task<GetNewsfeedDbResult> ExecuteAsync(
+        Task<GetPreviewNewsfeedDbResult> ExecuteAsync(
             UserId requestorId,
             UserId creatorId,
             IReadOnlyList<ChannelId> requestedChannelIds,

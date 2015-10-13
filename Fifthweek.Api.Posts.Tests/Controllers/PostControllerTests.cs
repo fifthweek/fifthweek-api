@@ -25,10 +25,13 @@
     public class PostControllerTests
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly Username Username = new Username(Guid.NewGuid().ToString());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
+        private static readonly BlogName BlogName = new BlogName(Guid.NewGuid().ToString());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
+        private static readonly ChannelName ChannelName = new ChannelName(Guid.NewGuid().ToString());
         private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly DateTime? Origin = DateTime.UtcNow;
@@ -40,6 +43,7 @@
         private Mock<ICommandHandler<RescheduleWithQueueCommand>> rescheduleWithQueue;
         private Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<GetCreatorBacklogQueryResult>>> getCreatorBacklog;
         private Mock<IQueryHandler<GetNewsfeedQuery, GetNewsfeedQueryResult>> getNewsfeed;
+        private Mock<IQueryHandler<GetNewsfeedQuery, GetPreviewNewsfeedQueryResult>> getPreviewNewsfeed;
         private Mock<ICommandHandler<CommentOnPostCommand>> postComment;
         private Mock<IQueryHandler<GetCommentsQuery, CommentsResult>> getComments;
         private Mock<ICommandHandler<LikePostCommand>> likePost;
@@ -61,6 +65,7 @@
             this.rescheduleWithQueue = new Mock<ICommandHandler<RescheduleWithQueueCommand>>();
             this.getCreatorBacklog = new Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<GetCreatorBacklogQueryResult>>>();
             this.getNewsfeed = new Mock<IQueryHandler<GetNewsfeedQuery, GetNewsfeedQueryResult>>();
+            this.getPreviewNewsfeed = new Mock<IQueryHandler<GetNewsfeedQuery, GetPreviewNewsfeedQueryResult>>();
             this.postComment = new Mock<ICommandHandler<CommentOnPostCommand>>();
             this.getComments = new Mock<IQueryHandler<GetCommentsQuery, CommentsResult>>();
             this.likePost = new Mock<ICommandHandler<LikePostCommand>>();
@@ -78,6 +83,7 @@
                 this.rescheduleWithQueue.Object,
                 this.getCreatorBacklog.Object,
                 this.getNewsfeed.Object,
+                this.getPreviewNewsfeed.Object,
                 this.postComment.Object,
                 this.getComments.Object,
                 this.likePost.Object,
@@ -114,14 +120,14 @@
         public async Task WhenGettingNewsfeed_ItShouldReturnResultFromNewsfeedQuery()
         {
             var query = new GetNewsfeedQuery(Requester, UserId, new[] { ChannelId }, Origin, SearchForwards, NonNegativeInt.Parse(10), PositiveInt.Parse(5));
-            var requestData = new NewsfeedFilter 
-            { 
-                CreatorId = UserId.Value.EncodeGuid(), 
+            var requestData = new NewsfeedFilter
+            {
+                CreatorId = UserId.Value.EncodeGuid(),
                 ChannelId = ChannelId.Value.EncodeGuid(),
                 Origin = Origin,
                 SearchForwards = SearchForwards,
-                Count = 5, 
-                StartIndex = 10 
+                Count = 5,
+                StartIndex = 10
             };
 
             var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, BlogId, ChannelId, new Comment(string.Empty), null, null, null, null, DateTime.UtcNow, 0, 0, false) }, 10);
@@ -139,6 +145,37 @@
         public async Task WhenGettingNewsfeed_WithoutSpecifyingFilter_ItShouldThrowBadRequestException()
         {
             await this.target.GetNewsfeed(null);
+        }
+
+        [TestMethod]
+        public async Task WhenGettingPreviewNewsfeed_ItShouldReturnResultFromNewsfeedQuery()
+        {
+            var query = new GetNewsfeedQuery(Requester, UserId, new[] { ChannelId }, Origin, SearchForwards, NonNegativeInt.Parse(10), PositiveInt.Parse(5));
+            var requestData = new NewsfeedFilter
+            {
+                CreatorId = UserId.Value.EncodeGuid(),
+                ChannelId = ChannelId.Value.EncodeGuid(),
+                Origin = Origin,
+                SearchForwards = SearchForwards,
+                Count = 5,
+                StartIndex = 10
+            };
+
+            var queryResult = new GetPreviewNewsfeedQueryResult(new[] { new GetPreviewNewsfeedQueryResult.PreviewPost(UserId, new GetPreviewNewsfeedQueryResult.PreviewPostCreator(Username, null), PostId, BlogId, new GetPreviewNewsfeedQueryResult.PreviewPostBlog(BlogName), ChannelId, new GetPreviewNewsfeedQueryResult.PreviewPostChannel(ChannelName), new Comment(string.Empty), null, null, null, null, null, DateTime.UtcNow, 0, 0, false) });
+
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
+            this.getPreviewNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
+
+            var result = await this.target.GetPreviewNewsfeed(requestData);
+
+            Assert.AreEqual(queryResult, result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenGettingPreviewNewsfeed_WithoutSpecifyingFilter_ItShouldThrowBadRequestException()
+        {
+            await this.target.GetPreviewNewsfeed(null);
         }
 
         [TestMethod]

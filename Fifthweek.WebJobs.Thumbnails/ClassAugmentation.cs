@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/04/2015 14:58:08 (UTC)
-//// Mapped solution in 10.91s
+//// Generated on 13/10/2015 10:57:48 (UTC)
+//// Mapped solution in 18.9s
 
 
 namespace Fifthweek.WebJobs.Thumbnails
@@ -114,12 +114,21 @@ namespace Fifthweek.WebJobs.Thumbnails
 namespace Fifthweek.WebJobs.Thumbnails
 {
     using System;
+    using System.Linq;
+    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
-    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.WebJobs.Shared;
     using Fifthweek.WebJobs.Thumbnails.Shared;
+    using ImageMagick;
+    using Fifthweek.Azure;
+    using Fifthweek.WebJobs.Shared;
+    using Microsoft.WindowsAzure.Storage.Blob;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
 
     public partial class LoggingThumbnailProcessorWrapper 
     {

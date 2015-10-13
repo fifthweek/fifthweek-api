@@ -26,7 +26,7 @@
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<GetNewsfeedDbResult> ExecuteAsync(
+        public async Task<GetPreviewNewsfeedDbResult> ExecuteAsync(
             UserId requestorId,
             UserId creatorId,
             IReadOnlyList<ChannelId> requestedChannelIds,
@@ -56,10 +56,19 @@
                 query.Append(GetNewsfeedDbStatement.GetSqlStart(requestorId, MaxCommentLength));
                 query.Append(GetNewsfeedDbStatement.CreateFilter(null, creatorId, requestedChannelIds, now, origin, searchForwards, startIndex, count));
 
-                var entities = (await connection.QueryAsync<NewsfeedPost.Builder>(query.ToString(), parameters)).ToList();
-                GetNewsfeedDbStatement.ProcessNewsfeedResults(entities);
+                var entities = (await connection.QueryAsync<PreviewNewsfeedPost.Builder>(query.ToString(), parameters)).ToList();
+                ProcessNewsfeedResults(entities);
                 
-                return new GetNewsfeedDbResult(entities.Select(_ => _.Build()).ToList(), 0);
+                return new GetPreviewNewsfeedDbResult(entities.Select(_ => _.Build()).ToList());
+            }
+        }
+
+        private static void ProcessNewsfeedResults(List<PreviewNewsfeedPost.Builder> entities)
+        {
+            foreach (var entity in entities)
+            {
+                entity.LiveDate = DateTime.SpecifyKind(entity.LiveDate, DateTimeKind.Utc);
+                entity.CreationDate = DateTime.SpecifyKind(entity.CreationDate, DateTimeKind.Utc);
             }
         }
     }

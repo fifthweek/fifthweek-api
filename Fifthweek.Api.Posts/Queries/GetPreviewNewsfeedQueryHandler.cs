@@ -8,6 +8,8 @@
     using Dapper;
 
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -31,7 +33,7 @@
         {
             query.AssertNotNull("query");
 
-            var requestingUserId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
+            var requestingUserId = await this.requesterSecurity.TryAuthenticateAsync(query.Requester);
 
             var now = this.timestampCreator.Now();
             var postsResult = await this.getPreviewNewsfeedDbStatement.ExecuteAsync(
@@ -51,6 +53,15 @@
             var results = new List<GetPreviewNewsfeedQueryResult.PreviewPost>();
             foreach (var post in posts)
             {
+                FileInformation profileImage = null;
+                if (post.ProfileImageFileId != null)
+                {
+                    profileImage = await this.fileInformationAggregator.GetFileInformationAsync(
+                        null,
+                        post.ProfileImageFileId,
+                        FilePurposes.ProfileImage);
+                }
+                
                 FileInformation file = null;
                 if (post.FileId != null)
                 {
@@ -83,9 +94,12 @@
 
                 var completePost = new GetPreviewNewsfeedQueryResult.PreviewPost(
                     post.CreatorId,
+                    new GetPreviewNewsfeedQueryResult.PreviewPostCreator(new Username(post.Username), profileImage),
                     post.PostId,
                     post.BlogId,
+                    new GetPreviewNewsfeedQueryResult.PreviewPostBlog(new BlogName(post.BlogName)),
                     post.ChannelId,
+                    new GetPreviewNewsfeedQueryResult.PreviewPostChannel(new ChannelName(post.ChannelName)),
                     post.Comment,
                     file,
                     file == null ? null : new FileSourceInformation(post.FileName, post.FileExtension, this.mimeTypeMap.GetMimeType(post.FileExtension), post.FileSize ?? 0, null),

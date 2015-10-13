@@ -233,10 +233,13 @@
                     using (var outputStream = await itemData.BlockBlob.OpenWriteAsync(cancellationToken))
                     {
                         this.imageService.Resize(itemImage, outputStream, item.Width, item.Height, item.ResizeBehaviour, item.ProcessingBehaviour);
-                        itemData.BlockBlob.Metadata[WidthHeaderKey] = image.Width.ToString();
-                        itemData.BlockBlob.Metadata[HeightHeaderKey] = image.Height.ToString();
+
+                        var resultWidth = itemImage.Width;
+                        var resultHeight = itemImage.Height;
+                        itemData.BlockBlob.Metadata[WidthHeaderKey] = resultWidth.ToString();
+                        itemData.BlockBlob.Metadata[HeightHeaderKey] = resultHeight.ToString();
                         
-                        logger.Info("Committing " + itemImage.Width + "x" + itemImage.Height);
+                        logger.Info("Committing " + itemImage.Width + "x" + itemImage.Height + " (" + resultWidth + "x" + resultHeight + ")");
                         
                         await Task.Factory.FromAsync(outputStream.BeginCommit(null, null), outputStream.EndCommit);
                     }

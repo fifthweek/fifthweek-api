@@ -78,6 +78,16 @@
             CASE WHEN likedPosts.{0} IS NOT NULL THEN 1 ELSE 0 END AS HasLikedPost",
             Like.Fields.PostId);
 
+        private static readonly string SqlPreviewInformationSelect = string.Format(@",
+            u.{0} AS Username,
+            blog.{1} AS BlogName,
+            channel.{2} AS ChannelName,
+            u.{3}",
+            FifthweekUser.Fields.UserName,
+            Blog.Fields.Name,
+            Channel.Fields.Name,
+            FifthweekUser.Fields.ProfileImageFileId);
+
         private static readonly string SqlFromPartial = string.Format(@"
             FROM {0} post
             INNER JOIN  {8} channel ON post.{2} = channel.{9}
@@ -121,8 +131,14 @@
             Like.Table,
             Like.Fields.UserId);
 
+        private static readonly string SqlPreviewInformationClause = string.Format(@"
+            LEFT OUTER JOIN {0} u ON blog.{1}=u.{2}",
+            FifthweekUser.Table,
+            Blog.Fields.CreatorId,
+            FifthweekUser.Fields.Id);
+
         private static readonly string NowDateFilter = string.Format(@"
-            WHERE       post.{0} <= @Now",
+            WHERE post.{0} <= @Now",
             Post.Fields.LiveDate);
 
         private static readonly string SubscriptionFilter = string.Format(
@@ -200,6 +216,8 @@
 
         public static string GetSqlStart(UserId requesterId, PositiveInt maxCommentLength = null)
         {
+            bool isPreview = maxCommentLength != null;
+
             var result = new StringBuilder();
 
             if (maxCommentLength == null)
@@ -218,11 +236,21 @@
                 result.Append(SqlHasLikedSelect);
             }
 
+            if (isPreview)
+            {
+                result.Append(SqlPreviewInformationSelect);
+            }
+
             result.Append(SqlFromPartial);
 
             if (requesterId != null)
             {
                 result.Append(SqlHasLikedFromClause);
+            }
+
+            if (isPreview)
+            {
+                result.Append(SqlPreviewInformationClause);
             }
 
             return result.ToString();
@@ -272,15 +300,6 @@
             }
 
             return filter.ToString();
-        }
-
-        public static void ProcessNewsfeedResults(List<NewsfeedPost.Builder> entities)
-        {
-            foreach (var entity in entities)
-            {
-                entity.LiveDate = DateTime.SpecifyKind(entity.LiveDate, DateTimeKind.Utc);
-                entity.CreationDate = DateTime.SpecifyKind(entity.CreationDate, DateTimeKind.Utc);
-            }
         }
 
         public async Task<GetNewsfeedDbResult> ExecuteAsync(
@@ -335,6 +354,15 @@
 
                     return new GetNewsfeedDbResult(entities.Select(_ => _.Build()).ToList(), accountBalance);
                 }
+            }
+        }
+
+        private static void ProcessNewsfeedResults(List<NewsfeedPost.Builder> entities)
+        {
+            foreach (var entity in entities)
+            {
+                entity.LiveDate = DateTime.SpecifyKind(entity.LiveDate, DateTimeKind.Utc);
+                entity.CreationDate = DateTime.SpecifyKind(entity.CreationDate, DateTimeKind.Utc);
             }
         }
     }

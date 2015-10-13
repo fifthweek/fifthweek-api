@@ -24,17 +24,17 @@
                         300, 
                         300,
                         "preview",
-                        ResizeBehaviour.CropToAspectRatio, 
-                        new Thumbnail(
-                            216, 
-                            216,
-                            "header",
-                            ResizeBehaviour.CropToAspectRatio, 
-                                new Thumbnail(
-                                    64, 
-                                    64, 
-                                    "footer",
-                                    ResizeBehaviour.CropToAspectRatio)))));
+                        ResizeBehaviour.CropToAspectRatio),
+                    new Thumbnail(
+                        216,
+                        216,
+                        "header",
+                        ResizeBehaviour.CropToAspectRatio),
+                    new Thumbnail(
+                        64,
+                        64,
+                        "footer",
+                        ResizeBehaviour.CropToAspectRatio)));
 
             Add(
                 FilePurposes.ProfileHeaderImage,
@@ -57,18 +57,18 @@
                         1890,
                         1440,
                         "feed",
-                        ResizeBehaviour.MaintainAspectRatio,
-                        new Thumbnail(
-                            600,
-                            600,
-                            "preview",
-                            ResizeBehaviour.MaintainAspectRatio),
-                        new Thumbnail(
-                            1200,
-                            1200,
-                            Shared.Constants.PostPreviewImageThumbnailName,
-                            ResizeBehaviour.CropToAspectRatio,
-                            ProcessingBehaviour.Darken))));
+                        ResizeBehaviour.MaintainAspectRatio),
+                    new Thumbnail(
+                        600,
+                        600,
+                        "preview",
+                        ResizeBehaviour.MaintainAspectRatio),
+                    new Thumbnail(
+                        1200,
+                        1200,
+                        Shared.Constants.PostPreviewImageThumbnailName,
+                        ResizeBehaviour.CropToAspectRatio,
+                        ProcessingBehaviour.Darken)));
 
             Add(FilePurposes.PostFile);
         }

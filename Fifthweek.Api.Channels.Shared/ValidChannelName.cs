@@ -10,7 +10,7 @@
     /// This should match ValidBlogName, as the blog name is used as the default channel name.
     /// </summary>
     [AutoEqualityMembers]
-    public partial class ValidChannelName
+    public partial class ValidChannelName : ChannelName
     {
         public static readonly string ForbiddenCharacters = "\r\n\t";
         public static readonly int MinLength = 1;
@@ -19,11 +19,10 @@
         private const string ForbiddenCharacterMessage = "Must not contain new lines or tabs";
         private static readonly HashSet<char> ForbiddenCharactersHashSet = new HashSet<char>(ForbiddenCharacters);
 
-        private ValidChannelName()
+        private ValidChannelName(string channelName)
+            : base(channelName)
         {
         }
-
-        public string Value { get; private set; }
 
         public static bool IsEmpty(string value)
         {
@@ -76,11 +75,8 @@
                 return false;
             }
 
-            channelName = new ValidChannelName
-            {
-                Value = value
-            };
-
+            channelName = new ValidChannelName(value);
+        
             return true;
         }
     }

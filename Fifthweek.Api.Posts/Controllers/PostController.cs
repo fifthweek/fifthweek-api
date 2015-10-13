@@ -26,6 +26,7 @@
         private readonly ICommandHandler<RescheduleWithQueueCommand> rescheduleWithQueue;
         private readonly IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<GetCreatorBacklogQueryResult>> getCreatorBacklog;
         private readonly IQueryHandler<GetNewsfeedQuery, GetNewsfeedQueryResult> getNewsfeed;
+        private readonly IQueryHandler<GetNewsfeedQuery, GetPreviewNewsfeedQueryResult> getPreviewNewsfeed;
         private readonly ICommandHandler<CommentOnPostCommand> postComment;
         private readonly IQueryHandler<GetCommentsQuery, CommentsResult> getComments;
         private readonly ICommandHandler<LikePostCommand> postLike;
@@ -49,25 +50,15 @@
         [Route("newsfeed")]
         public async Task<GetNewsfeedQueryResult> GetNewsfeed([FromUri]NewsfeedFilter filterData)
         {
-            filterData.AssertUrlParameterProvided("filter");
-            var filter = filterData.Parse();
+            var query = await this.GetNewsfeedQuery(filterData);
+            return await this.getNewsfeed.HandleAsync(query);
+        }
 
-            UserId creatorId = null;
-            if (!string.IsNullOrWhiteSpace(filterData.CreatorId))
-            {
-                creatorId = new UserId(filterData.CreatorId.DecodeGuid());
-            }
-
-            IReadOnlyList<ChannelId> channelIds = null;
-            if (!string.IsNullOrWhiteSpace(filterData.ChannelId))
-            {
-                channelIds = new List<ChannelId> { new ChannelId(filterData.ChannelId.DecodeGuid()) };
-            }
-
-            var requester = await this.requesterContext.GetRequesterAsync();
-
-            return await this.getNewsfeed.HandleAsync(new GetNewsfeedQuery(
-                requester, creatorId, channelIds, filter.Origin, filter.SearchForwards, filter.StartIndex, filter.Count));
+        [Route("previewNewsfeed")]
+        public async Task<GetPreviewNewsfeedQueryResult> GetPreviewNewsfeed([FromUri]NewsfeedFilter filterData)
+        {
+            var query = await this.GetNewsfeedQuery(filterData);
+            return await this.getPreviewNewsfeed.HandleAsync(query);
         }
 
         [Route("")]
@@ -222,6 +213,36 @@
             var requester = await this.requesterContext.GetRequesterAsync();
 
             await this.deleteLike.HandleAsync(new DeleteLikeCommand(requester, parsedPostId));
+        }
+
+        private async Task<GetNewsfeedQuery> GetNewsfeedQuery(NewsfeedFilter filterData)
+        {
+            filterData.AssertUrlParameterProvided("filter");
+            var filter = filterData.Parse();
+
+            UserId creatorId = null;
+            if (!string.IsNullOrWhiteSpace(filterData.CreatorId))
+            {
+                creatorId = new UserId(filterData.CreatorId.DecodeGuid());
+            }
+
+            IReadOnlyList<ChannelId> channelIds = null;
+            if (!string.IsNullOrWhiteSpace(filterData.ChannelId))
+            {
+                channelIds = new List<ChannelId> { new ChannelId(filterData.ChannelId.DecodeGuid()) };
+            }
+
+            var requester = await this.requesterContext.GetRequesterAsync();
+
+            var query = new GetNewsfeedQuery(
+                requester,
+                creatorId,
+                channelIds,
+                filter.Origin,
+                filter.SearchForwards,
+                filter.StartIndex,
+                filter.Count);
+            return query;
         }
     }
 }

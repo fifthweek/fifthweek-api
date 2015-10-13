@@ -24,6 +24,18 @@
             return requester.UserId;
         }
 
+        public async Task<UserId> TryAuthenticateAsync(Requester requester)
+        {
+            requester.AssertNotNull("requester");
+
+            if (requester.UserId == null)
+            {
+                return null;
+            }
+
+            return requester.UserId;
+        }
+
         public async Task<UserId> AuthenticateAsAsync(Requester requester, UserId userId)
         {
             requester.AssertNotNull("requester");

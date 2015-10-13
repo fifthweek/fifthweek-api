@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 10/09/2015 17:47:11 (UTC)
-//// Mapped solution in 24.31s
+//// Generated on 12/10/2015 13:48:00 (UTC)
+//// Mapped solution in 46.95s
 
 namespace Fifthweek.Api.Channels.Shared
 {
@@ -55,6 +55,53 @@ namespace Fifthweek.Api.Channels.Shared
         }
     }
 }
+namespace Fifthweek.Api.Channels.Shared
+{
+    using Fifthweek.CodeGeneration;
+
+    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
+    public partial class ChannelName 
+    {
+        public class JsonConverter : Newtonsoft.Json.JsonConverter
+        {
+            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                var valueType = (ChannelName)value;
+                serializer.Serialize(writer, valueType.Value);
+            }
+        
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (objectType != typeof(ChannelName))
+                {
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(ChannelName).Name, "objectType");
+                }
+        
+                var value = serializer.Deserialize<System.String>(reader);
+                return new ChannelName(value);
+            }
+        
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(ChannelName);
+            }
+        }
+        
+        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<ChannelName>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<ChannelName>
+        {
+            public override void SetValue(System.Data.IDbDataParameter parameter, ChannelName value)
+            {
+                parameter.DbType = System.Data.DbType.String;
+                parameter.Value = value.Value;
+            }
+        
+            public override ChannelName Parse(object value)
+            {
+                return new ChannelName((System.String)value);
+            }
+        }
+    }
+}
 
 namespace Fifthweek.Api.Channels.Shared
 {
@@ -68,6 +115,24 @@ namespace Fifthweek.Api.Channels.Shared
     {
         public ChannelId(
             System.Guid value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            this.Value = value;
+        }
+    }
+}
+namespace Fifthweek.Api.Channels.Shared
+{
+    using Fifthweek.CodeGeneration;
+
+    public partial class ChannelName 
+    {
+        public ChannelName(
+            System.String value)
         {
             if (value == null)
             {
@@ -137,17 +202,13 @@ namespace Fifthweek.Api.Channels.Shared
 }
 namespace Fifthweek.Api.Channels.Shared
 {
-    using System;
-    using System.Linq;
     using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
 
-    public partial class ValidChannelName 
+    public partial class ChannelName 
     {
         public override string ToString()
         {
-            return string.Format("ValidChannelName(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+            return string.Format("ChannelName(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
         }
         
         public override bool Equals(object obj)
@@ -167,7 +228,7 @@ namespace Fifthweek.Api.Channels.Shared
                 return false;
             }
         
-            return this.Equals((ValidChannelName)obj);
+            return this.Equals((ChannelName)obj);
         }
         
         public override int GetHashCode()
@@ -180,7 +241,7 @@ namespace Fifthweek.Api.Channels.Shared
             }
         }
         
-        protected bool Equals(ValidChannelName other)
+        protected bool Equals(ChannelName other)
         {
             if (!object.Equals(this.Value, other.Value))
             {

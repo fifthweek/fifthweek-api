@@ -50,7 +50,7 @@
         private static readonly int FileHeight = 600;
         private static readonly string ContentType = "ContentType";
         private static readonly string Signature = "signature";
-        private static readonly IReadOnlyList<NewsfeedPost> NewsfeedPosts = GetNewsfeedPosts().ToList();
+        private static readonly IReadOnlyList<PreviewNewsfeedPost> NewsfeedPosts = GetNewsfeedPosts().ToList();
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IGetPreviewNewsfeedDbStatement> getPreviewNewsfeedDbStatement;
@@ -97,19 +97,10 @@
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
-        public async Task ItShouldRequireAuthenticatedUser()
-        {
-            this.requesterSecurity.Setup(_ => _.AuthenticateAsync(Requester.Unauthenticated)).Throws<UnauthorizedException>();
-
-            await this.target.HandleAsync(new GetNewsfeedQuery(Requester.Unauthenticated, CreatorId, ChannelIds, Origin, SearchForwards, StartIndex, Count));
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(DivideByZeroException))]
         public async Task ItShouldPropogateExceptionsFromGetCreatorBacklogDbStatement()
         {
-            this.requesterSecurity.Setup(_ => _.AuthenticateAsync(Requester)).ReturnsAsync(UserId);
+            this.requesterSecurity.Setup(_ => _.TryAuthenticateAsync(Requester)).ReturnsAsync(UserId);
             this.getPreviewNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, Now, Origin.Value, SearchForwards, StartIndex, Count)).ThrowsAsync(new DivideByZeroException());
             await this.target.HandleAsync(new GetNewsfeedQuery(Requester, CreatorId, ChannelIds, Origin, SearchForwards, StartIndex, Count));
         }
@@ -117,13 +108,13 @@
         [TestMethod]
         public async Task ItShouldReturnPosts()
         {
-            this.requesterSecurity.Setup(_ => _.AuthenticateAsync(Requester)).ReturnsAsync(UserId);
+            this.requesterSecurity.Setup(_ => _.TryAuthenticateAsync(Requester)).ReturnsAsync(UserId);
 
             this.getPreviewNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, Now, Origin.Value, SearchForwards, StartIndex, Count))
-                .ReturnsAsync(new GetNewsfeedDbResult(NewsfeedPosts, 10));
+                .ReturnsAsync(new GetPreviewNewsfeedDbResult(NewsfeedPosts));
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(It.IsAny<ChannelId>(), It.IsAny<FileId>(), It.IsAny<string>()))
-                .Returns<ChannelId, FileId, string>((c, f, p) => Task.FromResult(new FileInformation(f, c.ToString())));
+                .Returns<ChannelId, FileId, string>((c, f, p) => Task.FromResult(new FileInformation(f, c == null ? "public" : c.ToString())));
 
             this.blobService.Setup(v => v.GetBlobSharedAccessInformationForReadingAsync(It.IsAny<string>(), It.IsAny<string>(), Expiry.Public))
                 .Returns<string, string, DateTime>((c, b, e) => Task.FromResult(new BlobSharedAccessInformation(c, b, c + "/" + b, Signature, e)));
@@ -133,6 +124,16 @@
             Assert.AreEqual(NewsfeedPosts.Count, result.Posts.Count);
             foreach (var item in result.Posts.Zip(NewsfeedPosts, (a, b) => new { Output = a, Input = b }))
             {
+                if (item.Input.ProfileImageFileId != null)
+                {
+                    Assert.AreEqual(item.Input.ProfileImageFileId, item.Output.Creator.ProfileImage.FileId);
+                    Assert.AreEqual("public", item.Output.Creator.ProfileImage.ContainerName);
+                }
+                else
+                {
+                    Assert.IsNull(item.Output.Creator.ProfileImage);
+                }
+
                 if (item.Input.FileId != null)
                 {
                     Assert.AreEqual(item.Input.FileId, item.Output.File.FileId);
@@ -174,19 +175,23 @@
                 Assert.AreEqual(item.Input.ChannelId, item.Output.ChannelId);
                 Assert.AreEqual(item.Input.Comment, item.Output.Comment);
                 Assert.AreEqual(item.Input.LiveDate, item.Output.LiveDate);
+
+                Assert.AreEqual(item.Input.Username, item.Output.Creator.Username.Value);
+                Assert.AreEqual(item.Input.BlogName, item.Output.Blog.Name.Value);
+                Assert.AreEqual(item.Input.ChannelName, item.Output.Channel.Name.Value);
             }
         }
 
         [TestMethod]
         public async Task WhenOriginIsNullItShouldPassInTheCurrentDate()
         {
-            this.requesterSecurity.Setup(_ => _.AuthenticateAsync(Requester)).ReturnsAsync(UserId);
+            this.requesterSecurity.Setup(_ => _.TryAuthenticateAsync(Requester)).ReturnsAsync(UserId);
 
             this.getPreviewNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, Now, Now, SearchForwards, StartIndex, Count))
-                .ReturnsAsync(new GetNewsfeedDbResult(NewsfeedPosts, 10));
+                .ReturnsAsync(new GetPreviewNewsfeedDbResult(NewsfeedPosts));
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(It.IsAny<ChannelId>(), It.IsAny<FileId>(), It.IsAny<string>()))
-                .Returns<ChannelId, FileId, string>((c, f, p) => Task.FromResult(new FileInformation(f, c.ToString())));
+                .Returns<ChannelId, FileId, string>((c, f, p) => Task.FromResult(new FileInformation(f, c == null ? "public" : c.ToString())));
 
             this.blobService.Setup(v => v.GetBlobSharedAccessInformationForReadingAsync(It.IsAny<string>(), It.IsAny<string>(), Expiry.Public))
                 .Returns<string, string, DateTime>((c, b, e) => Task.FromResult(new BlobSharedAccessInformation(c, b, c + "/" + b, Signature, e)));
@@ -194,7 +199,7 @@
             await this.target.HandleAsync(new GetNewsfeedQuery(Requester, CreatorId, ChannelIds, null, SearchForwards, StartIndex, Count));
         }
 
-        private static IEnumerable<NewsfeedPost> GetNewsfeedPosts()
+        private static IEnumerable<PreviewNewsfeedPost> GetNewsfeedPosts()
         {
             // 1 in 3 chance of coincidental ordering being correct, yielding a false positive when implementation fails to order explicitly.
             const int ChannelCount = 3;
@@ -202,7 +207,7 @@
             const int Posts = 6;
 
             var day = 0;
-            var result = new List<NewsfeedPost>();
+            var result = new List<PreviewNewsfeedPost>();
             for (var channelIndex = 0; channelIndex < ChannelCount; channelIndex++)
             {
                 var channelId = new ChannelId(Guid.NewGuid());
@@ -215,11 +220,15 @@
                         var liveDate = new SqlDateTime(Now.AddDays(day--)).Value;
 
                         result.Add(
-                        new NewsfeedPost(
+                        new PreviewNewsfeedPost(
                             CreatorId,
+                            Guid.NewGuid().ToString(),
+                            i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
                             new PostId(Guid.NewGuid()),
                             BlogId,
+                            Guid.NewGuid().ToString(),
                             channelId,
+                            Guid.NewGuid().ToString(),
                             i % 2 == 0 ? Comment : null,
                             i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
                             i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,

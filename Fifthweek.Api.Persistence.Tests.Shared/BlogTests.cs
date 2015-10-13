@@ -23,7 +23,7 @@
                 new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -100)).Value);
         }
 
-        public static Task CreateTestBlogAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newBlogId, Guid? headerImageFileId = null, Random random = null)
+        public static Task CreateTestBlogAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newBlogId, Guid? headerImageFileId = null, Random random = null, string username = null, string blogName = null)
         {
             if (random == null)
             {
@@ -32,11 +32,20 @@
 
             var creator = UserTests.UniqueEntity(random);
             creator.Id = newUserId;
+            if (username != null)
+            {
+                creator.UserName = username;
+            }
 
             var blog = UniqueEntity(random);
             blog.Id = newBlogId;
             blog.Creator = creator;
             blog.CreatorId = creator.Id;
+
+            if (blogName != null)
+            {
+                blog.Name = blogName;
+            }
 
             if (headerImageFileId.HasValue)
             {
