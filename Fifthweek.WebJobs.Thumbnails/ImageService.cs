@@ -24,7 +24,11 @@
 
             if (processingBehaviour == ProcessingBehaviour.Darken)
             {
-                input.Colorize(new MagickColor(0, 0, 0), new Percentage(50));
+                input.Colorize(new MagickColor(0, 0, 0), new Percentage(60));
+            }
+            else if (processingBehaviour == ProcessingBehaviour.Lighten)
+            {
+                input.Colorize(new MagickColor(ushort.MaxValue, ushort.MaxValue, ushort.MaxValue), new Percentage(75));
             }
 
             input.Write(output);

@@ -264,6 +264,27 @@
                 image => Assert.IsTrue(this.AreClose(this.Darken(TopColor), this.GetBottom(image))));
         }
 
+        [TestMethod]
+        public void WhenBothDimensionAreLargerOrSame_WhenLightenSpecified_ItShouldLightenTheImage_ColoredEdges()
+        {
+            var sampleImage = SampleImagesLoader.Instance.ColoredEdges;
+            int desiredWidth = sampleImage.Width;
+            int desiredHeight = sampleImage.Height;
+
+            this.PerformResizeTest(
+                sampleImage,
+                desiredWidth,
+                desiredHeight,
+                ResizeBehaviour.MaintainAspectRatio,
+                ProcessingBehaviour.Lighten,
+                image => Assert.AreEqual(sampleImage.Width, image.Width),
+                image => Assert.AreEqual(sampleImage.Height, image.Height),
+                image => Assert.IsTrue(this.AreClose(this.Lighten(SideColor), this.GetLeft(image))),
+                image => Assert.IsTrue(this.AreClose(this.Lighten(SideColor), this.GetRight(image))),
+                image => Assert.IsTrue(this.AreClose(this.Lighten(TopColor), this.GetTop(image))),
+                image => Assert.IsTrue(this.AreClose(this.Lighten(TopColor), this.GetBottom(image))));
+        }
+
         private bool AreClose(Color a, Color b)
         {
             var r1 = (int)a.R;
@@ -278,7 +299,22 @@
 
         private Color Darken(Color input)
         {
-            return Color.FromArgb(input.A, input.R / 2, input.G / 2, input.B / 2);
+            return Color.FromArgb(input.A, this.Darken(input.R), this.Darken(input.G), this.Darken(input.B));
+        }
+
+        private Color Lighten(Color input)
+        {
+            return Color.FromArgb(input.A, this.Lighten(input.R), this.Lighten(input.G), this.Lighten(input.B));
+        }
+
+        private int Darken(int channel)
+        {
+            return (int)(channel * 0.4);
+        }
+
+        private int Lighten(int channel)
+        {
+            return 255 - (int)((255 - channel) * 0.25);
         }
 
         [TestMethod]

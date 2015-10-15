@@ -68,7 +68,7 @@
                         1200,
                         Shared.Constants.PostPreviewImageThumbnailName,
                         ResizeBehaviour.CropToAspectRatio,
-                        ProcessingBehaviour.Darken)));
+                        ProcessingBehaviour.Lighten)));
 
             Add(FilePurposes.PostFile);
         }
