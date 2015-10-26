@@ -22,27 +22,32 @@
             WHERE UploadStartedDate<@EndDateExclusive
                 AND NOT EXISTS
                 (
-                    SELECT * FROM {4} p WHERE f.{0}=p.{5} OR f.{0}=p.{6}
+                    SELECT * FROM {4} p WHERE f.{0}=p.{5} 
                 )
                 AND NOT EXISTS
                 (
-                    SELECT * FROM {7} b WHERE f.{0}=b.{8}
+                    SELECT * FROM {6} b WHERE f.{0}=b.{7}
                 )
                 AND NOT EXISTS
                 (
-                    SELECT * FROM {9} u WHERE f.{0}=u.{10}
+                    SELECT * FROM {8} u WHERE f.{0}=u.{9}
+                )
+                AND NOT EXISTS
+                (
+                    SELECT * FROM {10} u WHERE f.{0}=u.{11}
                 )",
             File.Fields.Id,
             File.Fields.ChannelId,
             File.Fields.Purpose,
             File.Table,
             Post.Table,
-            Post.Fields.FileId,
-            Post.Fields.ImageId,
+            Post.Fields.PreviewImageId,
             Blog.Table,
             Blog.Fields.HeaderImageFileId,
             FifthweekUser.Table,
-            FifthweekUser.Fields.ProfileImageFileId);
+            FifthweekUser.Fields.ProfileImageFileId,
+            PostFile.Table,
+            PostFile.Fields.FileId);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 

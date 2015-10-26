@@ -33,25 +33,35 @@
         public Queue Queue { get; set; }
 
         [Optional, Index, Index("IX_DTA_GetNewsfeed", Order = 3)]
-        public Guid? FileId { get; set; }
+        public Guid? PreviewImageId { get; set; }
 
         [Optional, NonEquatable]
-        public File File { get; set; }
-
-        [Optional, Index, Index("IX_DTA_GetNewsfeed", Order = 4)]
-        public Guid? ImageId { get; set; }
-
-        [Optional, NonEquatable]
-        public File Image { get; set; }
+        public File PreviewImage { get; set; }
 
         [Optional]
+        [MaxLength(1000)]
+        public string PreviewText { get; set; }
+
+        [Required]
         [MaxLength(50000)] // ValidComment.MaxLength
-        public string Comment { get; set; }
+        public string Content { get; set; }
+
+        [Required]
+        public int PreviewWordCount { get; set; }
+
+        [Required]
+        public int WordCount { get; set; }
+
+        [Required]
+        public int ImageCount { get; set; }
+
+        [Required]
+        public int FileCount { get; set; }
 
         [Required, Index("IX_DTA_GetNewsfeed", Order = 1)]
         public DateTime LiveDate { get; set; }
 
-        [Required, Index("IX_DTA_GetNewsfeed", Order = 5)]
+        [Required, Index("IX_DTA_GetNewsfeed", Order = 4)]
         public DateTime CreationDate { get; set; }
     }
 }

@@ -30,7 +30,7 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
-        private static readonly Comment Comment = new Comment("Hey guys!");
+        private static readonly PreviewText PreviewText = new PreviewText("Hey guys!");
         private static readonly Random Random = new Random();
         private static readonly DateTime Now = DateTime.UtcNow;
         private static readonly string FileName = "FileName";
@@ -136,11 +136,11 @@
                     _.ChannelId = new ChannelId(Guid.Empty);
 
                     // Non required fields.
-                    _.Comment = null;
-                    _.FileId = null;
-                    _.FileName = null;
-                    _.FileExtension = null;
-                    _.FileSize = null;
+                    _.PreviewText = null;
+                    _.PreviewWordCount = 0;
+                    _.WordCount = 0;
+                    _.ImageCount = 0;
+                    _.FileCount = 0;
                     _.ImageId = null;
                     _.ImageName = null;
                     _.ImageExtension = null;
@@ -225,11 +225,6 @@
                 {
                     foreach (var backlogPost in SortedBacklogPosts)
                     {
-                        if (backlogPost.FileId != null)
-                        {
-                            files.Add(backlogPost.FileId);
-                        }
-
                         if (backlogPost.ImageId != null)
                         {
                             images.Add(backlogPost.ImageId);
@@ -251,11 +246,14 @@
                             null,
                             backlogPost.QueueId == null ? (Guid?)null : backlogPost.QueueId.Value,
                             null,
-                            backlogPost.FileId == null ? (Guid?)null : backlogPost.FileId.Value,
-                            null,
                             backlogPost.ImageId == null ? (Guid?)null : backlogPost.ImageId.Value,
                             null,
-                            backlogPost.Comment == null ? null : backlogPost.Comment.Value,
+                            backlogPost.PreviewText == null ? null : backlogPost.PreviewText.Value,
+                            "content",
+                            backlogPost.PreviewWordCount,
+                            backlogPost.WordCount,
+                            backlogPost.ImageCount,
+                            backlogPost.FileCount,
                             backlogPost.LiveDate,
                             backlogPost.CreationDate));
                     }
@@ -337,14 +335,14 @@
                             new BacklogPost(
                                 new PostId(Guid.NewGuid()),
                                 channelId,
-                                i % 2 == 0 ? queueId: null,
-                                i % 2 == 0 ? Comment : null,
-                                i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
+                                i % 2 == 0 ? queueId : null,
+                                i % 2 == 0 ? PreviewText : null,
                                 i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
+                                i % 2 == 0 ? PreviewText.Value.Length : 0,
+                                i % 2 == 0 ? PreviewText.Value.Length : 0,
+                                i % 3 == 2 ? 1 : 0,
+                                i % 3 == 1 ? 1 : 0,
                                 liveDate,
-                                i % 3 == 1 ? FileName : null,
-                                i % 3 == 1 ? FileExtension : null,
-                                i % 3 == 1 ? FileSize : (long?)null,
                                 i % 3 == 2 ? FileName : null,
                                 i % 3 == 2 ? FileExtension : null,
                                 i % 3 == 2 ? FileSize : (long?)null,

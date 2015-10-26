@@ -154,10 +154,11 @@
                 post.Id = PostId.Value;
                 post.ChannelId = ChannelId.Value;
                 post.QueueId = QueueId.Value;
-                post.FileId = FileId.Value;
+                post.PreviewImageId = FileId.Value;
                 post.CreationDate = new SqlDateTime(post.CreationDate).Value;
                 post.LiveDate = new SqlDateTime(post.LiveDate).Value;
                 await databaseContext.Database.Connection.InsertAsync(post);
+                await databaseContext.Database.Connection.InsertAsync(new PostFile(PostId.Value, FileId.Value));
 
                 await databaseContext.CreateTestUserAsync(UserId.Value, random);
 
@@ -188,6 +189,7 @@
                 var post = await databaseContext.Posts.SingleAsync(v => v.Id == PostId.Value);
                 var comment = await databaseContext.Comments.SingleAsync(v => v.Id == CommentId.Value);
                 var like = await databaseContext.Likes.SingleAsync(v => v.UserId == UserId.Value && v.PostId == PostId.Value);
+                var postFile = await databaseContext.PostFiles.SingleAsync(v => v.PostId == PostId.Value);
 
                 var result = new List<IIdentityEquatable>
                 {
@@ -196,6 +198,7 @@
                     subscription,
                     comment,
                     like,
+                    postFile,
                 };
 
                 return result;

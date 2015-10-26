@@ -49,6 +49,7 @@
         private readonly List<WeeklyReleaseTime> weeklyReleaseTimes = new List<WeeklyReleaseTime>();
         private readonly List<Post> posts = new List<Post>();
         private readonly List<File> files = new List<File>();
+        private readonly List<PostFile> postFiles = new List<PostFile>();
         private readonly List<RefreshToken> refreshTokens = new List<RefreshToken>();
         private readonly List<FreeAccessUser> freeAccessUsers = new List<FreeAccessUser>();
         private readonly List<ChannelSubscription> subscriptions = new List<ChannelSubscription>();
@@ -136,6 +137,7 @@
                     await connection.InsertAsync(this.queues, false);
                     await connection.InsertAsync(this.weeklyReleaseTimes, false);
                     await connection.InsertAsync(this.posts, false);
+                    await connection.InsertAsync(this.postFiles, false);
                     await connection.InsertAsync(this.refreshTokens, false);
                     await connection.InsertAsync(this.freeAccessUsers, false);
                     await connection.InsertAsync(this.subscriptions, false);
@@ -484,11 +486,14 @@
 
                 var file = FileTests.UniqueEntity(Random);
                 file.UserId = blog.Creator.Id;
-                post.Image = file;
-                post.ImageId = file.Id;
+                post.PreviewImage = file;
+                post.PreviewImageId = file.Id;
+
+                var postFile = new PostFile(post.Id, post, file.Id, file);
 
                 this.posts.Add(post);
                 this.files.Add(file);
+                this.postFiles.Add(postFile);
             }
 
             for (var postIndex = 0; postIndex < FilesPerCollection; postIndex++)
@@ -501,11 +506,12 @@
 
                 var file = FileTests.UniqueEntity(Random);
                 file.UserId = blog.Creator.Id;
-                post.File = file;
-                post.FileId = file.Id;
+
+                var postFile = new PostFile(post.Id, post, file.Id, file);
 
                 this.posts.Add(post);
                 this.files.Add(file);
+                this.postFiles.Add(postFile);
             }
       
             this.comments.Add(new Comment(Guid.NewGuid(), this.posts.Last().Id, null, this.users.First().Id, null, "Test comment", DateTime.UtcNow));

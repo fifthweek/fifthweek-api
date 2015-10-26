@@ -97,6 +97,7 @@
     <Compile Include="Commands\RevisePostCommandHandlerTests.cs" />
     <Compile Include="Commands\ReorderQueueCommandHandlerTests.cs" />
     <Compile Include="Commands\DeletePostCommandHandlerTests.cs" />
+    <Compile Include="Commands\RevisePostDbStatementTests.cs" />
     <Compile Include="CommentOnPostDbStatementTests.cs" />
     <Compile Include="DeletePostDbStatementTests.cs" />
     <Compile Include="GetCommentsDbStatementTests.cs" />

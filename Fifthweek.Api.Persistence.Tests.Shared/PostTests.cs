@@ -16,9 +16,12 @@
                 null,
                 null,
                 null,
-                null,
-                null,
                 "Note " + random.Next(),
+                "Note " + random.Next(),
+                0,
+                0,
+                0,
+                0,
                 new SqlDateTime(DateTime.UtcNow.AddDays((random.NextDouble() * -1000) + (random.NextDouble() * 1000))).Value,
                 new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -1000)).Value);
         }
@@ -35,9 +38,12 @@
                 null,
                 null,
                 null,
-                null,
-                null,
                 hasComment ? "Comment " + random.Next() : null,
+                hasComment ? "Comment " + random.Next() : string.Empty,
+                0,
+                0,
+                0,
+                0,
                 new SqlDateTime(DateTime.UtcNow.AddDays((random.NextDouble() * -1000) + (random.NextDouble() * 1000))).Value,
                 new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -1000)).Value);
         }

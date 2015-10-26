@@ -48,7 +48,7 @@
         private static readonly NonNegativeInt StartIndex = NonNegativeInt.Parse(10);
         private static readonly PositiveInt Count = PositiveInt.Parse(5);
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
-        private static readonly Comment Comment = new Comment(new string(Enumerable.Repeat<char>('x', 1000).ToArray()));
+        private static readonly PreviewText PreviewText = new PreviewText(new string(Enumerable.Repeat<char>('x', 1000).ToArray()));
         private static readonly Random Random = new Random();
         private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
         private static readonly string FileName = "FileName";
@@ -200,11 +200,11 @@
                         _.CreatorId = new UserId(Guid.Empty);
 
                         // Non required fields.
-                        _.Comment = null;
-                        _.FileId = null;
-                        _.FileName = null;
-                        _.FileExtension = null;
-                        _.FileSize = null;
+                        _.PreviewText = null;
+                        _.PreviewWordCount = 0;
+                        _.WordCount = 0;
+                        _.ImageCount = 0;
+                        _.FileCount = 0;
                         _.ImageId = null;
                         _.ImageName = null;
                         _.ImageExtension = null;
@@ -405,11 +405,6 @@
                             continue;
                         }
 
-                        if (newsfeedPost.FileId != null)
-                        {
-                            files.Add(newsfeedPost.FileId);
-                        }
-
                         if (newsfeedPost.ImageId != null)
                         {
                             images.Add(newsfeedPost.ImageId);
@@ -426,11 +421,14 @@
                             null,
                             (Guid?)null,
                             null,
-                            newsfeedPost.FileId == null ? (Guid?)null : newsfeedPost.FileId.Value,
-                            null,
                             newsfeedPost.ImageId == null ? (Guid?)null : newsfeedPost.ImageId.Value,
                             null,
-                            newsfeedPost.Comment == null ? null : newsfeedPost.Comment.Value,
+                            newsfeedPost.PreviewText == null ? null : newsfeedPost.PreviewText.Value,
+                            "content",
+                            newsfeedPost.PreviewWordCount,
+                            newsfeedPost.WordCount,
+                            newsfeedPost.ImageCount,
+                            newsfeedPost.FileCount,
                             newsfeedPost.LiveDate,
                             newsfeedPost.CreationDate));
 
@@ -571,13 +569,13 @@
                                 BlogId.ToString(),
                                 channelId,
                                 channelId.ToString(),
-                                i % 3 == 0 ? Comment : null,
-                                i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
+                                i % 2 == 0 ? PreviewText : null,
                                 i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
+                                i % 2 == 0 ? PreviewText.Value.Length : 0,
+                                i % 2 == 0 ? PreviewText.Value.Length : 0,
+                                i % 3 == 2 ? 1 : 0,
+                                i % 3 == 1 ? 1 : 0,
                                 liveDate,
-                                i % 3 == 1 ? FileName : null,
-                                i % 3 == 1 ? FileExtension : null,
-                                i % 3 == 1 ? FileSize : (long?)null,
                                 i % 3 == 2 ? FileName : null,
                                 i % 3 == 2 ? FileExtension : null,
                                 i % 3 == 2 ? FileSize : (long?)null,
@@ -651,13 +649,13 @@
                     v.BlogName,
                     v.ChannelId,
                     v.ChannelName,
-                    v.Comment == null ? null : new Comment(v.Comment.Value.Substring(0, GetPreviewNewsfeedDbStatement.MaxCommentLength.Value)),
-                    v.FileId,
+                    v.PreviewText == null ? null : new PreviewText(v.PreviewText.Value.Substring(0, GetPreviewNewsfeedDbStatement.MaxPreviewTextLength.Value)),
                     v.ImageId,
+                    v.PreviewWordCount,
+                    v.WordCount,
+                    v.ImageCount,
+                    v.FileCount,
                     v.LiveDate,
-                    v.FileName,
-                    v.FileExtension,
-                    v.FileSize,
                     v.ImageName,
                     v.ImageExtension,
                     v.ImageSize,

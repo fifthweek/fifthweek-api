@@ -19,19 +19,21 @@
         public QueueId QueueId { get; private set; }
 
         [Optional]
-        public Comment Comment { get; private set; }
-
-        [Optional]
-        public FileInformation File { get; private set; }
-
-        [Optional]
-        public FileSourceInformation FileSource { get; private set; }
+        public PreviewText PreviewText { get; private set; }
 
         [Optional]
         public FileInformation Image { get; private set; }
 
         [Optional]
         public FileSourceInformation ImageSource { get; private set; }
+
+        public int PreviewWordCount { get; private set; }
+
+        public int WordCount { get; private set; }
+
+        public int ImageCount { get; private set; }
+
+        public int FileCount { get; private set; }
 
         public DateTime LiveDate { get; private set; }
     }

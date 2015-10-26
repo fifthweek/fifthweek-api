@@ -56,8 +56,10 @@
     <Compile Include="CommentId.cs" />
     <Compile Include="IPostSecurity.cs" />
     <Compile Include="PostId.cs" />
+    <Compile Include="PreviewText.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidComment.cs" />
+    <Compile Include="ValidPreviewText.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

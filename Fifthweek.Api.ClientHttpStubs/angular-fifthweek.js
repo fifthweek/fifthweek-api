@@ -301,21 +301,7 @@ angular.module('webApp').factory('postStub',
     //     postId: 'Base64Guid',
     //     channelId: 'Base64Guid',
     //     queueId: 'Base64Guid', /* optional */
-    //     comment: '', /* optional */
-    //     file: { /* optional */
-    //       fileId: 'Base64Guid',
-    //       containerName: ''
-    //     },
-    //     fileSource: { /* optional */
-    //       fileName: '',
-    //       fileExtension: '',
-    //       contentType: '',
-    //       size: 0,
-    //       renderSize: { /* optional */
-    //         width: 0,
-    //         height: 0
-    //       }
-    //     },
+    //     previewText: '', /* optional */
     //     image: { /* optional */
     //       fileId: 'Base64Guid',
     //       containerName: ''
@@ -330,6 +316,10 @@ angular.module('webApp').factory('postStub',
     //         height: 0
     //       }
     //     },
+    //     previewWordCount: 0,
+    //     wordCount: 0,
+    //     imageCount: 0,
+    //     fileCount: 0,
     //     liveDate: '2015-12-25T14:45:05Z'
     //   }
     // ]
@@ -354,21 +344,7 @@ angular.module('webApp').factory('postStub',
     //       postId: 'Base64Guid',
     //       blogId: 'Base64Guid',
     //       channelId: 'Base64Guid',
-    //       comment: '', /* optional */
-    //       file: { /* optional */
-    //         fileId: 'Base64Guid',
-    //         containerName: ''
-    //       },
-    //       fileSource: { /* optional */
-    //         fileName: '',
-    //         fileExtension: '',
-    //         contentType: '',
-    //         size: 0,
-    //         renderSize: { /* optional */
-    //           width: 0,
-    //           height: 0
-    //         }
-    //       },
+    //       previewText: '', /* optional */
     //       image: { /* optional */
     //         fileId: 'Base64Guid',
     //         containerName: ''
@@ -383,6 +359,10 @@ angular.module('webApp').factory('postStub',
     //           height: 0
     //         }
     //       },
+    //       previewWordCount: 0,
+    //       wordCount: 0,
+    //       imageCount: 0,
+    //       fileCount: 0,
     //       liveDate: '2015-12-25T14:45:05Z',
     //       likesCount: 0,
     //       commentsCount: 0,
@@ -409,24 +389,23 @@ angular.module('webApp').factory('postStub',
     //   posts: [
     //     {
     //       creatorId: 'Base64Guid',
-    //       postId: 'Base64Guid',
-    //       blogId: 'Base64Guid',
-    //       channelId: 'Base64Guid',
-    //       comment: '', /* optional */
-    //       file: { /* optional */
-    //         fileId: 'Base64Guid',
-    //         containerName: ''
-    //       },
-    //       fileSource: { /* optional */
-    //         fileName: '',
-    //         fileExtension: '',
-    //         contentType: '',
-    //         size: 0,
-    //         renderSize: { /* optional */
-    //           width: 0,
-    //           height: 0
+    //       creator: {
+    //         username: '',
+    //         profileImage: { /* optional */
+    //           fileId: 'Base64Guid',
+    //           containerName: ''
     //         }
     //       },
+    //       postId: 'Base64Guid',
+    //       blogId: 'Base64Guid',
+    //       blog: {
+    //         name: ''
+    //       },
+    //       channelId: 'Base64Guid',
+    //       channel: {
+    //         name: ''
+    //       },
+    //       previewText: '', /* optional */
     //       image: { /* optional */
     //         fileId: 'Base64Guid',
     //         containerName: ''
@@ -448,6 +427,10 @@ angular.module('webApp').factory('postStub',
     //         signature: '',
     //         expiry: '2015-12-25T14:45:05Z'
     //       },
+    //       previewWordCount: 0,
+    //       wordCount: 0,
+    //       imageCount: 0,
+    //       fileCount: 0,
     //       liveDate: '2015-12-25T14:45:05Z',
     //       likesCount: 0,
     //       commentsCount: 0,
@@ -463,11 +446,18 @@ angular.module('webApp').factory('postStub',
 
     // postData = {
     //   channelId: 'Base64Guid',
-    //   fileId: 'Base64Guid', /* optional */
-    //   imageId: 'Base64Guid', /* optional */
-    //   comment: '', /* optional */
+    //   previewImageId: 'Base64Guid', /* optional */
+    //   previewText: '', /* optional */
+    //   content: '', /* optional */
     //   scheduledPostTime: '2015-12-25T14:45:05Z', /* optional */
-    //   queueId: 'Base64Guid' /* optional */
+    //   queueId: 'Base64Guid', /* optional */
+    //   previewWordCount: 0,
+    //   wordCount: 0,
+    //   imageCount: 0,
+    //   fileCount: 0,
+    //   fileIds: [ /* optional */
+    //     'Base64Guid'
+    //   ]
     // }
     service.postPost = function(postData) {
       return $http.post(utilities.fixUri(apiBaseUri + 'posts'), postData).catch(function(response) {
@@ -477,9 +467,16 @@ angular.module('webApp').factory('postStub',
 
     // postId = 'Base64Guid'
     // postData = {
-    //   fileId: 'Base64Guid', /* optional */
-    //   imageId: 'Base64Guid', /* optional */
-    //   comment: '' /* optional */
+    //   previewImageId: 'Base64Guid', /* optional */
+    //   previewText: '', /* optional */
+    //   content: '', /* optional */
+    //   previewWordCount: 0,
+    //   wordCount: 0,
+    //   imageCount: 0,
+    //   fileCount: 0,
+    //   fileIds: [ /* optional */
+    //     'Base64Guid'
+    //   ]
     // }
     service.putPost = function(postId, postData) {
       return $http.put(utilities.fixUri(apiBaseUri + 'posts/' + encodeURIComponent(postId)), postData).catch(function(response) {

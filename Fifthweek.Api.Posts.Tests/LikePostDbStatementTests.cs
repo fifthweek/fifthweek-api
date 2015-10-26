@@ -110,7 +110,7 @@
                 post.Id = PostId.Value;
                 post.ChannelId = ChannelId.Value;
                 post.QueueId = QueueId.Value;
-                post.FileId = FileId.Value;
+                post.PreviewImageId = FileId.Value;
                 post.CreationDate = new SqlDateTime(post.CreationDate).Value;
                 post.LiveDate = new SqlDateTime(post.LiveDate).Value;
                 await databaseContext.Database.Connection.InsertAsync(post);

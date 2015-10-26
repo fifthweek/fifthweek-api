@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
+    using System.Collections.Generic;
 
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
@@ -18,19 +19,31 @@
         public ChannelId ChannelId { get; set; }
 
         [Optional]
-        public FileId FileId { get; set; }
+        public FileId PreviewImageId { get; set; }
 
         [Optional]
-        public FileId ImageId { get; set; }
+        [Parsed(typeof(ValidPreviewText))]
+        public string PreviewText { get; set; }
 
         [Optional]
         [Parsed(typeof(ValidComment))]
-        public string Comment { get; set; }
+        public string Content { get; set; }
 
         [Optional]
         public DateTime? ScheduledPostTime { get; set; }
 
         [Optional]
         public QueueId QueueId { get; set; }
+
+        public int PreviewWordCount { get; set; }
+
+        public int WordCount { get; set; }
+
+        public int ImageCount { get; set; }
+
+        public int FileCount { get; set; }
+
+        [Optional]
+        public List<FileId> FileIds { get; set; }
     }
 }

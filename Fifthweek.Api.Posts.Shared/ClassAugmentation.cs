@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 10/09/2015 18:04:44 (UTC)
-//// Mapped solution in 22.8s
+//// Generated on 23/10/2015 18:33:52 (UTC)
+//// Mapped solution in 15.19s
 
 namespace Fifthweek.Api.Posts.Shared
 {
@@ -154,6 +154,53 @@ namespace Fifthweek.Api.Posts.Shared
         }
     }
 }
+namespace Fifthweek.Api.Posts.Shared
+{
+    using Fifthweek.CodeGeneration;
+
+    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
+    public partial class PreviewText 
+    {
+        public class JsonConverter : Newtonsoft.Json.JsonConverter
+        {
+            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                var valueType = (PreviewText)value;
+                serializer.Serialize(writer, valueType.Value);
+            }
+        
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (objectType != typeof(PreviewText))
+                {
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(PreviewText).Name, "objectType");
+                }
+        
+                var value = serializer.Deserialize<System.String>(reader);
+                return new PreviewText(value);
+            }
+        
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(PreviewText);
+            }
+        }
+        
+        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<PreviewText>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<PreviewText>
+        {
+            public override void SetValue(System.Data.IDbDataParameter parameter, PreviewText value)
+            {
+                parameter.DbType = System.Data.DbType.String;
+                parameter.Value = value.Value;
+            }
+        
+            public override PreviewText Parse(object value)
+            {
+                return new PreviewText((System.String)value);
+            }
+        }
+    }
+}
 
 namespace Fifthweek.Api.Posts.Shared
 {
@@ -208,6 +255,24 @@ namespace Fifthweek.Api.Posts.Shared
     {
         public CommentId(
             System.Guid value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            this.Value = value;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Shared
+{
+    using Fifthweek.CodeGeneration;
+
+    public partial class PreviewText 
+    {
+        public PreviewText(
+            System.String value)
         {
             if (value == null)
             {
@@ -374,6 +439,58 @@ namespace Fifthweek.Api.Posts.Shared
         }
         
         protected bool Equals(CommentId other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Shared
+{
+    using Fifthweek.CodeGeneration;
+
+    public partial class PreviewText 
+    {
+        public override string ToString()
+        {
+            return string.Format("PreviewText(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((PreviewText)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(PreviewText other)
         {
             if (!object.Equals(this.Value, other.Value))
             {

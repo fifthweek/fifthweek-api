@@ -246,7 +246,7 @@ public static System.Threading.Tasks.Task UpsertAsync(
         transaction);
 }
 
-public static System.Threading.Tasks.Task UpdateAsync(
+public static System.Threading.Tasks.Task<int> UpdateAsync(
     this System.Data.Common.DbConnection connection, 
     <#= unifiedClass.FirstCodeClass.Name #> entity, 
     <#= unifiedClass.FirstCodeClass.Name #>.Fields fields,

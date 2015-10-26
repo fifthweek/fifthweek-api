@@ -65,6 +65,8 @@
 
         IDbSet<Like> Likes { get; set; }
 
+        IDbSet<PostFile> PostFiles { get; set; }
+
         Task<int> SaveChangesAsync();
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);

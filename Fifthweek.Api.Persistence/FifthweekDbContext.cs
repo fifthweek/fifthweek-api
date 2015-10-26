@@ -35,6 +35,8 @@ namespace Fifthweek.Api.Persistence
 
         public IDbSet<File> Files { get; set; }
 
+        public IDbSet<PostFile> PostFiles { get; set; }
+
         public IDbSet<EndToEndTestEmail> EndToEndTestEmails { get; set; }
 
         public IDbSet<FreeAccessUser> FreeAccessUsers { get; set; }

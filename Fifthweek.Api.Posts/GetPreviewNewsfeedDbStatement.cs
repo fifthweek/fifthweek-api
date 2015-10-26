@@ -22,7 +22,7 @@
     [AutoConstructor]
     public partial class GetPreviewNewsfeedDbStatement : IGetPreviewNewsfeedDbStatement
     {
-        public static readonly PositiveInt MaxCommentLength = PositiveInt.Parse(400);
+        public static readonly PositiveInt MaxPreviewTextLength = PositiveInt.Parse(400);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
@@ -53,7 +53,7 @@
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var query = new StringBuilder();
-                query.Append(GetNewsfeedDbStatement.GetSqlStart(requestorId, MaxCommentLength));
+                query.Append(GetNewsfeedDbStatement.GetSqlStart(requestorId, MaxPreviewTextLength));
                 query.Append(GetNewsfeedDbStatement.CreateFilter(null, creatorId, requestedChannelIds, now, origin, searchForwards, startIndex, count, true));
 
                 var entities = (await connection.QueryAsync<PreviewNewsfeedPost.Builder>(query.ToString(), parameters)).ToList();

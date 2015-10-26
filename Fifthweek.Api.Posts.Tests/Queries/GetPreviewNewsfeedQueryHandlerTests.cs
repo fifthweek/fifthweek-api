@@ -40,7 +40,7 @@
         private static readonly bool SearchForwards = true;
         private static readonly NonNegativeInt StartIndex = NonNegativeInt.Parse(10);
         private static readonly PositiveInt Count = PositiveInt.Parse(5);
-        private static readonly Comment Comment = new Comment("Hey guys!");
+        private static readonly PreviewText PreviewText = new PreviewText("Hey guys!");
         private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
         private static readonly AccessSignatureExpiryInformation Expiry = new AccessSignatureExpiryInformation(Now.AddDays(1), Now.AddDays(2));
         private static readonly string FileName = "FileName";
@@ -134,21 +134,6 @@
                     Assert.IsNull(item.Output.Creator.ProfileImage);
                 }
 
-                if (item.Input.FileId != null)
-                {
-                    Assert.AreEqual(item.Input.FileId, item.Output.File.FileId);
-                    Assert.AreEqual(item.Input.ChannelId.ToString(), item.Output.File.ContainerName);
-                    Assert.AreEqual(item.Input.FileName, item.Output.FileSource.FileName);
-                    Assert.AreEqual(item.Input.FileExtension, item.Output.FileSource.FileExtension);
-                    Assert.AreEqual(item.Input.FileSize, item.Output.FileSource.Size);
-                    Assert.AreEqual(ContentType, item.Output.FileSource.ContentType);
-                }
-                else
-                {
-                    Assert.IsNull(item.Output.FileSource);
-                    Assert.IsNull(item.Output.File);
-                }
-
                 if (item.Input.ImageId != null)
                 {
                     Assert.AreEqual(item.Input.ImageId, item.Output.Image.FileId);
@@ -173,7 +158,11 @@
 
                 Assert.AreEqual(item.Input.PostId, item.Output.PostId);
                 Assert.AreEqual(item.Input.ChannelId, item.Output.ChannelId);
-                Assert.AreEqual(item.Input.Comment, item.Output.Comment);
+                Assert.AreEqual(item.Input.PreviewText, item.Output.PreviewText);
+                Assert.AreEqual(item.Input.PreviewWordCount, item.Output.PreviewWordCount);
+                Assert.AreEqual(item.Input.WordCount, item.Output.WordCount);
+                Assert.AreEqual(item.Input.ImageCount, item.Output.ImageCount);
+                Assert.AreEqual(item.Input.FileCount, item.Output.FileCount);
                 Assert.AreEqual(item.Input.LiveDate, item.Output.LiveDate);
 
                 Assert.AreEqual(item.Input.Username, item.Output.Creator.Username.Value);
@@ -229,13 +218,13 @@
                             Guid.NewGuid().ToString(),
                             channelId,
                             Guid.NewGuid().ToString(),
-                            i % 2 == 0 ? Comment : null,
-                            i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
+                            i % 2 == 0 ? PreviewText : null,
                             i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
+                            i % 2 == 0 ? PreviewText.Value.Length : 0,
+                            i % 2 == 0 ? PreviewText.Value.Length : 0,
+                            i % 3 == 2 ? 1 : 0,
+                            i % 3 == 1 ? 1 : 0,
                             liveDate,
-                            i % 3 == 1 ? FileName : null,
-                            i % 3 == 1 ? FileExtension : null,
-                            i % 3 == 1 ? FileSize : (long?)null,
                             i % 3 == 2 ? FileName : null,
                             i % 3 == 2 ? FileExtension : null,
                             i % 3 == 2 ? FileSize : (long?)null,

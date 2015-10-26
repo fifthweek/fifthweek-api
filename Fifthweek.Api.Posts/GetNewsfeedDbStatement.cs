@@ -40,8 +40,7 @@
 
         private static readonly string SqlSelectPartial = string.Format(@"
                 blog.{12} AS BlogId, blog.{13} AS CreatorId, post.{1} AS PostId, 
-                post.{2}, {6}, {7}, {3}, post.{21}, 
-                [file].{16} as FileName, [file].{17} as FileExtension, [file].{18} as FileSize, 
+                post.{2}, {7} AS ImageId, {3}, post.{21}, {22}, {23}, {24}, {25},
                 image.{16} as ImageName, image.{17} as ImageExtension, image.{18} as ImageSize, 
                 image.{19} as ImageRenderWidth, image.{20} as ImageRenderHeight,
                 COALESCE(likes.LikesCount, 0) AS LikesCount,
@@ -51,9 +50,9 @@
             Post.Fields.ChannelId,
             Post.Fields.LiveDate,
             Post.Fields.QueueId,
-            Post.Fields.Comment,
-            Post.Fields.FileId,
-            Post.Fields.ImageId,
+            Post.Fields.PreviewText,
+            Post.Fields.Id,
+            Post.Fields.PreviewImageId,
             Channel.Table,
             Channel.Fields.Id,
             Channel.Fields.BlogId,
@@ -68,11 +67,10 @@
             File.Fields.RenderWidth,
             File.Fields.RenderHeight,
             Post.Fields.CreationDate,
-            Like.Fields.PostId,
-            Like.Table,
-            Comment.Fields.PostId,
-            Comment.Table,
-            Like.Fields.UserId);
+            Post.Fields.PreviewWordCount,
+            Post.Fields.WordCount,
+            Post.Fields.ImageCount,
+            Post.Fields.FileCount);
 
         private static readonly string SqlHasLikedSelect = string.Format(@",
             CASE WHEN likedPosts.{0} IS NOT NULL THEN 1 ELSE 0 END AS HasLikedPost",
@@ -92,7 +90,6 @@
             FROM {0} post
             INNER JOIN  {8} channel ON post.{2} = channel.{9}
             INNER JOIN  {11} blog ON channel.{10} = blog.{12}
-            LEFT OUTER JOIN {14} [file] ON post.{6} = [file].{15}
             LEFT OUTER JOIN {14} image ON post.{7} = image.{15}
             LEFT OUTER JOIN (SELECT {22}, COUNT(*) AS LikesCount FROM {23} GROUP BY {22}) likes ON post.{1} = likes.{22}
             LEFT OUTER JOIN (SELECT {24}, COUNT(*) AS CommentsCount FROM {25} GROUP BY {24}) comments ON post.{1} = comments.{24}",
@@ -101,9 +98,9 @@
             Post.Fields.ChannelId,
             Post.Fields.LiveDate,
             Post.Fields.QueueId,
-            Post.Fields.Comment,
-            Post.Fields.FileId,
-            Post.Fields.ImageId,
+            Post.Fields.PreviewText,
+            Post.Fields.Id,
+            Post.Fields.PreviewImageId,
             Channel.Table,
             Channel.Fields.Id,
             Channel.Fields.BlogId,
@@ -232,11 +229,11 @@
 
             if (maxCommentLength == null)
             {
-                result.Append(string.Format("SELECT {0},", Post.Fields.Comment));
+                result.Append(string.Format("SELECT {0},", Post.Fields.PreviewText));
             }
             else
             {
-                result.Append(string.Format("SELECT LEFT({0}, {1}) AS Comment,", Post.Fields.Comment, maxCommentLength.Value));
+                result.Append(string.Format("SELECT LEFT({0}, {1}) AS PreviewText,", Post.Fields.PreviewText, maxCommentLength.Value));
             }
 
             result.Append(SqlSelectPartial);

@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Posts.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
@@ -31,6 +32,8 @@
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
+        private static readonly PostFile PostFile = new PostFile(PostId.Value, FileId.Value);
+        private static readonly IReadOnlyList<PostFile> PostFiles = new List<PostFile> { PostFile };
         private static readonly ValidComment Comment = ValidComment.Parse("Hey guys!");
         private static readonly Random Random = new Random();
         private static readonly DateTime Now = DateTime.UtcNow;
@@ -70,9 +73,9 @@
                 this.scheduledDateClipping.Setup(_ => _.Apply(Now, Now)).Returns(Now);
 
                 var givenPost = UnscheduledPost();
-                givenPost.Comment = null;
+                givenPost.PreviewText = null;
 
-                await this.target.SchedulePostAsync(givenPost, Now, Now);
+                await this.target.SchedulePostAsync(givenPost, PostFiles, Now, Now);
 
                 var expectedPost = givenPost.Copy(_ =>
                 {
@@ -82,7 +85,7 @@
 
                 return new ExpectedSideEffects
                 {
-                    Insert = expectedPost
+                    Inserts = new List<IIdentityEquatable> { expectedPost, new PostFile(expectedPost.Id, FileId.Value) },
                 };
             });
         }
@@ -102,7 +105,7 @@
 
                 var givenPost = UnscheduledPost();
 
-                await this.target.SchedulePostAsync(givenPost, scheduleDate, Now);
+                await this.target.SchedulePostAsync(givenPost, PostFiles, scheduleDate, Now);
 
                 var expectedPost = givenPost.Copy(_ =>
                 {
@@ -112,7 +115,7 @@
 
                 return new ExpectedSideEffects
                 {
-                    Insert = expectedPost
+                    Inserts = new List<IIdentityEquatable> { expectedPost, new PostFile(expectedPost.Id, FileId.Value) },
                 };
             });
         }
@@ -131,7 +134,7 @@
 
                 var givenPost = UnscheduledPost();
                 givenPost.QueueId = QueueId.Value;
-                await this.target.QueuePostAsync(givenPost);
+                await this.target.QueuePostAsync(givenPost, PostFiles);
 
                 var expectedPost = givenPost.Copy(_ =>
                 {
@@ -141,7 +144,7 @@
 
                 return new ExpectedSideEffects
                 {
-                    Insert = expectedPost
+                    Inserts = new List<IIdentityEquatable> { expectedPost, new PostFile(expectedPost.Id, FileId.Value) },
                 };
             });
         }
@@ -161,7 +164,7 @@
 
                 var givenPost = UnscheduledPost();
                 givenPost.QueueId = QueueId.Value;
-                await this.target.QueuePostAsync(givenPost);
+                await this.target.QueuePostAsync(givenPost, PostFiles);
 
                 var expectedPost = givenPost.Copy(_ =>
                 {
@@ -171,7 +174,7 @@
 
                 return new ExpectedSideEffects
                 {
-                    Insert = expectedPost
+                    Inserts = new List<IIdentityEquatable> { expectedPost, new PostFile(expectedPost.Id, FileId.Value) },
                 };
             });
         }
@@ -191,7 +194,7 @@
 
                 var givenPost = UnscheduledPost();
                 givenPost.QueueId = QueueId.Value;
-                await this.target.QueuePostAsync(givenPost);
+                await this.target.QueuePostAsync(givenPost, PostFiles);
 
                 var expectedPost = givenPost.Copy(_ =>
                 {
@@ -201,7 +204,7 @@
 
                 return new ExpectedSideEffects
                 {
-                    Insert = expectedPost
+                    Inserts = new List<IIdentityEquatable> { expectedPost, new PostFile(expectedPost.Id, FileId.Value) },
                 };
             });
         }
@@ -223,10 +226,10 @@
                 givenPost.QueueId = QueueId.Value;
                 await ExpectedException.AssertExceptionAsync<OptimisticConcurrencyException>(() =>
                 {
-                    return this.target.QueuePostAsync(givenPost);            
+                    return this.target.QueuePostAsync(givenPost, PostFiles);            
                 });
                 
-                return ExpectedSideEffects.None;
+                return ExpectedSideEffects.TransactionAborted;
             });
         }
 
@@ -244,10 +247,10 @@
           
                 var givenPost = UnscheduledPost();
                 givenPost.QueueId = QueueId.Value;
-         
-                await this.target.QueuePostAsync(givenPost);
+
+                await this.target.QueuePostAsync(givenPost, PostFiles);
                 await testDatabase.TakeSnapshotAsync();
-                await this.target.QueuePostAsync(givenPost);
+                await this.target.QueuePostAsync(givenPost, PostFiles);
 
                 return ExpectedSideEffects.None;
             });
@@ -261,11 +264,14 @@
                 null,
                 null,
                 null,
-                null,
-                null,
                 FileId.Value,
                 null,
                 Comment.Value,
+                Comment.Value,
+                1,
+                2,
+                3,
+                4,
                 default(DateTime),
                 new SqlDateTime(Now).Value); 
         }
@@ -285,7 +291,7 @@
                 var post = PostTests.UniqueFileOrImage(Random);
                 post.ChannelId = ChannelId.Value;
                 post.QueueId = scheduledByQueue ? (differentCollection ? DifferentQueueId.Value : QueueId.Value) : (Guid?)null;
-                post.FileId = FileId.Value; // Reuse same file across each post. Not realistic, but doesn't matter for this test.
+                post.PreviewImageId = FileId.Value; // Reuse same file across each post. Not realistic, but doesn't matter for this test.
                 post.LiveDate = liveDate;
                 await databaseContext.Database.Connection.InsertAsync(post);
             }
@@ -305,7 +311,7 @@
                         var post = PostTests.UniqueFileOrImage(Random);
                         post.ChannelId = ChannelId.Value;
                         post.QueueId = QueueId.Value;
-                        post.FileId = FileId.Value; // Reuse same file across each post. Not realistic, but doesn't matter for this test.
+                        post.PreviewImageId = FileId.Value; // Reuse same file across each post. Not realistic, but doesn't matter for this test.
                         post.LiveDate = DateTime.UtcNow.AddDays(i);
                         await databaseContext.Database.Connection.InsertAsync(post);
                     }

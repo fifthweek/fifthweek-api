@@ -1,6 +1,8 @@
 namespace Fifthweek.Api.Posts
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Channels.Shared;
@@ -20,14 +22,20 @@ namespace Fifthweek.Api.Posts
         public Task ExecuteAsync(
             PostId newPostId,
             ChannelId channelId,
-            ValidComment comment,
+            ValidComment content,
             DateTime? sheduledPostDate,
             QueueId queueId,
-            FileId fileId,
-            FileId imageId,
+            ValidPreviewText previewText,
+            FileId previewImageId,
+            IReadOnlyList<FileId> fileIds,
+            int previewWordCount,
+            int wordCount,
+            int imageCount,
+            int fileCount,
             DateTime now)
         {
             newPostId.AssertNotNull("newPostId");
+            content.AssertNotNull("content");
             channelId.AssertNotNull("channelId");
 
             var post = new Post(
@@ -36,20 +44,25 @@ namespace Fifthweek.Api.Posts
                 null,
                 queueId == null ? (Guid?)null : queueId.Value,
                 null,
-                fileId == null ? (Guid?)null : fileId.Value,
+                previewImageId == null ? (Guid?)null : previewImageId.Value,
                 null,
-                imageId == null ? (Guid?)null : imageId.Value,
-                null,
-                comment == null ? null : comment.Value,
+                previewText == null ? null : previewText.Value,
+                content.Value,
+                previewWordCount,
+                wordCount,
+                imageCount,
+                fileCount,
                 default(DateTime), // Live date assigned by sub-statements.
                 now);
 
+            var postFiles = fileIds.EmptyIfNull().Select(v => new PostFile(newPostId.Value, v.Value)).ToList();
+
             if (queueId != null)
             {
-                return this.subStatements.QueuePostAsync(post);
+                return this.subStatements.QueuePostAsync(post, postFiles);
             }
 
-            return this.subStatements.SchedulePostAsync(post, sheduledPostDate, now);
+            return this.subStatements.SchedulePostAsync(post, postFiles, sheduledPostDate, now);
         }
     }
 }

@@ -285,23 +285,12 @@
                 collection.BlogId = blog.Id;
                 await databaseContext.Database.Connection.InsertAsync(collection);
 
-                var notes = new List<Post>();
-                for (var i = 0; i < 10; i++)
-                {
-                    // Notes are not covered by this feature as they do not belong in a collection, but we add them to create a more realistic test state.
-                    var post = PostTests.UniqueNote(Random);
-                    post.ChannelId = channel.Id;
-
-                    notes.Add(post);
-                }
-
                 var postsInCollection = new List<Post>();
                 foreach (var liveDate in liveDates)
                 {
-                    var post = PostTests.UniqueFileOrImage(Random);
+                    var post = PostTests.UniqueNote(Random);
                     post.ChannelId = channel.Id;
                     post.QueueId = scheduledByQueue ? queueId.Value : (Guid?)null;
-                    post.FileId = file.Id;
                     post.LiveDate = liveDate;
 
                     // Clip dates as we will be comparing from these entities.
@@ -311,7 +300,7 @@
                     postsInCollection.Add(post);
                 }
 
-                await databaseContext.Database.Connection.InsertAsync(notes.Concat(postsInCollection));
+                await databaseContext.Database.Connection.InsertAsync(postsInCollection);
 
                 return postsInCollection;
             }

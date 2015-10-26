@@ -29,6 +29,7 @@
             builder.RegisterType<UnlikePostDbStatement>().As<IUnlikePostDbStatement>();
             builder.RegisterType<CommentOnPostDbStatement>().As<ICommentOnPostDbStatement>();
             builder.RegisterType<GetCommentsDbStatement>().As<IGetCommentsDbStatement>();
+            builder.RegisterType<RevisePostDbStatement>().As<IRevisePostDbStatement>();
         }
     }
 }

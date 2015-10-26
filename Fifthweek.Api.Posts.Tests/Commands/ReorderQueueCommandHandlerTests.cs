@@ -339,7 +339,7 @@
                     var post = PostTests.UniqueFileOrImage(Random);
                     post.ChannelId = channel.Id;
                     post.QueueId = scheduledByQueue ? queueId.Value : (Guid?)null;
-                    post.FileId = file.Id;
+                    post.PreviewImageId = file.Id;
                     post.LiveDate = Now.AddDays((1 + Random.Next(100)) * (liveDateInFuture ? 1 : -1));
 
                     // Clip dates as we will be comparing from these entities.

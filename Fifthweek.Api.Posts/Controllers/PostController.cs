@@ -9,6 +9,7 @@
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Queries;
@@ -75,9 +76,14 @@
                 requester,
                 newPostId,
                 post.ChannelId,
-                post.FileId,
-                post.ImageId,
-                post.Comment,
+                post.PreviewImageId,
+                post.PreviewText,
+                post.Content,
+                post.PreviewWordCount,
+                post.WordCount,
+                post.ImageCount,
+                post.FileCount,
+                post.FileIds ?? new List<FileId>(),
                 post.ScheduledPostTime,
                 post.QueueId,
                 timestamp));
@@ -97,9 +103,14 @@
             await this.revisePost.HandleAsync(new RevisePostCommand(
                 requester,
                 postIdObject,
-                post.FileId,
-                post.ImageId,
-                post.Comment));
+                post.PreviewImageId,
+                post.PreviewText,
+                post.Content,
+                post.PreviewWordCount,
+                post.WordCount,
+                post.ImageCount,
+                post.FileCount,
+                post.FileIds ?? new List<FileId>()));
         }
 
         [Route("{postId}")]

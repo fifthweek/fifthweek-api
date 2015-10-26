@@ -1,10 +1,12 @@
 namespace Fifthweek.Api.Posts
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
@@ -25,7 +27,7 @@ namespace Fifthweek.Api.Posts
         private readonly IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost;
         private readonly IScheduledDateClippingFunction scheduledDateClipping;
 
-        public async Task QueuePostAsync(Post post)
+        public async Task QueuePostAsync(Post post, IReadOnlyList<PostFile> postFiles)
         {
             post.AssertNotNull("post");
 
@@ -43,18 +45,26 @@ namespace Fifthweek.Api.Posts
                 Conditions = new[] { WherePostLiveDateUniqueToQueue }
             };
 
-            using (var connection = this.connectionFactory.CreateConnection())
+            using (var transaction = TransactionScopeBuilder.CreateAsync())
             {
-                var success = -1 == await connection.InsertAsync(parameters);
-
-                if (!success)
+                // The order we access tables should match RevisePostDbStatement.
+                using (var connection = this.connectionFactory.CreateConnection())
                 {
-                    throw new OptimisticConcurrencyException(string.Format("Failed to optimistically queue post to channel {0}", post.ChannelId));
+                    var success = -1 == await connection.InsertAsync(parameters);
+
+                    if (!success)
+                    {
+                        throw new OptimisticConcurrencyException(string.Format("Failed to optimistically queue post to channel {0}", post.ChannelId));
+                    }
+
+                    await connection.InsertAsync(postFiles);
                 }
+
+                transaction.Complete();
             }
         }
 
-        public async Task SchedulePostAsync(Post post, DateTime? scheduledPostDate, DateTime now)
+        public async Task SchedulePostAsync(Post post, IReadOnlyList<PostFile> postFiles, DateTime? scheduledPostDate, DateTime now)
         {
             post.AssertNotNull("post");
 
@@ -72,9 +82,16 @@ namespace Fifthweek.Api.Posts
 
             post.LiveDate = this.scheduledDateClipping.Apply(now, scheduledPostDate);
 
-            using (var connection = this.connectionFactory.CreateConnection())
+            using (var transaction = TransactionScopeBuilder.CreateAsync())
             {
-                await connection.InsertAsync(post);
+                // The order we access tables should match RevisePostDbStatement.
+                using (var connection = this.connectionFactory.CreateConnection())
+                {
+                    await connection.InsertAsync(post);
+                    await connection.InsertAsync(postFiles);
+                }
+
+                transaction.Complete();
             }
         }
     }

@@ -44,7 +44,6 @@
 
                 await this.target.ExecuteAsync(EndDate);
 
-                Assert.AreEqual(36, expectedDeletions.Count);
                 return new ExpectedSideEffects
                 {
                     Deletes = expectedDeletions,
@@ -117,10 +116,14 @@
             var posts = new List<Post>();
             var post = PostTests.UniqueFileOrImage(random);
             post.ChannelId = channel.Id;
-            post.ImageId = file.Id;
+            post.PreviewImageId = file.Id;
             post.ChannelId = channel.Id;
             posts.Add(post);
             await connection.InsertAsync(posts);
+
+            var postFiles = new List<PostFile>();
+            postFiles.Add(new PostFile(post.Id, file.Id));
+            await connection.InsertAsync(postFiles);
 
             var channelSubscriptions = new List<ChannelSubscription>();
             if (subscriberId != null)
@@ -204,7 +207,8 @@
                 .Concat(creatorChannelSnapshotItems)
                 .Concat(creatorFreeAccessUsersSnapshots)
                 .Concat(creatorFreeAccessUsersSnapshotItems)
-                .Concat(userPaymentOrigins);
+                .Concat(userPaymentOrigins)
+                .Concat(postFiles);
         }
     }
 }

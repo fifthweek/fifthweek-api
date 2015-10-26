@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 13/10/2015 11:00:03 (UTC)
-//// Mapped solution in 11.87s
+//// Generated on 26/10/2015 16:40:47 (UTC)
+//// Mapped solution in 27.24s
 
 
 namespace Fifthweek.Api.Persistence
@@ -415,11 +415,14 @@ namespace Fifthweek.Api.Persistence
             Fifthweek.Api.Persistence.Channel channel,
             System.Nullable<System.Guid> queueId,
             Fifthweek.Api.Persistence.Queue queue,
-            System.Nullable<System.Guid> fileId,
-            Fifthweek.Api.Persistence.File file,
-            System.Nullable<System.Guid> imageId,
-            Fifthweek.Api.Persistence.File image,
-            System.String comment,
+            System.Nullable<System.Guid> previewImageId,
+            Fifthweek.Api.Persistence.File previewImage,
+            System.String previewText,
+            System.String content,
+            System.Int32 previewWordCount,
+            System.Int32 wordCount,
+            System.Int32 imageCount,
+            System.Int32 fileCount,
             System.DateTime liveDate,
             System.DateTime creationDate)
         {
@@ -431,6 +434,31 @@ namespace Fifthweek.Api.Persistence
             if (channelId == null)
             {
                 throw new ArgumentNullException("channelId");
+            }
+
+            if (content == null)
+            {
+                throw new ArgumentNullException("content");
+            }
+
+            if (previewWordCount == null)
+            {
+                throw new ArgumentNullException("previewWordCount");
+            }
+
+            if (wordCount == null)
+            {
+                throw new ArgumentNullException("wordCount");
+            }
+
+            if (imageCount == null)
+            {
+                throw new ArgumentNullException("imageCount");
+            }
+
+            if (fileCount == null)
+            {
+                throw new ArgumentNullException("fileCount");
             }
 
             if (liveDate == null)
@@ -448,11 +476,14 @@ namespace Fifthweek.Api.Persistence
             this.Channel = channel;
             this.QueueId = queueId;
             this.Queue = queue;
-            this.FileId = fileId;
-            this.File = file;
-            this.ImageId = imageId;
-            this.Image = image;
-            this.Comment = comment;
+            this.PreviewImageId = previewImageId;
+            this.PreviewImage = previewImage;
+            this.PreviewText = previewText;
+            this.Content = content;
+            this.PreviewWordCount = previewWordCount;
+            this.WordCount = wordCount;
+            this.ImageCount = imageCount;
+            this.FileCount = fileCount;
             this.LiveDate = liveDate;
             this.CreationDate = creationDate;
         }
@@ -467,312 +498,49 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
-    public partial class RefreshToken 
+    public partial class Comment 
     {
-        public RefreshToken(
-            System.String username,
-            System.String clientId,
-            System.String encryptedId,
-            System.DateTime issuedDate,
-            System.DateTime expiresDate,
-            System.String protectedTicket)
-        {
-            if (username == null)
-            {
-                throw new ArgumentNullException("username");
-            }
-
-            if (clientId == null)
-            {
-                throw new ArgumentNullException("clientId");
-            }
-
-            if (encryptedId == null)
-            {
-                throw new ArgumentNullException("encryptedId");
-            }
-
-            if (issuedDate == null)
-            {
-                throw new ArgumentNullException("issuedDate");
-            }
-
-            if (expiresDate == null)
-            {
-                throw new ArgumentNullException("expiresDate");
-            }
-
-            if (protectedTicket == null)
-            {
-                throw new ArgumentNullException("protectedTicket");
-            }
-
-            this.Username = username;
-            this.ClientId = clientId;
-            this.EncryptedId = encryptedId;
-            this.IssuedDate = issuedDate;
-            this.ExpiresDate = expiresDate;
-            this.ProtectedTicket = protectedTicket;
-        }
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class CreatorChannelsSnapshot 
-    {
-        public CreatorChannelsSnapshot(
+        public Comment(
             System.Guid id,
-            System.DateTime timestamp,
-            System.Guid creatorId)
+            System.Guid postId,
+            Fifthweek.Api.Persistence.Post post,
+            System.Guid userId,
+            Fifthweek.Api.Persistence.Identity.FifthweekUser user,
+            System.String content,
+            System.DateTime creationDate)
         {
             if (id == null)
             {
                 throw new ArgumentNullException("id");
             }
 
-            if (timestamp == null)
+            if (postId == null)
             {
-                throw new ArgumentNullException("timestamp");
+                throw new ArgumentNullException("postId");
             }
 
-            if (creatorId == null)
+            if (userId == null)
             {
-                throw new ArgumentNullException("creatorId");
+                throw new ArgumentNullException("userId");
             }
 
-            this.Id = id;
-            this.Timestamp = timestamp;
-            this.CreatorId = creatorId;
-        }
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class CreatorChannelsSnapshotItem 
-    {
-        public CreatorChannelsSnapshotItem(
-            System.Guid creatorChannelsSnapshotId,
-            Fifthweek.Api.Persistence.Snapshots.CreatorChannelsSnapshot creatorChannelsSnapshot,
-            System.Guid channelId,
-            System.Int32 price)
-        {
-            if (creatorChannelsSnapshotId == null)
+            if (content == null)
             {
-                throw new ArgumentNullException("creatorChannelsSnapshotId");
+                throw new ArgumentNullException("content");
             }
 
-            if (channelId == null)
+            if (creationDate == null)
             {
-                throw new ArgumentNullException("channelId");
-            }
-
-            if (price == null)
-            {
-                throw new ArgumentNullException("price");
-            }
-
-            this.CreatorChannelsSnapshotId = creatorChannelsSnapshotId;
-            this.CreatorChannelsSnapshot = creatorChannelsSnapshot;
-            this.ChannelId = channelId;
-            this.Price = price;
-        }
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class CreatorFreeAccessUsersSnapshot 
-    {
-        public CreatorFreeAccessUsersSnapshot(
-            System.Guid id,
-            System.DateTime timestamp,
-            System.Guid creatorId)
-        {
-            if (id == null)
-            {
-                throw new ArgumentNullException("id");
-            }
-
-            if (timestamp == null)
-            {
-                throw new ArgumentNullException("timestamp");
-            }
-
-            if (creatorId == null)
-            {
-                throw new ArgumentNullException("creatorId");
+                throw new ArgumentNullException("creationDate");
             }
 
             this.Id = id;
-            this.Timestamp = timestamp;
-            this.CreatorId = creatorId;
-        }
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class CreatorFreeAccessUsersSnapshotItem 
-    {
-        public CreatorFreeAccessUsersSnapshotItem(
-            System.Guid creatorFreeAccessUsersSnapshotId,
-            Fifthweek.Api.Persistence.Snapshots.CreatorFreeAccessUsersSnapshot creatorFreeAccessUsersSnapshot,
-            System.String email)
-        {
-            if (creatorFreeAccessUsersSnapshotId == null)
-            {
-                throw new ArgumentNullException("creatorFreeAccessUsersSnapshotId");
-            }
-
-            if (email == null)
-            {
-                throw new ArgumentNullException("email");
-            }
-
-            this.CreatorFreeAccessUsersSnapshotId = creatorFreeAccessUsersSnapshotId;
-            this.CreatorFreeAccessUsersSnapshot = creatorFreeAccessUsersSnapshot;
-            this.Email = email;
-        }
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class SubscriberChannelsSnapshot 
-    {
-        public SubscriberChannelsSnapshot(
-            System.Guid id,
-            System.DateTime timestamp,
-            System.Guid subscriberId)
-        {
-            if (id == null)
-            {
-                throw new ArgumentNullException("id");
-            }
-
-            if (timestamp == null)
-            {
-                throw new ArgumentNullException("timestamp");
-            }
-
-            if (subscriberId == null)
-            {
-                throw new ArgumentNullException("subscriberId");
-            }
-
-            this.Id = id;
-            this.Timestamp = timestamp;
-            this.SubscriberId = subscriberId;
-        }
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class SubscriberChannelsSnapshotItem 
-    {
-        public SubscriberChannelsSnapshotItem(
-            System.Guid subscriberChannelsSnapshotId,
-            Fifthweek.Api.Persistence.Snapshots.SubscriberChannelsSnapshot subscriberChannelsSnapshot,
-            System.Guid channelId,
-            System.Guid creatorId,
-            System.Int32 acceptedPrice,
-            System.DateTime subscriptionStartDate)
-        {
-            if (subscriberChannelsSnapshotId == null)
-            {
-                throw new ArgumentNullException("subscriberChannelsSnapshotId");
-            }
-
-            if (channelId == null)
-            {
-                throw new ArgumentNullException("channelId");
-            }
-
-            if (creatorId == null)
-            {
-                throw new ArgumentNullException("creatorId");
-            }
-
-            if (acceptedPrice == null)
-            {
-                throw new ArgumentNullException("acceptedPrice");
-            }
-
-            if (subscriptionStartDate == null)
-            {
-                throw new ArgumentNullException("subscriptionStartDate");
-            }
-
-            this.SubscriberChannelsSnapshotId = subscriberChannelsSnapshotId;
-            this.SubscriberChannelsSnapshot = subscriberChannelsSnapshot;
-            this.ChannelId = channelId;
-            this.CreatorId = creatorId;
-            this.AcceptedPrice = acceptedPrice;
-            this.SubscriptionStartDate = subscriptionStartDate;
-        }
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class SubscriberSnapshot 
-    {
-        public SubscriberSnapshot(
-            System.DateTime timestamp,
-            System.Guid subscriberId,
-            System.String email)
-        {
-            if (timestamp == null)
-            {
-                throw new ArgumentNullException("timestamp");
-            }
-
-            if (subscriberId == null)
-            {
-                throw new ArgumentNullException("subscriberId");
-            }
-
-            this.Timestamp = timestamp;
-            this.SubscriberId = subscriberId;
-            this.Email = email;
+            this.PostId = postId;
+            this.Post = post;
+            this.UserId = userId;
+            this.User = user;
+            this.Content = content;
+            this.CreationDate = creationDate;
         }
     }
 }
@@ -785,26 +553,35 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
-    public partial class WeeklyReleaseTime 
+    public partial class Like 
     {
-        public WeeklyReleaseTime(
-            System.Guid queueId,
-            Fifthweek.Api.Persistence.Queue queue,
-            System.Byte hourOfWeek)
+        public Like(
+            System.Guid postId,
+            Fifthweek.Api.Persistence.Post post,
+            System.Guid userId,
+            Fifthweek.Api.Persistence.Identity.FifthweekUser user,
+            System.DateTime creationDate)
         {
-            if (queueId == null)
+            if (postId == null)
             {
-                throw new ArgumentNullException("queueId");
+                throw new ArgumentNullException("postId");
             }
 
-            if (hourOfWeek == null)
+            if (userId == null)
             {
-                throw new ArgumentNullException("hourOfWeek");
+                throw new ArgumentNullException("userId");
             }
 
-            this.QueueId = queueId;
-            this.Queue = queue;
-            this.HourOfWeek = hourOfWeek;
+            if (creationDate == null)
+            {
+                throw new ArgumentNullException("creationDate");
+            }
+
+            this.PostId = postId;
+            this.Post = post;
+            this.UserId = userId;
+            this.User = user;
+            this.CreationDate = creationDate;
         }
     }
 }
@@ -936,6 +713,38 @@ namespace Fifthweek.Api.Persistence.Payments
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Persistence.Identity;
 
+    public partial class CreatorPercentageOverride 
+    {
+        public CreatorPercentageOverride(
+            System.Guid userId,
+            System.Decimal percentage,
+            System.Nullable<System.DateTime> expiryDate)
+        {
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
+            if (percentage == null)
+            {
+                throw new ArgumentNullException("percentage");
+            }
+
+            this.UserId = userId;
+            this.Percentage = percentage;
+            this.ExpiryDate = expiryDate;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
     public partial class UncommittedSubscriptionPayment 
     {
         public UncommittedSubscriptionPayment(
@@ -994,38 +803,6 @@ namespace Fifthweek.Api.Persistence.Payments
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Persistence.Identity;
 
-    public partial class CreatorPercentageOverride 
-    {
-        public CreatorPercentageOverride(
-            System.Guid userId,
-            System.Decimal percentage,
-            System.Nullable<System.DateTime> expiryDate)
-        {
-            if (userId == null)
-            {
-                throw new ArgumentNullException("userId");
-            }
-
-            if (percentage == null)
-            {
-                throw new ArgumentNullException("percentage");
-            }
-
-            this.UserId = userId;
-            this.Percentage = percentage;
-            this.ExpiryDate = expiryDate;
-        }
-    }
-}
-namespace Fifthweek.Api.Persistence.Payments
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Persistence.Identity;
-
     public partial class UserPaymentOrigin 
     {
         public UserPaymentOrigin(
@@ -1070,49 +847,28 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
-    public partial class Comment 
+    public partial class PostFile 
     {
-        public Comment(
-            System.Guid id,
+        public PostFile(
             System.Guid postId,
             Fifthweek.Api.Persistence.Post post,
-            System.Guid userId,
-            Fifthweek.Api.Persistence.Identity.FifthweekUser user,
-            System.String content,
-            System.DateTime creationDate)
+            System.Guid fileId,
+            Fifthweek.Api.Persistence.File file)
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException("id");
-            }
-
             if (postId == null)
             {
                 throw new ArgumentNullException("postId");
             }
 
-            if (userId == null)
+            if (fileId == null)
             {
-                throw new ArgumentNullException("userId");
+                throw new ArgumentNullException("fileId");
             }
 
-            if (content == null)
-            {
-                throw new ArgumentNullException("content");
-            }
-
-            if (creationDate == null)
-            {
-                throw new ArgumentNullException("creationDate");
-            }
-
-            this.Id = id;
             this.PostId = postId;
             this.Post = post;
-            this.UserId = userId;
-            this.User = user;
-            this.Content = content;
-            this.CreationDate = creationDate;
+            this.FileId = fileId;
+            this.File = file;
         }
     }
 }
@@ -1125,35 +881,344 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
-    public partial class Like 
+    public partial class RefreshToken 
     {
-        public Like(
-            System.Guid postId,
-            Fifthweek.Api.Persistence.Post post,
-            System.Guid userId,
-            Fifthweek.Api.Persistence.Identity.FifthweekUser user,
-            System.DateTime creationDate)
+        public RefreshToken(
+            System.String username,
+            System.String clientId,
+            System.String encryptedId,
+            System.DateTime issuedDate,
+            System.DateTime expiresDate,
+            System.String protectedTicket)
         {
-            if (postId == null)
+            if (username == null)
             {
-                throw new ArgumentNullException("postId");
+                throw new ArgumentNullException("username");
             }
 
-            if (userId == null)
+            if (clientId == null)
             {
-                throw new ArgumentNullException("userId");
+                throw new ArgumentNullException("clientId");
             }
 
-            if (creationDate == null)
+            if (encryptedId == null)
             {
-                throw new ArgumentNullException("creationDate");
+                throw new ArgumentNullException("encryptedId");
             }
 
-            this.PostId = postId;
-            this.Post = post;
-            this.UserId = userId;
-            this.User = user;
-            this.CreationDate = creationDate;
+            if (issuedDate == null)
+            {
+                throw new ArgumentNullException("issuedDate");
+            }
+
+            if (expiresDate == null)
+            {
+                throw new ArgumentNullException("expiresDate");
+            }
+
+            if (protectedTicket == null)
+            {
+                throw new ArgumentNullException("protectedTicket");
+            }
+
+            this.Username = username;
+            this.ClientId = clientId;
+            this.EncryptedId = encryptedId;
+            this.IssuedDate = issuedDate;
+            this.ExpiresDate = expiresDate;
+            this.ProtectedTicket = protectedTicket;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CreatorChannelsSnapshot 
+    {
+        public CreatorChannelsSnapshot(
+            System.Guid id,
+            System.DateTime timestamp,
+            System.Guid creatorId)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            if (creatorId == null)
+            {
+                throw new ArgumentNullException("creatorId");
+            }
+
+            this.Id = id;
+            this.Timestamp = timestamp;
+            this.CreatorId = creatorId;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CreatorChannelsSnapshotItem 
+    {
+        public CreatorChannelsSnapshotItem(
+            System.Guid creatorChannelsSnapshotId,
+            Fifthweek.Api.Persistence.Snapshots.CreatorChannelsSnapshot creatorChannelsSnapshot,
+            System.Guid channelId,
+            System.Int32 price)
+        {
+            if (creatorChannelsSnapshotId == null)
+            {
+                throw new ArgumentNullException("creatorChannelsSnapshotId");
+            }
+
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            if (price == null)
+            {
+                throw new ArgumentNullException("price");
+            }
+
+            this.CreatorChannelsSnapshotId = creatorChannelsSnapshotId;
+            this.CreatorChannelsSnapshot = creatorChannelsSnapshot;
+            this.ChannelId = channelId;
+            this.Price = price;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CreatorFreeAccessUsersSnapshot 
+    {
+        public CreatorFreeAccessUsersSnapshot(
+            System.Guid id,
+            System.DateTime timestamp,
+            System.Guid creatorId)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            if (creatorId == null)
+            {
+                throw new ArgumentNullException("creatorId");
+            }
+
+            this.Id = id;
+            this.Timestamp = timestamp;
+            this.CreatorId = creatorId;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CreatorFreeAccessUsersSnapshotItem 
+    {
+        public CreatorFreeAccessUsersSnapshotItem(
+            System.Guid creatorFreeAccessUsersSnapshotId,
+            Fifthweek.Api.Persistence.Snapshots.CreatorFreeAccessUsersSnapshot creatorFreeAccessUsersSnapshot,
+            System.String email)
+        {
+            if (creatorFreeAccessUsersSnapshotId == null)
+            {
+                throw new ArgumentNullException("creatorFreeAccessUsersSnapshotId");
+            }
+
+            if (email == null)
+            {
+                throw new ArgumentNullException("email");
+            }
+
+            this.CreatorFreeAccessUsersSnapshotId = creatorFreeAccessUsersSnapshotId;
+            this.CreatorFreeAccessUsersSnapshot = creatorFreeAccessUsersSnapshot;
+            this.Email = email;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class SubscriberChannelsSnapshot 
+    {
+        public SubscriberChannelsSnapshot(
+            System.Guid id,
+            System.DateTime timestamp,
+            System.Guid subscriberId)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            if (subscriberId == null)
+            {
+                throw new ArgumentNullException("subscriberId");
+            }
+
+            this.Id = id;
+            this.Timestamp = timestamp;
+            this.SubscriberId = subscriberId;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class SubscriberChannelsSnapshotItem 
+    {
+        public SubscriberChannelsSnapshotItem(
+            System.Guid subscriberChannelsSnapshotId,
+            Fifthweek.Api.Persistence.Snapshots.SubscriberChannelsSnapshot subscriberChannelsSnapshot,
+            System.Guid channelId,
+            System.Guid creatorId,
+            System.Int32 acceptedPrice,
+            System.DateTime subscriptionStartDate)
+        {
+            if (subscriberChannelsSnapshotId == null)
+            {
+                throw new ArgumentNullException("subscriberChannelsSnapshotId");
+            }
+
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            if (creatorId == null)
+            {
+                throw new ArgumentNullException("creatorId");
+            }
+
+            if (acceptedPrice == null)
+            {
+                throw new ArgumentNullException("acceptedPrice");
+            }
+
+            if (subscriptionStartDate == null)
+            {
+                throw new ArgumentNullException("subscriptionStartDate");
+            }
+
+            this.SubscriberChannelsSnapshotId = subscriberChannelsSnapshotId;
+            this.SubscriberChannelsSnapshot = subscriberChannelsSnapshot;
+            this.ChannelId = channelId;
+            this.CreatorId = creatorId;
+            this.AcceptedPrice = acceptedPrice;
+            this.SubscriptionStartDate = subscriptionStartDate;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class SubscriberSnapshot 
+    {
+        public SubscriberSnapshot(
+            System.DateTime timestamp,
+            System.Guid subscriberId,
+            System.String email)
+        {
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            if (subscriberId == null)
+            {
+                throw new ArgumentNullException("subscriberId");
+            }
+
+            this.Timestamp = timestamp;
+            this.SubscriberId = subscriberId;
+            this.Email = email;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+
+    public partial class WeeklyReleaseTime 
+    {
+        public WeeklyReleaseTime(
+            System.Guid queueId,
+            Fifthweek.Api.Persistence.Queue queue,
+            System.Byte hourOfWeek)
+        {
+            if (queueId == null)
+            {
+                throw new ArgumentNullException("queueId");
+            }
+
+            if (hourOfWeek == null)
+            {
+                throw new ArgumentNullException("hourOfWeek");
+            }
+
+            this.QueueId = queueId;
+            this.Queue = queue;
+            this.HourOfWeek = hourOfWeek;
         }
     }
 }
@@ -1804,7 +1869,7 @@ namespace Fifthweek.Api.Persistence
     {
         public override string ToString()
         {
-            return string.Format("Post({0}, {1}, {2}, {3}, {4}, \"{5}\", {6}, {7})", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.QueueId == null ? "null" : this.QueueId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+            return string.Format("Post({0}, {1}, {2}, {3}, \"{4}\", \"{5}\", {6}, {7}, {8}, {9}, {10}, {11})", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.QueueId == null ? "null" : this.QueueId.ToString(), this.PreviewImageId == null ? "null" : this.PreviewImageId.ToString(), this.PreviewText == null ? "null" : this.PreviewText.ToString(), this.Content == null ? "null" : this.Content.ToString(), this.PreviewWordCount == null ? "null" : this.PreviewWordCount.ToString(), this.WordCount == null ? "null" : this.WordCount.ToString(), this.ImageCount == null ? "null" : this.ImageCount.ToString(), this.FileCount == null ? "null" : this.FileCount.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1835,9 +1900,13 @@ namespace Fifthweek.Api.Persistence
                 hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.QueueId != null ? this.QueueId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ImageId != null ? this.ImageId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PreviewImageId != null ? this.PreviewImageId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PreviewText != null ? this.PreviewText.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Content != null ? this.Content.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PreviewWordCount != null ? this.PreviewWordCount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.WordCount != null ? this.WordCount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ImageCount != null ? this.ImageCount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.FileCount != null ? this.FileCount.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.LiveDate != null ? this.LiveDate.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
                 return hashCode;
@@ -1861,17 +1930,37 @@ namespace Fifthweek.Api.Persistence
                 return false;
             }
         
-            if (!object.Equals(this.FileId, other.FileId))
+            if (!object.Equals(this.PreviewImageId, other.PreviewImageId))
             {
                 return false;
             }
         
-            if (!object.Equals(this.ImageId, other.ImageId))
+            if (!object.Equals(this.PreviewText, other.PreviewText))
             {
                 return false;
             }
         
-            if (!object.Equals(this.Comment, other.Comment))
+            if (!object.Equals(this.Content, other.Content))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.PreviewWordCount, other.PreviewWordCount))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.WordCount, other.WordCount))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ImageCount, other.ImageCount))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.FileCount, other.FileCount))
             {
                 return false;
             }
@@ -1899,11 +1988,11 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
-    public partial class RefreshToken 
+    public partial class Comment 
     {
         public override string ToString()
         {
-            return string.Format("RefreshToken(\"{0}\", \"{1}\", \"{2}\", {3}, {4}, \"{5}\")", this.Username == null ? "null" : this.Username.ToString(), this.ClientId == null ? "null" : this.ClientId.ToString(), this.EncryptedId == null ? "null" : this.EncryptedId.ToString(), this.IssuedDate == null ? "null" : this.IssuedDate.ToString(), this.ExpiresDate == null ? "null" : this.ExpiresDate.ToString(), this.ProtectedTicket == null ? "null" : this.ProtectedTicket.ToString());
+            return string.Format("Comment({0}, {1}, {2}, \"{3}\", {4})", this.Id == null ? "null" : this.Id.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.Content == null ? "null" : this.Content.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1923,93 +2012,7 @@ namespace Fifthweek.Api.Persistence
                 return false;
             }
         
-            return this.Equals((RefreshToken)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ClientId != null ? this.ClientId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.EncryptedId != null ? this.EncryptedId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.IssuedDate != null ? this.IssuedDate.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ExpiresDate != null ? this.ExpiresDate.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ProtectedTicket != null ? this.ProtectedTicket.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(RefreshToken other)
-        {
-            if (!object.Equals(this.Username, other.Username))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ClientId, other.ClientId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.EncryptedId, other.EncryptedId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.IssuedDate, other.IssuedDate))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ExpiresDate, other.ExpiresDate))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ProtectedTicket, other.ProtectedTicket))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class CreatorChannelsSnapshot 
-    {
-        public override string ToString()
-        {
-            return string.Format("CreatorChannelsSnapshot({0}, {1}, {2})", this.Id == null ? "null" : this.Id.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((CreatorChannelsSnapshot)obj);
+            return this.Equals((Comment)obj);
         }
         
         public override int GetHashCode()
@@ -2018,439 +2021,37 @@ namespace Fifthweek.Api.Persistence.Snapshots
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Content != null ? this.Content.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
                 return hashCode;
             }
         }
         
-        protected bool Equals(CreatorChannelsSnapshot other)
+        protected bool Equals(Comment other)
         {
             if (!object.Equals(this.Id, other.Id))
             {
                 return false;
             }
         
-            if (!object.Equals(this.Timestamp, other.Timestamp))
+            if (!object.Equals(this.PostId, other.PostId))
             {
                 return false;
             }
         
-            if (!object.Equals(this.CreatorId, other.CreatorId))
+            if (!object.Equals(this.UserId, other.UserId))
             {
                 return false;
             }
         
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class CreatorChannelsSnapshotItem 
-    {
-        public override string ToString()
-        {
-            return string.Format("CreatorChannelsSnapshotItem({0}, {1}, {2})", this.CreatorChannelsSnapshotId == null ? "null" : this.CreatorChannelsSnapshotId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Price == null ? "null" : this.Price.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
+            if (!object.Equals(this.Content, other.Content))
             {
                 return false;
             }
         
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((CreatorChannelsSnapshotItem)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.CreatorChannelsSnapshotId != null ? this.CreatorChannelsSnapshotId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Price != null ? this.Price.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(CreatorChannelsSnapshotItem other)
-        {
-            if (!object.Equals(this.CreatorChannelsSnapshotId, other.CreatorChannelsSnapshotId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ChannelId, other.ChannelId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Price, other.Price))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class CreatorFreeAccessUsersSnapshot 
-    {
-        public override string ToString()
-        {
-            return string.Format("CreatorFreeAccessUsersSnapshot({0}, {1}, {2})", this.Id == null ? "null" : this.Id.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((CreatorFreeAccessUsersSnapshot)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(CreatorFreeAccessUsersSnapshot other)
-        {
-            if (!object.Equals(this.Id, other.Id))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Timestamp, other.Timestamp))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.CreatorId, other.CreatorId))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class CreatorFreeAccessUsersSnapshotItem 
-    {
-        public override string ToString()
-        {
-            return string.Format("CreatorFreeAccessUsersSnapshotItem({0}, \"{1}\")", this.CreatorFreeAccessUsersSnapshotId == null ? "null" : this.CreatorFreeAccessUsersSnapshotId.ToString(), this.Email == null ? "null" : this.Email.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((CreatorFreeAccessUsersSnapshotItem)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.CreatorFreeAccessUsersSnapshotId != null ? this.CreatorFreeAccessUsersSnapshotId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(CreatorFreeAccessUsersSnapshotItem other)
-        {
-            if (!object.Equals(this.CreatorFreeAccessUsersSnapshotId, other.CreatorFreeAccessUsersSnapshotId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Email, other.Email))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class SubscriberChannelsSnapshot 
-    {
-        public override string ToString()
-        {
-            return string.Format("SubscriberChannelsSnapshot({0}, {1}, {2})", this.Id == null ? "null" : this.Id.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.SubscriberId == null ? "null" : this.SubscriberId.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((SubscriberChannelsSnapshot)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SubscriberId != null ? this.SubscriberId.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(SubscriberChannelsSnapshot other)
-        {
-            if (!object.Equals(this.Id, other.Id))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Timestamp, other.Timestamp))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.SubscriberId, other.SubscriberId))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class SubscriberChannelsSnapshotItem 
-    {
-        public override string ToString()
-        {
-            return string.Format("SubscriberChannelsSnapshotItem({0}, {1}, {2}, {3}, {4})", this.SubscriberChannelsSnapshotId == null ? "null" : this.SubscriberChannelsSnapshotId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.AcceptedPrice == null ? "null" : this.AcceptedPrice.ToString(), this.SubscriptionStartDate == null ? "null" : this.SubscriptionStartDate.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((SubscriberChannelsSnapshotItem)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.SubscriberChannelsSnapshotId != null ? this.SubscriberChannelsSnapshotId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.AcceptedPrice != null ? this.AcceptedPrice.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SubscriptionStartDate != null ? this.SubscriptionStartDate.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(SubscriberChannelsSnapshotItem other)
-        {
-            if (!object.Equals(this.SubscriberChannelsSnapshotId, other.SubscriberChannelsSnapshotId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ChannelId, other.ChannelId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.CreatorId, other.CreatorId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.AcceptedPrice, other.AcceptedPrice))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.SubscriptionStartDate, other.SubscriptionStartDate))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class SubscriberSnapshot 
-    {
-        public override string ToString()
-        {
-            return string.Format("SubscriberSnapshot({0}, {1}, \"{2}\")", this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.SubscriberId == null ? "null" : this.SubscriberId.ToString(), this.Email == null ? "null" : this.Email.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((SubscriberSnapshot)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SubscriberId != null ? this.SubscriberId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(SubscriberSnapshot other)
-        {
-            if (!object.Equals(this.Timestamp, other.Timestamp))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.SubscriberId, other.SubscriberId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Email, other.Email))
+            if (!object.Equals(this.CreationDate, other.CreationDate))
             {
                 return false;
             }
@@ -2468,11 +2069,11 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
-    public partial class WeeklyReleaseTime 
+    public partial class Like 
     {
         public override string ToString()
         {
-            return string.Format("WeeklyReleaseTime({0}, {1})", this.QueueId == null ? "null" : this.QueueId.ToString(), this.HourOfWeek == null ? "null" : this.HourOfWeek.ToString());
+            return string.Format("Like({0}, {1}, {2})", this.PostId == null ? "null" : this.PostId.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2492,7 +2093,7 @@ namespace Fifthweek.Api.Persistence
                 return false;
             }
         
-            return this.Equals((WeeklyReleaseTime)obj);
+            return this.Equals((Like)obj);
         }
         
         public override int GetHashCode()
@@ -2500,20 +2101,26 @@ namespace Fifthweek.Api.Persistence
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.QueueId != null ? this.QueueId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.HourOfWeek != null ? this.HourOfWeek.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
                 return hashCode;
             }
         }
         
-        protected bool Equals(WeeklyReleaseTime other)
+        protected bool Equals(Like other)
         {
-            if (!object.Equals(this.QueueId, other.QueueId))
+            if (!object.Equals(this.PostId, other.PostId))
             {
                 return false;
             }
         
-            if (!object.Equals(this.HourOfWeek, other.HourOfWeek))
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CreationDate, other.CreationDate))
             {
                 return false;
             }
@@ -2729,6 +2336,75 @@ namespace Fifthweek.Api.Persistence.Payments
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Persistence.Identity;
 
+    public partial class CreatorPercentageOverride 
+    {
+        public override string ToString()
+        {
+            return string.Format("CreatorPercentageOverride({0}, {1}, {2})", this.UserId == null ? "null" : this.UserId.ToString(), this.Percentage == null ? "null" : this.Percentage.ToString(), this.ExpiryDate == null ? "null" : this.ExpiryDate.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CreatorPercentageOverride)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Percentage != null ? this.Percentage.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ExpiryDate != null ? this.ExpiryDate.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CreatorPercentageOverride other)
+        {
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Percentage, other.Percentage))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ExpiryDate, other.ExpiryDate))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
     public partial class UncommittedSubscriptionPayment 
     {
         public override string ToString()
@@ -2799,75 +2475,6 @@ namespace Fifthweek.Api.Persistence.Payments
             }
         
             if (!object.Equals(this.InputDataReference, other.InputDataReference))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Persistence.Payments
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Persistence.Identity;
-
-    public partial class CreatorPercentageOverride 
-    {
-        public override string ToString()
-        {
-            return string.Format("CreatorPercentageOverride({0}, {1}, {2})", this.UserId == null ? "null" : this.UserId.ToString(), this.Percentage == null ? "null" : this.Percentage.ToString(), this.ExpiryDate == null ? "null" : this.ExpiryDate.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((CreatorPercentageOverride)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Percentage != null ? this.Percentage.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ExpiryDate != null ? this.ExpiryDate.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(CreatorPercentageOverride other)
-        {
-            if (!object.Equals(this.UserId, other.UserId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Percentage, other.Percentage))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ExpiryDate, other.ExpiryDate))
             {
                 return false;
             }
@@ -2984,11 +2591,11 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
-    public partial class Comment 
+    public partial class PostFile 
     {
         public override string ToString()
         {
-            return string.Format("Comment({0}, {1}, {2}, \"{3}\", {4})", this.Id == null ? "null" : this.Id.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.Content == null ? "null" : this.Content.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+            return string.Format("PostFile({0}, {1})", this.PostId == null ? "null" : this.PostId.ToString(), this.FileId == null ? "null" : this.FileId.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3008,7 +2615,7 @@ namespace Fifthweek.Api.Persistence
                 return false;
             }
         
-            return this.Equals((Comment)obj);
+            return this.Equals((PostFile)obj);
         }
         
         public override int GetHashCode()
@@ -3016,38 +2623,20 @@ namespace Fifthweek.Api.Persistence
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Content != null ? this.Content.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
                 return hashCode;
             }
         }
         
-        protected bool Equals(Comment other)
+        protected bool Equals(PostFile other)
         {
-            if (!object.Equals(this.Id, other.Id))
-            {
-                return false;
-            }
-        
             if (!object.Equals(this.PostId, other.PostId))
             {
                 return false;
             }
         
-            if (!object.Equals(this.UserId, other.UserId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Content, other.Content))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.CreationDate, other.CreationDate))
+            if (!object.Equals(this.FileId, other.FileId))
             {
                 return false;
             }
@@ -3065,11 +2654,11 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
-    public partial class Like 
+    public partial class RefreshToken 
     {
         public override string ToString()
         {
-            return string.Format("Like({0}, {1}, {2})", this.PostId == null ? "null" : this.PostId.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+            return string.Format("RefreshToken(\"{0}\", \"{1}\", \"{2}\", {3}, {4}, \"{5}\")", this.Username == null ? "null" : this.Username.ToString(), this.ClientId == null ? "null" : this.ClientId.ToString(), this.EncryptedId == null ? "null" : this.EncryptedId.ToString(), this.IssuedDate == null ? "null" : this.IssuedDate.ToString(), this.ExpiresDate == null ? "null" : this.ExpiresDate.ToString(), this.ProtectedTicket == null ? "null" : this.ProtectedTicket.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3089,7 +2678,7 @@ namespace Fifthweek.Api.Persistence
                 return false;
             }
         
-            return this.Equals((Like)obj);
+            return this.Equals((RefreshToken)obj);
         }
         
         public override int GetHashCode()
@@ -3097,26 +2686,589 @@ namespace Fifthweek.Api.Persistence
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ClientId != null ? this.ClientId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.EncryptedId != null ? this.EncryptedId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IssuedDate != null ? this.IssuedDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ExpiresDate != null ? this.ExpiresDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ProtectedTicket != null ? this.ProtectedTicket.GetHashCode() : 0);
                 return hashCode;
             }
         }
         
-        protected bool Equals(Like other)
+        protected bool Equals(RefreshToken other)
         {
-            if (!object.Equals(this.PostId, other.PostId))
+            if (!object.Equals(this.Username, other.Username))
             {
                 return false;
             }
         
-            if (!object.Equals(this.UserId, other.UserId))
+            if (!object.Equals(this.ClientId, other.ClientId))
             {
                 return false;
             }
         
-            if (!object.Equals(this.CreationDate, other.CreationDate))
+            if (!object.Equals(this.EncryptedId, other.EncryptedId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.IssuedDate, other.IssuedDate))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ExpiresDate, other.ExpiresDate))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ProtectedTicket, other.ProtectedTicket))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CreatorChannelsSnapshot 
+    {
+        public override string ToString()
+        {
+            return string.Format("CreatorChannelsSnapshot({0}, {1}, {2})", this.Id == null ? "null" : this.Id.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CreatorChannelsSnapshot)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CreatorChannelsSnapshot other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Timestamp, other.Timestamp))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CreatorId, other.CreatorId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CreatorChannelsSnapshotItem 
+    {
+        public override string ToString()
+        {
+            return string.Format("CreatorChannelsSnapshotItem({0}, {1}, {2})", this.CreatorChannelsSnapshotId == null ? "null" : this.CreatorChannelsSnapshotId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Price == null ? "null" : this.Price.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CreatorChannelsSnapshotItem)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.CreatorChannelsSnapshotId != null ? this.CreatorChannelsSnapshotId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Price != null ? this.Price.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CreatorChannelsSnapshotItem other)
+        {
+            if (!object.Equals(this.CreatorChannelsSnapshotId, other.CreatorChannelsSnapshotId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Price, other.Price))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CreatorFreeAccessUsersSnapshot 
+    {
+        public override string ToString()
+        {
+            return string.Format("CreatorFreeAccessUsersSnapshot({0}, {1}, {2})", this.Id == null ? "null" : this.Id.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CreatorFreeAccessUsersSnapshot)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CreatorFreeAccessUsersSnapshot other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Timestamp, other.Timestamp))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CreatorId, other.CreatorId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CreatorFreeAccessUsersSnapshotItem 
+    {
+        public override string ToString()
+        {
+            return string.Format("CreatorFreeAccessUsersSnapshotItem({0}, \"{1}\")", this.CreatorFreeAccessUsersSnapshotId == null ? "null" : this.CreatorFreeAccessUsersSnapshotId.ToString(), this.Email == null ? "null" : this.Email.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CreatorFreeAccessUsersSnapshotItem)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.CreatorFreeAccessUsersSnapshotId != null ? this.CreatorFreeAccessUsersSnapshotId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CreatorFreeAccessUsersSnapshotItem other)
+        {
+            if (!object.Equals(this.CreatorFreeAccessUsersSnapshotId, other.CreatorFreeAccessUsersSnapshotId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Email, other.Email))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class SubscriberChannelsSnapshot 
+    {
+        public override string ToString()
+        {
+            return string.Format("SubscriberChannelsSnapshot({0}, {1}, {2})", this.Id == null ? "null" : this.Id.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.SubscriberId == null ? "null" : this.SubscriberId.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((SubscriberChannelsSnapshot)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SubscriberId != null ? this.SubscriberId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(SubscriberChannelsSnapshot other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Timestamp, other.Timestamp))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.SubscriberId, other.SubscriberId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class SubscriberChannelsSnapshotItem 
+    {
+        public override string ToString()
+        {
+            return string.Format("SubscriberChannelsSnapshotItem({0}, {1}, {2}, {3}, {4})", this.SubscriberChannelsSnapshotId == null ? "null" : this.SubscriberChannelsSnapshotId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.AcceptedPrice == null ? "null" : this.AcceptedPrice.ToString(), this.SubscriptionStartDate == null ? "null" : this.SubscriptionStartDate.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((SubscriberChannelsSnapshotItem)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.SubscriberChannelsSnapshotId != null ? this.SubscriberChannelsSnapshotId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.AcceptedPrice != null ? this.AcceptedPrice.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SubscriptionStartDate != null ? this.SubscriptionStartDate.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(SubscriberChannelsSnapshotItem other)
+        {
+            if (!object.Equals(this.SubscriberChannelsSnapshotId, other.SubscriberChannelsSnapshotId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CreatorId, other.CreatorId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.AcceptedPrice, other.AcceptedPrice))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.SubscriptionStartDate, other.SubscriptionStartDate))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class SubscriberSnapshot 
+    {
+        public override string ToString()
+        {
+            return string.Format("SubscriberSnapshot({0}, {1}, \"{2}\")", this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.SubscriberId == null ? "null" : this.SubscriberId.ToString(), this.Email == null ? "null" : this.Email.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((SubscriberSnapshot)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SubscriberId != null ? this.SubscriberId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(SubscriberSnapshot other)
+        {
+            if (!object.Equals(this.Timestamp, other.Timestamp))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.SubscriberId, other.SubscriberId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Email, other.Email))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+
+    public partial class WeeklyReleaseTime 
+    {
+        public override string ToString()
+        {
+            return string.Format("WeeklyReleaseTime({0}, {1})", this.QueueId == null ? "null" : this.QueueId.ToString(), this.HourOfWeek == null ? "null" : this.HourOfWeek.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((WeeklyReleaseTime)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.QueueId != null ? this.QueueId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.HourOfWeek != null ? this.HourOfWeek.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(WeeklyReleaseTime other)
+        {
+            if (!object.Equals(this.QueueId, other.QueueId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.HourOfWeek, other.HourOfWeek))
             {
                 return false;
             }
@@ -3462,17 +3614,49 @@ namespace Fifthweek.Api.Persistence
             copy.Channel = this.Channel;
             copy.QueueId = this.QueueId;
             copy.Queue = this.Queue;
-            copy.FileId = this.FileId;
-            copy.File = this.File;
-            copy.ImageId = this.ImageId;
-            copy.Image = this.Image;
-            copy.Comment = this.Comment;
+            copy.PreviewImageId = this.PreviewImageId;
+            copy.PreviewImage = this.PreviewImage;
+            copy.PreviewText = this.PreviewText;
+            copy.Content = this.Content;
+            copy.PreviewWordCount = this.PreviewWordCount;
+            copy.WordCount = this.WordCount;
+            copy.ImageCount = this.ImageCount;
+            copy.FileCount = this.FileCount;
             copy.LiveDate = this.LiveDate;
             copy.CreationDate = this.CreationDate;
             return copy;
         }
         
         public Post Copy(Action<Post> applyDelta)
+        {
+            var copy = this.Copy();
+            applyDelta(copy);
+            return copy;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+
+    public partial class PostFile 
+    {
+        public PostFile Copy()
+        {
+            var copy = new PostFile();
+            copy.PostId = this.PostId;
+            copy.Post = this.Post;
+            copy.FileId = this.FileId;
+            copy.File = this.File;
+            return copy;
+        }
+        
+        public PostFile Copy(Action<PostFile> applyDelta)
         {
             var copy = this.Copy();
             applyDelta(copy);
@@ -3670,7 +3854,7 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
             Blog entity, 
             Blog.Fields fields,
@@ -4110,7 +4294,7 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
             Channel entity, 
             Channel.Fields fields,
@@ -4559,7 +4743,7 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
             ChannelSubscription entity, 
             ChannelSubscription.Fields fields,
@@ -4942,7 +5126,7 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
             Queue entity, 
             Queue.Fields fields,
@@ -5318,7 +5502,7 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
             EndToEndTestEmail entity, 
             EndToEndTestEmail.Fields fields,
@@ -5705,7 +5889,7 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
             File entity, 
             File.Fields fields,
@@ -6256,7 +6440,7 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
             FreeAccessUser entity, 
             FreeAccessUser.Fields fields,
@@ -6470,11 +6654,15 @@ namespace Fifthweek.Api.Persistence
             Id = 1, 
             ChannelId = 2, 
             QueueId = 4, 
-            FileId = 8, 
-            ImageId = 16, 
-            Comment = 32, 
-            LiveDate = 64, 
-            CreationDate = 128
+            PreviewImageId = 8, 
+            PreviewText = 16, 
+            Content = 32, 
+            PreviewWordCount = 64, 
+            WordCount = 128, 
+            ImageCount = 256, 
+            FileCount = 512, 
+            LiveDate = 1024, 
+            CreationDate = 2048
         }
     }
 
@@ -6491,7 +6679,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.Id, entity.ChannelId, entity.QueueId, entity.FileId, entity.ImageId, entity.Comment, entity.LiveDate, entity.CreationDate
+                    entity.Id, entity.ChannelId, entity.QueueId, entity.PreviewImageId, entity.PreviewText, entity.Content, entity.PreviewWordCount, entity.WordCount, entity.ImageCount, entity.FileCount, entity.LiveDate, entity.CreationDate
                 }).ToArray(),
                 transaction);
         }
@@ -6507,7 +6695,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.Id, entity.ChannelId, entity.QueueId, entity.FileId, entity.ImageId, entity.Comment, entity.LiveDate, entity.CreationDate
+                    entity.Id, entity.ChannelId, entity.QueueId, entity.PreviewImageId, entity.PreviewText, entity.Content, entity.PreviewWordCount, entity.WordCount, entity.ImageCount, entity.FileCount, entity.LiveDate, entity.CreationDate
                 },
                 transaction);
         }
@@ -6552,7 +6740,7 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.Id, entity.ChannelId, entity.QueueId, entity.FileId, entity.ImageId, entity.Comment, entity.LiveDate, entity.CreationDate });
+                : new Dapper.DynamicParameters(new { entity.Id, entity.ChannelId, entity.QueueId, entity.PreviewImageId, entity.PreviewText, entity.Content, entity.PreviewWordCount, entity.WordCount, entity.ImageCount, entity.FileCount, entity.LiveDate, entity.CreationDate });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -6576,7 +6764,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(Post.Fields.Empty, fields), 
                 new 
                 {
-                    entity.Id, entity.ChannelId, entity.QueueId, entity.FileId, entity.ImageId, entity.Comment, entity.LiveDate, entity.CreationDate
+                    entity.Id, entity.ChannelId, entity.QueueId, entity.PreviewImageId, entity.PreviewText, entity.Content, entity.PreviewWordCount, entity.WordCount, entity.ImageCount, entity.FileCount, entity.LiveDate, entity.CreationDate
                 },
                 transaction);
         }
@@ -6593,12 +6781,12 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.Id, entity.ChannelId, entity.QueueId, entity.FileId, entity.ImageId, entity.Comment, entity.LiveDate, entity.CreationDate
+                    entity.Id, entity.ChannelId, entity.QueueId, entity.PreviewImageId, entity.PreviewText, entity.Content, entity.PreviewWordCount, entity.WordCount, entity.ImageCount, entity.FileCount, entity.LiveDate, entity.CreationDate
                 },
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
             Post entity, 
             Post.Fields fields,
@@ -6664,7 +6852,7 @@ namespace Fifthweek.Api.Persistence
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO Posts(Id, ChannelId, QueueId, FileId, ImageId, Comment, LiveDate, CreationDate) VALUES(@Id, @ChannelId, @QueueId, @FileId, @ImageId, @Comment, @LiveDate, @CreationDate)";
+            const string insert = "INSERT INTO Posts(Id, ChannelId, QueueId, PreviewImageId, PreviewText, Content, PreviewWordCount, WordCount, ImageCount, FileCount, LiveDate, CreationDate) VALUES(@Id, @ChannelId, @QueueId, @PreviewImageId, @PreviewText, @Content, @PreviewWordCount, @WordCount, @ImageCount, @FileCount, @LiveDate, @CreationDate)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
@@ -6675,7 +6863,7 @@ namespace Fifthweek.Api.Persistence
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE Posts WITH (HOLDLOCK) as Target
-                USING (VALUES (@Id, @ChannelId, @QueueId, @FileId, @ImageId, @Comment, @LiveDate, @CreationDate)) AS Source (Id, ChannelId, QueueId, FileId, ImageId, Comment, LiveDate, CreationDate)
+                USING (VALUES (@Id, @ChannelId, @QueueId, @PreviewImageId, @PreviewText, @Content, @PreviewWordCount, @WordCount, @ImageCount, @FileCount, @LiveDate, @CreationDate)) AS Source (Id, ChannelId, QueueId, PreviewImageId, PreviewText, Content, PreviewWordCount, WordCount, ImageCount, FileCount, LiveDate, CreationDate)
                 ON    (");
                 
             if (mergeOnFields == Post.Fields.Empty)
@@ -6694,8 +6882,8 @@ namespace Fifthweek.Api.Persistence
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (Id, ChannelId, QueueId, FileId, ImageId, Comment, LiveDate, CreationDate)
-                    VALUES  (Source.Id, Source.ChannelId, Source.QueueId, Source.FileId, Source.ImageId, Source.Comment, Source.LiveDate, Source.CreationDate);");
+                    INSERT  (Id, ChannelId, QueueId, PreviewImageId, PreviewText, Content, PreviewWordCount, WordCount, ImageCount, FileCount, LiveDate, CreationDate)
+                    VALUES  (Source.Id, Source.ChannelId, Source.QueueId, Source.PreviewImageId, Source.PreviewText, Source.Content, Source.PreviewWordCount, Source.WordCount, Source.ImageCount, Source.FileCount, Source.LiveDate, Source.CreationDate);");
             return sql.ToString();
         }
         
@@ -6726,19 +6914,39 @@ namespace Fifthweek.Api.Persistence
                 fieldNames.Add("QueueId");
             }
         
-            if (fields.HasFlag(Post.Fields.FileId))
+            if (fields.HasFlag(Post.Fields.PreviewImageId))
             {
-                fieldNames.Add("FileId");
+                fieldNames.Add("PreviewImageId");
             }
         
-            if (fields.HasFlag(Post.Fields.ImageId))
+            if (fields.HasFlag(Post.Fields.PreviewText))
             {
-                fieldNames.Add("ImageId");
+                fieldNames.Add("PreviewText");
             }
         
-            if (fields.HasFlag(Post.Fields.Comment))
+            if (fields.HasFlag(Post.Fields.Content))
             {
-                fieldNames.Add("Comment");
+                fieldNames.Add("Content");
+            }
+        
+            if (fields.HasFlag(Post.Fields.PreviewWordCount))
+            {
+                fieldNames.Add("PreviewWordCount");
+            }
+        
+            if (fields.HasFlag(Post.Fields.WordCount))
+            {
+                fieldNames.Add("WordCount");
+            }
+        
+            if (fields.HasFlag(Post.Fields.ImageCount))
+            {
+                fieldNames.Add("ImageCount");
+            }
+        
+            if (fields.HasFlag(Post.Fields.FileCount))
+            {
+                fieldNames.Add("FileCount");
             }
         
             if (fields.HasFlag(Post.Fields.LiveDate))
@@ -6773,19 +6981,39 @@ namespace Fifthweek.Api.Persistence
                 parameters.Add("QueueId", entity.QueueId);
             }
         
-            if (fields.HasFlag(Post.Fields.FileId) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.FileId)))
+            if (fields.HasFlag(Post.Fields.PreviewImageId) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.PreviewImageId)))
             {
-                parameters.Add("FileId", entity.FileId);
+                parameters.Add("PreviewImageId", entity.PreviewImageId);
             }
         
-            if (fields.HasFlag(Post.Fields.ImageId) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.ImageId)))
+            if (fields.HasFlag(Post.Fields.PreviewText) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.PreviewText)))
             {
-                parameters.Add("ImageId", entity.ImageId);
+                parameters.Add("PreviewText", entity.PreviewText);
             }
         
-            if (fields.HasFlag(Post.Fields.Comment) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.Comment)))
+            if (fields.HasFlag(Post.Fields.Content) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.Content)))
             {
-                parameters.Add("Comment", entity.Comment);
+                parameters.Add("Content", entity.Content);
+            }
+        
+            if (fields.HasFlag(Post.Fields.PreviewWordCount) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.PreviewWordCount)))
+            {
+                parameters.Add("PreviewWordCount", entity.PreviewWordCount);
+            }
+        
+            if (fields.HasFlag(Post.Fields.WordCount) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.WordCount)))
+            {
+                parameters.Add("WordCount", entity.WordCount);
+            }
+        
+            if (fields.HasFlag(Post.Fields.ImageCount) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.ImageCount)))
+            {
+                parameters.Add("ImageCount", entity.ImageCount);
+            }
+        
+            if (fields.HasFlag(Post.Fields.FileCount) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.FileCount)))
+            {
+                parameters.Add("FileCount", entity.FileCount);
             }
         
             if (fields.HasFlag(Post.Fields.LiveDate) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.LiveDate)))
@@ -6819,19 +7047,39 @@ namespace Fifthweek.Api.Persistence
                 parameters.Add("QueueId", entity.QueueId);
             }
         
-            if (!fields.HasFlag(Post.Fields.FileId))
+            if (!fields.HasFlag(Post.Fields.PreviewImageId))
             {
-                parameters.Add("FileId", entity.FileId);
+                parameters.Add("PreviewImageId", entity.PreviewImageId);
             }
         
-            if (!fields.HasFlag(Post.Fields.ImageId))
+            if (!fields.HasFlag(Post.Fields.PreviewText))
             {
-                parameters.Add("ImageId", entity.ImageId);
+                parameters.Add("PreviewText", entity.PreviewText);
             }
         
-            if (!fields.HasFlag(Post.Fields.Comment))
+            if (!fields.HasFlag(Post.Fields.Content))
             {
-                parameters.Add("Comment", entity.Comment);
+                parameters.Add("Content", entity.Content);
+            }
+        
+            if (!fields.HasFlag(Post.Fields.PreviewWordCount))
+            {
+                parameters.Add("PreviewWordCount", entity.PreviewWordCount);
+            }
+        
+            if (!fields.HasFlag(Post.Fields.WordCount))
+            {
+                parameters.Add("WordCount", entity.WordCount);
+            }
+        
+            if (!fields.HasFlag(Post.Fields.ImageCount))
+            {
+                parameters.Add("ImageCount", entity.ImageCount);
+            }
+        
+            if (!fields.HasFlag(Post.Fields.FileCount))
+            {
+                parameters.Add("FileCount", entity.FileCount);
             }
         
             if (!fields.HasFlag(Post.Fields.LiveDate))
@@ -6858,422 +7106,11 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
-    public partial class RefreshToken  : IIdentityEquatable
+    public partial class Comment  : IIdentityEquatable
     {
-        public const string Table = "RefreshTokens";
+        public const string Table = "Comments";
         
-        public RefreshToken(
-            System.String username,
-            System.String clientId)
-        {
-            if (username == null)
-            {
-                throw new ArgumentNullException("username");
-            }
-
-            if (clientId == null)
-            {
-                throw new ArgumentNullException("clientId");
-            }
-
-            this.Username = username;
-            this.ClientId = clientId;
-        }
-        
-        public bool IdentityEquals(object other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-        
-            if (other.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.IdentityEquals((RefreshToken)other);
-        }
-        
-        protected bool IdentityEquals(RefreshToken other)
-        {
-            if (!object.Equals(this.Username, other.Username))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ClientId, other.ClientId))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-        
-        [Flags]
-        public enum Fields
-        {
-            Empty = 0,
-            Username = 1, 
-            ClientId = 2, 
-            EncryptedId = 4, 
-            IssuedDate = 8, 
-            ExpiresDate = 16, 
-            ProtectedTicket = 32
-        }
-    }
-
-    public static partial class RefreshTokenExtensions
-    {
-        public static System.Threading.Tasks.Task InsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            System.Collections.Generic.IEnumerable<RefreshToken> entities, 
-            bool idempotent = true, 
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                InsertStatement(idempotent), 
-                entities.Select(entity => new 
-                {
-                    entity.Username, entity.ClientId, entity.EncryptedId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
-                }).ToArray(),
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task InsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            RefreshToken entity,
-            bool idempotent = true, 
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                InsertStatement(idempotent), 
-                new 
-                {
-                    entity.Username, entity.ClientId, entity.EncryptedId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertAsync(
-            this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<RefreshToken, RefreshToken.Fields> parameters)
-        {
-            var sql = new System.Text.StringBuilder();
-        
-            if (parameters.Declarations != null)
-            {
-                sql.AppendLine(parameters.Declarations);
-            }
-            
-            int currentIndex = 0;
-            if (parameters.Conditions != null)
-            {
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.Append("IF ");
-                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                    sql.AppendLine("BEGIN");
-                    ++currentIndex;
-                }
-            }
-        
-            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
-        
-            if (parameters.Conditions != null)
-            {
-                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
-                    
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.AppendLine("END");
-                    sql.AppendLine("ELSE");
-                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
-                }
-            }
-        
-            var entity = parameters.Entity;
-            var parameterObject = parameters.ExcludedFromInput != null
-                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.Username, entity.ClientId, entity.EncryptedId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket });
-        
-            if (parameters.AdditionalParameters != null)
-            {
-                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                parameterObject);
-        }
-        
-        public static System.Threading.Tasks.Task UpsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            RefreshToken entity, 
-            RefreshToken.Fields fields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                UpsertStatement(RefreshToken.Fields.Empty, fields), 
-                new 
-                {
-                    entity.Username, entity.ClientId, entity.EncryptedId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task UpsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            RefreshToken entity, 
-            RefreshToken.Fields mergeOnFields,
-            RefreshToken.Fields updateFields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                UpsertStatement(mergeOnFields, updateFields), 
-                new 
-                {
-                    entity.Username, entity.ClientId, entity.EncryptedId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task UpdateAsync(
-            this System.Data.Common.DbConnection connection, 
-            RefreshToken entity, 
-            RefreshToken.Fields fields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> UpdateAsync(
-            this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<RefreshToken, RefreshToken.Fields> parameters)
-        {
-            if (parameters.UpdateMask == null)
-            {
-                throw new ArgumentException("Must contain update mask", "parameters");
-            }
-        
-            var sql = new System.Text.StringBuilder();
-        
-            if (parameters.Declarations != null)
-            {
-                sql.AppendLine(parameters.Declarations);
-            }
-            
-            int currentIndex = 0;
-            if (parameters.Conditions != null)
-            {
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.Append("IF ");
-                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                    sql.AppendLine("BEGIN");
-                    ++currentIndex;
-                }
-            }
-        
-            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
-        
-            if (parameters.Conditions != null)
-            {
-                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
-                    
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.AppendLine("END");
-                    sql.AppendLine("ELSE");
-                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
-                }
-            }
-        
-            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
-        
-            if (parameters.AdditionalParameters != null)
-            {
-                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                parameterObject);
-        }
-        
-        public static string InsertStatement(bool idempotent = true)
-        {
-            const string insert = "INSERT INTO RefreshTokens(Username, ClientId, EncryptedId, IssuedDate, ExpiresDate, ProtectedTicket) VALUES(@Username, @ClientId, @EncryptedId, @IssuedDate, @ExpiresDate, @ProtectedTicket)";
-            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
-        }
-        
-        public static string UpsertStatement(RefreshToken.Fields mergeOnFields, RefreshToken.Fields updateFields)
-        {
-            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
-            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
-            var sql = new System.Text.StringBuilder();
-            sql.Append(
-                @"MERGE RefreshTokens WITH (HOLDLOCK) as Target
-                USING (VALUES (@Username, @ClientId, @EncryptedId, @IssuedDate, @ExpiresDate, @ProtectedTicket)) AS Source (Username, ClientId, EncryptedId, IssuedDate, ExpiresDate, ProtectedTicket)
-                ON    (");
-                
-            if (mergeOnFields == RefreshToken.Fields.Empty)
-            {
-                sql.Append(@"Target.Username = Source.Username AND Target.ClientId = Source.ClientId");
-            }
-            else
-            {
-                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
-            }
-                
-            sql.Append(@")
-                WHEN MATCHED THEN
-                    UPDATE
-                    SET        ");
-            sql.AppendUpdateParameters(GetFieldNames(updateFields));
-            sql.Append(
-                @" WHEN NOT MATCHED THEN
-                    INSERT  (Username, ClientId, EncryptedId, IssuedDate, ExpiresDate, ProtectedTicket)
-                    VALUES  (Source.Username, Source.ClientId, Source.EncryptedId, Source.IssuedDate, Source.ExpiresDate, Source.ProtectedTicket);");
-            return sql.ToString();
-        }
-        
-        public static string UpdateStatement(RefreshToken.Fields fields)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.Append("UPDATE RefreshTokens SET ");
-            sql.AppendUpdateParameters(GetFieldNames(fields));
-            sql.Append(" WHERE Username = @Username AND ClientId = @ClientId");
-            return sql.ToString();
-        }
-        
-        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(RefreshToken.Fields fields, bool autoIncludePrimaryKeys = true)
-        {
-            var fieldNames = new System.Collections.Generic.List<string>();
-            if (autoIncludePrimaryKeys)
-            {
-                fieldNames.Add("Username");
-            }
-        
-            if (autoIncludePrimaryKeys)
-            {
-                fieldNames.Add("ClientId");
-            }
-        
-            if (fields.HasFlag(RefreshToken.Fields.EncryptedId))
-            {
-                fieldNames.Add("EncryptedId");
-            }
-        
-            if (fields.HasFlag(RefreshToken.Fields.IssuedDate))
-            {
-                fieldNames.Add("IssuedDate");
-            }
-        
-            if (fields.HasFlag(RefreshToken.Fields.ExpiresDate))
-            {
-                fieldNames.Add("ExpiresDate");
-            }
-        
-            if (fields.HasFlag(RefreshToken.Fields.ProtectedTicket))
-            {
-                fieldNames.Add("ProtectedTicket");
-            }
-        
-            return fieldNames;
-        }
-        
-        private static Dapper.DynamicParameters OnlySpecifiedParameters(
-            RefreshToken entity, 
-            RefreshToken.Fields fields,
-            RefreshToken.Fields? excludedFields = null)
-        {
-            var parameters = new Dapper.DynamicParameters();
-        
-            // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("Username", entity.Username);
-            parameters.Add("ClientId", entity.ClientId);
-            if (fields.HasFlag(RefreshToken.Fields.EncryptedId) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.EncryptedId)))
-            {
-                parameters.Add("EncryptedId", entity.EncryptedId);
-            }
-        
-            if (fields.HasFlag(RefreshToken.Fields.IssuedDate) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.IssuedDate)))
-            {
-                parameters.Add("IssuedDate", entity.IssuedDate);
-            }
-        
-            if (fields.HasFlag(RefreshToken.Fields.ExpiresDate) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.ExpiresDate)))
-            {
-                parameters.Add("ExpiresDate", entity.ExpiresDate);
-            }
-        
-            if (fields.HasFlag(RefreshToken.Fields.ProtectedTicket) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.ProtectedTicket)))
-            {
-                parameters.Add("ProtectedTicket", entity.ProtectedTicket);
-            }
-        
-            return parameters;
-        }
-        
-        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
-            RefreshToken entity, 
-            RefreshToken.Fields fields)
-        {
-            var parameters = new Dapper.DynamicParameters();
-        
-            // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("Username", entity.Username);
-            parameters.Add("ClientId", entity.ClientId);
-            if (!fields.HasFlag(RefreshToken.Fields.EncryptedId))
-            {
-                parameters.Add("EncryptedId", entity.EncryptedId);
-            }
-        
-            if (!fields.HasFlag(RefreshToken.Fields.IssuedDate))
-            {
-                parameters.Add("IssuedDate", entity.IssuedDate);
-            }
-        
-            if (!fields.HasFlag(RefreshToken.Fields.ExpiresDate))
-            {
-                parameters.Add("ExpiresDate", entity.ExpiresDate);
-            }
-        
-            if (!fields.HasFlag(RefreshToken.Fields.ProtectedTicket))
-            {
-                parameters.Add("ProtectedTicket", entity.ProtectedTicket);
-            }
-        
-            return parameters;
-        }
-        
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class CreatorChannelsSnapshot  : IIdentityEquatable
-    {
-        public const string Table = "CreatorChannelsSnapshots";
-        
-        public CreatorChannelsSnapshot(
+        public Comment(
             System.Guid id)
         {
             if (id == null)
@@ -7301,10 +7138,10 @@ namespace Fifthweek.Api.Persistence.Snapshots
                 return false;
             }
         
-            return this.IdentityEquals((CreatorChannelsSnapshot)other);
+            return this.IdentityEquals((Comment)other);
         }
         
-        protected bool IdentityEquals(CreatorChannelsSnapshot other)
+        protected bool IdentityEquals(Comment other)
         {
             if (!object.Equals(this.Id, other.Id))
             {
@@ -7319,16 +7156,18 @@ namespace Fifthweek.Api.Persistence.Snapshots
         {
             Empty = 0,
             Id = 1, 
-            Timestamp = 2, 
-            CreatorId = 4
+            PostId = 2, 
+            UserId = 4, 
+            Content = 8, 
+            CreationDate = 16
         }
     }
 
-    public static partial class CreatorChannelsSnapshotExtensions
+    public static partial class CommentExtensions
     {
         public static System.Threading.Tasks.Task InsertAsync(
             this System.Data.Common.DbConnection connection, 
-            System.Collections.Generic.IEnumerable<CreatorChannelsSnapshot> entities, 
+            System.Collections.Generic.IEnumerable<Comment> entities, 
             bool idempotent = true, 
             System.Data.IDbTransaction transaction = null)
         {
@@ -7337,14 +7176,14 @@ namespace Fifthweek.Api.Persistence.Snapshots
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.Id, entity.Timestamp, entity.CreatorId
+                    entity.Id, entity.PostId, entity.UserId, entity.Content, entity.CreationDate
                 }).ToArray(),
                 transaction);
         }
         
         public static System.Threading.Tasks.Task InsertAsync(
             this System.Data.Common.DbConnection connection, 
-            CreatorChannelsSnapshot entity,
+            Comment entity,
             bool idempotent = true, 
             System.Data.IDbTransaction transaction = null)
         {
@@ -7353,14 +7192,14 @@ namespace Fifthweek.Api.Persistence.Snapshots
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.Id, entity.Timestamp, entity.CreatorId
+                    entity.Id, entity.PostId, entity.UserId, entity.Content, entity.CreationDate
                 },
                 transaction);
         }
         
         public static System.Threading.Tasks.Task<int> InsertAsync(
             this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<CreatorChannelsSnapshot, CreatorChannelsSnapshot.Fields> parameters)
+            SqlGenerationParameters<Comment, Comment.Fields> parameters)
         {
             var sql = new System.Text.StringBuilder();
         
@@ -7398,7 +7237,7 @@ namespace Fifthweek.Api.Persistence.Snapshots
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.Id, entity.Timestamp, entity.CreatorId });
+                : new Dapper.DynamicParameters(new { entity.Id, entity.PostId, entity.UserId, entity.Content, entity.CreationDate });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -7413,25 +7252,25 @@ namespace Fifthweek.Api.Persistence.Snapshots
         
         public static System.Threading.Tasks.Task UpsertAsync(
             this System.Data.Common.DbConnection connection, 
-            CreatorChannelsSnapshot entity, 
-            CreatorChannelsSnapshot.Fields fields,
+            Comment entity, 
+            Comment.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
             return Dapper.SqlMapper.ExecuteAsync(
                 connection, 
-                UpsertStatement(CreatorChannelsSnapshot.Fields.Empty, fields), 
+                UpsertStatement(Comment.Fields.Empty, fields), 
                 new 
                 {
-                    entity.Id, entity.Timestamp, entity.CreatorId
+                    entity.Id, entity.PostId, entity.UserId, entity.Content, entity.CreationDate
                 },
                 transaction);
         }
         
         public static System.Threading.Tasks.Task UpsertAsync(
             this System.Data.Common.DbConnection connection, 
-            CreatorChannelsSnapshot entity, 
-            CreatorChannelsSnapshot.Fields mergeOnFields,
-            CreatorChannelsSnapshot.Fields updateFields,
+            Comment entity, 
+            Comment.Fields mergeOnFields,
+            Comment.Fields updateFields,
             System.Data.IDbTransaction transaction = null)
         {
             return Dapper.SqlMapper.ExecuteAsync(
@@ -7439,15 +7278,15 @@ namespace Fifthweek.Api.Persistence.Snapshots
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.Id, entity.Timestamp, entity.CreatorId
+                    entity.Id, entity.PostId, entity.UserId, entity.Content, entity.CreationDate
                 },
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
-            CreatorChannelsSnapshot entity, 
-            CreatorChannelsSnapshot.Fields fields,
+            Comment entity, 
+            Comment.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
             return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
@@ -7455,7 +7294,7 @@ namespace Fifthweek.Api.Persistence.Snapshots
         
         public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<CreatorChannelsSnapshot, CreatorChannelsSnapshot.Fields> parameters)
+            SqlGenerationParameters<Comment, Comment.Fields> parameters)
         {
             if (parameters.UpdateMask == null)
             {
@@ -7510,21 +7349,21 @@ namespace Fifthweek.Api.Persistence.Snapshots
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO CreatorChannelsSnapshots(Id, Timestamp, CreatorId) VALUES(@Id, @Timestamp, @CreatorId)";
+            const string insert = "INSERT INTO Comments(Id, PostId, UserId, Content, CreationDate) VALUES(@Id, @PostId, @UserId, @Content, @CreationDate)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
-        public static string UpsertStatement(CreatorChannelsSnapshot.Fields mergeOnFields, CreatorChannelsSnapshot.Fields updateFields)
+        public static string UpsertStatement(Comment.Fields mergeOnFields, Comment.Fields updateFields)
         {
             // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
             // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
             var sql = new System.Text.StringBuilder();
             sql.Append(
-                @"MERGE CreatorChannelsSnapshots WITH (HOLDLOCK) as Target
-                USING (VALUES (@Id, @Timestamp, @CreatorId)) AS Source (Id, Timestamp, CreatorId)
+                @"MERGE Comments WITH (HOLDLOCK) as Target
+                USING (VALUES (@Id, @PostId, @UserId, @Content, @CreationDate)) AS Source (Id, PostId, UserId, Content, CreationDate)
                 ON    (");
                 
-            if (mergeOnFields == CreatorChannelsSnapshot.Fields.Empty)
+            if (mergeOnFields == Comment.Fields.Empty)
             {
                 sql.Append(@"Target.Id = Source.Id");
             }
@@ -7540,21 +7379,21 @@ namespace Fifthweek.Api.Persistence.Snapshots
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (Id, Timestamp, CreatorId)
-                    VALUES  (Source.Id, Source.Timestamp, Source.CreatorId);");
+                    INSERT  (Id, PostId, UserId, Content, CreationDate)
+                    VALUES  (Source.Id, Source.PostId, Source.UserId, Source.Content, Source.CreationDate);");
             return sql.ToString();
         }
         
-        public static string UpdateStatement(CreatorChannelsSnapshot.Fields fields)
+        public static string UpdateStatement(Comment.Fields fields)
         {
             var sql = new System.Text.StringBuilder();
-            sql.Append("UPDATE CreatorChannelsSnapshots SET ");
+            sql.Append("UPDATE Comments SET ");
             sql.AppendUpdateParameters(GetFieldNames(fields));
             sql.Append(" WHERE Id = @Id");
             return sql.ToString();
         }
         
-        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(CreatorChannelsSnapshot.Fields fields, bool autoIncludePrimaryKeys = true)
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Comment.Fields fields, bool autoIncludePrimaryKeys = true)
         {
             var fieldNames = new System.Collections.Generic.List<string>();
             if (autoIncludePrimaryKeys)
@@ -7562,2243 +7401,87 @@ namespace Fifthweek.Api.Persistence.Snapshots
                 fieldNames.Add("Id");
             }
         
-            if (fields.HasFlag(CreatorChannelsSnapshot.Fields.Timestamp))
+            if (fields.HasFlag(Comment.Fields.PostId))
             {
-                fieldNames.Add("Timestamp");
+                fieldNames.Add("PostId");
             }
         
-            if (fields.HasFlag(CreatorChannelsSnapshot.Fields.CreatorId))
+            if (fields.HasFlag(Comment.Fields.UserId))
             {
-                fieldNames.Add("CreatorId");
+                fieldNames.Add("UserId");
+            }
+        
+            if (fields.HasFlag(Comment.Fields.Content))
+            {
+                fieldNames.Add("Content");
+            }
+        
+            if (fields.HasFlag(Comment.Fields.CreationDate))
+            {
+                fieldNames.Add("CreationDate");
             }
         
             return fieldNames;
         }
         
         private static Dapper.DynamicParameters OnlySpecifiedParameters(
-            CreatorChannelsSnapshot entity, 
-            CreatorChannelsSnapshot.Fields fields,
-            CreatorChannelsSnapshot.Fields? excludedFields = null)
+            Comment entity, 
+            Comment.Fields fields,
+            Comment.Fields? excludedFields = null)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
             parameters.Add("Id", entity.Id);
-            if (fields.HasFlag(CreatorChannelsSnapshot.Fields.Timestamp) && (excludedFields == null || !excludedFields.Value.HasFlag(CreatorChannelsSnapshot.Fields.Timestamp)))
+            if (fields.HasFlag(Comment.Fields.PostId) && (excludedFields == null || !excludedFields.Value.HasFlag(Comment.Fields.PostId)))
             {
-                parameters.Add("Timestamp", entity.Timestamp);
+                parameters.Add("PostId", entity.PostId);
             }
         
-            if (fields.HasFlag(CreatorChannelsSnapshot.Fields.CreatorId) && (excludedFields == null || !excludedFields.Value.HasFlag(CreatorChannelsSnapshot.Fields.CreatorId)))
+            if (fields.HasFlag(Comment.Fields.UserId) && (excludedFields == null || !excludedFields.Value.HasFlag(Comment.Fields.UserId)))
             {
-                parameters.Add("CreatorId", entity.CreatorId);
+                parameters.Add("UserId", entity.UserId);
+            }
+        
+            if (fields.HasFlag(Comment.Fields.Content) && (excludedFields == null || !excludedFields.Value.HasFlag(Comment.Fields.Content)))
+            {
+                parameters.Add("Content", entity.Content);
+            }
+        
+            if (fields.HasFlag(Comment.Fields.CreationDate) && (excludedFields == null || !excludedFields.Value.HasFlag(Comment.Fields.CreationDate)))
+            {
+                parameters.Add("CreationDate", entity.CreationDate);
             }
         
             return parameters;
         }
         
         private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
-            CreatorChannelsSnapshot entity, 
-            CreatorChannelsSnapshot.Fields fields)
+            Comment entity, 
+            Comment.Fields fields)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
             parameters.Add("Id", entity.Id);
-            if (!fields.HasFlag(CreatorChannelsSnapshot.Fields.Timestamp))
+            if (!fields.HasFlag(Comment.Fields.PostId))
             {
-                parameters.Add("Timestamp", entity.Timestamp);
+                parameters.Add("PostId", entity.PostId);
             }
         
-            if (!fields.HasFlag(CreatorChannelsSnapshot.Fields.CreatorId))
+            if (!fields.HasFlag(Comment.Fields.UserId))
             {
-                parameters.Add("CreatorId", entity.CreatorId);
+                parameters.Add("UserId", entity.UserId);
             }
         
-            return parameters;
-        }
-        
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class CreatorChannelsSnapshotItem  : IIdentityEquatable
-    {
-        public const string Table = "CreatorChannelsSnapshotItems";
-        
-        public CreatorChannelsSnapshotItem(
-            System.Guid creatorChannelsSnapshotId,
-            System.Guid channelId)
-        {
-            if (creatorChannelsSnapshotId == null)
-            {
-                throw new ArgumentNullException("creatorChannelsSnapshotId");
-            }
-
-            if (channelId == null)
-            {
-                throw new ArgumentNullException("channelId");
-            }
-
-            this.CreatorChannelsSnapshotId = creatorChannelsSnapshotId;
-            this.ChannelId = channelId;
-        }
-        
-        public bool IdentityEquals(object other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-        
-            if (other.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.IdentityEquals((CreatorChannelsSnapshotItem)other);
-        }
-        
-        protected bool IdentityEquals(CreatorChannelsSnapshotItem other)
-        {
-            if (!object.Equals(this.CreatorChannelsSnapshotId, other.CreatorChannelsSnapshotId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ChannelId, other.ChannelId))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-        
-        [Flags]
-        public enum Fields
-        {
-            Empty = 0,
-            CreatorChannelsSnapshotId = 1, 
-            ChannelId = 2, 
-            Price = 4
-        }
-    }
-
-    public static partial class CreatorChannelsSnapshotItemExtensions
-    {
-        public static System.Threading.Tasks.Task InsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            System.Collections.Generic.IEnumerable<CreatorChannelsSnapshotItem> entities, 
-            bool idempotent = true, 
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                InsertStatement(idempotent), 
-                entities.Select(entity => new 
-                {
-                    entity.CreatorChannelsSnapshotId, entity.ChannelId, entity.Price
-                }).ToArray(),
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task InsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            CreatorChannelsSnapshotItem entity,
-            bool idempotent = true, 
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                InsertStatement(idempotent), 
-                new 
-                {
-                    entity.CreatorChannelsSnapshotId, entity.ChannelId, entity.Price
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertAsync(
-            this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<CreatorChannelsSnapshotItem, CreatorChannelsSnapshotItem.Fields> parameters)
-        {
-            var sql = new System.Text.StringBuilder();
-        
-            if (parameters.Declarations != null)
-            {
-                sql.AppendLine(parameters.Declarations);
-            }
-            
-            int currentIndex = 0;
-            if (parameters.Conditions != null)
-            {
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.Append("IF ");
-                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                    sql.AppendLine("BEGIN");
-                    ++currentIndex;
-                }
-            }
-        
-            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
-        
-            if (parameters.Conditions != null)
-            {
-                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
-                    
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.AppendLine("END");
-                    sql.AppendLine("ELSE");
-                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
-                }
-            }
-        
-            var entity = parameters.Entity;
-            var parameterObject = parameters.ExcludedFromInput != null
-                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.CreatorChannelsSnapshotId, entity.ChannelId, entity.Price });
-        
-            if (parameters.AdditionalParameters != null)
-            {
-                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                parameterObject);
-        }
-        
-        public static System.Threading.Tasks.Task UpsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            CreatorChannelsSnapshotItem entity, 
-            CreatorChannelsSnapshotItem.Fields fields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                UpsertStatement(CreatorChannelsSnapshotItem.Fields.Empty, fields), 
-                new 
-                {
-                    entity.CreatorChannelsSnapshotId, entity.ChannelId, entity.Price
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task UpsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            CreatorChannelsSnapshotItem entity, 
-            CreatorChannelsSnapshotItem.Fields mergeOnFields,
-            CreatorChannelsSnapshotItem.Fields updateFields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                UpsertStatement(mergeOnFields, updateFields), 
-                new 
-                {
-                    entity.CreatorChannelsSnapshotId, entity.ChannelId, entity.Price
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task UpdateAsync(
-            this System.Data.Common.DbConnection connection, 
-            CreatorChannelsSnapshotItem entity, 
-            CreatorChannelsSnapshotItem.Fields fields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> UpdateAsync(
-            this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<CreatorChannelsSnapshotItem, CreatorChannelsSnapshotItem.Fields> parameters)
-        {
-            if (parameters.UpdateMask == null)
-            {
-                throw new ArgumentException("Must contain update mask", "parameters");
-            }
-        
-            var sql = new System.Text.StringBuilder();
-        
-            if (parameters.Declarations != null)
-            {
-                sql.AppendLine(parameters.Declarations);
-            }
-            
-            int currentIndex = 0;
-            if (parameters.Conditions != null)
-            {
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.Append("IF ");
-                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                    sql.AppendLine("BEGIN");
-                    ++currentIndex;
-                }
-            }
-        
-            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
-        
-            if (parameters.Conditions != null)
-            {
-                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
-                    
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.AppendLine("END");
-                    sql.AppendLine("ELSE");
-                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
-                }
-            }
-        
-            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
-        
-            if (parameters.AdditionalParameters != null)
-            {
-                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                parameterObject);
-        }
-        
-        public static string InsertStatement(bool idempotent = true)
-        {
-            const string insert = "INSERT INTO CreatorChannelsSnapshotItems(CreatorChannelsSnapshotId, ChannelId, Price) VALUES(@CreatorChannelsSnapshotId, @ChannelId, @Price)";
-            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
-        }
-        
-        public static string UpsertStatement(CreatorChannelsSnapshotItem.Fields mergeOnFields, CreatorChannelsSnapshotItem.Fields updateFields)
-        {
-            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
-            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
-            var sql = new System.Text.StringBuilder();
-            sql.Append(
-                @"MERGE CreatorChannelsSnapshotItems WITH (HOLDLOCK) as Target
-                USING (VALUES (@CreatorChannelsSnapshotId, @ChannelId, @Price)) AS Source (CreatorChannelsSnapshotId, ChannelId, Price)
-                ON    (");
-                
-            if (mergeOnFields == CreatorChannelsSnapshotItem.Fields.Empty)
-            {
-                sql.Append(@"Target.CreatorChannelsSnapshotId = Source.CreatorChannelsSnapshotId AND Target.ChannelId = Source.ChannelId");
-            }
-            else
-            {
-                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
-            }
-                
-            sql.Append(@")
-                WHEN MATCHED THEN
-                    UPDATE
-                    SET        ");
-            sql.AppendUpdateParameters(GetFieldNames(updateFields));
-            sql.Append(
-                @" WHEN NOT MATCHED THEN
-                    INSERT  (CreatorChannelsSnapshotId, ChannelId, Price)
-                    VALUES  (Source.CreatorChannelsSnapshotId, Source.ChannelId, Source.Price);");
-            return sql.ToString();
-        }
-        
-        public static string UpdateStatement(CreatorChannelsSnapshotItem.Fields fields)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.Append("UPDATE CreatorChannelsSnapshotItems SET ");
-            sql.AppendUpdateParameters(GetFieldNames(fields));
-            sql.Append(" WHERE CreatorChannelsSnapshotId = @CreatorChannelsSnapshotId AND ChannelId = @ChannelId");
-            return sql.ToString();
-        }
-        
-        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(CreatorChannelsSnapshotItem.Fields fields, bool autoIncludePrimaryKeys = true)
-        {
-            var fieldNames = new System.Collections.Generic.List<string>();
-            if (autoIncludePrimaryKeys)
-            {
-                fieldNames.Add("CreatorChannelsSnapshotId");
-            }
-        
-            if (autoIncludePrimaryKeys)
-            {
-                fieldNames.Add("ChannelId");
-            }
-        
-            if (fields.HasFlag(CreatorChannelsSnapshotItem.Fields.Price))
-            {
-                fieldNames.Add("Price");
-            }
-        
-            return fieldNames;
-        }
-        
-        private static Dapper.DynamicParameters OnlySpecifiedParameters(
-            CreatorChannelsSnapshotItem entity, 
-            CreatorChannelsSnapshotItem.Fields fields,
-            CreatorChannelsSnapshotItem.Fields? excludedFields = null)
-        {
-            var parameters = new Dapper.DynamicParameters();
-        
-            // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("CreatorChannelsSnapshotId", entity.CreatorChannelsSnapshotId);
-            parameters.Add("ChannelId", entity.ChannelId);
-            if (fields.HasFlag(CreatorChannelsSnapshotItem.Fields.Price) && (excludedFields == null || !excludedFields.Value.HasFlag(CreatorChannelsSnapshotItem.Fields.Price)))
-            {
-                parameters.Add("Price", entity.Price);
-            }
-        
-            return parameters;
-        }
-        
-        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
-            CreatorChannelsSnapshotItem entity, 
-            CreatorChannelsSnapshotItem.Fields fields)
-        {
-            var parameters = new Dapper.DynamicParameters();
-        
-            // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("CreatorChannelsSnapshotId", entity.CreatorChannelsSnapshotId);
-            parameters.Add("ChannelId", entity.ChannelId);
-            if (!fields.HasFlag(CreatorChannelsSnapshotItem.Fields.Price))
-            {
-                parameters.Add("Price", entity.Price);
-            }
-        
-            return parameters;
-        }
-        
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class CreatorFreeAccessUsersSnapshot  : IIdentityEquatable
-    {
-        public const string Table = "CreatorFreeAccessUsersSnapshots";
-        
-        public CreatorFreeAccessUsersSnapshot(
-            System.Guid id)
-        {
-            if (id == null)
-            {
-                throw new ArgumentNullException("id");
-            }
-
-            this.Id = id;
-        }
-        
-        public bool IdentityEquals(object other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-        
-            if (other.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.IdentityEquals((CreatorFreeAccessUsersSnapshot)other);
-        }
-        
-        protected bool IdentityEquals(CreatorFreeAccessUsersSnapshot other)
-        {
-            if (!object.Equals(this.Id, other.Id))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-        
-        [Flags]
-        public enum Fields
-        {
-            Empty = 0,
-            Id = 1, 
-            Timestamp = 2, 
-            CreatorId = 4
-        }
-    }
-
-    public static partial class CreatorFreeAccessUsersSnapshotExtensions
-    {
-        public static System.Threading.Tasks.Task InsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            System.Collections.Generic.IEnumerable<CreatorFreeAccessUsersSnapshot> entities, 
-            bool idempotent = true, 
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                InsertStatement(idempotent), 
-                entities.Select(entity => new 
-                {
-                    entity.Id, entity.Timestamp, entity.CreatorId
-                }).ToArray(),
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task InsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            CreatorFreeAccessUsersSnapshot entity,
-            bool idempotent = true, 
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                InsertStatement(idempotent), 
-                new 
-                {
-                    entity.Id, entity.Timestamp, entity.CreatorId
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertAsync(
-            this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<CreatorFreeAccessUsersSnapshot, CreatorFreeAccessUsersSnapshot.Fields> parameters)
-        {
-            var sql = new System.Text.StringBuilder();
-        
-            if (parameters.Declarations != null)
-            {
-                sql.AppendLine(parameters.Declarations);
-            }
-            
-            int currentIndex = 0;
-            if (parameters.Conditions != null)
-            {
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.Append("IF ");
-                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                    sql.AppendLine("BEGIN");
-                    ++currentIndex;
-                }
-            }
-        
-            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
-        
-            if (parameters.Conditions != null)
-            {
-                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
-                    
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.AppendLine("END");
-                    sql.AppendLine("ELSE");
-                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
-                }
-            }
-        
-            var entity = parameters.Entity;
-            var parameterObject = parameters.ExcludedFromInput != null
-                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.Id, entity.Timestamp, entity.CreatorId });
-        
-            if (parameters.AdditionalParameters != null)
-            {
-                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                parameterObject);
-        }
-        
-        public static System.Threading.Tasks.Task UpsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            CreatorFreeAccessUsersSnapshot entity, 
-            CreatorFreeAccessUsersSnapshot.Fields fields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                UpsertStatement(CreatorFreeAccessUsersSnapshot.Fields.Empty, fields), 
-                new 
-                {
-                    entity.Id, entity.Timestamp, entity.CreatorId
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task UpsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            CreatorFreeAccessUsersSnapshot entity, 
-            CreatorFreeAccessUsersSnapshot.Fields mergeOnFields,
-            CreatorFreeAccessUsersSnapshot.Fields updateFields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                UpsertStatement(mergeOnFields, updateFields), 
-                new 
-                {
-                    entity.Id, entity.Timestamp, entity.CreatorId
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task UpdateAsync(
-            this System.Data.Common.DbConnection connection, 
-            CreatorFreeAccessUsersSnapshot entity, 
-            CreatorFreeAccessUsersSnapshot.Fields fields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> UpdateAsync(
-            this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<CreatorFreeAccessUsersSnapshot, CreatorFreeAccessUsersSnapshot.Fields> parameters)
-        {
-            if (parameters.UpdateMask == null)
-            {
-                throw new ArgumentException("Must contain update mask", "parameters");
-            }
-        
-            var sql = new System.Text.StringBuilder();
-        
-            if (parameters.Declarations != null)
-            {
-                sql.AppendLine(parameters.Declarations);
-            }
-            
-            int currentIndex = 0;
-            if (parameters.Conditions != null)
-            {
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.Append("IF ");
-                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                    sql.AppendLine("BEGIN");
-                    ++currentIndex;
-                }
-            }
-        
-            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
-        
-            if (parameters.Conditions != null)
-            {
-                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
-                    
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.AppendLine("END");
-                    sql.AppendLine("ELSE");
-                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
-                }
-            }
-        
-            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
-        
-            if (parameters.AdditionalParameters != null)
-            {
-                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                parameterObject);
-        }
-        
-        public static string InsertStatement(bool idempotent = true)
-        {
-            const string insert = "INSERT INTO CreatorFreeAccessUsersSnapshots(Id, Timestamp, CreatorId) VALUES(@Id, @Timestamp, @CreatorId)";
-            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
-        }
-        
-        public static string UpsertStatement(CreatorFreeAccessUsersSnapshot.Fields mergeOnFields, CreatorFreeAccessUsersSnapshot.Fields updateFields)
-        {
-            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
-            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
-            var sql = new System.Text.StringBuilder();
-            sql.Append(
-                @"MERGE CreatorFreeAccessUsersSnapshots WITH (HOLDLOCK) as Target
-                USING (VALUES (@Id, @Timestamp, @CreatorId)) AS Source (Id, Timestamp, CreatorId)
-                ON    (");
-                
-            if (mergeOnFields == CreatorFreeAccessUsersSnapshot.Fields.Empty)
-            {
-                sql.Append(@"Target.Id = Source.Id");
-            }
-            else
-            {
-                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
-            }
-                
-            sql.Append(@")
-                WHEN MATCHED THEN
-                    UPDATE
-                    SET        ");
-            sql.AppendUpdateParameters(GetFieldNames(updateFields));
-            sql.Append(
-                @" WHEN NOT MATCHED THEN
-                    INSERT  (Id, Timestamp, CreatorId)
-                    VALUES  (Source.Id, Source.Timestamp, Source.CreatorId);");
-            return sql.ToString();
-        }
-        
-        public static string UpdateStatement(CreatorFreeAccessUsersSnapshot.Fields fields)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.Append("UPDATE CreatorFreeAccessUsersSnapshots SET ");
-            sql.AppendUpdateParameters(GetFieldNames(fields));
-            sql.Append(" WHERE Id = @Id");
-            return sql.ToString();
-        }
-        
-        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(CreatorFreeAccessUsersSnapshot.Fields fields, bool autoIncludePrimaryKeys = true)
-        {
-            var fieldNames = new System.Collections.Generic.List<string>();
-            if (autoIncludePrimaryKeys)
-            {
-                fieldNames.Add("Id");
-            }
-        
-            if (fields.HasFlag(CreatorFreeAccessUsersSnapshot.Fields.Timestamp))
-            {
-                fieldNames.Add("Timestamp");
-            }
-        
-            if (fields.HasFlag(CreatorFreeAccessUsersSnapshot.Fields.CreatorId))
-            {
-                fieldNames.Add("CreatorId");
-            }
-        
-            return fieldNames;
-        }
-        
-        private static Dapper.DynamicParameters OnlySpecifiedParameters(
-            CreatorFreeAccessUsersSnapshot entity, 
-            CreatorFreeAccessUsersSnapshot.Fields fields,
-            CreatorFreeAccessUsersSnapshot.Fields? excludedFields = null)
-        {
-            var parameters = new Dapper.DynamicParameters();
-        
-            // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("Id", entity.Id);
-            if (fields.HasFlag(CreatorFreeAccessUsersSnapshot.Fields.Timestamp) && (excludedFields == null || !excludedFields.Value.HasFlag(CreatorFreeAccessUsersSnapshot.Fields.Timestamp)))
-            {
-                parameters.Add("Timestamp", entity.Timestamp);
-            }
-        
-            if (fields.HasFlag(CreatorFreeAccessUsersSnapshot.Fields.CreatorId) && (excludedFields == null || !excludedFields.Value.HasFlag(CreatorFreeAccessUsersSnapshot.Fields.CreatorId)))
-            {
-                parameters.Add("CreatorId", entity.CreatorId);
-            }
-        
-            return parameters;
-        }
-        
-        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
-            CreatorFreeAccessUsersSnapshot entity, 
-            CreatorFreeAccessUsersSnapshot.Fields fields)
-        {
-            var parameters = new Dapper.DynamicParameters();
-        
-            // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("Id", entity.Id);
-            if (!fields.HasFlag(CreatorFreeAccessUsersSnapshot.Fields.Timestamp))
-            {
-                parameters.Add("Timestamp", entity.Timestamp);
-            }
-        
-            if (!fields.HasFlag(CreatorFreeAccessUsersSnapshot.Fields.CreatorId))
-            {
-                parameters.Add("CreatorId", entity.CreatorId);
-            }
-        
-            return parameters;
-        }
-        
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class CreatorFreeAccessUsersSnapshotItem  : IIdentityEquatable
-    {
-        public const string Table = "CreatorFreeAccessUsersSnapshotItems";
-        
-        public CreatorFreeAccessUsersSnapshotItem(
-            System.Guid creatorFreeAccessUsersSnapshotId,
-            System.String email)
-        {
-            if (creatorFreeAccessUsersSnapshotId == null)
-            {
-                throw new ArgumentNullException("creatorFreeAccessUsersSnapshotId");
-            }
-
-            if (email == null)
-            {
-                throw new ArgumentNullException("email");
-            }
-
-            this.CreatorFreeAccessUsersSnapshotId = creatorFreeAccessUsersSnapshotId;
-            this.Email = email;
-        }
-        
-        public bool IdentityEquals(object other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-        
-            if (other.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.IdentityEquals((CreatorFreeAccessUsersSnapshotItem)other);
-        }
-        
-        protected bool IdentityEquals(CreatorFreeAccessUsersSnapshotItem other)
-        {
-            if (!object.Equals(this.CreatorFreeAccessUsersSnapshotId, other.CreatorFreeAccessUsersSnapshotId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Email, other.Email))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-        
-        [Flags]
-        public enum Fields
-        {
-            Empty = 0,
-            CreatorFreeAccessUsersSnapshotId = 1, 
-            Email = 2
-        }
-    }
-
-    public static partial class CreatorFreeAccessUsersSnapshotItemExtensions
-    {
-        public static System.Threading.Tasks.Task InsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            System.Collections.Generic.IEnumerable<CreatorFreeAccessUsersSnapshotItem> entities, 
-            bool idempotent = true, 
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                InsertStatement(idempotent), 
-                entities.Select(entity => new 
-                {
-                    entity.CreatorFreeAccessUsersSnapshotId, entity.Email
-                }).ToArray(),
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task InsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            CreatorFreeAccessUsersSnapshotItem entity,
-            bool idempotent = true, 
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                InsertStatement(idempotent), 
-                new 
-                {
-                    entity.CreatorFreeAccessUsersSnapshotId, entity.Email
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertAsync(
-            this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<CreatorFreeAccessUsersSnapshotItem, CreatorFreeAccessUsersSnapshotItem.Fields> parameters)
-        {
-            var sql = new System.Text.StringBuilder();
-        
-            if (parameters.Declarations != null)
-            {
-                sql.AppendLine(parameters.Declarations);
-            }
-            
-            int currentIndex = 0;
-            if (parameters.Conditions != null)
-            {
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.Append("IF ");
-                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                    sql.AppendLine("BEGIN");
-                    ++currentIndex;
-                }
-            }
-        
-            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
-        
-            if (parameters.Conditions != null)
-            {
-                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
-                    
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.AppendLine("END");
-                    sql.AppendLine("ELSE");
-                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
-                }
-            }
-        
-            var entity = parameters.Entity;
-            var parameterObject = parameters.ExcludedFromInput != null
-                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.CreatorFreeAccessUsersSnapshotId, entity.Email });
-        
-            if (parameters.AdditionalParameters != null)
-            {
-                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                parameterObject);
-        }
-        
-        public static System.Threading.Tasks.Task UpsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            CreatorFreeAccessUsersSnapshotItem entity, 
-            CreatorFreeAccessUsersSnapshotItem.Fields fields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                UpsertStatement(CreatorFreeAccessUsersSnapshotItem.Fields.Empty, fields), 
-                new 
-                {
-                    entity.CreatorFreeAccessUsersSnapshotId, entity.Email
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task UpsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            CreatorFreeAccessUsersSnapshotItem entity, 
-            CreatorFreeAccessUsersSnapshotItem.Fields mergeOnFields,
-            CreatorFreeAccessUsersSnapshotItem.Fields updateFields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                UpsertStatement(mergeOnFields, updateFields), 
-                new 
-                {
-                    entity.CreatorFreeAccessUsersSnapshotId, entity.Email
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task UpdateAsync(
-            this System.Data.Common.DbConnection connection, 
-            CreatorFreeAccessUsersSnapshotItem entity, 
-            CreatorFreeAccessUsersSnapshotItem.Fields fields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> UpdateAsync(
-            this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<CreatorFreeAccessUsersSnapshotItem, CreatorFreeAccessUsersSnapshotItem.Fields> parameters)
-        {
-            if (parameters.UpdateMask == null)
-            {
-                throw new ArgumentException("Must contain update mask", "parameters");
-            }
-        
-            var sql = new System.Text.StringBuilder();
-        
-            if (parameters.Declarations != null)
-            {
-                sql.AppendLine(parameters.Declarations);
-            }
-            
-            int currentIndex = 0;
-            if (parameters.Conditions != null)
-            {
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.Append("IF ");
-                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                    sql.AppendLine("BEGIN");
-                    ++currentIndex;
-                }
-            }
-        
-            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
-        
-            if (parameters.Conditions != null)
-            {
-                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
-                    
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.AppendLine("END");
-                    sql.AppendLine("ELSE");
-                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
-                }
-            }
-        
-            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
-        
-            if (parameters.AdditionalParameters != null)
-            {
-                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                parameterObject);
-        }
-        
-        public static string InsertStatement(bool idempotent = true)
-        {
-            const string insert = "INSERT INTO CreatorFreeAccessUsersSnapshotItems(CreatorFreeAccessUsersSnapshotId, Email) VALUES(@CreatorFreeAccessUsersSnapshotId, @Email)";
-            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
-        }
-        
-        public static string UpsertStatement(CreatorFreeAccessUsersSnapshotItem.Fields mergeOnFields, CreatorFreeAccessUsersSnapshotItem.Fields updateFields)
-        {
-            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
-            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
-            var sql = new System.Text.StringBuilder();
-            sql.Append(
-                @"MERGE CreatorFreeAccessUsersSnapshotItems WITH (HOLDLOCK) as Target
-                USING (VALUES (@CreatorFreeAccessUsersSnapshotId, @Email)) AS Source (CreatorFreeAccessUsersSnapshotId, Email)
-                ON    (");
-                
-            if (mergeOnFields == CreatorFreeAccessUsersSnapshotItem.Fields.Empty)
-            {
-                sql.Append(@"Target.CreatorFreeAccessUsersSnapshotId = Source.CreatorFreeAccessUsersSnapshotId AND Target.Email = Source.Email");
-            }
-            else
-            {
-                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
-            }
-                
-            sql.Append(@")
-                WHEN MATCHED THEN
-                    UPDATE
-                    SET        ");
-            sql.AppendUpdateParameters(GetFieldNames(updateFields));
-            sql.Append(
-                @" WHEN NOT MATCHED THEN
-                    INSERT  (CreatorFreeAccessUsersSnapshotId, Email)
-                    VALUES  (Source.CreatorFreeAccessUsersSnapshotId, Source.Email);");
-            return sql.ToString();
-        }
-        
-        public static string UpdateStatement(CreatorFreeAccessUsersSnapshotItem.Fields fields)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.Append("UPDATE CreatorFreeAccessUsersSnapshotItems SET ");
-            sql.AppendUpdateParameters(GetFieldNames(fields));
-            sql.Append(" WHERE CreatorFreeAccessUsersSnapshotId = @CreatorFreeAccessUsersSnapshotId AND Email = @Email");
-            return sql.ToString();
-        }
-        
-        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(CreatorFreeAccessUsersSnapshotItem.Fields fields, bool autoIncludePrimaryKeys = true)
-        {
-            var fieldNames = new System.Collections.Generic.List<string>();
-            if (autoIncludePrimaryKeys)
-            {
-                fieldNames.Add("CreatorFreeAccessUsersSnapshotId");
-            }
-        
-            if (autoIncludePrimaryKeys)
-            {
-                fieldNames.Add("Email");
-            }
-        
-            return fieldNames;
-        }
-        
-        private static Dapper.DynamicParameters OnlySpecifiedParameters(
-            CreatorFreeAccessUsersSnapshotItem entity, 
-            CreatorFreeAccessUsersSnapshotItem.Fields fields,
-            CreatorFreeAccessUsersSnapshotItem.Fields? excludedFields = null)
-        {
-            var parameters = new Dapper.DynamicParameters();
-        
-            // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("CreatorFreeAccessUsersSnapshotId", entity.CreatorFreeAccessUsersSnapshotId);
-            parameters.Add("Email", entity.Email);
-            return parameters;
-        }
-        
-        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
-            CreatorFreeAccessUsersSnapshotItem entity, 
-            CreatorFreeAccessUsersSnapshotItem.Fields fields)
-        {
-            var parameters = new Dapper.DynamicParameters();
-        
-            // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("CreatorFreeAccessUsersSnapshotId", entity.CreatorFreeAccessUsersSnapshotId);
-            parameters.Add("Email", entity.Email);
-            return parameters;
-        }
-        
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class SubscriberChannelsSnapshot  : IIdentityEquatable
-    {
-        public const string Table = "SubscriberChannelsSnapshots";
-        
-        public SubscriberChannelsSnapshot(
-            System.Guid id)
-        {
-            if (id == null)
-            {
-                throw new ArgumentNullException("id");
-            }
-
-            this.Id = id;
-        }
-        
-        public bool IdentityEquals(object other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-        
-            if (other.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.IdentityEquals((SubscriberChannelsSnapshot)other);
-        }
-        
-        protected bool IdentityEquals(SubscriberChannelsSnapshot other)
-        {
-            if (!object.Equals(this.Id, other.Id))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-        
-        [Flags]
-        public enum Fields
-        {
-            Empty = 0,
-            Id = 1, 
-            Timestamp = 2, 
-            SubscriberId = 4
-        }
-    }
-
-    public static partial class SubscriberChannelsSnapshotExtensions
-    {
-        public static System.Threading.Tasks.Task InsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            System.Collections.Generic.IEnumerable<SubscriberChannelsSnapshot> entities, 
-            bool idempotent = true, 
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                InsertStatement(idempotent), 
-                entities.Select(entity => new 
-                {
-                    entity.Id, entity.Timestamp, entity.SubscriberId
-                }).ToArray(),
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task InsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            SubscriberChannelsSnapshot entity,
-            bool idempotent = true, 
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                InsertStatement(idempotent), 
-                new 
-                {
-                    entity.Id, entity.Timestamp, entity.SubscriberId
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertAsync(
-            this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<SubscriberChannelsSnapshot, SubscriberChannelsSnapshot.Fields> parameters)
-        {
-            var sql = new System.Text.StringBuilder();
-        
-            if (parameters.Declarations != null)
-            {
-                sql.AppendLine(parameters.Declarations);
-            }
-            
-            int currentIndex = 0;
-            if (parameters.Conditions != null)
-            {
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.Append("IF ");
-                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                    sql.AppendLine("BEGIN");
-                    ++currentIndex;
-                }
-            }
-        
-            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
-        
-            if (parameters.Conditions != null)
-            {
-                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
-                    
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.AppendLine("END");
-                    sql.AppendLine("ELSE");
-                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
-                }
-            }
-        
-            var entity = parameters.Entity;
-            var parameterObject = parameters.ExcludedFromInput != null
-                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.Id, entity.Timestamp, entity.SubscriberId });
-        
-            if (parameters.AdditionalParameters != null)
-            {
-                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                parameterObject);
-        }
-        
-        public static System.Threading.Tasks.Task UpsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            SubscriberChannelsSnapshot entity, 
-            SubscriberChannelsSnapshot.Fields fields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                UpsertStatement(SubscriberChannelsSnapshot.Fields.Empty, fields), 
-                new 
-                {
-                    entity.Id, entity.Timestamp, entity.SubscriberId
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task UpsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            SubscriberChannelsSnapshot entity, 
-            SubscriberChannelsSnapshot.Fields mergeOnFields,
-            SubscriberChannelsSnapshot.Fields updateFields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                UpsertStatement(mergeOnFields, updateFields), 
-                new 
-                {
-                    entity.Id, entity.Timestamp, entity.SubscriberId
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task UpdateAsync(
-            this System.Data.Common.DbConnection connection, 
-            SubscriberChannelsSnapshot entity, 
-            SubscriberChannelsSnapshot.Fields fields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> UpdateAsync(
-            this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<SubscriberChannelsSnapshot, SubscriberChannelsSnapshot.Fields> parameters)
-        {
-            if (parameters.UpdateMask == null)
-            {
-                throw new ArgumentException("Must contain update mask", "parameters");
-            }
-        
-            var sql = new System.Text.StringBuilder();
-        
-            if (parameters.Declarations != null)
-            {
-                sql.AppendLine(parameters.Declarations);
-            }
-            
-            int currentIndex = 0;
-            if (parameters.Conditions != null)
-            {
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.Append("IF ");
-                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                    sql.AppendLine("BEGIN");
-                    ++currentIndex;
-                }
-            }
-        
-            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
-        
-            if (parameters.Conditions != null)
-            {
-                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
-                    
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.AppendLine("END");
-                    sql.AppendLine("ELSE");
-                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
-                }
-            }
-        
-            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
-        
-            if (parameters.AdditionalParameters != null)
-            {
-                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                parameterObject);
-        }
-        
-        public static string InsertStatement(bool idempotent = true)
-        {
-            const string insert = "INSERT INTO SubscriberChannelsSnapshots(Id, Timestamp, SubscriberId) VALUES(@Id, @Timestamp, @SubscriberId)";
-            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
-        }
-        
-        public static string UpsertStatement(SubscriberChannelsSnapshot.Fields mergeOnFields, SubscriberChannelsSnapshot.Fields updateFields)
-        {
-            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
-            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
-            var sql = new System.Text.StringBuilder();
-            sql.Append(
-                @"MERGE SubscriberChannelsSnapshots WITH (HOLDLOCK) as Target
-                USING (VALUES (@Id, @Timestamp, @SubscriberId)) AS Source (Id, Timestamp, SubscriberId)
-                ON    (");
-                
-            if (mergeOnFields == SubscriberChannelsSnapshot.Fields.Empty)
-            {
-                sql.Append(@"Target.Id = Source.Id");
-            }
-            else
-            {
-                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
-            }
-                
-            sql.Append(@")
-                WHEN MATCHED THEN
-                    UPDATE
-                    SET        ");
-            sql.AppendUpdateParameters(GetFieldNames(updateFields));
-            sql.Append(
-                @" WHEN NOT MATCHED THEN
-                    INSERT  (Id, Timestamp, SubscriberId)
-                    VALUES  (Source.Id, Source.Timestamp, Source.SubscriberId);");
-            return sql.ToString();
-        }
-        
-        public static string UpdateStatement(SubscriberChannelsSnapshot.Fields fields)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.Append("UPDATE SubscriberChannelsSnapshots SET ");
-            sql.AppendUpdateParameters(GetFieldNames(fields));
-            sql.Append(" WHERE Id = @Id");
-            return sql.ToString();
-        }
-        
-        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(SubscriberChannelsSnapshot.Fields fields, bool autoIncludePrimaryKeys = true)
-        {
-            var fieldNames = new System.Collections.Generic.List<string>();
-            if (autoIncludePrimaryKeys)
-            {
-                fieldNames.Add("Id");
-            }
-        
-            if (fields.HasFlag(SubscriberChannelsSnapshot.Fields.Timestamp))
-            {
-                fieldNames.Add("Timestamp");
-            }
-        
-            if (fields.HasFlag(SubscriberChannelsSnapshot.Fields.SubscriberId))
-            {
-                fieldNames.Add("SubscriberId");
-            }
-        
-            return fieldNames;
-        }
-        
-        private static Dapper.DynamicParameters OnlySpecifiedParameters(
-            SubscriberChannelsSnapshot entity, 
-            SubscriberChannelsSnapshot.Fields fields,
-            SubscriberChannelsSnapshot.Fields? excludedFields = null)
-        {
-            var parameters = new Dapper.DynamicParameters();
-        
-            // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("Id", entity.Id);
-            if (fields.HasFlag(SubscriberChannelsSnapshot.Fields.Timestamp) && (excludedFields == null || !excludedFields.Value.HasFlag(SubscriberChannelsSnapshot.Fields.Timestamp)))
-            {
-                parameters.Add("Timestamp", entity.Timestamp);
-            }
-        
-            if (fields.HasFlag(SubscriberChannelsSnapshot.Fields.SubscriberId) && (excludedFields == null || !excludedFields.Value.HasFlag(SubscriberChannelsSnapshot.Fields.SubscriberId)))
-            {
-                parameters.Add("SubscriberId", entity.SubscriberId);
-            }
-        
-            return parameters;
-        }
-        
-        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
-            SubscriberChannelsSnapshot entity, 
-            SubscriberChannelsSnapshot.Fields fields)
-        {
-            var parameters = new Dapper.DynamicParameters();
-        
-            // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("Id", entity.Id);
-            if (!fields.HasFlag(SubscriberChannelsSnapshot.Fields.Timestamp))
-            {
-                parameters.Add("Timestamp", entity.Timestamp);
-            }
-        
-            if (!fields.HasFlag(SubscriberChannelsSnapshot.Fields.SubscriberId))
-            {
-                parameters.Add("SubscriberId", entity.SubscriberId);
-            }
-        
-            return parameters;
-        }
-        
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class SubscriberChannelsSnapshotItem  : IIdentityEquatable
-    {
-        public const string Table = "SubscriberChannelsSnapshotItems";
-        
-        public SubscriberChannelsSnapshotItem(
-            System.Guid subscriberChannelsSnapshotId,
-            System.Guid channelId)
-        {
-            if (subscriberChannelsSnapshotId == null)
-            {
-                throw new ArgumentNullException("subscriberChannelsSnapshotId");
-            }
-
-            if (channelId == null)
-            {
-                throw new ArgumentNullException("channelId");
-            }
-
-            this.SubscriberChannelsSnapshotId = subscriberChannelsSnapshotId;
-            this.ChannelId = channelId;
-        }
-        
-        public bool IdentityEquals(object other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-        
-            if (other.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.IdentityEquals((SubscriberChannelsSnapshotItem)other);
-        }
-        
-        protected bool IdentityEquals(SubscriberChannelsSnapshotItem other)
-        {
-            if (!object.Equals(this.SubscriberChannelsSnapshotId, other.SubscriberChannelsSnapshotId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ChannelId, other.ChannelId))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-        
-        [Flags]
-        public enum Fields
-        {
-            Empty = 0,
-            SubscriberChannelsSnapshotId = 1, 
-            ChannelId = 2, 
-            CreatorId = 4, 
-            AcceptedPrice = 8, 
-            SubscriptionStartDate = 16
-        }
-    }
-
-    public static partial class SubscriberChannelsSnapshotItemExtensions
-    {
-        public static System.Threading.Tasks.Task InsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            System.Collections.Generic.IEnumerable<SubscriberChannelsSnapshotItem> entities, 
-            bool idempotent = true, 
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                InsertStatement(idempotent), 
-                entities.Select(entity => new 
-                {
-                    entity.SubscriberChannelsSnapshotId, entity.ChannelId, entity.CreatorId, entity.AcceptedPrice, entity.SubscriptionStartDate
-                }).ToArray(),
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task InsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            SubscriberChannelsSnapshotItem entity,
-            bool idempotent = true, 
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                InsertStatement(idempotent), 
-                new 
-                {
-                    entity.SubscriberChannelsSnapshotId, entity.ChannelId, entity.CreatorId, entity.AcceptedPrice, entity.SubscriptionStartDate
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertAsync(
-            this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<SubscriberChannelsSnapshotItem, SubscriberChannelsSnapshotItem.Fields> parameters)
-        {
-            var sql = new System.Text.StringBuilder();
-        
-            if (parameters.Declarations != null)
-            {
-                sql.AppendLine(parameters.Declarations);
-            }
-            
-            int currentIndex = 0;
-            if (parameters.Conditions != null)
-            {
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.Append("IF ");
-                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                    sql.AppendLine("BEGIN");
-                    ++currentIndex;
-                }
-            }
-        
-            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
-        
-            if (parameters.Conditions != null)
-            {
-                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
-                    
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.AppendLine("END");
-                    sql.AppendLine("ELSE");
-                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
-                }
-            }
-        
-            var entity = parameters.Entity;
-            var parameterObject = parameters.ExcludedFromInput != null
-                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.SubscriberChannelsSnapshotId, entity.ChannelId, entity.CreatorId, entity.AcceptedPrice, entity.SubscriptionStartDate });
-        
-            if (parameters.AdditionalParameters != null)
-            {
-                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                parameterObject);
-        }
-        
-        public static System.Threading.Tasks.Task UpsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            SubscriberChannelsSnapshotItem entity, 
-            SubscriberChannelsSnapshotItem.Fields fields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                UpsertStatement(SubscriberChannelsSnapshotItem.Fields.Empty, fields), 
-                new 
-                {
-                    entity.SubscriberChannelsSnapshotId, entity.ChannelId, entity.CreatorId, entity.AcceptedPrice, entity.SubscriptionStartDate
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task UpsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            SubscriberChannelsSnapshotItem entity, 
-            SubscriberChannelsSnapshotItem.Fields mergeOnFields,
-            SubscriberChannelsSnapshotItem.Fields updateFields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                UpsertStatement(mergeOnFields, updateFields), 
-                new 
-                {
-                    entity.SubscriberChannelsSnapshotId, entity.ChannelId, entity.CreatorId, entity.AcceptedPrice, entity.SubscriptionStartDate
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task UpdateAsync(
-            this System.Data.Common.DbConnection connection, 
-            SubscriberChannelsSnapshotItem entity, 
-            SubscriberChannelsSnapshotItem.Fields fields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> UpdateAsync(
-            this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<SubscriberChannelsSnapshotItem, SubscriberChannelsSnapshotItem.Fields> parameters)
-        {
-            if (parameters.UpdateMask == null)
-            {
-                throw new ArgumentException("Must contain update mask", "parameters");
-            }
-        
-            var sql = new System.Text.StringBuilder();
-        
-            if (parameters.Declarations != null)
-            {
-                sql.AppendLine(parameters.Declarations);
-            }
-            
-            int currentIndex = 0;
-            if (parameters.Conditions != null)
-            {
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.Append("IF ");
-                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                    sql.AppendLine("BEGIN");
-                    ++currentIndex;
-                }
-            }
-        
-            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
-        
-            if (parameters.Conditions != null)
-            {
-                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
-                    
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.AppendLine("END");
-                    sql.AppendLine("ELSE");
-                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
-                }
-            }
-        
-            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
-        
-            if (parameters.AdditionalParameters != null)
-            {
-                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                parameterObject);
-        }
-        
-        public static string InsertStatement(bool idempotent = true)
-        {
-            const string insert = "INSERT INTO SubscriberChannelsSnapshotItems(SubscriberChannelsSnapshotId, ChannelId, CreatorId, AcceptedPrice, SubscriptionStartDate) VALUES(@SubscriberChannelsSnapshotId, @ChannelId, @CreatorId, @AcceptedPrice, @SubscriptionStartDate)";
-            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
-        }
-        
-        public static string UpsertStatement(SubscriberChannelsSnapshotItem.Fields mergeOnFields, SubscriberChannelsSnapshotItem.Fields updateFields)
-        {
-            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
-            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
-            var sql = new System.Text.StringBuilder();
-            sql.Append(
-                @"MERGE SubscriberChannelsSnapshotItems WITH (HOLDLOCK) as Target
-                USING (VALUES (@SubscriberChannelsSnapshotId, @ChannelId, @CreatorId, @AcceptedPrice, @SubscriptionStartDate)) AS Source (SubscriberChannelsSnapshotId, ChannelId, CreatorId, AcceptedPrice, SubscriptionStartDate)
-                ON    (");
-                
-            if (mergeOnFields == SubscriberChannelsSnapshotItem.Fields.Empty)
-            {
-                sql.Append(@"Target.SubscriberChannelsSnapshotId = Source.SubscriberChannelsSnapshotId AND Target.ChannelId = Source.ChannelId");
-            }
-            else
-            {
-                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
-            }
-                
-            sql.Append(@")
-                WHEN MATCHED THEN
-                    UPDATE
-                    SET        ");
-            sql.AppendUpdateParameters(GetFieldNames(updateFields));
-            sql.Append(
-                @" WHEN NOT MATCHED THEN
-                    INSERT  (SubscriberChannelsSnapshotId, ChannelId, CreatorId, AcceptedPrice, SubscriptionStartDate)
-                    VALUES  (Source.SubscriberChannelsSnapshotId, Source.ChannelId, Source.CreatorId, Source.AcceptedPrice, Source.SubscriptionStartDate);");
-            return sql.ToString();
-        }
-        
-        public static string UpdateStatement(SubscriberChannelsSnapshotItem.Fields fields)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.Append("UPDATE SubscriberChannelsSnapshotItems SET ");
-            sql.AppendUpdateParameters(GetFieldNames(fields));
-            sql.Append(" WHERE SubscriberChannelsSnapshotId = @SubscriberChannelsSnapshotId AND ChannelId = @ChannelId");
-            return sql.ToString();
-        }
-        
-        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(SubscriberChannelsSnapshotItem.Fields fields, bool autoIncludePrimaryKeys = true)
-        {
-            var fieldNames = new System.Collections.Generic.List<string>();
-            if (autoIncludePrimaryKeys)
-            {
-                fieldNames.Add("SubscriberChannelsSnapshotId");
-            }
-        
-            if (autoIncludePrimaryKeys)
-            {
-                fieldNames.Add("ChannelId");
-            }
-        
-            if (fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.CreatorId))
-            {
-                fieldNames.Add("CreatorId");
-            }
-        
-            if (fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.AcceptedPrice))
-            {
-                fieldNames.Add("AcceptedPrice");
-            }
-        
-            if (fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.SubscriptionStartDate))
-            {
-                fieldNames.Add("SubscriptionStartDate");
-            }
-        
-            return fieldNames;
-        }
-        
-        private static Dapper.DynamicParameters OnlySpecifiedParameters(
-            SubscriberChannelsSnapshotItem entity, 
-            SubscriberChannelsSnapshotItem.Fields fields,
-            SubscriberChannelsSnapshotItem.Fields? excludedFields = null)
-        {
-            var parameters = new Dapper.DynamicParameters();
-        
-            // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("SubscriberChannelsSnapshotId", entity.SubscriberChannelsSnapshotId);
-            parameters.Add("ChannelId", entity.ChannelId);
-            if (fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.CreatorId) && (excludedFields == null || !excludedFields.Value.HasFlag(SubscriberChannelsSnapshotItem.Fields.CreatorId)))
-            {
-                parameters.Add("CreatorId", entity.CreatorId);
-            }
-        
-            if (fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.AcceptedPrice) && (excludedFields == null || !excludedFields.Value.HasFlag(SubscriberChannelsSnapshotItem.Fields.AcceptedPrice)))
-            {
-                parameters.Add("AcceptedPrice", entity.AcceptedPrice);
-            }
-        
-            if (fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.SubscriptionStartDate) && (excludedFields == null || !excludedFields.Value.HasFlag(SubscriberChannelsSnapshotItem.Fields.SubscriptionStartDate)))
-            {
-                parameters.Add("SubscriptionStartDate", entity.SubscriptionStartDate);
-            }
-        
-            return parameters;
-        }
-        
-        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
-            SubscriberChannelsSnapshotItem entity, 
-            SubscriberChannelsSnapshotItem.Fields fields)
-        {
-            var parameters = new Dapper.DynamicParameters();
-        
-            // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("SubscriberChannelsSnapshotId", entity.SubscriberChannelsSnapshotId);
-            parameters.Add("ChannelId", entity.ChannelId);
-            if (!fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.CreatorId))
-            {
-                parameters.Add("CreatorId", entity.CreatorId);
-            }
-        
-            if (!fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.AcceptedPrice))
-            {
-                parameters.Add("AcceptedPrice", entity.AcceptedPrice);
-            }
-        
-            if (!fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.SubscriptionStartDate))
-            {
-                parameters.Add("SubscriptionStartDate", entity.SubscriptionStartDate);
-            }
-        
-            return parameters;
-        }
-        
-    }
-}
-namespace Fifthweek.Api.Persistence.Snapshots
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.CodeGeneration;
-    using System.ComponentModel.DataAnnotations.Schema;
-
-    public partial class SubscriberSnapshot  : IIdentityEquatable
-    {
-        public const string Table = "SubscriberSnapshots";
-        
-        public SubscriberSnapshot(
-            System.DateTime timestamp,
-            System.Guid subscriberId)
-        {
-            if (timestamp == null)
-            {
-                throw new ArgumentNullException("timestamp");
-            }
-
-            if (subscriberId == null)
-            {
-                throw new ArgumentNullException("subscriberId");
-            }
-
-            this.Timestamp = timestamp;
-            this.SubscriberId = subscriberId;
-        }
-        
-        public bool IdentityEquals(object other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-        
-            if (other.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.IdentityEquals((SubscriberSnapshot)other);
-        }
-        
-        protected bool IdentityEquals(SubscriberSnapshot other)
-        {
-            if (!object.Equals(this.Timestamp, other.Timestamp))
+            if (!fields.HasFlag(Comment.Fields.Content))
             {
-                return false;
+                parameters.Add("Content", entity.Content);
             }
-        
-            if (!object.Equals(this.SubscriberId, other.SubscriberId))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-        
-        [Flags]
-        public enum Fields
-        {
-            Empty = 0,
-            Timestamp = 1, 
-            SubscriberId = 2, 
-            Email = 4
-        }
-    }
-
-    public static partial class SubscriberSnapshotExtensions
-    {
-        public static System.Threading.Tasks.Task InsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            System.Collections.Generic.IEnumerable<SubscriberSnapshot> entities, 
-            bool idempotent = true, 
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                InsertStatement(idempotent), 
-                entities.Select(entity => new 
-                {
-                    entity.Timestamp, entity.SubscriberId, entity.Email
-                }).ToArray(),
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task InsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            SubscriberSnapshot entity,
-            bool idempotent = true, 
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                InsertStatement(idempotent), 
-                new 
-                {
-                    entity.Timestamp, entity.SubscriberId, entity.Email
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertAsync(
-            this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<SubscriberSnapshot, SubscriberSnapshot.Fields> parameters)
-        {
-            var sql = new System.Text.StringBuilder();
-        
-            if (parameters.Declarations != null)
-            {
-                sql.AppendLine(parameters.Declarations);
-            }
-            
-            int currentIndex = 0;
-            if (parameters.Conditions != null)
-            {
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.Append("IF ");
-                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                    sql.AppendLine("BEGIN");
-                    ++currentIndex;
-                }
-            }
-        
-            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
-        
-            if (parameters.Conditions != null)
-            {
-                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
-                    
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.AppendLine("END");
-                    sql.AppendLine("ELSE");
-                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
-                }
-            }
-        
-            var entity = parameters.Entity;
-            var parameterObject = parameters.ExcludedFromInput != null
-                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.Timestamp, entity.SubscriberId, entity.Email });
-        
-            if (parameters.AdditionalParameters != null)
-            {
-                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                parameterObject);
-        }
-        
-        public static System.Threading.Tasks.Task UpsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            SubscriberSnapshot entity, 
-            SubscriberSnapshot.Fields fields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                UpsertStatement(SubscriberSnapshot.Fields.Empty, fields), 
-                new 
-                {
-                    entity.Timestamp, entity.SubscriberId, entity.Email
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task UpsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            SubscriberSnapshot entity, 
-            SubscriberSnapshot.Fields mergeOnFields,
-            SubscriberSnapshot.Fields updateFields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                UpsertStatement(mergeOnFields, updateFields), 
-                new 
-                {
-                    entity.Timestamp, entity.SubscriberId, entity.Email
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task UpdateAsync(
-            this System.Data.Common.DbConnection connection, 
-            SubscriberSnapshot entity, 
-            SubscriberSnapshot.Fields fields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> UpdateAsync(
-            this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<SubscriberSnapshot, SubscriberSnapshot.Fields> parameters)
-        {
-            if (parameters.UpdateMask == null)
-            {
-                throw new ArgumentException("Must contain update mask", "parameters");
-            }
-        
-            var sql = new System.Text.StringBuilder();
-        
-            if (parameters.Declarations != null)
-            {
-                sql.AppendLine(parameters.Declarations);
-            }
-            
-            int currentIndex = 0;
-            if (parameters.Conditions != null)
-            {
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.Append("IF ");
-                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                    sql.AppendLine("BEGIN");
-                    ++currentIndex;
-                }
-            }
-        
-            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
-        
-            if (parameters.Conditions != null)
-            {
-                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
-                    
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.AppendLine("END");
-                    sql.AppendLine("ELSE");
-                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
-                }
-            }
-        
-            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
-        
-            if (parameters.AdditionalParameters != null)
-            {
-                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                parameterObject);
-        }
-        
-        public static string InsertStatement(bool idempotent = true)
-        {
-            const string insert = "INSERT INTO SubscriberSnapshots(Timestamp, SubscriberId, Email) VALUES(@Timestamp, @SubscriberId, @Email)";
-            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
-        }
-        
-        public static string UpsertStatement(SubscriberSnapshot.Fields mergeOnFields, SubscriberSnapshot.Fields updateFields)
-        {
-            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
-            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
-            var sql = new System.Text.StringBuilder();
-            sql.Append(
-                @"MERGE SubscriberSnapshots WITH (HOLDLOCK) as Target
-                USING (VALUES (@Timestamp, @SubscriberId, @Email)) AS Source (Timestamp, SubscriberId, Email)
-                ON    (");
-                
-            if (mergeOnFields == SubscriberSnapshot.Fields.Empty)
-            {
-                sql.Append(@"Target.Timestamp = Source.Timestamp AND Target.SubscriberId = Source.SubscriberId");
-            }
-            else
-            {
-                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
-            }
-                
-            sql.Append(@")
-                WHEN MATCHED THEN
-                    UPDATE
-                    SET        ");
-            sql.AppendUpdateParameters(GetFieldNames(updateFields));
-            sql.Append(
-                @" WHEN NOT MATCHED THEN
-                    INSERT  (Timestamp, SubscriberId, Email)
-                    VALUES  (Source.Timestamp, Source.SubscriberId, Source.Email);");
-            return sql.ToString();
-        }
-        
-        public static string UpdateStatement(SubscriberSnapshot.Fields fields)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.Append("UPDATE SubscriberSnapshots SET ");
-            sql.AppendUpdateParameters(GetFieldNames(fields));
-            sql.Append(" WHERE Timestamp = @Timestamp AND SubscriberId = @SubscriberId");
-            return sql.ToString();
-        }
-        
-        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(SubscriberSnapshot.Fields fields, bool autoIncludePrimaryKeys = true)
-        {
-            var fieldNames = new System.Collections.Generic.List<string>();
-            if (autoIncludePrimaryKeys)
-            {
-                fieldNames.Add("Timestamp");
-            }
-        
-            if (autoIncludePrimaryKeys)
-            {
-                fieldNames.Add("SubscriberId");
-            }
-        
-            if (fields.HasFlag(SubscriberSnapshot.Fields.Email))
-            {
-                fieldNames.Add("Email");
-            }
-        
-            return fieldNames;
-        }
-        
-        private static Dapper.DynamicParameters OnlySpecifiedParameters(
-            SubscriberSnapshot entity, 
-            SubscriberSnapshot.Fields fields,
-            SubscriberSnapshot.Fields? excludedFields = null)
-        {
-            var parameters = new Dapper.DynamicParameters();
-        
-            // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("Timestamp", entity.Timestamp);
-            parameters.Add("SubscriberId", entity.SubscriberId);
-            if (fields.HasFlag(SubscriberSnapshot.Fields.Email) && (excludedFields == null || !excludedFields.Value.HasFlag(SubscriberSnapshot.Fields.Email)))
-            {
-                parameters.Add("Email", entity.Email);
-            }
-        
-            return parameters;
-        }
-        
-        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
-            SubscriberSnapshot entity, 
-            SubscriberSnapshot.Fields fields)
-        {
-            var parameters = new Dapper.DynamicParameters();
         
-            // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("Timestamp", entity.Timestamp);
-            parameters.Add("SubscriberId", entity.SubscriberId);
-            if (!fields.HasFlag(SubscriberSnapshot.Fields.Email))
+            if (!fields.HasFlag(Comment.Fields.CreationDate))
             {
-                parameters.Add("Email", entity.Email);
+                parameters.Add("CreationDate", entity.CreationDate);
             }
         
             return parameters;
@@ -9815,26 +7498,26 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
-    public partial class WeeklyReleaseTime  : IIdentityEquatable
+    public partial class Like  : IIdentityEquatable
     {
-        public const string Table = "WeeklyReleaseTimes";
+        public const string Table = "Likes";
         
-        public WeeklyReleaseTime(
-            System.Guid queueId,
-            System.Byte hourOfWeek)
+        public Like(
+            System.Guid postId,
+            System.Guid userId)
         {
-            if (queueId == null)
+            if (postId == null)
             {
-                throw new ArgumentNullException("queueId");
+                throw new ArgumentNullException("postId");
             }
 
-            if (hourOfWeek == null)
+            if (userId == null)
             {
-                throw new ArgumentNullException("hourOfWeek");
+                throw new ArgumentNullException("userId");
             }
 
-            this.QueueId = queueId;
-            this.HourOfWeek = hourOfWeek;
+            this.PostId = postId;
+            this.UserId = userId;
         }
         
         public bool IdentityEquals(object other)
@@ -9854,17 +7537,17 @@ namespace Fifthweek.Api.Persistence
                 return false;
             }
         
-            return this.IdentityEquals((WeeklyReleaseTime)other);
+            return this.IdentityEquals((Like)other);
         }
         
-        protected bool IdentityEquals(WeeklyReleaseTime other)
+        protected bool IdentityEquals(Like other)
         {
-            if (!object.Equals(this.QueueId, other.QueueId))
+            if (!object.Equals(this.PostId, other.PostId))
             {
                 return false;
             }
         
-            if (!object.Equals(this.HourOfWeek, other.HourOfWeek))
+            if (!object.Equals(this.UserId, other.UserId))
             {
                 return false;
             }
@@ -9876,16 +7559,17 @@ namespace Fifthweek.Api.Persistence
         public enum Fields
         {
             Empty = 0,
-            QueueId = 1, 
-            HourOfWeek = 2
+            PostId = 1, 
+            UserId = 2, 
+            CreationDate = 4
         }
     }
 
-    public static partial class WeeklyReleaseTimeExtensions
+    public static partial class LikeExtensions
     {
         public static System.Threading.Tasks.Task InsertAsync(
             this System.Data.Common.DbConnection connection, 
-            System.Collections.Generic.IEnumerable<WeeklyReleaseTime> entities, 
+            System.Collections.Generic.IEnumerable<Like> entities, 
             bool idempotent = true, 
             System.Data.IDbTransaction transaction = null)
         {
@@ -9894,14 +7578,14 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.QueueId, entity.HourOfWeek
+                    entity.PostId, entity.UserId, entity.CreationDate
                 }).ToArray(),
                 transaction);
         }
         
         public static System.Threading.Tasks.Task InsertAsync(
             this System.Data.Common.DbConnection connection, 
-            WeeklyReleaseTime entity,
+            Like entity,
             bool idempotent = true, 
             System.Data.IDbTransaction transaction = null)
         {
@@ -9910,14 +7594,14 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.QueueId, entity.HourOfWeek
+                    entity.PostId, entity.UserId, entity.CreationDate
                 },
                 transaction);
         }
         
         public static System.Threading.Tasks.Task<int> InsertAsync(
             this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<WeeklyReleaseTime, WeeklyReleaseTime.Fields> parameters)
+            SqlGenerationParameters<Like, Like.Fields> parameters)
         {
             var sql = new System.Text.StringBuilder();
         
@@ -9955,7 +7639,7 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.QueueId, entity.HourOfWeek });
+                : new Dapper.DynamicParameters(new { entity.PostId, entity.UserId, entity.CreationDate });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -9970,25 +7654,25 @@ namespace Fifthweek.Api.Persistence
         
         public static System.Threading.Tasks.Task UpsertAsync(
             this System.Data.Common.DbConnection connection, 
-            WeeklyReleaseTime entity, 
-            WeeklyReleaseTime.Fields fields,
+            Like entity, 
+            Like.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
             return Dapper.SqlMapper.ExecuteAsync(
                 connection, 
-                UpsertStatement(WeeklyReleaseTime.Fields.Empty, fields), 
+                UpsertStatement(Like.Fields.Empty, fields), 
                 new 
                 {
-                    entity.QueueId, entity.HourOfWeek
+                    entity.PostId, entity.UserId, entity.CreationDate
                 },
                 transaction);
         }
         
         public static System.Threading.Tasks.Task UpsertAsync(
             this System.Data.Common.DbConnection connection, 
-            WeeklyReleaseTime entity, 
-            WeeklyReleaseTime.Fields mergeOnFields,
-            WeeklyReleaseTime.Fields updateFields,
+            Like entity, 
+            Like.Fields mergeOnFields,
+            Like.Fields updateFields,
             System.Data.IDbTransaction transaction = null)
         {
             return Dapper.SqlMapper.ExecuteAsync(
@@ -9996,15 +7680,15 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.QueueId, entity.HourOfWeek
+                    entity.PostId, entity.UserId, entity.CreationDate
                 },
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
-            WeeklyReleaseTime entity, 
-            WeeklyReleaseTime.Fields fields,
+            Like entity, 
+            Like.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
             return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
@@ -10012,7 +7696,7 @@ namespace Fifthweek.Api.Persistence
         
         public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<WeeklyReleaseTime, WeeklyReleaseTime.Fields> parameters)
+            SqlGenerationParameters<Like, Like.Fields> parameters)
         {
             if (parameters.UpdateMask == null)
             {
@@ -10067,23 +7751,23 @@ namespace Fifthweek.Api.Persistence
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO WeeklyReleaseTimes(QueueId, HourOfWeek) VALUES(@QueueId, @HourOfWeek)";
+            const string insert = "INSERT INTO Likes(PostId, UserId, CreationDate) VALUES(@PostId, @UserId, @CreationDate)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
-        public static string UpsertStatement(WeeklyReleaseTime.Fields mergeOnFields, WeeklyReleaseTime.Fields updateFields)
+        public static string UpsertStatement(Like.Fields mergeOnFields, Like.Fields updateFields)
         {
             // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
             // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
             var sql = new System.Text.StringBuilder();
             sql.Append(
-                @"MERGE WeeklyReleaseTimes WITH (HOLDLOCK) as Target
-                USING (VALUES (@QueueId, @HourOfWeek)) AS Source (QueueId, HourOfWeek)
+                @"MERGE Likes WITH (HOLDLOCK) as Target
+                USING (VALUES (@PostId, @UserId, @CreationDate)) AS Source (PostId, UserId, CreationDate)
                 ON    (");
                 
-            if (mergeOnFields == WeeklyReleaseTime.Fields.Empty)
+            if (mergeOnFields == Like.Fields.Empty)
             {
-                sql.Append(@"Target.QueueId = Source.QueueId AND Target.HourOfWeek = Source.HourOfWeek");
+                sql.Append(@"Target.PostId = Source.PostId AND Target.UserId = Source.UserId");
             }
             else
             {
@@ -10097,58 +7781,73 @@ namespace Fifthweek.Api.Persistence
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (QueueId, HourOfWeek)
-                    VALUES  (Source.QueueId, Source.HourOfWeek);");
+                    INSERT  (PostId, UserId, CreationDate)
+                    VALUES  (Source.PostId, Source.UserId, Source.CreationDate);");
             return sql.ToString();
         }
         
-        public static string UpdateStatement(WeeklyReleaseTime.Fields fields)
+        public static string UpdateStatement(Like.Fields fields)
         {
             var sql = new System.Text.StringBuilder();
-            sql.Append("UPDATE WeeklyReleaseTimes SET ");
+            sql.Append("UPDATE Likes SET ");
             sql.AppendUpdateParameters(GetFieldNames(fields));
-            sql.Append(" WHERE QueueId = @QueueId AND HourOfWeek = @HourOfWeek");
+            sql.Append(" WHERE PostId = @PostId AND UserId = @UserId");
             return sql.ToString();
         }
         
-        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(WeeklyReleaseTime.Fields fields, bool autoIncludePrimaryKeys = true)
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Like.Fields fields, bool autoIncludePrimaryKeys = true)
         {
             var fieldNames = new System.Collections.Generic.List<string>();
             if (autoIncludePrimaryKeys)
             {
-                fieldNames.Add("QueueId");
+                fieldNames.Add("PostId");
             }
         
             if (autoIncludePrimaryKeys)
             {
-                fieldNames.Add("HourOfWeek");
+                fieldNames.Add("UserId");
+            }
+        
+            if (fields.HasFlag(Like.Fields.CreationDate))
+            {
+                fieldNames.Add("CreationDate");
             }
         
             return fieldNames;
         }
         
         private static Dapper.DynamicParameters OnlySpecifiedParameters(
-            WeeklyReleaseTime entity, 
-            WeeklyReleaseTime.Fields fields,
-            WeeklyReleaseTime.Fields? excludedFields = null)
+            Like entity, 
+            Like.Fields fields,
+            Like.Fields? excludedFields = null)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("QueueId", entity.QueueId);
-            parameters.Add("HourOfWeek", entity.HourOfWeek);
+            parameters.Add("PostId", entity.PostId);
+            parameters.Add("UserId", entity.UserId);
+            if (fields.HasFlag(Like.Fields.CreationDate) && (excludedFields == null || !excludedFields.Value.HasFlag(Like.Fields.CreationDate)))
+            {
+                parameters.Add("CreationDate", entity.CreationDate);
+            }
+        
             return parameters;
         }
         
         private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
-            WeeklyReleaseTime entity, 
-            WeeklyReleaseTime.Fields fields)
+            Like entity, 
+            Like.Fields fields)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("QueueId", entity.QueueId);
-            parameters.Add("HourOfWeek", entity.HourOfWeek);
+            parameters.Add("PostId", entity.PostId);
+            parameters.Add("UserId", entity.UserId);
+            if (!fields.HasFlag(Like.Fields.CreationDate))
+            {
+                parameters.Add("CreationDate", entity.CreationDate);
+            }
+        
             return parameters;
         }
         
@@ -10347,7 +8046,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
             AppendOnlyLedgerRecord entity, 
             AppendOnlyLedgerRecord.Fields fields,
@@ -10867,7 +8566,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
             CalculatedAccountBalance entity, 
             CalculatedAccountBalance.Fields fields,
@@ -11035,6 +8734,366 @@ namespace Fifthweek.Api.Persistence.Payments
             if (!fields.HasFlag(CalculatedAccountBalance.Fields.Amount))
             {
                 parameters.Add("Amount", entity.Amount);
+            }
+        
+            return parameters;
+        }
+        
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class CreatorPercentageOverride  : IIdentityEquatable
+    {
+        public const string Table = "CreatorPercentageOverrides";
+        
+        public CreatorPercentageOverride(
+            System.Guid userId)
+        {
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
+            this.UserId = userId;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((CreatorPercentageOverride)other);
+        }
+        
+        protected bool IdentityEquals(CreatorPercentageOverride other)
+        {
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            UserId = 1, 
+            Percentage = 2, 
+            ExpiryDate = 4
+        }
+    }
+
+    public static partial class CreatorPercentageOverrideExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<CreatorPercentageOverride> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.UserId, entity.Percentage, entity.ExpiryDate
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            CreatorPercentageOverride entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.UserId, entity.Percentage, entity.ExpiryDate
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<CreatorPercentageOverride, CreatorPercentageOverride.Fields> parameters)
+        {
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new Dapper.DynamicParameters(new { entity.UserId, entity.Percentage, entity.ExpiryDate });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            CreatorPercentageOverride entity, 
+            CreatorPercentageOverride.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(CreatorPercentageOverride.Fields.Empty, fields), 
+                new 
+                {
+                    entity.UserId, entity.Percentage, entity.ExpiryDate
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            CreatorPercentageOverride entity, 
+            CreatorPercentageOverride.Fields mergeOnFields,
+            CreatorPercentageOverride.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.UserId, entity.Percentage, entity.ExpiryDate
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            CreatorPercentageOverride entity, 
+            CreatorPercentageOverride.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<CreatorPercentageOverride, CreatorPercentageOverride.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO CreatorPercentageOverrides(UserId, Percentage, ExpiryDate) VALUES(@UserId, @Percentage, @ExpiryDate)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(CreatorPercentageOverride.Fields mergeOnFields, CreatorPercentageOverride.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE CreatorPercentageOverrides WITH (HOLDLOCK) as Target
+                USING (VALUES (@UserId, @Percentage, @ExpiryDate)) AS Source (UserId, Percentage, ExpiryDate)
+                ON    (");
+                
+            if (mergeOnFields == CreatorPercentageOverride.Fields.Empty)
+            {
+                sql.Append(@"Target.UserId = Source.UserId");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (UserId, Percentage, ExpiryDate)
+                    VALUES  (Source.UserId, Source.Percentage, Source.ExpiryDate);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(CreatorPercentageOverride.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE CreatorPercentageOverrides SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE UserId = @UserId");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(CreatorPercentageOverride.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("UserId");
+            }
+        
+            if (fields.HasFlag(CreatorPercentageOverride.Fields.Percentage))
+            {
+                fieldNames.Add("Percentage");
+            }
+        
+            if (fields.HasFlag(CreatorPercentageOverride.Fields.ExpiryDate))
+            {
+                fieldNames.Add("ExpiryDate");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
+            CreatorPercentageOverride entity, 
+            CreatorPercentageOverride.Fields fields,
+            CreatorPercentageOverride.Fields? excludedFields = null)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("UserId", entity.UserId);
+            if (fields.HasFlag(CreatorPercentageOverride.Fields.Percentage) && (excludedFields == null || !excludedFields.Value.HasFlag(CreatorPercentageOverride.Fields.Percentage)))
+            {
+                parameters.Add("Percentage", entity.Percentage);
+            }
+        
+            if (fields.HasFlag(CreatorPercentageOverride.Fields.ExpiryDate) && (excludedFields == null || !excludedFields.Value.HasFlag(CreatorPercentageOverride.Fields.ExpiryDate)))
+            {
+                parameters.Add("ExpiryDate", entity.ExpiryDate);
+            }
+        
+            return parameters;
+        }
+        
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
+            CreatorPercentageOverride entity, 
+            CreatorPercentageOverride.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("UserId", entity.UserId);
+            if (!fields.HasFlag(CreatorPercentageOverride.Fields.Percentage))
+            {
+                parameters.Add("Percentage", entity.Percentage);
+            }
+        
+            if (!fields.HasFlag(CreatorPercentageOverride.Fields.ExpiryDate))
+            {
+                parameters.Add("ExpiryDate", entity.ExpiryDate);
             }
         
             return parameters;
@@ -11241,7 +9300,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
             UncommittedSubscriptionPayment entity, 
             UncommittedSubscriptionPayment.Fields fields,
@@ -11463,366 +9522,6 @@ namespace Fifthweek.Api.Persistence.Payments
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Persistence.Identity;
 
-    public partial class CreatorPercentageOverride  : IIdentityEquatable
-    {
-        public const string Table = "CreatorPercentageOverrides";
-        
-        public CreatorPercentageOverride(
-            System.Guid userId)
-        {
-            if (userId == null)
-            {
-                throw new ArgumentNullException("userId");
-            }
-
-            this.UserId = userId;
-        }
-        
-        public bool IdentityEquals(object other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-        
-            if (other.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.IdentityEquals((CreatorPercentageOverride)other);
-        }
-        
-        protected bool IdentityEquals(CreatorPercentageOverride other)
-        {
-            if (!object.Equals(this.UserId, other.UserId))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-        
-        [Flags]
-        public enum Fields
-        {
-            Empty = 0,
-            UserId = 1, 
-            Percentage = 2, 
-            ExpiryDate = 4
-        }
-    }
-
-    public static partial class CreatorPercentageOverrideExtensions
-    {
-        public static System.Threading.Tasks.Task InsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            System.Collections.Generic.IEnumerable<CreatorPercentageOverride> entities, 
-            bool idempotent = true, 
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                InsertStatement(idempotent), 
-                entities.Select(entity => new 
-                {
-                    entity.UserId, entity.Percentage, entity.ExpiryDate
-                }).ToArray(),
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task InsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            CreatorPercentageOverride entity,
-            bool idempotent = true, 
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                InsertStatement(idempotent), 
-                new 
-                {
-                    entity.UserId, entity.Percentage, entity.ExpiryDate
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertAsync(
-            this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<CreatorPercentageOverride, CreatorPercentageOverride.Fields> parameters)
-        {
-            var sql = new System.Text.StringBuilder();
-        
-            if (parameters.Declarations != null)
-            {
-                sql.AppendLine(parameters.Declarations);
-            }
-            
-            int currentIndex = 0;
-            if (parameters.Conditions != null)
-            {
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.Append("IF ");
-                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                    sql.AppendLine("BEGIN");
-                    ++currentIndex;
-                }
-            }
-        
-            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
-        
-            if (parameters.Conditions != null)
-            {
-                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
-                    
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.AppendLine("END");
-                    sql.AppendLine("ELSE");
-                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
-                }
-            }
-        
-            var entity = parameters.Entity;
-            var parameterObject = parameters.ExcludedFromInput != null
-                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.UserId, entity.Percentage, entity.ExpiryDate });
-        
-            if (parameters.AdditionalParameters != null)
-            {
-                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                parameterObject);
-        }
-        
-        public static System.Threading.Tasks.Task UpsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            CreatorPercentageOverride entity, 
-            CreatorPercentageOverride.Fields fields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                UpsertStatement(CreatorPercentageOverride.Fields.Empty, fields), 
-                new 
-                {
-                    entity.UserId, entity.Percentage, entity.ExpiryDate
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task UpsertAsync(
-            this System.Data.Common.DbConnection connection, 
-            CreatorPercentageOverride entity, 
-            CreatorPercentageOverride.Fields mergeOnFields,
-            CreatorPercentageOverride.Fields updateFields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection, 
-                UpsertStatement(mergeOnFields, updateFields), 
-                new 
-                {
-                    entity.UserId, entity.Percentage, entity.ExpiryDate
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task UpdateAsync(
-            this System.Data.Common.DbConnection connection, 
-            CreatorPercentageOverride entity, 
-            CreatorPercentageOverride.Fields fields,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> UpdateAsync(
-            this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<CreatorPercentageOverride, CreatorPercentageOverride.Fields> parameters)
-        {
-            if (parameters.UpdateMask == null)
-            {
-                throw new ArgumentException("Must contain update mask", "parameters");
-            }
-        
-            var sql = new System.Text.StringBuilder();
-        
-            if (parameters.Declarations != null)
-            {
-                sql.AppendLine(parameters.Declarations);
-            }
-            
-            int currentIndex = 0;
-            if (parameters.Conditions != null)
-            {
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.Append("IF ");
-                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                    sql.AppendLine("BEGIN");
-                    ++currentIndex;
-                }
-            }
-        
-            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
-        
-            if (parameters.Conditions != null)
-            {
-                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
-                    
-                foreach (var condition in parameters.Conditions)
-                {
-                    sql.AppendLine("END");
-                    sql.AppendLine("ELSE");
-                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
-                }
-            }
-        
-            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
-        
-            if (parameters.AdditionalParameters != null)
-            {
-                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                parameterObject);
-        }
-        
-        public static string InsertStatement(bool idempotent = true)
-        {
-            const string insert = "INSERT INTO CreatorPercentageOverrides(UserId, Percentage, ExpiryDate) VALUES(@UserId, @Percentage, @ExpiryDate)";
-            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
-        }
-        
-        public static string UpsertStatement(CreatorPercentageOverride.Fields mergeOnFields, CreatorPercentageOverride.Fields updateFields)
-        {
-            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
-            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
-            var sql = new System.Text.StringBuilder();
-            sql.Append(
-                @"MERGE CreatorPercentageOverrides WITH (HOLDLOCK) as Target
-                USING (VALUES (@UserId, @Percentage, @ExpiryDate)) AS Source (UserId, Percentage, ExpiryDate)
-                ON    (");
-                
-            if (mergeOnFields == CreatorPercentageOverride.Fields.Empty)
-            {
-                sql.Append(@"Target.UserId = Source.UserId");
-            }
-            else
-            {
-                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
-            }
-                
-            sql.Append(@")
-                WHEN MATCHED THEN
-                    UPDATE
-                    SET        ");
-            sql.AppendUpdateParameters(GetFieldNames(updateFields));
-            sql.Append(
-                @" WHEN NOT MATCHED THEN
-                    INSERT  (UserId, Percentage, ExpiryDate)
-                    VALUES  (Source.UserId, Source.Percentage, Source.ExpiryDate);");
-            return sql.ToString();
-        }
-        
-        public static string UpdateStatement(CreatorPercentageOverride.Fields fields)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.Append("UPDATE CreatorPercentageOverrides SET ");
-            sql.AppendUpdateParameters(GetFieldNames(fields));
-            sql.Append(" WHERE UserId = @UserId");
-            return sql.ToString();
-        }
-        
-        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(CreatorPercentageOverride.Fields fields, bool autoIncludePrimaryKeys = true)
-        {
-            var fieldNames = new System.Collections.Generic.List<string>();
-            if (autoIncludePrimaryKeys)
-            {
-                fieldNames.Add("UserId");
-            }
-        
-            if (fields.HasFlag(CreatorPercentageOverride.Fields.Percentage))
-            {
-                fieldNames.Add("Percentage");
-            }
-        
-            if (fields.HasFlag(CreatorPercentageOverride.Fields.ExpiryDate))
-            {
-                fieldNames.Add("ExpiryDate");
-            }
-        
-            return fieldNames;
-        }
-        
-        private static Dapper.DynamicParameters OnlySpecifiedParameters(
-            CreatorPercentageOverride entity, 
-            CreatorPercentageOverride.Fields fields,
-            CreatorPercentageOverride.Fields? excludedFields = null)
-        {
-            var parameters = new Dapper.DynamicParameters();
-        
-            // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("UserId", entity.UserId);
-            if (fields.HasFlag(CreatorPercentageOverride.Fields.Percentage) && (excludedFields == null || !excludedFields.Value.HasFlag(CreatorPercentageOverride.Fields.Percentage)))
-            {
-                parameters.Add("Percentage", entity.Percentage);
-            }
-        
-            if (fields.HasFlag(CreatorPercentageOverride.Fields.ExpiryDate) && (excludedFields == null || !excludedFields.Value.HasFlag(CreatorPercentageOverride.Fields.ExpiryDate)))
-            {
-                parameters.Add("ExpiryDate", entity.ExpiryDate);
-            }
-        
-            return parameters;
-        }
-        
-        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
-            CreatorPercentageOverride entity, 
-            CreatorPercentageOverride.Fields fields)
-        {
-            var parameters = new Dapper.DynamicParameters();
-        
-            // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("UserId", entity.UserId);
-            if (!fields.HasFlag(CreatorPercentageOverride.Fields.Percentage))
-            {
-                parameters.Add("Percentage", entity.Percentage);
-            }
-        
-            if (!fields.HasFlag(CreatorPercentageOverride.Fields.ExpiryDate))
-            {
-                parameters.Add("ExpiryDate", entity.ExpiryDate);
-            }
-        
-            return parameters;
-        }
-        
-    }
-}
-namespace Fifthweek.Api.Persistence.Payments
-{
-    using System;
-    using System.Linq;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Persistence.Identity;
-
     public partial class UserPaymentOrigin  : IIdentityEquatable
     {
         public const string Table = "UserPaymentOrigins";
@@ -12003,7 +9702,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
             UserPaymentOrigin entity, 
             UserPaymentOrigin.Fields fields,
@@ -12263,11 +9962,770 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
-    public partial class Comment  : IIdentityEquatable
+    public partial class PostFile  : IIdentityEquatable
     {
-        public const string Table = "Comments";
+        public const string Table = "PostFiles";
         
-        public Comment(
+        public PostFile(
+            System.Guid postId,
+            System.Guid fileId)
+        {
+            if (postId == null)
+            {
+                throw new ArgumentNullException("postId");
+            }
+
+            if (fileId == null)
+            {
+                throw new ArgumentNullException("fileId");
+            }
+
+            this.PostId = postId;
+            this.FileId = fileId;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((PostFile)other);
+        }
+        
+        protected bool IdentityEquals(PostFile other)
+        {
+            if (!object.Equals(this.PostId, other.PostId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.FileId, other.FileId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            PostId = 1, 
+            FileId = 2
+        }
+    }
+
+    public static partial class PostFileExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<PostFile> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.PostId, entity.FileId
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            PostFile entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.PostId, entity.FileId
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<PostFile, PostFile.Fields> parameters)
+        {
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new Dapper.DynamicParameters(new { entity.PostId, entity.FileId });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            PostFile entity, 
+            PostFile.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(PostFile.Fields.Empty, fields), 
+                new 
+                {
+                    entity.PostId, entity.FileId
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            PostFile entity, 
+            PostFile.Fields mergeOnFields,
+            PostFile.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.PostId, entity.FileId
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            PostFile entity, 
+            PostFile.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<PostFile, PostFile.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO PostFiles(PostId, FileId) VALUES(@PostId, @FileId)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(PostFile.Fields mergeOnFields, PostFile.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE PostFiles WITH (HOLDLOCK) as Target
+                USING (VALUES (@PostId, @FileId)) AS Source (PostId, FileId)
+                ON    (");
+                
+            if (mergeOnFields == PostFile.Fields.Empty)
+            {
+                sql.Append(@"Target.PostId = Source.PostId AND Target.FileId = Source.FileId");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (PostId, FileId)
+                    VALUES  (Source.PostId, Source.FileId);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(PostFile.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE PostFiles SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE PostId = @PostId AND FileId = @FileId");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(PostFile.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("PostId");
+            }
+        
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("FileId");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
+            PostFile entity, 
+            PostFile.Fields fields,
+            PostFile.Fields? excludedFields = null)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("PostId", entity.PostId);
+            parameters.Add("FileId", entity.FileId);
+            return parameters;
+        }
+        
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
+            PostFile entity, 
+            PostFile.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("PostId", entity.PostId);
+            parameters.Add("FileId", entity.FileId);
+            return parameters;
+        }
+        
+    }
+}
+namespace Fifthweek.Api.Persistence
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+
+    public partial class RefreshToken  : IIdentityEquatable
+    {
+        public const string Table = "RefreshTokens";
+        
+        public RefreshToken(
+            System.String username,
+            System.String clientId)
+        {
+            if (username == null)
+            {
+                throw new ArgumentNullException("username");
+            }
+
+            if (clientId == null)
+            {
+                throw new ArgumentNullException("clientId");
+            }
+
+            this.Username = username;
+            this.ClientId = clientId;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((RefreshToken)other);
+        }
+        
+        protected bool IdentityEquals(RefreshToken other)
+        {
+            if (!object.Equals(this.Username, other.Username))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ClientId, other.ClientId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            Username = 1, 
+            ClientId = 2, 
+            EncryptedId = 4, 
+            IssuedDate = 8, 
+            ExpiresDate = 16, 
+            ProtectedTicket = 32
+        }
+    }
+
+    public static partial class RefreshTokenExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<RefreshToken> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.Username, entity.ClientId, entity.EncryptedId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            RefreshToken entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.Username, entity.ClientId, entity.EncryptedId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<RefreshToken, RefreshToken.Fields> parameters)
+        {
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new Dapper.DynamicParameters(new { entity.Username, entity.ClientId, entity.EncryptedId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            RefreshToken entity, 
+            RefreshToken.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(RefreshToken.Fields.Empty, fields), 
+                new 
+                {
+                    entity.Username, entity.ClientId, entity.EncryptedId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            RefreshToken entity, 
+            RefreshToken.Fields mergeOnFields,
+            RefreshToken.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.Username, entity.ClientId, entity.EncryptedId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            RefreshToken entity, 
+            RefreshToken.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<RefreshToken, RefreshToken.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO RefreshTokens(Username, ClientId, EncryptedId, IssuedDate, ExpiresDate, ProtectedTicket) VALUES(@Username, @ClientId, @EncryptedId, @IssuedDate, @ExpiresDate, @ProtectedTicket)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(RefreshToken.Fields mergeOnFields, RefreshToken.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE RefreshTokens WITH (HOLDLOCK) as Target
+                USING (VALUES (@Username, @ClientId, @EncryptedId, @IssuedDate, @ExpiresDate, @ProtectedTicket)) AS Source (Username, ClientId, EncryptedId, IssuedDate, ExpiresDate, ProtectedTicket)
+                ON    (");
+                
+            if (mergeOnFields == RefreshToken.Fields.Empty)
+            {
+                sql.Append(@"Target.Username = Source.Username AND Target.ClientId = Source.ClientId");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (Username, ClientId, EncryptedId, IssuedDate, ExpiresDate, ProtectedTicket)
+                    VALUES  (Source.Username, Source.ClientId, Source.EncryptedId, Source.IssuedDate, Source.ExpiresDate, Source.ProtectedTicket);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(RefreshToken.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE RefreshTokens SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE Username = @Username AND ClientId = @ClientId");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(RefreshToken.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("Username");
+            }
+        
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("ClientId");
+            }
+        
+            if (fields.HasFlag(RefreshToken.Fields.EncryptedId))
+            {
+                fieldNames.Add("EncryptedId");
+            }
+        
+            if (fields.HasFlag(RefreshToken.Fields.IssuedDate))
+            {
+                fieldNames.Add("IssuedDate");
+            }
+        
+            if (fields.HasFlag(RefreshToken.Fields.ExpiresDate))
+            {
+                fieldNames.Add("ExpiresDate");
+            }
+        
+            if (fields.HasFlag(RefreshToken.Fields.ProtectedTicket))
+            {
+                fieldNames.Add("ProtectedTicket");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
+            RefreshToken entity, 
+            RefreshToken.Fields fields,
+            RefreshToken.Fields? excludedFields = null)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Username", entity.Username);
+            parameters.Add("ClientId", entity.ClientId);
+            if (fields.HasFlag(RefreshToken.Fields.EncryptedId) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.EncryptedId)))
+            {
+                parameters.Add("EncryptedId", entity.EncryptedId);
+            }
+        
+            if (fields.HasFlag(RefreshToken.Fields.IssuedDate) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.IssuedDate)))
+            {
+                parameters.Add("IssuedDate", entity.IssuedDate);
+            }
+        
+            if (fields.HasFlag(RefreshToken.Fields.ExpiresDate) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.ExpiresDate)))
+            {
+                parameters.Add("ExpiresDate", entity.ExpiresDate);
+            }
+        
+            if (fields.HasFlag(RefreshToken.Fields.ProtectedTicket) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.ProtectedTicket)))
+            {
+                parameters.Add("ProtectedTicket", entity.ProtectedTicket);
+            }
+        
+            return parameters;
+        }
+        
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
+            RefreshToken entity, 
+            RefreshToken.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Username", entity.Username);
+            parameters.Add("ClientId", entity.ClientId);
+            if (!fields.HasFlag(RefreshToken.Fields.EncryptedId))
+            {
+                parameters.Add("EncryptedId", entity.EncryptedId);
+            }
+        
+            if (!fields.HasFlag(RefreshToken.Fields.IssuedDate))
+            {
+                parameters.Add("IssuedDate", entity.IssuedDate);
+            }
+        
+            if (!fields.HasFlag(RefreshToken.Fields.ExpiresDate))
+            {
+                parameters.Add("ExpiresDate", entity.ExpiresDate);
+            }
+        
+            if (!fields.HasFlag(RefreshToken.Fields.ProtectedTicket))
+            {
+                parameters.Add("ProtectedTicket", entity.ProtectedTicket);
+            }
+        
+            return parameters;
+        }
+        
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CreatorChannelsSnapshot  : IIdentityEquatable
+    {
+        public const string Table = "CreatorChannelsSnapshots";
+        
+        public CreatorChannelsSnapshot(
             System.Guid id)
         {
             if (id == null)
@@ -12295,10 +10753,10 @@ namespace Fifthweek.Api.Persistence
                 return false;
             }
         
-            return this.IdentityEquals((Comment)other);
+            return this.IdentityEquals((CreatorChannelsSnapshot)other);
         }
         
-        protected bool IdentityEquals(Comment other)
+        protected bool IdentityEquals(CreatorChannelsSnapshot other)
         {
             if (!object.Equals(this.Id, other.Id))
             {
@@ -12313,18 +10771,16 @@ namespace Fifthweek.Api.Persistence
         {
             Empty = 0,
             Id = 1, 
-            PostId = 2, 
-            UserId = 4, 
-            Content = 8, 
-            CreationDate = 16
+            Timestamp = 2, 
+            CreatorId = 4
         }
     }
 
-    public static partial class CommentExtensions
+    public static partial class CreatorChannelsSnapshotExtensions
     {
         public static System.Threading.Tasks.Task InsertAsync(
             this System.Data.Common.DbConnection connection, 
-            System.Collections.Generic.IEnumerable<Comment> entities, 
+            System.Collections.Generic.IEnumerable<CreatorChannelsSnapshot> entities, 
             bool idempotent = true, 
             System.Data.IDbTransaction transaction = null)
         {
@@ -12333,14 +10789,14 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.Id, entity.PostId, entity.UserId, entity.Content, entity.CreationDate
+                    entity.Id, entity.Timestamp, entity.CreatorId
                 }).ToArray(),
                 transaction);
         }
         
         public static System.Threading.Tasks.Task InsertAsync(
             this System.Data.Common.DbConnection connection, 
-            Comment entity,
+            CreatorChannelsSnapshot entity,
             bool idempotent = true, 
             System.Data.IDbTransaction transaction = null)
         {
@@ -12349,14 +10805,14 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.Id, entity.PostId, entity.UserId, entity.Content, entity.CreationDate
+                    entity.Id, entity.Timestamp, entity.CreatorId
                 },
                 transaction);
         }
         
         public static System.Threading.Tasks.Task<int> InsertAsync(
             this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<Comment, Comment.Fields> parameters)
+            SqlGenerationParameters<CreatorChannelsSnapshot, CreatorChannelsSnapshot.Fields> parameters)
         {
             var sql = new System.Text.StringBuilder();
         
@@ -12394,7 +10850,7 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.Id, entity.PostId, entity.UserId, entity.Content, entity.CreationDate });
+                : new Dapper.DynamicParameters(new { entity.Id, entity.Timestamp, entity.CreatorId });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -12409,25 +10865,25 @@ namespace Fifthweek.Api.Persistence
         
         public static System.Threading.Tasks.Task UpsertAsync(
             this System.Data.Common.DbConnection connection, 
-            Comment entity, 
-            Comment.Fields fields,
+            CreatorChannelsSnapshot entity, 
+            CreatorChannelsSnapshot.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
             return Dapper.SqlMapper.ExecuteAsync(
                 connection, 
-                UpsertStatement(Comment.Fields.Empty, fields), 
+                UpsertStatement(CreatorChannelsSnapshot.Fields.Empty, fields), 
                 new 
                 {
-                    entity.Id, entity.PostId, entity.UserId, entity.Content, entity.CreationDate
+                    entity.Id, entity.Timestamp, entity.CreatorId
                 },
                 transaction);
         }
         
         public static System.Threading.Tasks.Task UpsertAsync(
             this System.Data.Common.DbConnection connection, 
-            Comment entity, 
-            Comment.Fields mergeOnFields,
-            Comment.Fields updateFields,
+            CreatorChannelsSnapshot entity, 
+            CreatorChannelsSnapshot.Fields mergeOnFields,
+            CreatorChannelsSnapshot.Fields updateFields,
             System.Data.IDbTransaction transaction = null)
         {
             return Dapper.SqlMapper.ExecuteAsync(
@@ -12435,15 +10891,15 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.Id, entity.PostId, entity.UserId, entity.Content, entity.CreationDate
+                    entity.Id, entity.Timestamp, entity.CreatorId
                 },
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
-            Comment entity, 
-            Comment.Fields fields,
+            CreatorChannelsSnapshot entity, 
+            CreatorChannelsSnapshot.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
             return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
@@ -12451,7 +10907,7 @@ namespace Fifthweek.Api.Persistence
         
         public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<Comment, Comment.Fields> parameters)
+            SqlGenerationParameters<CreatorChannelsSnapshot, CreatorChannelsSnapshot.Fields> parameters)
         {
             if (parameters.UpdateMask == null)
             {
@@ -12506,21 +10962,21 @@ namespace Fifthweek.Api.Persistence
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO Comments(Id, PostId, UserId, Content, CreationDate) VALUES(@Id, @PostId, @UserId, @Content, @CreationDate)";
+            const string insert = "INSERT INTO CreatorChannelsSnapshots(Id, Timestamp, CreatorId) VALUES(@Id, @Timestamp, @CreatorId)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
-        public static string UpsertStatement(Comment.Fields mergeOnFields, Comment.Fields updateFields)
+        public static string UpsertStatement(CreatorChannelsSnapshot.Fields mergeOnFields, CreatorChannelsSnapshot.Fields updateFields)
         {
             // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
             // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
             var sql = new System.Text.StringBuilder();
             sql.Append(
-                @"MERGE Comments WITH (HOLDLOCK) as Target
-                USING (VALUES (@Id, @PostId, @UserId, @Content, @CreationDate)) AS Source (Id, PostId, UserId, Content, CreationDate)
+                @"MERGE CreatorChannelsSnapshots WITH (HOLDLOCK) as Target
+                USING (VALUES (@Id, @Timestamp, @CreatorId)) AS Source (Id, Timestamp, CreatorId)
                 ON    (");
                 
-            if (mergeOnFields == Comment.Fields.Empty)
+            if (mergeOnFields == CreatorChannelsSnapshot.Fields.Empty)
             {
                 sql.Append(@"Target.Id = Source.Id");
             }
@@ -12536,21 +10992,21 @@ namespace Fifthweek.Api.Persistence
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (Id, PostId, UserId, Content, CreationDate)
-                    VALUES  (Source.Id, Source.PostId, Source.UserId, Source.Content, Source.CreationDate);");
+                    INSERT  (Id, Timestamp, CreatorId)
+                    VALUES  (Source.Id, Source.Timestamp, Source.CreatorId);");
             return sql.ToString();
         }
         
-        public static string UpdateStatement(Comment.Fields fields)
+        public static string UpdateStatement(CreatorChannelsSnapshot.Fields fields)
         {
             var sql = new System.Text.StringBuilder();
-            sql.Append("UPDATE Comments SET ");
+            sql.Append("UPDATE CreatorChannelsSnapshots SET ");
             sql.AppendUpdateParameters(GetFieldNames(fields));
             sql.Append(" WHERE Id = @Id");
             return sql.ToString();
         }
         
-        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Comment.Fields fields, bool autoIncludePrimaryKeys = true)
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(CreatorChannelsSnapshot.Fields fields, bool autoIncludePrimaryKeys = true)
         {
             var fieldNames = new System.Collections.Generic.List<string>();
             if (autoIncludePrimaryKeys)
@@ -12558,87 +11014,57 @@ namespace Fifthweek.Api.Persistence
                 fieldNames.Add("Id");
             }
         
-            if (fields.HasFlag(Comment.Fields.PostId))
+            if (fields.HasFlag(CreatorChannelsSnapshot.Fields.Timestamp))
             {
-                fieldNames.Add("PostId");
+                fieldNames.Add("Timestamp");
             }
         
-            if (fields.HasFlag(Comment.Fields.UserId))
+            if (fields.HasFlag(CreatorChannelsSnapshot.Fields.CreatorId))
             {
-                fieldNames.Add("UserId");
-            }
-        
-            if (fields.HasFlag(Comment.Fields.Content))
-            {
-                fieldNames.Add("Content");
-            }
-        
-            if (fields.HasFlag(Comment.Fields.CreationDate))
-            {
-                fieldNames.Add("CreationDate");
+                fieldNames.Add("CreatorId");
             }
         
             return fieldNames;
         }
         
         private static Dapper.DynamicParameters OnlySpecifiedParameters(
-            Comment entity, 
-            Comment.Fields fields,
-            Comment.Fields? excludedFields = null)
+            CreatorChannelsSnapshot entity, 
+            CreatorChannelsSnapshot.Fields fields,
+            CreatorChannelsSnapshot.Fields? excludedFields = null)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
             parameters.Add("Id", entity.Id);
-            if (fields.HasFlag(Comment.Fields.PostId) && (excludedFields == null || !excludedFields.Value.HasFlag(Comment.Fields.PostId)))
+            if (fields.HasFlag(CreatorChannelsSnapshot.Fields.Timestamp) && (excludedFields == null || !excludedFields.Value.HasFlag(CreatorChannelsSnapshot.Fields.Timestamp)))
             {
-                parameters.Add("PostId", entity.PostId);
+                parameters.Add("Timestamp", entity.Timestamp);
             }
         
-            if (fields.HasFlag(Comment.Fields.UserId) && (excludedFields == null || !excludedFields.Value.HasFlag(Comment.Fields.UserId)))
+            if (fields.HasFlag(CreatorChannelsSnapshot.Fields.CreatorId) && (excludedFields == null || !excludedFields.Value.HasFlag(CreatorChannelsSnapshot.Fields.CreatorId)))
             {
-                parameters.Add("UserId", entity.UserId);
-            }
-        
-            if (fields.HasFlag(Comment.Fields.Content) && (excludedFields == null || !excludedFields.Value.HasFlag(Comment.Fields.Content)))
-            {
-                parameters.Add("Content", entity.Content);
-            }
-        
-            if (fields.HasFlag(Comment.Fields.CreationDate) && (excludedFields == null || !excludedFields.Value.HasFlag(Comment.Fields.CreationDate)))
-            {
-                parameters.Add("CreationDate", entity.CreationDate);
+                parameters.Add("CreatorId", entity.CreatorId);
             }
         
             return parameters;
         }
         
         private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
-            Comment entity, 
-            Comment.Fields fields)
+            CreatorChannelsSnapshot entity, 
+            CreatorChannelsSnapshot.Fields fields)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
             parameters.Add("Id", entity.Id);
-            if (!fields.HasFlag(Comment.Fields.PostId))
+            if (!fields.HasFlag(CreatorChannelsSnapshot.Fields.Timestamp))
             {
-                parameters.Add("PostId", entity.PostId);
+                parameters.Add("Timestamp", entity.Timestamp);
             }
         
-            if (!fields.HasFlag(Comment.Fields.UserId))
+            if (!fields.HasFlag(CreatorChannelsSnapshot.Fields.CreatorId))
             {
-                parameters.Add("UserId", entity.UserId);
-            }
-        
-            if (!fields.HasFlag(Comment.Fields.Content))
-            {
-                parameters.Add("Content", entity.Content);
-            }
-        
-            if (!fields.HasFlag(Comment.Fields.CreationDate))
-            {
-                parameters.Add("CreationDate", entity.CreationDate);
+                parameters.Add("CreatorId", entity.CreatorId);
             }
         
             return parameters;
@@ -12646,35 +11072,34 @@ namespace Fifthweek.Api.Persistence
         
     }
 }
-namespace Fifthweek.Api.Persistence
+namespace Fifthweek.Api.Persistence.Snapshots
 {
     using System;
     using System.Linq;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
-    public partial class Like  : IIdentityEquatable
+    public partial class CreatorChannelsSnapshotItem  : IIdentityEquatable
     {
-        public const string Table = "Likes";
+        public const string Table = "CreatorChannelsSnapshotItems";
         
-        public Like(
-            System.Guid postId,
-            System.Guid userId)
+        public CreatorChannelsSnapshotItem(
+            System.Guid creatorChannelsSnapshotId,
+            System.Guid channelId)
         {
-            if (postId == null)
+            if (creatorChannelsSnapshotId == null)
             {
-                throw new ArgumentNullException("postId");
+                throw new ArgumentNullException("creatorChannelsSnapshotId");
             }
 
-            if (userId == null)
+            if (channelId == null)
             {
-                throw new ArgumentNullException("userId");
+                throw new ArgumentNullException("channelId");
             }
 
-            this.PostId = postId;
-            this.UserId = userId;
+            this.CreatorChannelsSnapshotId = creatorChannelsSnapshotId;
+            this.ChannelId = channelId;
         }
         
         public bool IdentityEquals(object other)
@@ -12694,17 +11119,17 @@ namespace Fifthweek.Api.Persistence
                 return false;
             }
         
-            return this.IdentityEquals((Like)other);
+            return this.IdentityEquals((CreatorChannelsSnapshotItem)other);
         }
         
-        protected bool IdentityEquals(Like other)
+        protected bool IdentityEquals(CreatorChannelsSnapshotItem other)
         {
-            if (!object.Equals(this.PostId, other.PostId))
+            if (!object.Equals(this.CreatorChannelsSnapshotId, other.CreatorChannelsSnapshotId))
             {
                 return false;
             }
         
-            if (!object.Equals(this.UserId, other.UserId))
+            if (!object.Equals(this.ChannelId, other.ChannelId))
             {
                 return false;
             }
@@ -12716,17 +11141,17 @@ namespace Fifthweek.Api.Persistence
         public enum Fields
         {
             Empty = 0,
-            PostId = 1, 
-            UserId = 2, 
-            CreationDate = 4
+            CreatorChannelsSnapshotId = 1, 
+            ChannelId = 2, 
+            Price = 4
         }
     }
 
-    public static partial class LikeExtensions
+    public static partial class CreatorChannelsSnapshotItemExtensions
     {
         public static System.Threading.Tasks.Task InsertAsync(
             this System.Data.Common.DbConnection connection, 
-            System.Collections.Generic.IEnumerable<Like> entities, 
+            System.Collections.Generic.IEnumerable<CreatorChannelsSnapshotItem> entities, 
             bool idempotent = true, 
             System.Data.IDbTransaction transaction = null)
         {
@@ -12735,14 +11160,14 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.PostId, entity.UserId, entity.CreationDate
+                    entity.CreatorChannelsSnapshotId, entity.ChannelId, entity.Price
                 }).ToArray(),
                 transaction);
         }
         
         public static System.Threading.Tasks.Task InsertAsync(
             this System.Data.Common.DbConnection connection, 
-            Like entity,
+            CreatorChannelsSnapshotItem entity,
             bool idempotent = true, 
             System.Data.IDbTransaction transaction = null)
         {
@@ -12751,14 +11176,14 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.PostId, entity.UserId, entity.CreationDate
+                    entity.CreatorChannelsSnapshotId, entity.ChannelId, entity.Price
                 },
                 transaction);
         }
         
         public static System.Threading.Tasks.Task<int> InsertAsync(
             this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<Like, Like.Fields> parameters)
+            SqlGenerationParameters<CreatorChannelsSnapshotItem, CreatorChannelsSnapshotItem.Fields> parameters)
         {
             var sql = new System.Text.StringBuilder();
         
@@ -12796,7 +11221,7 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.PostId, entity.UserId, entity.CreationDate });
+                : new Dapper.DynamicParameters(new { entity.CreatorChannelsSnapshotId, entity.ChannelId, entity.Price });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -12811,25 +11236,25 @@ namespace Fifthweek.Api.Persistence
         
         public static System.Threading.Tasks.Task UpsertAsync(
             this System.Data.Common.DbConnection connection, 
-            Like entity, 
-            Like.Fields fields,
+            CreatorChannelsSnapshotItem entity, 
+            CreatorChannelsSnapshotItem.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
             return Dapper.SqlMapper.ExecuteAsync(
                 connection, 
-                UpsertStatement(Like.Fields.Empty, fields), 
+                UpsertStatement(CreatorChannelsSnapshotItem.Fields.Empty, fields), 
                 new 
                 {
-                    entity.PostId, entity.UserId, entity.CreationDate
+                    entity.CreatorChannelsSnapshotId, entity.ChannelId, entity.Price
                 },
                 transaction);
         }
         
         public static System.Threading.Tasks.Task UpsertAsync(
             this System.Data.Common.DbConnection connection, 
-            Like entity, 
-            Like.Fields mergeOnFields,
-            Like.Fields updateFields,
+            CreatorChannelsSnapshotItem entity, 
+            CreatorChannelsSnapshotItem.Fields mergeOnFields,
+            CreatorChannelsSnapshotItem.Fields updateFields,
             System.Data.IDbTransaction transaction = null)
         {
             return Dapper.SqlMapper.ExecuteAsync(
@@ -12837,15 +11262,15 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.PostId, entity.UserId, entity.CreationDate
+                    entity.CreatorChannelsSnapshotId, entity.ChannelId, entity.Price
                 },
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
-            Like entity, 
-            Like.Fields fields,
+            CreatorChannelsSnapshotItem entity, 
+            CreatorChannelsSnapshotItem.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
             return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
@@ -12853,7 +11278,7 @@ namespace Fifthweek.Api.Persistence
         
         public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection,
-            SqlGenerationParameters<Like, Like.Fields> parameters)
+            SqlGenerationParameters<CreatorChannelsSnapshotItem, CreatorChannelsSnapshotItem.Fields> parameters)
         {
             if (parameters.UpdateMask == null)
             {
@@ -12908,23 +11333,23 @@ namespace Fifthweek.Api.Persistence
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO Likes(PostId, UserId, CreationDate) VALUES(@PostId, @UserId, @CreationDate)";
+            const string insert = "INSERT INTO CreatorChannelsSnapshotItems(CreatorChannelsSnapshotId, ChannelId, Price) VALUES(@CreatorChannelsSnapshotId, @ChannelId, @Price)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
-        public static string UpsertStatement(Like.Fields mergeOnFields, Like.Fields updateFields)
+        public static string UpsertStatement(CreatorChannelsSnapshotItem.Fields mergeOnFields, CreatorChannelsSnapshotItem.Fields updateFields)
         {
             // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
             // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
             var sql = new System.Text.StringBuilder();
             sql.Append(
-                @"MERGE Likes WITH (HOLDLOCK) as Target
-                USING (VALUES (@PostId, @UserId, @CreationDate)) AS Source (PostId, UserId, CreationDate)
+                @"MERGE CreatorChannelsSnapshotItems WITH (HOLDLOCK) as Target
+                USING (VALUES (@CreatorChannelsSnapshotId, @ChannelId, @Price)) AS Source (CreatorChannelsSnapshotId, ChannelId, Price)
                 ON    (");
                 
-            if (mergeOnFields == Like.Fields.Empty)
+            if (mergeOnFields == CreatorChannelsSnapshotItem.Fields.Empty)
             {
-                sql.Append(@"Target.PostId = Source.PostId AND Target.UserId = Source.UserId");
+                sql.Append(@"Target.CreatorChannelsSnapshotId = Source.CreatorChannelsSnapshotId AND Target.ChannelId = Source.ChannelId");
             }
             else
             {
@@ -12938,73 +11363,2244 @@ namespace Fifthweek.Api.Persistence
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (PostId, UserId, CreationDate)
-                    VALUES  (Source.PostId, Source.UserId, Source.CreationDate);");
+                    INSERT  (CreatorChannelsSnapshotId, ChannelId, Price)
+                    VALUES  (Source.CreatorChannelsSnapshotId, Source.ChannelId, Source.Price);");
             return sql.ToString();
         }
         
-        public static string UpdateStatement(Like.Fields fields)
+        public static string UpdateStatement(CreatorChannelsSnapshotItem.Fields fields)
         {
             var sql = new System.Text.StringBuilder();
-            sql.Append("UPDATE Likes SET ");
+            sql.Append("UPDATE CreatorChannelsSnapshotItems SET ");
             sql.AppendUpdateParameters(GetFieldNames(fields));
-            sql.Append(" WHERE PostId = @PostId AND UserId = @UserId");
+            sql.Append(" WHERE CreatorChannelsSnapshotId = @CreatorChannelsSnapshotId AND ChannelId = @ChannelId");
             return sql.ToString();
         }
         
-        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Like.Fields fields, bool autoIncludePrimaryKeys = true)
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(CreatorChannelsSnapshotItem.Fields fields, bool autoIncludePrimaryKeys = true)
         {
             var fieldNames = new System.Collections.Generic.List<string>();
             if (autoIncludePrimaryKeys)
             {
-                fieldNames.Add("PostId");
+                fieldNames.Add("CreatorChannelsSnapshotId");
             }
         
             if (autoIncludePrimaryKeys)
             {
-                fieldNames.Add("UserId");
+                fieldNames.Add("ChannelId");
             }
         
-            if (fields.HasFlag(Like.Fields.CreationDate))
+            if (fields.HasFlag(CreatorChannelsSnapshotItem.Fields.Price))
             {
-                fieldNames.Add("CreationDate");
+                fieldNames.Add("Price");
             }
         
             return fieldNames;
         }
         
         private static Dapper.DynamicParameters OnlySpecifiedParameters(
-            Like entity, 
-            Like.Fields fields,
-            Like.Fields? excludedFields = null)
+            CreatorChannelsSnapshotItem entity, 
+            CreatorChannelsSnapshotItem.Fields fields,
+            CreatorChannelsSnapshotItem.Fields? excludedFields = null)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("PostId", entity.PostId);
-            parameters.Add("UserId", entity.UserId);
-            if (fields.HasFlag(Like.Fields.CreationDate) && (excludedFields == null || !excludedFields.Value.HasFlag(Like.Fields.CreationDate)))
+            parameters.Add("CreatorChannelsSnapshotId", entity.CreatorChannelsSnapshotId);
+            parameters.Add("ChannelId", entity.ChannelId);
+            if (fields.HasFlag(CreatorChannelsSnapshotItem.Fields.Price) && (excludedFields == null || !excludedFields.Value.HasFlag(CreatorChannelsSnapshotItem.Fields.Price)))
             {
-                parameters.Add("CreationDate", entity.CreationDate);
+                parameters.Add("Price", entity.Price);
             }
         
             return parameters;
         }
         
         private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
-            Like entity, 
-            Like.Fields fields)
+            CreatorChannelsSnapshotItem entity, 
+            CreatorChannelsSnapshotItem.Fields fields)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("PostId", entity.PostId);
-            parameters.Add("UserId", entity.UserId);
-            if (!fields.HasFlag(Like.Fields.CreationDate))
+            parameters.Add("CreatorChannelsSnapshotId", entity.CreatorChannelsSnapshotId);
+            parameters.Add("ChannelId", entity.ChannelId);
+            if (!fields.HasFlag(CreatorChannelsSnapshotItem.Fields.Price))
             {
-                parameters.Add("CreationDate", entity.CreationDate);
+                parameters.Add("Price", entity.Price);
             }
         
+            return parameters;
+        }
+        
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CreatorFreeAccessUsersSnapshot  : IIdentityEquatable
+    {
+        public const string Table = "CreatorFreeAccessUsersSnapshots";
+        
+        public CreatorFreeAccessUsersSnapshot(
+            System.Guid id)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            this.Id = id;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((CreatorFreeAccessUsersSnapshot)other);
+        }
+        
+        protected bool IdentityEquals(CreatorFreeAccessUsersSnapshot other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            Id = 1, 
+            Timestamp = 2, 
+            CreatorId = 4
+        }
+    }
+
+    public static partial class CreatorFreeAccessUsersSnapshotExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<CreatorFreeAccessUsersSnapshot> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.Id, entity.Timestamp, entity.CreatorId
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            CreatorFreeAccessUsersSnapshot entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.Id, entity.Timestamp, entity.CreatorId
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<CreatorFreeAccessUsersSnapshot, CreatorFreeAccessUsersSnapshot.Fields> parameters)
+        {
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new Dapper.DynamicParameters(new { entity.Id, entity.Timestamp, entity.CreatorId });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            CreatorFreeAccessUsersSnapshot entity, 
+            CreatorFreeAccessUsersSnapshot.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(CreatorFreeAccessUsersSnapshot.Fields.Empty, fields), 
+                new 
+                {
+                    entity.Id, entity.Timestamp, entity.CreatorId
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            CreatorFreeAccessUsersSnapshot entity, 
+            CreatorFreeAccessUsersSnapshot.Fields mergeOnFields,
+            CreatorFreeAccessUsersSnapshot.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.Id, entity.Timestamp, entity.CreatorId
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            CreatorFreeAccessUsersSnapshot entity, 
+            CreatorFreeAccessUsersSnapshot.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<CreatorFreeAccessUsersSnapshot, CreatorFreeAccessUsersSnapshot.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO CreatorFreeAccessUsersSnapshots(Id, Timestamp, CreatorId) VALUES(@Id, @Timestamp, @CreatorId)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(CreatorFreeAccessUsersSnapshot.Fields mergeOnFields, CreatorFreeAccessUsersSnapshot.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE CreatorFreeAccessUsersSnapshots WITH (HOLDLOCK) as Target
+                USING (VALUES (@Id, @Timestamp, @CreatorId)) AS Source (Id, Timestamp, CreatorId)
+                ON    (");
+                
+            if (mergeOnFields == CreatorFreeAccessUsersSnapshot.Fields.Empty)
+            {
+                sql.Append(@"Target.Id = Source.Id");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (Id, Timestamp, CreatorId)
+                    VALUES  (Source.Id, Source.Timestamp, Source.CreatorId);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(CreatorFreeAccessUsersSnapshot.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE CreatorFreeAccessUsersSnapshots SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE Id = @Id");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(CreatorFreeAccessUsersSnapshot.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("Id");
+            }
+        
+            if (fields.HasFlag(CreatorFreeAccessUsersSnapshot.Fields.Timestamp))
+            {
+                fieldNames.Add("Timestamp");
+            }
+        
+            if (fields.HasFlag(CreatorFreeAccessUsersSnapshot.Fields.CreatorId))
+            {
+                fieldNames.Add("CreatorId");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
+            CreatorFreeAccessUsersSnapshot entity, 
+            CreatorFreeAccessUsersSnapshot.Fields fields,
+            CreatorFreeAccessUsersSnapshot.Fields? excludedFields = null)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
+            if (fields.HasFlag(CreatorFreeAccessUsersSnapshot.Fields.Timestamp) && (excludedFields == null || !excludedFields.Value.HasFlag(CreatorFreeAccessUsersSnapshot.Fields.Timestamp)))
+            {
+                parameters.Add("Timestamp", entity.Timestamp);
+            }
+        
+            if (fields.HasFlag(CreatorFreeAccessUsersSnapshot.Fields.CreatorId) && (excludedFields == null || !excludedFields.Value.HasFlag(CreatorFreeAccessUsersSnapshot.Fields.CreatorId)))
+            {
+                parameters.Add("CreatorId", entity.CreatorId);
+            }
+        
+            return parameters;
+        }
+        
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
+            CreatorFreeAccessUsersSnapshot entity, 
+            CreatorFreeAccessUsersSnapshot.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
+            if (!fields.HasFlag(CreatorFreeAccessUsersSnapshot.Fields.Timestamp))
+            {
+                parameters.Add("Timestamp", entity.Timestamp);
+            }
+        
+            if (!fields.HasFlag(CreatorFreeAccessUsersSnapshot.Fields.CreatorId))
+            {
+                parameters.Add("CreatorId", entity.CreatorId);
+            }
+        
+            return parameters;
+        }
+        
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CreatorFreeAccessUsersSnapshotItem  : IIdentityEquatable
+    {
+        public const string Table = "CreatorFreeAccessUsersSnapshotItems";
+        
+        public CreatorFreeAccessUsersSnapshotItem(
+            System.Guid creatorFreeAccessUsersSnapshotId,
+            System.String email)
+        {
+            if (creatorFreeAccessUsersSnapshotId == null)
+            {
+                throw new ArgumentNullException("creatorFreeAccessUsersSnapshotId");
+            }
+
+            if (email == null)
+            {
+                throw new ArgumentNullException("email");
+            }
+
+            this.CreatorFreeAccessUsersSnapshotId = creatorFreeAccessUsersSnapshotId;
+            this.Email = email;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((CreatorFreeAccessUsersSnapshotItem)other);
+        }
+        
+        protected bool IdentityEquals(CreatorFreeAccessUsersSnapshotItem other)
+        {
+            if (!object.Equals(this.CreatorFreeAccessUsersSnapshotId, other.CreatorFreeAccessUsersSnapshotId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Email, other.Email))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            CreatorFreeAccessUsersSnapshotId = 1, 
+            Email = 2
+        }
+    }
+
+    public static partial class CreatorFreeAccessUsersSnapshotItemExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<CreatorFreeAccessUsersSnapshotItem> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.CreatorFreeAccessUsersSnapshotId, entity.Email
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            CreatorFreeAccessUsersSnapshotItem entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.CreatorFreeAccessUsersSnapshotId, entity.Email
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<CreatorFreeAccessUsersSnapshotItem, CreatorFreeAccessUsersSnapshotItem.Fields> parameters)
+        {
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new Dapper.DynamicParameters(new { entity.CreatorFreeAccessUsersSnapshotId, entity.Email });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            CreatorFreeAccessUsersSnapshotItem entity, 
+            CreatorFreeAccessUsersSnapshotItem.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(CreatorFreeAccessUsersSnapshotItem.Fields.Empty, fields), 
+                new 
+                {
+                    entity.CreatorFreeAccessUsersSnapshotId, entity.Email
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            CreatorFreeAccessUsersSnapshotItem entity, 
+            CreatorFreeAccessUsersSnapshotItem.Fields mergeOnFields,
+            CreatorFreeAccessUsersSnapshotItem.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.CreatorFreeAccessUsersSnapshotId, entity.Email
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            CreatorFreeAccessUsersSnapshotItem entity, 
+            CreatorFreeAccessUsersSnapshotItem.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<CreatorFreeAccessUsersSnapshotItem, CreatorFreeAccessUsersSnapshotItem.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO CreatorFreeAccessUsersSnapshotItems(CreatorFreeAccessUsersSnapshotId, Email) VALUES(@CreatorFreeAccessUsersSnapshotId, @Email)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(CreatorFreeAccessUsersSnapshotItem.Fields mergeOnFields, CreatorFreeAccessUsersSnapshotItem.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE CreatorFreeAccessUsersSnapshotItems WITH (HOLDLOCK) as Target
+                USING (VALUES (@CreatorFreeAccessUsersSnapshotId, @Email)) AS Source (CreatorFreeAccessUsersSnapshotId, Email)
+                ON    (");
+                
+            if (mergeOnFields == CreatorFreeAccessUsersSnapshotItem.Fields.Empty)
+            {
+                sql.Append(@"Target.CreatorFreeAccessUsersSnapshotId = Source.CreatorFreeAccessUsersSnapshotId AND Target.Email = Source.Email");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (CreatorFreeAccessUsersSnapshotId, Email)
+                    VALUES  (Source.CreatorFreeAccessUsersSnapshotId, Source.Email);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(CreatorFreeAccessUsersSnapshotItem.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE CreatorFreeAccessUsersSnapshotItems SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE CreatorFreeAccessUsersSnapshotId = @CreatorFreeAccessUsersSnapshotId AND Email = @Email");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(CreatorFreeAccessUsersSnapshotItem.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("CreatorFreeAccessUsersSnapshotId");
+            }
+        
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("Email");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
+            CreatorFreeAccessUsersSnapshotItem entity, 
+            CreatorFreeAccessUsersSnapshotItem.Fields fields,
+            CreatorFreeAccessUsersSnapshotItem.Fields? excludedFields = null)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("CreatorFreeAccessUsersSnapshotId", entity.CreatorFreeAccessUsersSnapshotId);
+            parameters.Add("Email", entity.Email);
+            return parameters;
+        }
+        
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
+            CreatorFreeAccessUsersSnapshotItem entity, 
+            CreatorFreeAccessUsersSnapshotItem.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("CreatorFreeAccessUsersSnapshotId", entity.CreatorFreeAccessUsersSnapshotId);
+            parameters.Add("Email", entity.Email);
+            return parameters;
+        }
+        
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class SubscriberChannelsSnapshot  : IIdentityEquatable
+    {
+        public const string Table = "SubscriberChannelsSnapshots";
+        
+        public SubscriberChannelsSnapshot(
+            System.Guid id)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            this.Id = id;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((SubscriberChannelsSnapshot)other);
+        }
+        
+        protected bool IdentityEquals(SubscriberChannelsSnapshot other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            Id = 1, 
+            Timestamp = 2, 
+            SubscriberId = 4
+        }
+    }
+
+    public static partial class SubscriberChannelsSnapshotExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<SubscriberChannelsSnapshot> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.Id, entity.Timestamp, entity.SubscriberId
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            SubscriberChannelsSnapshot entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.Id, entity.Timestamp, entity.SubscriberId
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<SubscriberChannelsSnapshot, SubscriberChannelsSnapshot.Fields> parameters)
+        {
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new Dapper.DynamicParameters(new { entity.Id, entity.Timestamp, entity.SubscriberId });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            SubscriberChannelsSnapshot entity, 
+            SubscriberChannelsSnapshot.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(SubscriberChannelsSnapshot.Fields.Empty, fields), 
+                new 
+                {
+                    entity.Id, entity.Timestamp, entity.SubscriberId
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            SubscriberChannelsSnapshot entity, 
+            SubscriberChannelsSnapshot.Fields mergeOnFields,
+            SubscriberChannelsSnapshot.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.Id, entity.Timestamp, entity.SubscriberId
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            SubscriberChannelsSnapshot entity, 
+            SubscriberChannelsSnapshot.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<SubscriberChannelsSnapshot, SubscriberChannelsSnapshot.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO SubscriberChannelsSnapshots(Id, Timestamp, SubscriberId) VALUES(@Id, @Timestamp, @SubscriberId)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(SubscriberChannelsSnapshot.Fields mergeOnFields, SubscriberChannelsSnapshot.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE SubscriberChannelsSnapshots WITH (HOLDLOCK) as Target
+                USING (VALUES (@Id, @Timestamp, @SubscriberId)) AS Source (Id, Timestamp, SubscriberId)
+                ON    (");
+                
+            if (mergeOnFields == SubscriberChannelsSnapshot.Fields.Empty)
+            {
+                sql.Append(@"Target.Id = Source.Id");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (Id, Timestamp, SubscriberId)
+                    VALUES  (Source.Id, Source.Timestamp, Source.SubscriberId);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(SubscriberChannelsSnapshot.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE SubscriberChannelsSnapshots SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE Id = @Id");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(SubscriberChannelsSnapshot.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("Id");
+            }
+        
+            if (fields.HasFlag(SubscriberChannelsSnapshot.Fields.Timestamp))
+            {
+                fieldNames.Add("Timestamp");
+            }
+        
+            if (fields.HasFlag(SubscriberChannelsSnapshot.Fields.SubscriberId))
+            {
+                fieldNames.Add("SubscriberId");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
+            SubscriberChannelsSnapshot entity, 
+            SubscriberChannelsSnapshot.Fields fields,
+            SubscriberChannelsSnapshot.Fields? excludedFields = null)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
+            if (fields.HasFlag(SubscriberChannelsSnapshot.Fields.Timestamp) && (excludedFields == null || !excludedFields.Value.HasFlag(SubscriberChannelsSnapshot.Fields.Timestamp)))
+            {
+                parameters.Add("Timestamp", entity.Timestamp);
+            }
+        
+            if (fields.HasFlag(SubscriberChannelsSnapshot.Fields.SubscriberId) && (excludedFields == null || !excludedFields.Value.HasFlag(SubscriberChannelsSnapshot.Fields.SubscriberId)))
+            {
+                parameters.Add("SubscriberId", entity.SubscriberId);
+            }
+        
+            return parameters;
+        }
+        
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
+            SubscriberChannelsSnapshot entity, 
+            SubscriberChannelsSnapshot.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
+            if (!fields.HasFlag(SubscriberChannelsSnapshot.Fields.Timestamp))
+            {
+                parameters.Add("Timestamp", entity.Timestamp);
+            }
+        
+            if (!fields.HasFlag(SubscriberChannelsSnapshot.Fields.SubscriberId))
+            {
+                parameters.Add("SubscriberId", entity.SubscriberId);
+            }
+        
+            return parameters;
+        }
+        
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class SubscriberChannelsSnapshotItem  : IIdentityEquatable
+    {
+        public const string Table = "SubscriberChannelsSnapshotItems";
+        
+        public SubscriberChannelsSnapshotItem(
+            System.Guid subscriberChannelsSnapshotId,
+            System.Guid channelId)
+        {
+            if (subscriberChannelsSnapshotId == null)
+            {
+                throw new ArgumentNullException("subscriberChannelsSnapshotId");
+            }
+
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            this.SubscriberChannelsSnapshotId = subscriberChannelsSnapshotId;
+            this.ChannelId = channelId;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((SubscriberChannelsSnapshotItem)other);
+        }
+        
+        protected bool IdentityEquals(SubscriberChannelsSnapshotItem other)
+        {
+            if (!object.Equals(this.SubscriberChannelsSnapshotId, other.SubscriberChannelsSnapshotId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            SubscriberChannelsSnapshotId = 1, 
+            ChannelId = 2, 
+            CreatorId = 4, 
+            AcceptedPrice = 8, 
+            SubscriptionStartDate = 16
+        }
+    }
+
+    public static partial class SubscriberChannelsSnapshotItemExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<SubscriberChannelsSnapshotItem> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.SubscriberChannelsSnapshotId, entity.ChannelId, entity.CreatorId, entity.AcceptedPrice, entity.SubscriptionStartDate
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            SubscriberChannelsSnapshotItem entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.SubscriberChannelsSnapshotId, entity.ChannelId, entity.CreatorId, entity.AcceptedPrice, entity.SubscriptionStartDate
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<SubscriberChannelsSnapshotItem, SubscriberChannelsSnapshotItem.Fields> parameters)
+        {
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new Dapper.DynamicParameters(new { entity.SubscriberChannelsSnapshotId, entity.ChannelId, entity.CreatorId, entity.AcceptedPrice, entity.SubscriptionStartDate });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            SubscriberChannelsSnapshotItem entity, 
+            SubscriberChannelsSnapshotItem.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(SubscriberChannelsSnapshotItem.Fields.Empty, fields), 
+                new 
+                {
+                    entity.SubscriberChannelsSnapshotId, entity.ChannelId, entity.CreatorId, entity.AcceptedPrice, entity.SubscriptionStartDate
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            SubscriberChannelsSnapshotItem entity, 
+            SubscriberChannelsSnapshotItem.Fields mergeOnFields,
+            SubscriberChannelsSnapshotItem.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.SubscriberChannelsSnapshotId, entity.ChannelId, entity.CreatorId, entity.AcceptedPrice, entity.SubscriptionStartDate
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            SubscriberChannelsSnapshotItem entity, 
+            SubscriberChannelsSnapshotItem.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<SubscriberChannelsSnapshotItem, SubscriberChannelsSnapshotItem.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO SubscriberChannelsSnapshotItems(SubscriberChannelsSnapshotId, ChannelId, CreatorId, AcceptedPrice, SubscriptionStartDate) VALUES(@SubscriberChannelsSnapshotId, @ChannelId, @CreatorId, @AcceptedPrice, @SubscriptionStartDate)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(SubscriberChannelsSnapshotItem.Fields mergeOnFields, SubscriberChannelsSnapshotItem.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE SubscriberChannelsSnapshotItems WITH (HOLDLOCK) as Target
+                USING (VALUES (@SubscriberChannelsSnapshotId, @ChannelId, @CreatorId, @AcceptedPrice, @SubscriptionStartDate)) AS Source (SubscriberChannelsSnapshotId, ChannelId, CreatorId, AcceptedPrice, SubscriptionStartDate)
+                ON    (");
+                
+            if (mergeOnFields == SubscriberChannelsSnapshotItem.Fields.Empty)
+            {
+                sql.Append(@"Target.SubscriberChannelsSnapshotId = Source.SubscriberChannelsSnapshotId AND Target.ChannelId = Source.ChannelId");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (SubscriberChannelsSnapshotId, ChannelId, CreatorId, AcceptedPrice, SubscriptionStartDate)
+                    VALUES  (Source.SubscriberChannelsSnapshotId, Source.ChannelId, Source.CreatorId, Source.AcceptedPrice, Source.SubscriptionStartDate);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(SubscriberChannelsSnapshotItem.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE SubscriberChannelsSnapshotItems SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE SubscriberChannelsSnapshotId = @SubscriberChannelsSnapshotId AND ChannelId = @ChannelId");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(SubscriberChannelsSnapshotItem.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("SubscriberChannelsSnapshotId");
+            }
+        
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("ChannelId");
+            }
+        
+            if (fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.CreatorId))
+            {
+                fieldNames.Add("CreatorId");
+            }
+        
+            if (fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.AcceptedPrice))
+            {
+                fieldNames.Add("AcceptedPrice");
+            }
+        
+            if (fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.SubscriptionStartDate))
+            {
+                fieldNames.Add("SubscriptionStartDate");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
+            SubscriberChannelsSnapshotItem entity, 
+            SubscriberChannelsSnapshotItem.Fields fields,
+            SubscriberChannelsSnapshotItem.Fields? excludedFields = null)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("SubscriberChannelsSnapshotId", entity.SubscriberChannelsSnapshotId);
+            parameters.Add("ChannelId", entity.ChannelId);
+            if (fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.CreatorId) && (excludedFields == null || !excludedFields.Value.HasFlag(SubscriberChannelsSnapshotItem.Fields.CreatorId)))
+            {
+                parameters.Add("CreatorId", entity.CreatorId);
+            }
+        
+            if (fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.AcceptedPrice) && (excludedFields == null || !excludedFields.Value.HasFlag(SubscriberChannelsSnapshotItem.Fields.AcceptedPrice)))
+            {
+                parameters.Add("AcceptedPrice", entity.AcceptedPrice);
+            }
+        
+            if (fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.SubscriptionStartDate) && (excludedFields == null || !excludedFields.Value.HasFlag(SubscriberChannelsSnapshotItem.Fields.SubscriptionStartDate)))
+            {
+                parameters.Add("SubscriptionStartDate", entity.SubscriptionStartDate);
+            }
+        
+            return parameters;
+        }
+        
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
+            SubscriberChannelsSnapshotItem entity, 
+            SubscriberChannelsSnapshotItem.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("SubscriberChannelsSnapshotId", entity.SubscriberChannelsSnapshotId);
+            parameters.Add("ChannelId", entity.ChannelId);
+            if (!fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.CreatorId))
+            {
+                parameters.Add("CreatorId", entity.CreatorId);
+            }
+        
+            if (!fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.AcceptedPrice))
+            {
+                parameters.Add("AcceptedPrice", entity.AcceptedPrice);
+            }
+        
+            if (!fields.HasFlag(SubscriberChannelsSnapshotItem.Fields.SubscriptionStartDate))
+            {
+                parameters.Add("SubscriptionStartDate", entity.SubscriptionStartDate);
+            }
+        
+            return parameters;
+        }
+        
+    }
+}
+namespace Fifthweek.Api.Persistence.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class SubscriberSnapshot  : IIdentityEquatable
+    {
+        public const string Table = "SubscriberSnapshots";
+        
+        public SubscriberSnapshot(
+            System.DateTime timestamp,
+            System.Guid subscriberId)
+        {
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            if (subscriberId == null)
+            {
+                throw new ArgumentNullException("subscriberId");
+            }
+
+            this.Timestamp = timestamp;
+            this.SubscriberId = subscriberId;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((SubscriberSnapshot)other);
+        }
+        
+        protected bool IdentityEquals(SubscriberSnapshot other)
+        {
+            if (!object.Equals(this.Timestamp, other.Timestamp))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.SubscriberId, other.SubscriberId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            Timestamp = 1, 
+            SubscriberId = 2, 
+            Email = 4
+        }
+    }
+
+    public static partial class SubscriberSnapshotExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<SubscriberSnapshot> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.Timestamp, entity.SubscriberId, entity.Email
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            SubscriberSnapshot entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.Timestamp, entity.SubscriberId, entity.Email
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<SubscriberSnapshot, SubscriberSnapshot.Fields> parameters)
+        {
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new Dapper.DynamicParameters(new { entity.Timestamp, entity.SubscriberId, entity.Email });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            SubscriberSnapshot entity, 
+            SubscriberSnapshot.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(SubscriberSnapshot.Fields.Empty, fields), 
+                new 
+                {
+                    entity.Timestamp, entity.SubscriberId, entity.Email
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            SubscriberSnapshot entity, 
+            SubscriberSnapshot.Fields mergeOnFields,
+            SubscriberSnapshot.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.Timestamp, entity.SubscriberId, entity.Email
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            SubscriberSnapshot entity, 
+            SubscriberSnapshot.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<SubscriberSnapshot, SubscriberSnapshot.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO SubscriberSnapshots(Timestamp, SubscriberId, Email) VALUES(@Timestamp, @SubscriberId, @Email)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(SubscriberSnapshot.Fields mergeOnFields, SubscriberSnapshot.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE SubscriberSnapshots WITH (HOLDLOCK) as Target
+                USING (VALUES (@Timestamp, @SubscriberId, @Email)) AS Source (Timestamp, SubscriberId, Email)
+                ON    (");
+                
+            if (mergeOnFields == SubscriberSnapshot.Fields.Empty)
+            {
+                sql.Append(@"Target.Timestamp = Source.Timestamp AND Target.SubscriberId = Source.SubscriberId");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (Timestamp, SubscriberId, Email)
+                    VALUES  (Source.Timestamp, Source.SubscriberId, Source.Email);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(SubscriberSnapshot.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE SubscriberSnapshots SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE Timestamp = @Timestamp AND SubscriberId = @SubscriberId");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(SubscriberSnapshot.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("Timestamp");
+            }
+        
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("SubscriberId");
+            }
+        
+            if (fields.HasFlag(SubscriberSnapshot.Fields.Email))
+            {
+                fieldNames.Add("Email");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
+            SubscriberSnapshot entity, 
+            SubscriberSnapshot.Fields fields,
+            SubscriberSnapshot.Fields? excludedFields = null)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Timestamp", entity.Timestamp);
+            parameters.Add("SubscriberId", entity.SubscriberId);
+            if (fields.HasFlag(SubscriberSnapshot.Fields.Email) && (excludedFields == null || !excludedFields.Value.HasFlag(SubscriberSnapshot.Fields.Email)))
+            {
+                parameters.Add("Email", entity.Email);
+            }
+        
+            return parameters;
+        }
+        
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
+            SubscriberSnapshot entity, 
+            SubscriberSnapshot.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Timestamp", entity.Timestamp);
+            parameters.Add("SubscriberId", entity.SubscriberId);
+            if (!fields.HasFlag(SubscriberSnapshot.Fields.Email))
+            {
+                parameters.Add("Email", entity.Email);
+            }
+        
+            return parameters;
+        }
+        
+    }
+}
+namespace Fifthweek.Api.Persistence
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+
+    public partial class WeeklyReleaseTime  : IIdentityEquatable
+    {
+        public const string Table = "WeeklyReleaseTimes";
+        
+        public WeeklyReleaseTime(
+            System.Guid queueId,
+            System.Byte hourOfWeek)
+        {
+            if (queueId == null)
+            {
+                throw new ArgumentNullException("queueId");
+            }
+
+            if (hourOfWeek == null)
+            {
+                throw new ArgumentNullException("hourOfWeek");
+            }
+
+            this.QueueId = queueId;
+            this.HourOfWeek = hourOfWeek;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((WeeklyReleaseTime)other);
+        }
+        
+        protected bool IdentityEquals(WeeklyReleaseTime other)
+        {
+            if (!object.Equals(this.QueueId, other.QueueId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.HourOfWeek, other.HourOfWeek))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            QueueId = 1, 
+            HourOfWeek = 2
+        }
+    }
+
+    public static partial class WeeklyReleaseTimeExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<WeeklyReleaseTime> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.QueueId, entity.HourOfWeek
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            WeeklyReleaseTime entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.QueueId, entity.HourOfWeek
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<WeeklyReleaseTime, WeeklyReleaseTime.Fields> parameters)
+        {
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new Dapper.DynamicParameters(new { entity.QueueId, entity.HourOfWeek });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            WeeklyReleaseTime entity, 
+            WeeklyReleaseTime.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(WeeklyReleaseTime.Fields.Empty, fields), 
+                new 
+                {
+                    entity.QueueId, entity.HourOfWeek
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            WeeklyReleaseTime entity, 
+            WeeklyReleaseTime.Fields mergeOnFields,
+            WeeklyReleaseTime.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.QueueId, entity.HourOfWeek
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            WeeklyReleaseTime entity, 
+            WeeklyReleaseTime.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<WeeklyReleaseTime, WeeklyReleaseTime.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO WeeklyReleaseTimes(QueueId, HourOfWeek) VALUES(@QueueId, @HourOfWeek)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(WeeklyReleaseTime.Fields mergeOnFields, WeeklyReleaseTime.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE WeeklyReleaseTimes WITH (HOLDLOCK) as Target
+                USING (VALUES (@QueueId, @HourOfWeek)) AS Source (QueueId, HourOfWeek)
+                ON    (");
+                
+            if (mergeOnFields == WeeklyReleaseTime.Fields.Empty)
+            {
+                sql.Append(@"Target.QueueId = Source.QueueId AND Target.HourOfWeek = Source.HourOfWeek");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (QueueId, HourOfWeek)
+                    VALUES  (Source.QueueId, Source.HourOfWeek);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(WeeklyReleaseTime.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE WeeklyReleaseTimes SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE QueueId = @QueueId AND HourOfWeek = @HourOfWeek");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(WeeklyReleaseTime.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("QueueId");
+            }
+        
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("HourOfWeek");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
+            WeeklyReleaseTime entity, 
+            WeeklyReleaseTime.Fields fields,
+            WeeklyReleaseTime.Fields? excludedFields = null)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("QueueId", entity.QueueId);
+            parameters.Add("HourOfWeek", entity.HourOfWeek);
+            return parameters;
+        }
+        
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
+            WeeklyReleaseTime entity, 
+            WeeklyReleaseTime.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("QueueId", entity.QueueId);
+            parameters.Add("HourOfWeek", entity.HourOfWeek);
             return parameters;
         }
         
@@ -13194,7 +13790,7 @@ namespace Fifthweek.Api.Persistence.Identity
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
             FifthweekRole entity, 
             FifthweekRole.Fields fields,
@@ -13555,7 +14151,7 @@ namespace Fifthweek.Api.Persistence.Identity
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
             FifthweekUser entity, 
             FifthweekUser.Fields fields,
@@ -14152,7 +14748,7 @@ namespace Fifthweek.Api.Persistence.Identity
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task UpdateAsync(
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
             this System.Data.Common.DbConnection connection, 
             FifthweekUserRole entity, 
             FifthweekUserRole.Fields fields,

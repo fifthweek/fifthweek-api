@@ -99,7 +99,7 @@
         public async Task WhenGettingCreatorBacklog_ItShouldReturnResultFromCreatorBacklogQuery()
         {
             var query = new GetCreatorBacklogQuery(Requester, UserId);
-            var queryResult = new[] { new GetCreatorBacklogQueryResult(PostId, ChannelId, QueueId, new Comment(""), null, null, null, null, DateTime.UtcNow) };
+            var queryResult = new[] { new GetCreatorBacklogQueryResult(PostId, ChannelId, QueueId, new PreviewText(""), null, null, 0, 0, 0, 0, DateTime.UtcNow) };
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.getCreatorBacklog.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
@@ -130,7 +130,7 @@
                 StartIndex = 10
             };
 
-            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, BlogId, ChannelId, new Comment(string.Empty), null, null, null, null, DateTime.UtcNow, 0, 0, false) }, 10);
+            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, BlogId, ChannelId, new PreviewText(string.Empty), null, null, 0, 0, 0, 0, DateTime.UtcNow, 0, 0, false) }, 10);
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.getNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
@@ -161,7 +161,7 @@
                 StartIndex = 10
             };
 
-            var queryResult = new GetPreviewNewsfeedQueryResult(new[] { new GetPreviewNewsfeedQueryResult.PreviewPost(UserId, new GetPreviewNewsfeedQueryResult.PreviewPostCreator(Username, null), PostId, BlogId, new GetPreviewNewsfeedQueryResult.PreviewPostBlog(BlogName), ChannelId, new GetPreviewNewsfeedQueryResult.PreviewPostChannel(ChannelName), new Comment(string.Empty), null, null, null, null, null, DateTime.UtcNow, 0, 0, false) });
+            var queryResult = new GetPreviewNewsfeedQueryResult(new[] { new GetPreviewNewsfeedQueryResult.PreviewPost(UserId, new GetPreviewNewsfeedQueryResult.PreviewPostCreator(Username, null), PostId, BlogId, new GetPreviewNewsfeedQueryResult.PreviewPostBlog(BlogName), ChannelId, new GetPreviewNewsfeedQueryResult.PreviewPostChannel(ChannelName), new PreviewText(string.Empty), null, null, null, 0, 0, 0, 0, DateTime.UtcNow, 0, 0, false) });
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.getPreviewNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
@@ -184,8 +184,8 @@
             var timestamp = DateTime.UtcNow;
             this.timestampCreator.Setup(v => v.Now()).Returns(timestamp);
 
-            var data = new NewPostData(ChannelId, FileId, null, null, null, QueueId);
-            var command = new PostToChannelCommand(Requester, PostId, ChannelId, FileId, null, null, null, QueueId, timestamp);
+            var data = new NewPostData(ChannelId, FileId, null, null, null, QueueId, 0, 0, 0, 0, null);
+            var command = new PostToChannelCommand(Requester, PostId, ChannelId, FileId, null, null, 0, 0, 0, 0, new List<FileId>(), null, QueueId, timestamp);
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
@@ -206,8 +206,8 @@
         [TestMethod]
         public async Task WhenPuttingPost_ItShouldIssuePostFileCommand()
         {
-            var data = new RevisedPostData(FileId, null, null);
-            var command = new RevisePostCommand(Requester, PostId, FileId, null, null);
+            var data = new RevisedPostData(FileId, null, null, 0, 0, 0, 0, null);
+            var command = new RevisePostCommand(Requester, PostId, FileId, null, null, 0, 0, 0, 0, new List<FileId>());
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
@@ -222,7 +222,7 @@
         [ExpectedException(typeof(BadRequestException))]
         public async Task WhenPuttingPost_WithoutSpecifyingRevisedFileId_ItShouldThrowBadRequestException()
         {
-            await this.target.PutPost(string.Empty, new RevisedPostData(FileId, null, null));
+            await this.target.PutPost(string.Empty, new RevisedPostData(FileId, null, null, 0, 0, 0, 0, null));
         }
 
         [TestMethod]

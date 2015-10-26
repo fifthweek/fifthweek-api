@@ -113,6 +113,7 @@
     <Compile Include="ILikePostDbStatement.cs" />
     <Compile Include="IMovePostToQueueDbStatement.cs" />
     <Compile Include="IDefragmentQueueIfRequiredDbStatement.cs" />
+    <Compile Include="IRevisePostDbStatement.cs" />
     <Compile Include="ISetPostLiveDateDbStatement.cs" />
     <Compile Include="IsPostSubscriberDbStatement.cs" />
     <Compile Include="ITryGetPostQueueIdStatement.cs" />
@@ -162,6 +163,7 @@
     <Compile Include="Queries\PreviewNewsfeedPost.cs" />
     <Compile Include="Queries\RenderSize.cs" />
     <Compile Include="DefragmentQueueIfRequiredDbStatement.cs" />
+    <Compile Include="RevisePostDbStatement.cs" />
     <Compile Include="ScheduledDateClippingFunction.cs" />
     <Compile Include="SetPostLiveDateDbStatement.cs" />
     <Compile Include="TryGetPostQueueIdDbStatement.cs" />

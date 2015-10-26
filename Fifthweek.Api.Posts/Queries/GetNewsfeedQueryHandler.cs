@@ -46,15 +46,6 @@
             var results = new List<GetNewsfeedQueryResult.Post>();
             foreach (var post in posts)
             {
-                FileInformation file = null;
-                if (post.FileId != null)
-                {
-                    file = await this.fileInformationAggregator.GetFileInformationAsync(
-                        post.ChannelId,
-                        post.FileId,
-                        FilePurposes.PostFile);
-                }
-
                 FileInformation image = null;
                 if (post.ImageId != null)
                 {
@@ -75,11 +66,13 @@
                     post.PostId,
                     post.BlogId,
                     post.ChannelId,
-                    post.Comment,
-                    file,
-                    file == null ? null : new FileSourceInformation(post.FileName, post.FileExtension, this.mimeTypeMap.GetMimeType(post.FileExtension), post.FileSize ?? 0, null),
+                    post.PreviewText,
                     image,
                     image == null ? null : new FileSourceInformation(post.ImageName, post.ImageExtension, this.mimeTypeMap.GetMimeType(post.ImageExtension), post.ImageSize ?? 0, imageRenderSize),
+                    post.PreviewWordCount,
+                    post.WordCount,
+                    post.ImageCount,
+                    post.FileCount,
                     post.LiveDate,
                     post.LikesCount,
                     post.CommentsCount,

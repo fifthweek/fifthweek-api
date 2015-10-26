@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Posts.Tests.Commands
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Channels.Shared;
@@ -28,49 +29,48 @@
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly FileId ImageId = new FileId(Guid.NewGuid());
+        private static readonly IReadOnlyList<FileId> FileIds = new List<FileId> { FileId, ImageId };
         private static readonly DateTime Timestamp = DateTime.UtcNow;
         private static readonly DateTime? ScheduleDate = null;
-        private static readonly ValidComment Comment = ValidComment.Parse("Hey guys!");
-        private static readonly PostToChannelCommand Command = new PostToChannelCommand(Requester, PostId, ChannelId, FileId, ImageId, Comment, ScheduleDate, QueueId, Timestamp);
-        private Mock<IQueueSecurity> collectionSecurity;
+        private static readonly ValidPreviewText PreviewText = ValidPreviewText.Parse("preview-text");
+        private static readonly ValidComment Content = ValidComment.Parse("comment");
+        private static readonly PostToChannelCommand Command = new PostToChannelCommand(Requester, PostId, ChannelId, ImageId, PreviewText, Content, 1, 2, 3, 4, FileIds, ScheduleDate, QueueId, Timestamp);
+        private Mock<IQueueSecurity> queueSecurity;
         private Mock<IFileSecurity> fileSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<IPostFileTypeChecks> postFileTypeChecks;
-        private Mock<IPostToChannelDbStatement> postToCollectionDbStatement;
+        private Mock<IPostToChannelDbStatement> postToChannelDbStatement;
         private PostToChannelCommandHandler target;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.collectionSecurity = new Mock<IQueueSecurity>();
+            this.queueSecurity = new Mock<IQueueSecurity>();
             this.fileSecurity = new Mock<IFileSecurity>();
-            this.postFileTypeChecks = new Mock<IPostFileTypeChecks>();
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
 
             // Give side-effecting components strict mock behaviour.
-            this.postToCollectionDbStatement = new Mock<IPostToChannelDbStatement>(MockBehavior.Strict);
+            this.postToChannelDbStatement = new Mock<IPostToChannelDbStatement>(MockBehavior.Strict);
 
             this.target = new PostToChannelCommandHandler(
-                this.collectionSecurity.Object,
+                this.queueSecurity.Object,
                 this.fileSecurity.Object,
                 this.requesterSecurity.Object,
-                this.postFileTypeChecks.Object,
-                this.postToCollectionDbStatement.Object);
+                this.postToChannelDbStatement.Object);
         }
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
-            await this.target.HandleAsync(new PostToChannelCommand(Requester.Unauthenticated, PostId, ChannelId, FileId, ImageId, Comment, ScheduleDate, QueueId, Timestamp));
+            await this.target.HandleAsync(new PostToChannelCommand(Requester.Unauthenticated, PostId, ChannelId, ImageId, PreviewText, Content, 1, 2, 3, 4, FileIds, ScheduleDate, QueueId, Timestamp));
         }
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenNotAllowedToPost_ItShouldThrowUnauthorizedException()
         {
-            this.collectionSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, QueueId)).Throws<UnauthorizedException>();
+            this.queueSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, QueueId)).Throws<UnauthorizedException>();
 
             await this.target.HandleAsync(Command);
         }
@@ -85,10 +85,19 @@
         }
 
         [TestMethod]
-        [ExpectedException(typeof(RecoverableException))]
-        public async Task WhenFileHasInvalidType_ItShouldThrowRecoverableException()
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenFileIdsDoNotContainPreviewImageId_ItShouldThrowRecoverableException()
         {
-            this.postFileTypeChecks.Setup(_ => _.AssertValidForFilePostAsync(FileId)).Throws(new RecoverableException("Bad file type"));
+            await this.target.HandleAsync(new PostToChannelCommand(Requester, PostId, ChannelId, ImageId, PreviewText, Content, 1, 2, 3, 4, new List<FileId> { FileId }, ScheduleDate, QueueId, Timestamp));
+
+            await this.target.HandleAsync(Command);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenNoContent_ItShouldThrowRecoverableException()
+        {
+            await this.target.HandleAsync(new PostToChannelCommand(Requester, PostId, ChannelId, ImageId, null, Content, 1, 2, 3, 4, new List<FileId> { }, ScheduleDate, QueueId, Timestamp));
 
             await this.target.HandleAsync(Command);
         }
@@ -96,14 +105,14 @@
         [TestMethod]
         public async Task WhenAllowedToPost_ItShouldPostToCollection()
         {
-            this.postToCollectionDbStatement.Setup(
-                _ => _.ExecuteAsync(PostId, ChannelId, Comment, ScheduleDate, QueueId, FileId, ImageId, Timestamp))
+            this.postToChannelDbStatement.Setup(
+                _ => _.ExecuteAsync(PostId, ChannelId, Content, ScheduleDate, QueueId, PreviewText, ImageId, FileIds, 1, 2, 3, 4, Timestamp))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
             await this.target.HandleAsync(Command);
 
-            this.postToCollectionDbStatement.Verify();
+            this.postToChannelDbStatement.Verify();
         }
     }
 }

@@ -29,7 +29,7 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
-        private static readonly Comment Comment = new Comment("Hey guys!");
+        private static readonly PreviewText PreviewText = new PreviewText("Hey guys!");
         private static readonly DateTime Now = DateTime.UtcNow;
         private static readonly string FileName = "FileName";
         private static readonly string FileExtension = "FileExtension";
@@ -123,16 +123,6 @@
             Assert.AreEqual(BacklogPosts.Count, result.Count);
             foreach (var item in result.Zip(BacklogPosts, (a, b) => new { Output = a, Input = b } ))
             {
-                if (item.Input.FileId != null)
-                {
-                    Assert.AreEqual(item.Input.FileId, item.Output.File.FileId);
-                    Assert.AreEqual(item.Input.ChannelId.ToString(), item.Output.File.ContainerName);
-                    Assert.AreEqual(item.Input.FileName, item.Output.FileSource.FileName);
-                    Assert.AreEqual(item.Input.FileExtension, item.Output.FileSource.FileExtension);
-                    Assert.AreEqual(item.Input.FileSize, item.Output.FileSource.Size);
-                    Assert.AreEqual(ContentType, item.Output.FileSource.ContentType);
-                }
-
                 if (item.Input.ImageId != null)
                 {
                     Assert.AreEqual(item.Input.ImageId, item.Output.Image.FileId);
@@ -146,7 +136,7 @@
                 Assert.AreEqual(item.Input.PostId, item.Output.PostId);
                 Assert.AreEqual(item.Input.ChannelId, item.Output.ChannelId);
                 Assert.AreEqual(item.Input.QueueId, item.Output.QueueId);
-                Assert.AreEqual(item.Input.Comment, item.Output.Comment);
+                Assert.AreEqual(item.Input.PreviewText, item.Output.PreviewText);
                 Assert.AreEqual(item.Input.LiveDate, item.Output.LiveDate);
             }
         }
@@ -166,23 +156,23 @@
                 for (var channelIndex = 0; channelIndex < ChannelCount; channelIndex++)
                 {
                     var channelId = new ChannelId(Guid.NewGuid());
-                    for (var collectionIndex = 0; collectionIndex < CollectionsPerChannel; collectionIndex++)
+                    for (var queueInded = 0; queueInded < CollectionsPerChannel; queueInded++)
                     {
-                        var collectionId = collectionIndex == 0 ? null : new QueueId(Guid.NewGuid());
+                        var queueId = queueInded == 0 ? null : new QueueId(Guid.NewGuid());
                         for (var i = 0; i < Posts; i++)
                         {
                             result.Add(
                             new BacklogPost(
                                 new PostId(Guid.NewGuid()),
                                 channelId,
-                                i % 2 == 0 ? collectionId : null,
-                                i % 2 == 0 ? Comment : null,
-                                i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
+                                i % 2 == 0 ? queueId : null,
+                                i % 2 == 0 ? PreviewText : null,
                                 i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
+                                i % 2 == 0 ? PreviewText.Value.Length : 0,
+                                i % 2 == 0 ? PreviewText.Value.Length : 0,
+                                i % 3 == 2 ? 1 : 0,
+                                i % 3 == 1 ? 1 : 0,
                                 liveDate,
-                                i % 3 == 1 ? FileName : null,
-                                i % 3 == 1 ? FileExtension : null,
-                                i % 3 == 1 ? FileSize : (long?)null,
                                 i % 3 == 2 ? FileName : null,
                                 i % 3 == 2 ? FileExtension : null,
                                 i % 3 == 2 ? FileSize : (long?)null,

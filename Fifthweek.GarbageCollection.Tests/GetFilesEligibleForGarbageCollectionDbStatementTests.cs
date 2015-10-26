@@ -17,6 +17,7 @@
     [TestClass]
     public class GetFilesEligibleForGarbageCollectionDbStatementTests : PersistenceTestsBase
     {
+        private static readonly Random Random = new Random();
         private static readonly DateTime Now = DateTime.UtcNow;
         private static readonly DateTime EndDate = Now.AddDays(-1);
         private static readonly DateTime IncludedDate = EndDate.AddDays(-1);
@@ -61,8 +62,6 @@
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                var random = new Random();
-
                 // Create header file
                 var blogId = BlogId.Random();
                 var headerImageFileId = FileId.Random();
@@ -71,7 +70,7 @@
                 headerImageFile.UploadStartedDate = IncludedDate;
 
                 var channelId = ChannelId.Random();
-                var channel = ChannelTests.UniqueEntity(random);
+                var channel = ChannelTests.UniqueEntity(Random);
                 channel.BlogId = blogId.Value;
                 channel.Blog = databaseContext.Blogs.First(v => v.Id == blogId.Value);
                 channel.Id = channelId.Value;
@@ -85,26 +84,30 @@
                 user.ProfileImageFileId = profileImageFileId.Value;
 
                 // Create image post file.
-                var post1 = PostTests.UniqueFileOrImage(random);
+                var post1 = PostTests.UniqueFileOrImage(Random);
                 var imageFileId = FileId.Random();
                 var image = this.CreateTestFileWithExistingUserAsync(UserId.Value, imageFileId.Value, IncludedDate);
                 databaseContext.Files.Add(image);
-                post1.ImageId = imageFileId.Value;
-                post1.Image = image;
+                post1.PreviewImageId = imageFileId.Value;
+                post1.PreviewImage = image;
                 post1.ChannelId = channelId.Value;
                 post1.Channel = channel;
                 databaseContext.Posts.Add(post1);
 
+                var post1File = new PostFile(post1.Id, post1, imageFileId.Value, image);
+                databaseContext.PostFiles.Add(post1File);
+
                 // Create file post file.
-                var post2 = PostTests.UniqueFileOrImage(random);
+                var post2 = PostTests.UniqueFileOrImage(Random);
                 var fileFileId = FileId.Random();
                 var file = this.CreateTestFileWithExistingUserAsync(UserId.Value, fileFileId.Value, IncludedDate);
                 databaseContext.Files.Add(file);
-                post2.FileId = fileFileId.Value;
-                post2.File = file;
                 post2.ChannelId = channelId.Value;
                 post2.Channel = channel;
                 databaseContext.Posts.Add(post2);
+
+                var post2File = new PostFile(post2.Id, post2, fileFileId.Value, file);
+                databaseContext.PostFiles.Add(post2File);
 
                 // Create files excluded because of date.
                 var lateFile1 = this.CreateTestFileWithExistingUserAsync(UserId.Value, FileId.Random().Value, EndDate);
@@ -124,9 +127,7 @@
   
         public File CreateTestFileWithExistingUserAsync(Guid existingUserId, Guid newFileId, DateTime uploadStartedDate)
         {
-            var random = new Random();
-
-            var file = FileTests.UniqueEntity(random);
+            var file = FileTests.UniqueEntity(Random);
             file.Id = newFileId;
             file.UserId = existingUserId;
             file.UploadStartedDate = uploadStartedDate;

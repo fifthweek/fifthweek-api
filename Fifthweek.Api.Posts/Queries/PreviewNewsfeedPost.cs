@@ -30,24 +30,20 @@
         public string ChannelName { get; private set; }
 
         [Optional]
-        public Comment Comment { get; private set; }
-
-        [Optional]
-        public FileId FileId { get; private set; }
+        public PreviewText PreviewText { get; private set; }
 
         [Optional]
         public FileId ImageId { get; private set; }
 
+        public int PreviewWordCount { get; private set; }
+
+        public int WordCount { get; private set; }
+
+        public int ImageCount { get; private set; }
+
+        public int FileCount { get; private set; }
+
         public DateTime LiveDate { get; private set; }
-
-        [Optional]
-        public string FileName { get; private set; }
-
-        [Optional]
-        public string FileExtension { get; private set; }
-
-        [Optional]
-        public long? FileSize { get; private set; }
 
         [Optional]
         public string ImageName { get; private set; }

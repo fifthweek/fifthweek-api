@@ -6,12 +6,12 @@
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers]
-    public partial class ValidComment : Comment
+    public partial class ValidPreviewText : PreviewText
     {
         public static readonly int MinLength = 1;
-        public static readonly int MaxLength = 50000;
+        public static readonly int MaxLength = 1000;
 
-        private ValidComment(string value)
+        private ValidPreviewText(string value)
             : base(value)
         {
         }
@@ -21,24 +21,24 @@
             return string.IsNullOrEmpty(value);
         }
 
-        public static ValidComment Parse(string value)
+        public static ValidPreviewText Parse(string value)
         {
-            ValidComment retval;
+            ValidPreviewText retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid comment", "value");
+                throw new ArgumentException("Invalid preview text", "value");
             }
 
             return retval;
         }
 
-        public static bool TryParse(string value, out ValidComment comment)
+        public static bool TryParse(string value, out ValidPreviewText comment)
         {
             IReadOnlyCollection<string> errorMessages;
             return TryParse(value, out comment, out errorMessages);
         }
 
-        public static bool TryParse(string value, out ValidComment comment, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(string value, out ValidPreviewText comment, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
@@ -62,7 +62,7 @@
                 return false;
             }
 
-            comment = new ValidComment(value);
+            comment = new ValidPreviewText(value);
 
             return true;
         }

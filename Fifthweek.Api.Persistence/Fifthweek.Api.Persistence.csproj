@@ -110,6 +110,11 @@
     <Compile Include="Migrations\201510131113469_AddIsDiscoverableFieldToChannel.Designer.cs">
       <DependentUpon>201510131113469_AddIsDiscoverableFieldToChannel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201510251521202_SupportFullArticles.cs" />
+    <Compile Include="Migrations\201510251521202_SupportFullArticles.Designer.cs">
+      <DependentUpon>201510251521202_SupportFullArticles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PostFile.cs" />
     <Compile Include="Queue.cs" />
     <Compile Include="DapperExtensions.cs" />
     <Compile Include="DapperTypeHandlerRegistration.cs" />
@@ -630,6 +635,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201510131113469_AddIsDiscoverableFieldToChannel.resx">
       <DependentUpon>201510131113469_AddIsDiscoverableFieldToChannel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510251521202_SupportFullArticles.resx">
+      <DependentUpon>201510251521202_SupportFullArticles.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

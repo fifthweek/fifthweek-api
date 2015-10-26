@@ -18,14 +18,12 @@
     public partial class GetCreatorBacklogDbStatement : IGetCreatorBacklogDbStatement
     {
         private static readonly string Sql = string.Format(
-          @"SELECT    post.{1} AS PostId, post.{2}, {4}, {5}, {6}, {7}, {3}, post.{22}, [file].{17} as FileName, [file].{18} as FileExtension, [file].{19} as FileSize, image.{17} as ImageName, image.{18} as ImageExtension, image.{19} as ImageSize, image.{20} as ImageRenderWidth, image.{21} as ImageRenderHeight
+          @"SELECT    post.{1} AS PostId, post.{2}, {4}, {5}, {23}, {24}, {25}, {26}, {7} AS ImageId, {3}, post.{22}, image.{17} as ImageName, image.{18} as ImageExtension, image.{19} as ImageSize, image.{20} as ImageRenderWidth, image.{21} as ImageRenderHeight
             FROM        {0} post
             INNER JOIN  {9} channel
                 ON      post.{2} = channel.{10}
             INNER JOIN  {12} subscription
                 ON      channel.{11} = subscription.{13}
-            LEFT OUTER JOIN {15} [file]
-                ON      post.{6} = [file].{16}
             LEFT OUTER JOIN {15} image
                 ON      post.{7} = image.{16}
             WHERE       post.{3} > @Now
@@ -36,9 +34,9 @@
           Post.Fields.ChannelId,
           Post.Fields.LiveDate,
           Post.Fields.QueueId,
-          Post.Fields.Comment,
-          Post.Fields.FileId,
-          Post.Fields.ImageId,
+          Post.Fields.PreviewText,
+          Post.Fields.Id,
+          Post.Fields.PreviewImageId,
           Post.Fields.Id,
           Channel.Table,
           Channel.Fields.Id,
@@ -53,7 +51,11 @@
           File.Fields.BlobSizeBytes,
           File.Fields.RenderWidth,
           File.Fields.RenderHeight,
-          Post.Fields.CreationDate);
+          Post.Fields.CreationDate,
+          Post.Fields.PreviewWordCount,
+          Post.Fields.WordCount,
+          Post.Fields.ImageCount,
+          Post.Fields.FileCount);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 

@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Posts.Tests.Commands
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Channels.Shared;
@@ -9,61 +10,60 @@
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
 
     [TestClass]
-    public class RevisePostCommandHandlerTests : PersistenceTestsBase
+    public class RevisePostCommandHandlerTests
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
-        private static readonly ValidComment Comment = ValidComment.Parse("Hey peeps!");
+        private static readonly ValidPreviewText PreviewText = ValidPreviewText.Parse("preview-text");
+        private static readonly ValidComment Content = ValidComment.Parse("comment");
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly FileId ImageId = new FileId(Guid.NewGuid());
-        private static readonly RevisePostCommand Command = new RevisePostCommand(Requester, PostId, FileId, ImageId, Comment);
+        private static readonly IReadOnlyList<FileId> FileIds = new List<FileId> { FileId, ImageId };
+        private static readonly RevisePostCommand Command = new RevisePostCommand(Requester, PostId, ImageId, PreviewText, Content, 0, 1, 2, 3, FileIds);
         private Mock<IPostSecurity> postSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private Mock<IScheduleGarbageCollectionStatement> scheduleGarbageCollection;
+        private Mock<IFileSecurity> fileSecurity;
+        private Mock<IRevisePostDbStatement> revisePostDbStatement;
         private RevisePostCommandHandler target;
 
         [TestInitialize]
         public void Initialize()
         {
             this.postSecurity = new Mock<IPostSecurity>();
+            this.fileSecurity = new Mock<IFileSecurity>();
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
 
             // Give potentially side-effective components strict mock behaviour.
-            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
+            this.revisePostDbStatement = new Mock<IRevisePostDbStatement>(MockBehavior.Strict);
             this.scheduleGarbageCollection = new Mock<IScheduleGarbageCollectionStatement>(MockBehavior.Strict);
 
-            this.InitializeTarget(this.connectionFactory.Object);
-        }
-
-        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
-        {
             this.target = new RevisePostCommandHandler(
                 this.requesterSecurity.Object,
                 this.postSecurity.Object,
-                connectionFactory,
-                this.scheduleGarbageCollection.Object);
+                this.scheduleGarbageCollection.Object,
+                this.fileSecurity.Object,
+                this.revisePostDbStatement.Object);
         }
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
-            await this.target.HandleAsync(new RevisePostCommand(Requester.Unauthenticated, PostId, FileId, ImageId, Comment));
+            await this.target.HandleAsync(new RevisePostCommand(Requester.Unauthenticated, PostId, ImageId, PreviewText, Content, 0, 1, 2, 3, FileIds));
         }
 
         [TestMethod]
@@ -76,97 +76,46 @@
         }
 
         [TestMethod]
-        public async Task WhenReRun_ItShouldHaveNoEffect()
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenNotAllowedToUseFile_ItShouldThrowUnauthorizedException()
         {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.scheduleGarbageCollection.Setup(_ => _.ExecuteAsync()).Returns(Task.FromResult(0));
-                this.InitializeTarget(testDatabase);
-                await this.CreateCollectionAsync(testDatabase, createPost: true);
-                await this.target.HandleAsync(Command);
-                await testDatabase.TakeSnapshotAsync();
+            this.fileSecurity.Setup(_ => _.AssertReferenceAllowedAsync(UserId, FileId)).Throws<UnauthorizedException>();
 
-                await this.target.HandleAsync(Command);
-
-                return ExpectedSideEffects.None;
-            });
+            await this.target.HandleAsync(Command);
         }
 
         [TestMethod]
-        public async Task WhenPostDoesNotExist_ItShouldHaveNoEffect()
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenFileIdsDoNotContainPreviewImageId_ItShouldThrowRecoverableException()
         {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.scheduleGarbageCollection.Setup(_ => _.ExecuteAsync()).Returns(Task.FromResult(0));
-                this.InitializeTarget(testDatabase);
-                await this.CreateCollectionAsync(testDatabase, createPost: false);
-                await testDatabase.TakeSnapshotAsync();
+            await this.target.HandleAsync(new RevisePostCommand(Requester, PostId, ImageId, PreviewText, Content, 0, 1, 2, 3, new List<FileId> { FileId }));
 
-                await this.target.HandleAsync(Command);
+            await this.target.HandleAsync(Command);
+        }
 
-                return ExpectedSideEffects.None;
-            });
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenNoContent_ItShouldThrowRecoverableException()
+        {
+            await this.target.HandleAsync(new RevisePostCommand(Requester, PostId, ImageId, null, Content, 0, 1, 2, 3, new List<FileId> { }));
+
+            await this.target.HandleAsync(Command);
         }
 
         [TestMethod]
         public async Task WhenPostExists_ItShouldUpdateAndScheduleGarbageCollection()
         {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.scheduleGarbageCollection.Setup(_ => _.ExecuteAsync()).Returns(Task.FromResult(0)).Verifiable();
-                this.InitializeTarget(testDatabase);
-                await this.CreateCollectionAsync(testDatabase, createPost: true);
-                await testDatabase.TakeSnapshotAsync();
+            this.revisePostDbStatement.Setup(
+                v => v.ExecuteAsync(PostId, Content, PreviewText, ImageId, FileIds, 0, 1, 2, 3))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
 
-                await this.target.HandleAsync(Command);
+            this.scheduleGarbageCollection.Setup(_ => _.ExecuteAsync()).Returns(Task.FromResult(0)).Verifiable();
 
-                this.scheduleGarbageCollection.Verify();
+            await this.target.HandleAsync(Command);
 
-                var expectedPost = new Post(PostId.Value)
-                {
-                    ChannelId = ChannelId.Value,
-                    QueueId = QueueId.Value,
-                    FileId = FileId.Value,
-                    ImageId = ImageId.Value,
-                    Comment = Comment.Value
-                };
-
-                return new ExpectedSideEffects
-                {
-                    Update = new WildcardEntity<Post>(expectedPost)
-                    {
-                        Expected = actualPost =>
-                        {
-                            expectedPost.LiveDate = actualPost.LiveDate;
-                            expectedPost.CreationDate = actualPost.CreationDate; // Take wildcard properties from actual value.
-                            return expectedPost;
-                        }
-                    }
-                };
-            });
-        }
-
-        private async Task CreateCollectionAsync(TestDatabaseContext testDatabase, bool createPost)
-        {
-            using (var databaseContext = testDatabase.CreateContext())
-            {
-                await databaseContext.CreateTestEntitiesAsync(UserId.Value, ChannelId.Value, QueueId.Value);
-
-                if (createPost)
-                {
-                    var existingFileId = Guid.NewGuid();
-                    await databaseContext.CreateTestFileWithExistingUserAsync(UserId.Value, existingFileId);
-                    await databaseContext.CreateTestFileWithExistingUserAsync(UserId.Value, FileId.Value);
-                    await databaseContext.CreateTestFileWithExistingUserAsync(UserId.Value, ImageId.Value);
-
-                    var post = PostTests.UniqueFileOrImage(new Random());
-                    post.Id = PostId.Value;
-                    post.ChannelId = ChannelId.Value;
-                    post.QueueId = QueueId.Value;
-                    post.FileId = existingFileId;
-                    await databaseContext.Database.Connection.InsertAsync(post);    
-                }
-            }
+            this.revisePostDbStatement.Verify();
+            this.scheduleGarbageCollection.Verify();
         }
     }
 }
