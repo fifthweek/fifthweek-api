@@ -56,7 +56,7 @@
                     new Thumbnail(
                         1890,
                         1440,
-                        "feed",
+                        Shared.Constants.PostFeedImageThumbnailName,
                         ResizeBehaviour.MaintainAspectRatio),
                     new Thumbnail(
                         600,

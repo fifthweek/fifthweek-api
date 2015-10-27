@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 26/10/2015 12:52:53 (UTC)
-//// Mapped solution in 15.48s
+//// Generated on 27/10/2015 12:48:51 (UTC)
+//// Mapped solution in 17.99s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -388,6 +388,7 @@ namespace Fifthweek.Api.Posts.Controllers
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.DeleteLikeCommand> deleteLike,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostToChannelCommand> postPost,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.RevisePostCommand> revisePost,
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Posts.Queries.GetPostQuery,Fifthweek.Api.Posts.Queries.GetPostQueryResult> getPost,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
             Fifthweek.Shared.ITimestampCreator timestampCreator,
             Fifthweek.Shared.IGuidCreator guidCreator)
@@ -462,6 +463,11 @@ namespace Fifthweek.Api.Posts.Controllers
                 throw new ArgumentNullException("revisePost");
             }
 
+            if (getPost == null)
+            {
+                throw new ArgumentNullException("getPost");
+            }
+
             if (requesterContext == null)
             {
                 throw new ArgumentNullException("requesterContext");
@@ -491,6 +497,7 @@ namespace Fifthweek.Api.Posts.Controllers
             this.deleteLike = deleteLike;
             this.postPost = postPost;
             this.revisePost = revisePost;
+            this.getPost = getPost;
             this.requesterContext = requesterContext;
             this.timestampCreator = timestampCreator;
             this.guidCreator = guidCreator;
@@ -986,6 +993,7 @@ namespace Fifthweek.Api.Posts.Queries
             Fifthweek.Api.Blogs.Shared.BlogId blogId,
             Fifthweek.Api.Channels.Shared.ChannelId channelId,
             Fifthweek.Api.Posts.Shared.PreviewText previewText,
+            Fifthweek.Api.Posts.Shared.Comment content,
             Fifthweek.Api.FileManagement.Shared.FileId imageId,
             System.Int32 previewWordCount,
             System.Int32 wordCount,
@@ -1072,6 +1080,7 @@ namespace Fifthweek.Api.Posts.Queries
             this.BlogId = blogId;
             this.ChannelId = channelId;
             this.PreviewText = previewText;
+            this.Content = content;
             this.ImageId = imageId;
             this.PreviewWordCount = previewWordCount;
             this.WordCount = wordCount;
@@ -2636,7 +2645,8 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public GetCommentsQuery(
             Fifthweek.Api.Identity.Shared.Membership.Requester requester,
-            Fifthweek.Api.Posts.Shared.PostId postId)
+            Fifthweek.Api.Posts.Shared.PostId postId,
+            System.DateTime timestamp)
         {
             if (requester == null)
             {
@@ -2648,8 +2658,14 @@ namespace Fifthweek.Api.Posts.Queries
                 throw new ArgumentNullException("postId");
             }
 
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
             this.Requester = requester;
             this.PostId = postId;
+            this.Timestamp = timestamp;
         }
     }
 }
@@ -2723,17 +2739,11 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public DeleteLikeCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
             Fifthweek.Api.Posts.IUnlikePostDbStatement unlikePost)
         {
             if (requesterSecurity == null)
             {
                 throw new ArgumentNullException("requesterSecurity");
-            }
-
-            if (postSecurity == null)
-            {
-                throw new ArgumentNullException("postSecurity");
             }
 
             if (unlikePost == null)
@@ -2742,7 +2752,6 @@ namespace Fifthweek.Api.Posts.Commands
             }
 
             this.requesterSecurity = requesterSecurity;
-            this.postSecurity = postSecurity;
             this.unlikePost = unlikePost;
         }
     }
@@ -3817,6 +3826,496 @@ namespace Fifthweek.Api.Posts
         }
     }
 }
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
+    using System.Text;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Api.Posts.Controllers;
+
+    public partial class GetPostDbResult
+    {
+        public partial class PostFileDbResult 
+        {
+            public PostFileDbResult(
+                Fifthweek.Api.FileManagement.Shared.FileId fileId,
+                System.String fileName,
+                System.String fileExtension,
+                System.String purpose,
+                System.Int64 fileSize,
+                System.Nullable<System.Int32> renderWidth,
+                System.Nullable<System.Int32> renderHeight)
+            {
+                if (fileId == null)
+                {
+                    throw new ArgumentNullException("fileId");
+                }
+
+                if (fileName == null)
+                {
+                    throw new ArgumentNullException("fileName");
+                }
+
+                if (fileExtension == null)
+                {
+                    throw new ArgumentNullException("fileExtension");
+                }
+
+                if (purpose == null)
+                {
+                    throw new ArgumentNullException("purpose");
+                }
+
+                if (fileSize == null)
+                {
+                    throw new ArgumentNullException("fileSize");
+                }
+
+                this.FileId = fileId;
+                this.FileName = fileName;
+                this.FileExtension = fileExtension;
+                this.Purpose = purpose;
+                this.FileSize = fileSize;
+                this.RenderWidth = renderWidth;
+                this.RenderHeight = renderHeight;
+            }
+        }
+    }
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
+    using System.Text;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Api.Posts.Controllers;
+
+    public partial class GetPostDbResult 
+    {
+        public GetPostDbResult(
+            Fifthweek.Api.Posts.Queries.NewsfeedPost post,
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.GetPostDbResult.PostFileDbResult> files)
+        {
+            if (post == null)
+            {
+                throw new ArgumentNullException("post");
+            }
+
+            if (files == null)
+            {
+                throw new ArgumentNullException("files");
+            }
+
+            this.Post = post;
+            this.Files = files;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Posts.Controllers;
+    using Fifthweek.Api.Azure;
+
+    public partial class GetPostQueryHandler 
+    {
+        public GetPostQueryHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
+            Fifthweek.Api.Posts.IGetPostDbStatement getPostDbStatement,
+            Fifthweek.Api.FileManagement.Shared.IGetAccessSignatureExpiryInformation getAccessSignatureExpiryInformation,
+            Fifthweek.Api.FileManagement.Shared.IFileInformationAggregator fileInformationAggregator,
+            Fifthweek.Api.Azure.IBlobService blobService,
+            Fifthweek.Shared.IMimeTypeMap mimeTypeMap,
+            Fifthweek.Api.Posts.IRequestFreePostDbStatement requestFreePost)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (postSecurity == null)
+            {
+                throw new ArgumentNullException("postSecurity");
+            }
+
+            if (getPostDbStatement == null)
+            {
+                throw new ArgumentNullException("getPostDbStatement");
+            }
+
+            if (getAccessSignatureExpiryInformation == null)
+            {
+                throw new ArgumentNullException("getAccessSignatureExpiryInformation");
+            }
+
+            if (fileInformationAggregator == null)
+            {
+                throw new ArgumentNullException("fileInformationAggregator");
+            }
+
+            if (blobService == null)
+            {
+                throw new ArgumentNullException("blobService");
+            }
+
+            if (mimeTypeMap == null)
+            {
+                throw new ArgumentNullException("mimeTypeMap");
+            }
+
+            if (requestFreePost == null)
+            {
+                throw new ArgumentNullException("requestFreePost");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.postSecurity = postSecurity;
+            this.getPostDbStatement = getPostDbStatement;
+            this.getAccessSignatureExpiryInformation = getAccessSignatureExpiryInformation;
+            this.fileInformationAggregator = fileInformationAggregator;
+            this.blobService = blobService;
+            this.mimeTypeMap = mimeTypeMap;
+            this.requestFreePost = requestFreePost;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
+    using System.Text;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Api.Posts.Controllers;
+
+    public partial class GetPostDbStatement 
+    {
+        public GetPostDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Posts.Controllers;
+    using Fifthweek.Api.Azure;
+
+    public partial class GetPostQueryResult
+    {
+        public partial class FullPost 
+        {
+            public FullPost(
+                Fifthweek.Api.Identity.Shared.Membership.UserId creatorId,
+                Fifthweek.Api.Posts.Shared.PostId postId,
+                Fifthweek.Api.Blogs.Shared.BlogId blogId,
+                Fifthweek.Api.Channels.Shared.ChannelId channelId,
+                Fifthweek.Api.Posts.Shared.Comment content,
+                System.Int32 previewWordCount,
+                System.Int32 wordCount,
+                System.Int32 imageCount,
+                System.Int32 fileCount,
+                System.DateTime liveDate,
+                System.Int32 likesCount,
+                System.Int32 commentsCount,
+                System.Boolean hasLiked)
+            {
+                if (creatorId == null)
+                {
+                    throw new ArgumentNullException("creatorId");
+                }
+
+                if (postId == null)
+                {
+                    throw new ArgumentNullException("postId");
+                }
+
+                if (blogId == null)
+                {
+                    throw new ArgumentNullException("blogId");
+                }
+
+                if (channelId == null)
+                {
+                    throw new ArgumentNullException("channelId");
+                }
+
+                if (content == null)
+                {
+                    throw new ArgumentNullException("content");
+                }
+
+                if (previewWordCount == null)
+                {
+                    throw new ArgumentNullException("previewWordCount");
+                }
+
+                if (wordCount == null)
+                {
+                    throw new ArgumentNullException("wordCount");
+                }
+
+                if (imageCount == null)
+                {
+                    throw new ArgumentNullException("imageCount");
+                }
+
+                if (fileCount == null)
+                {
+                    throw new ArgumentNullException("fileCount");
+                }
+
+                if (liveDate == null)
+                {
+                    throw new ArgumentNullException("liveDate");
+                }
+
+                if (likesCount == null)
+                {
+                    throw new ArgumentNullException("likesCount");
+                }
+
+                if (commentsCount == null)
+                {
+                    throw new ArgumentNullException("commentsCount");
+                }
+
+                if (hasLiked == null)
+                {
+                    throw new ArgumentNullException("hasLiked");
+                }
+
+                this.CreatorId = creatorId;
+                this.PostId = postId;
+                this.BlogId = blogId;
+                this.ChannelId = channelId;
+                this.Content = content;
+                this.PreviewWordCount = previewWordCount;
+                this.WordCount = wordCount;
+                this.ImageCount = imageCount;
+                this.FileCount = fileCount;
+                this.LiveDate = liveDate;
+                this.LikesCount = likesCount;
+                this.CommentsCount = commentsCount;
+                this.HasLiked = hasLiked;
+            }
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Posts.Controllers;
+    using Fifthweek.Api.Azure;
+
+    public partial class GetPostQueryResult 
+    {
+        public GetPostQueryResult(
+            Fifthweek.Api.Posts.Queries.GetPostQueryResult.FullPost post,
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.GetPostQueryResult.File> files)
+        {
+            if (post == null)
+            {
+                throw new ArgumentNullException("post");
+            }
+
+            if (files == null)
+            {
+                throw new ArgumentNullException("files");
+            }
+
+            this.Post = post;
+            this.Files = files;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Posts.Controllers;
+    using Fifthweek.Api.Azure;
+
+    public partial class GetPostQueryResult
+    {
+        public partial class File 
+        {
+            public File(
+                Fifthweek.Api.FileManagement.Shared.FileInformation information,
+                Fifthweek.Api.Posts.Queries.FileSourceInformation source,
+                Fifthweek.Api.Azure.BlobSharedAccessInformation accessInformation)
+            {
+                if (information == null)
+                {
+                    throw new ArgumentNullException("information");
+                }
+
+                if (source == null)
+                {
+                    throw new ArgumentNullException("source");
+                }
+
+                this.Information = information;
+                this.Source = source;
+                this.AccessInformation = accessInformation;
+            }
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+
+    public partial class GetPostQuery 
+    {
+        public GetPostQuery(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            Fifthweek.Api.Posts.Shared.PostId postId,
+            System.DateTime timestamp)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (postId == null)
+            {
+                throw new ArgumentNullException("postId");
+            }
+
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            this.Requester = requester;
+            this.PostId = postId;
+            this.Timestamp = timestamp;
+        }
+    }
+}
 
 namespace Fifthweek.Api.Posts.Commands
 {
@@ -4404,7 +4903,7 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public override string ToString()
         {
-            return string.Format("NewsfeedPost({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, \"{11}\", \"{12}\", {13}, {14}, {15}, {16}, {17}, {18}, {19})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.PreviewText == null ? "null" : this.PreviewText.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.PreviewWordCount == null ? "null" : this.PreviewWordCount.ToString(), this.WordCount == null ? "null" : this.WordCount.ToString(), this.ImageCount == null ? "null" : this.ImageCount.ToString(), this.FileCount == null ? "null" : this.FileCount.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.ImageName == null ? "null" : this.ImageName.ToString(), this.ImageExtension == null ? "null" : this.ImageExtension.ToString(), this.ImageSize == null ? "null" : this.ImageSize.ToString(), this.ImageRenderWidth == null ? "null" : this.ImageRenderWidth.ToString(), this.ImageRenderHeight == null ? "null" : this.ImageRenderHeight.ToString(), this.LikesCount == null ? "null" : this.LikesCount.ToString(), this.CommentsCount == null ? "null" : this.CommentsCount.ToString(), this.HasLikedPost == null ? "null" : this.HasLikedPost.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+            return string.Format("NewsfeedPost({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, \"{12}\", \"{13}\", {14}, {15}, {16}, {17}, {18}, {19}, {20})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.PreviewText == null ? "null" : this.PreviewText.ToString(), this.Content == null ? "null" : this.Content.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.PreviewWordCount == null ? "null" : this.PreviewWordCount.ToString(), this.WordCount == null ? "null" : this.WordCount.ToString(), this.ImageCount == null ? "null" : this.ImageCount.ToString(), this.FileCount == null ? "null" : this.FileCount.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.ImageName == null ? "null" : this.ImageName.ToString(), this.ImageExtension == null ? "null" : this.ImageExtension.ToString(), this.ImageSize == null ? "null" : this.ImageSize.ToString(), this.ImageRenderWidth == null ? "null" : this.ImageRenderWidth.ToString(), this.ImageRenderHeight == null ? "null" : this.ImageRenderHeight.ToString(), this.LikesCount == null ? "null" : this.LikesCount.ToString(), this.CommentsCount == null ? "null" : this.CommentsCount.ToString(), this.HasLikedPost == null ? "null" : this.HasLikedPost.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
         }
         
         public override bool Equals(object obj)
@@ -4437,6 +4936,7 @@ namespace Fifthweek.Api.Posts.Queries
                 hashCode = (hashCode * 397) ^ (this.BlogId != null ? this.BlogId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.PreviewText != null ? this.PreviewText.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Content != null ? this.Content.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ImageId != null ? this.ImageId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.PreviewWordCount != null ? this.PreviewWordCount.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.WordCount != null ? this.WordCount.GetHashCode() : 0);
@@ -4479,6 +4979,11 @@ namespace Fifthweek.Api.Posts.Queries
             }
         
             if (!object.Equals(this.PreviewText, other.PreviewText))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Content, other.Content))
             {
                 return false;
             }
@@ -6218,7 +6723,7 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public override string ToString()
         {
-            return string.Format("GetCommentsQuery({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString());
+            return string.Format("GetCommentsQuery({0}, {1}, {2})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString());
         }
         
         public override bool Equals(object obj)
@@ -6248,6 +6753,7 @@ namespace Fifthweek.Api.Posts.Queries
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -6260,6 +6766,11 @@ namespace Fifthweek.Api.Posts.Queries
             }
         
             if (!object.Equals(this.PostId, other.PostId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Timestamp, other.Timestamp))
             {
                 return false;
             }
@@ -7295,6 +7806,530 @@ namespace Fifthweek.Api.Posts.Queries
         }
     }
 }
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
+    using System.Text;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Api.Posts.Controllers;
+
+    public partial class GetPostDbResult
+    {
+        public partial class PostFileDbResult 
+        {
+            public override string ToString()
+            {
+                return string.Format("PostFileDbResult({0}, \"{1}\", \"{2}\", \"{3}\", {4}, {5}, {6})", this.FileId == null ? "null" : this.FileId.ToString(), this.FileName == null ? "null" : this.FileName.ToString(), this.FileExtension == null ? "null" : this.FileExtension.ToString(), this.Purpose == null ? "null" : this.Purpose.ToString(), this.FileSize == null ? "null" : this.FileSize.ToString(), this.RenderWidth == null ? "null" : this.RenderWidth.ToString(), this.RenderHeight == null ? "null" : this.RenderHeight.ToString());
+            }
+            
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+            
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+            
+                if (obj.GetType() != this.GetType())
+                {
+                    return false;
+                }
+            
+                return this.Equals((PostFileDbResult)obj);
+            }
+            
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    int hashCode = 0;
+                    hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.FileName != null ? this.FileName.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.FileExtension != null ? this.FileExtension.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.Purpose != null ? this.Purpose.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.FileSize != null ? this.FileSize.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.RenderWidth != null ? this.RenderWidth.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.RenderHeight != null ? this.RenderHeight.GetHashCode() : 0);
+                    return hashCode;
+                }
+            }
+            
+            protected bool Equals(PostFileDbResult other)
+            {
+                if (!object.Equals(this.FileId, other.FileId))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.FileName, other.FileName))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.FileExtension, other.FileExtension))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.Purpose, other.Purpose))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.FileSize, other.FileSize))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.RenderWidth, other.RenderWidth))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.RenderHeight, other.RenderHeight))
+                {
+                    return false;
+                }
+            
+                return true;
+            }
+        }
+    }
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
+    using System.Text;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Api.Posts.Controllers;
+
+    public partial class GetPostDbResult 
+    {
+        public override string ToString()
+        {
+            return string.Format("GetPostDbResult({0}, {1})", this.Post == null ? "null" : this.Post.ToString(), this.Files == null ? "null" : this.Files.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((GetPostDbResult)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Post != null ? this.Post.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Files != null 
+        			? this.Files.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(GetPostDbResult other)
+        {
+            if (!object.Equals(this.Post, other.Post))
+            {
+                return false;
+            }
+        
+            if (this.Files != null && other.Files != null)
+            {
+                if (!this.Files.SequenceEqual(other.Files))
+                {
+                    return false;    
+                }
+            }
+            else if (this.Files != null || other.Files != null)
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Posts.Controllers;
+    using Fifthweek.Api.Azure;
+
+    public partial class GetPostQueryResult
+    {
+        public partial class FullPost 
+        {
+            public override string ToString()
+            {
+                return string.Format("FullPost({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Content == null ? "null" : this.Content.ToString(), this.PreviewWordCount == null ? "null" : this.PreviewWordCount.ToString(), this.WordCount == null ? "null" : this.WordCount.ToString(), this.ImageCount == null ? "null" : this.ImageCount.ToString(), this.FileCount == null ? "null" : this.FileCount.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.LikesCount == null ? "null" : this.LikesCount.ToString(), this.CommentsCount == null ? "null" : this.CommentsCount.ToString(), this.HasLiked == null ? "null" : this.HasLiked.ToString());
+            }
+            
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+            
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+            
+                if (obj.GetType() != this.GetType())
+                {
+                    return false;
+                }
+            
+                return this.Equals((FullPost)obj);
+            }
+            
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    int hashCode = 0;
+                    hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.BlogId != null ? this.BlogId.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.Content != null ? this.Content.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.PreviewWordCount != null ? this.PreviewWordCount.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.WordCount != null ? this.WordCount.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.ImageCount != null ? this.ImageCount.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.FileCount != null ? this.FileCount.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.LiveDate != null ? this.LiveDate.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.LikesCount != null ? this.LikesCount.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.CommentsCount != null ? this.CommentsCount.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.HasLiked != null ? this.HasLiked.GetHashCode() : 0);
+                    return hashCode;
+                }
+            }
+            
+            protected bool Equals(FullPost other)
+            {
+                if (!object.Equals(this.CreatorId, other.CreatorId))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.PostId, other.PostId))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.BlogId, other.BlogId))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.ChannelId, other.ChannelId))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.Content, other.Content))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.PreviewWordCount, other.PreviewWordCount))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.WordCount, other.WordCount))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.ImageCount, other.ImageCount))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.FileCount, other.FileCount))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.LiveDate, other.LiveDate))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.LikesCount, other.LikesCount))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.CommentsCount, other.CommentsCount))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.HasLiked, other.HasLiked))
+                {
+                    return false;
+                }
+            
+                return true;
+            }
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Posts.Controllers;
+    using Fifthweek.Api.Azure;
+
+    public partial class GetPostQueryResult 
+    {
+        public override string ToString()
+        {
+            return string.Format("GetPostQueryResult({0}, {1})", this.Post == null ? "null" : this.Post.ToString(), this.Files == null ? "null" : this.Files.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((GetPostQueryResult)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Post != null ? this.Post.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Files != null 
+        			? this.Files.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(GetPostQueryResult other)
+        {
+            if (!object.Equals(this.Post, other.Post))
+            {
+                return false;
+            }
+        
+            if (this.Files != null && other.Files != null)
+            {
+                if (!this.Files.SequenceEqual(other.Files))
+                {
+                    return false;    
+                }
+            }
+            else if (this.Files != null || other.Files != null)
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Posts.Controllers;
+    using Fifthweek.Api.Azure;
+
+    public partial class GetPostQueryResult
+    {
+        public partial class File 
+        {
+            public override string ToString()
+            {
+                return string.Format("File({0}, {1}, {2})", this.Information == null ? "null" : this.Information.ToString(), this.Source == null ? "null" : this.Source.ToString(), this.AccessInformation == null ? "null" : this.AccessInformation.ToString());
+            }
+            
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+            
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+            
+                if (obj.GetType() != this.GetType())
+                {
+                    return false;
+                }
+            
+                return this.Equals((File)obj);
+            }
+            
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    int hashCode = 0;
+                    hashCode = (hashCode * 397) ^ (this.Information != null ? this.Information.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.Source != null ? this.Source.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.AccessInformation != null ? this.AccessInformation.GetHashCode() : 0);
+                    return hashCode;
+                }
+            }
+            
+            protected bool Equals(File other)
+            {
+                if (!object.Equals(this.Information, other.Information))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.Source, other.Source))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.AccessInformation, other.AccessInformation))
+                {
+                    return false;
+                }
+            
+                return true;
+            }
+        }
+    }
+}
 namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
@@ -7466,6 +8501,74 @@ namespace Fifthweek.Api.Posts.Controllers
 namespace Fifthweek.Api.Posts.Queries
 {
     using System;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+
+    public partial class GetPostQuery 
+    {
+        public override string ToString()
+        {
+            return string.Format("GetPostQuery({0}, {1}, {2})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((GetPostQuery)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(GetPostQuery other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.PostId, other.PostId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Timestamp, other.Timestamp))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System;
     using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
@@ -7588,6 +8691,7 @@ namespace Fifthweek.Api.Posts.Queries
             builder.BlogId = this.BlogId;
             builder.ChannelId = this.ChannelId;
             builder.PreviewText = this.PreviewText;
+            builder.Content = this.Content;
             builder.ImageId = this.ImageId;
             builder.PreviewWordCount = this.PreviewWordCount;
             builder.WordCount = this.WordCount;
@@ -7620,6 +8724,7 @@ namespace Fifthweek.Api.Posts.Queries
             public Fifthweek.Api.Blogs.Shared.BlogId BlogId { get; set; }
             public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; set; }
             public Fifthweek.Api.Posts.Shared.PreviewText PreviewText { get; set; }
+            public Fifthweek.Api.Posts.Shared.Comment Content { get; set; }
             public Fifthweek.Api.FileManagement.Shared.FileId ImageId { get; set; }
             public System.Int32 PreviewWordCount { get; set; }
             public System.Int32 WordCount { get; set; }
@@ -7644,6 +8749,7 @@ namespace Fifthweek.Api.Posts.Queries
                     this.BlogId, 
                     this.ChannelId, 
                     this.PreviewText, 
+                    this.Content, 
                     this.ImageId, 
                     this.PreviewWordCount, 
                     this.WordCount, 
@@ -7777,6 +8883,80 @@ namespace Fifthweek.Api.Posts.Queries
                     this.CommentsCount, 
                     this.HasLikedPost, 
                     this.CreationDate);
+            }
+        }
+    }
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
+    using System.Text;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Api.Posts.Controllers;
+
+    public partial class GetPostDbResult
+    {
+        public partial class PostFileDbResult 
+        {
+            public Builder ToBuilder()
+            {
+                var builder = new Builder();
+                builder.FileId = this.FileId;
+                builder.FileName = this.FileName;
+                builder.FileExtension = this.FileExtension;
+                builder.Purpose = this.Purpose;
+                builder.FileSize = this.FileSize;
+                builder.RenderWidth = this.RenderWidth;
+                builder.RenderHeight = this.RenderHeight;
+                return builder;
+            }
+            
+            public PostFileDbResult Copy(Action<Builder> applyDelta)
+            {
+                var builder = this.ToBuilder();
+                applyDelta(builder);
+                return builder.Build();
+            }
+            
+            public partial class Builder
+            {
+                public Fifthweek.Api.FileManagement.Shared.FileId FileId { get; set; }
+                public System.String FileName { get; set; }
+                public System.String FileExtension { get; set; }
+                public System.String Purpose { get; set; }
+                public System.Int64 FileSize { get; set; }
+                public System.Nullable<System.Int32> RenderWidth { get; set; }
+                public System.Nullable<System.Int32> RenderHeight { get; set; }
+            
+                public PostFileDbResult Build()
+                {
+                    return new PostFileDbResult(
+                        this.FileId, 
+                        this.FileName, 
+                        this.FileExtension, 
+                        this.Purpose, 
+                        this.FileSize, 
+                        this.RenderWidth, 
+                        this.RenderHeight);
+                }
             }
         }
     }

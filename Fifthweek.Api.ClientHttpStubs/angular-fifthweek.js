@@ -485,6 +485,55 @@ angular.module('webApp').factory('postStub',
     };
 
     // postId = 'Base64Guid'
+    // result = {
+    //   post: {
+    //     creatorId: 'Base64Guid',
+    //     postId: 'Base64Guid',
+    //     blogId: 'Base64Guid',
+    //     channelId: 'Base64Guid',
+    //     content: '',
+    //     previewWordCount: 0,
+    //     wordCount: 0,
+    //     imageCount: 0,
+    //     fileCount: 0,
+    //     liveDate: '2015-12-25T14:45:05Z',
+    //     likesCount: 0,
+    //     commentsCount: 0,
+    //     hasLiked: false
+    //   },
+    //   files: [
+    //     {
+    //       information: {
+    //         fileId: 'Base64Guid',
+    //         containerName: ''
+    //       },
+    //       source: {
+    //         fileName: '',
+    //         fileExtension: '',
+    //         contentType: '',
+    //         size: 0,
+    //         renderSize: { /* optional */
+    //           width: 0,
+    //           height: 0
+    //         }
+    //       },
+    //       accessInformation: { /* optional */
+    //         containerName: '',
+    //         blobName: '',
+    //         uri: '',
+    //         signature: '',
+    //         expiry: '2015-12-25T14:45:05Z'
+    //       }
+    //     }
+    //   ]
+    // }
+    service.getPost = function(postId) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'posts/' + encodeURIComponent(postId))).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // postId = 'Base64Guid'
     service.deletePost = function(postId) {
       return $http.delete(utilities.fixUri(apiBaseUri + 'posts/' + encodeURIComponent(postId))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));

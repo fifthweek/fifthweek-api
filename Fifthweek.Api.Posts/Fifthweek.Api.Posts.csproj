@@ -101,6 +101,8 @@
     <Compile Include="GetCommentsDbStatement.cs" />
     <Compile Include="GetCreatorBacklogDbStatement.cs" />
     <Compile Include="GetNewsfeedDbResult.cs" />
+    <Compile Include="GetPostDbResult.cs" />
+    <Compile Include="GetPostDbStatement.cs" />
     <Compile Include="GetPreviewNewsfeedDbResult.cs" />
     <Compile Include="GetPreviewNewsfeedDbStatement.cs" />
     <Compile Include="GetNewsfeedDbStatement.cs" />
@@ -108,11 +110,13 @@
     <Compile Include="IGetCommentsDbStatement.cs" />
     <Compile Include="IGetCreatorBacklogDbStatement.cs" />
     <Compile Include="IGetNewsfeedDbStatement.cs" />
+    <Compile Include="IGetPostDbStatement.cs" />
     <Compile Include="IGetPreviewNewsfeedDbStatement.cs" />
     <Compile Include="IIsPostSubscriberDbStatement.cs" />
     <Compile Include="ILikePostDbStatement.cs" />
     <Compile Include="IMovePostToQueueDbStatement.cs" />
     <Compile Include="IDefragmentQueueIfRequiredDbStatement.cs" />
+    <Compile Include="IRequestFreePostDbStatement.cs" />
     <Compile Include="IRevisePostDbStatement.cs" />
     <Compile Include="ISetPostLiveDateDbStatement.cs" />
     <Compile Include="IsPostSubscriberDbStatement.cs" />
@@ -152,6 +156,9 @@
     <Compile Include="Queries\GetCommentsQueryHandler.cs" />
     <Compile Include="Queries\GetCreatorBacklogQueryResult.cs" />
     <Compile Include="Queries\GetNewsfeedQuery.cs" />
+    <Compile Include="Queries\GetPostQuery.cs" />
+    <Compile Include="Queries\GetPostQueryHandler.cs" />
+    <Compile Include="Queries\GetPostQueryResult.cs" />
     <Compile Include="Queries\GetPreviewNewsfeedQueryResult.cs" />
     <Compile Include="Queries\GetPreviewNewsfeedQueryHandler.cs" />
     <Compile Include="Queries\GetNewsfeedQueryHandler.cs" />
@@ -163,6 +170,7 @@
     <Compile Include="Queries\PreviewNewsfeedPost.cs" />
     <Compile Include="Queries\RenderSize.cs" />
     <Compile Include="DefragmentQueueIfRequiredDbStatement.cs" />
+    <Compile Include="RequestFreePostDbStatement.cs" />
     <Compile Include="RevisePostDbStatement.cs" />
     <Compile Include="ScheduledDateClippingFunction.cs" />
     <Compile Include="SetPostLiveDateDbStatement.cs" />

@@ -22,6 +22,7 @@
         private static readonly UserId UserId = UserId.Random();
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly PostId PostId = PostId.Random();
+        private static readonly DateTime Timestamp = DateTime.UtcNow;
 
         private GetCommentsQueryHandler target;
 
@@ -55,23 +56,23 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task ItShouldCheckTheUserIsAuthenticated()
         {
-            await this.target.HandleAsync(new GetCommentsQuery(Requester.Unauthenticated, PostId));
+            await this.target.HandleAsync(new GetCommentsQuery(Requester.Unauthenticated, PostId, Timestamp));
         }
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task ItShouldCheckTheUserCanCommentOnThePost()
         {
-            this.postSecurity.Setup(v => v.AssertCommentOrLikeAllowedAsync(UserId, PostId))
+            this.postSecurity.Setup(v => v.AssertReadAllowedAsync(UserId, PostId, Timestamp))
                 .Throws(new UnauthorizedException());
 
-            await this.target.HandleAsync(new GetCommentsQuery(Requester, PostId));
+            await this.target.HandleAsync(new GetCommentsQuery(Requester, PostId, Timestamp));
         }
 
         [TestMethod]
         public async Task ItShouldCommentOnPostDatabase()
         {
-            this.postSecurity.Setup(v => v.AssertCommentOrLikeAllowedAsync(UserId, PostId)).Returns(Task.FromResult(0));
+            this.postSecurity.Setup(v => v.AssertReadAllowedAsync(UserId, PostId, Timestamp)).Returns(Task.FromResult(0));
 
             var expectedResult = new CommentsResult(
                 new List<CommentsResult.Item>
@@ -83,7 +84,7 @@
                 .Returns(Task.FromResult(expectedResult))
                 .Verifiable();
 
-            var result = await this.target.HandleAsync(new GetCommentsQuery(Requester, PostId));
+            var result = await this.target.HandleAsync(new GetCommentsQuery(Requester, PostId, Timestamp));
 
             Assert.AreEqual(expectedResult, result);
             this.getComments.Verify();

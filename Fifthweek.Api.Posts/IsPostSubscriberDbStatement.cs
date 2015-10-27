@@ -1,11 +1,13 @@
 namespace Fifthweek.Api.Posts
 {
+    using System;
     using System.Threading.Tasks;
 
     using Dapper;
 
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
@@ -13,25 +15,27 @@ namespace Fifthweek.Api.Posts
     public partial class IsPostSubscriberDbStatement : IIsPostSubscriberDbStatement
     {
         private static readonly string Sql = string.Format(
-            @"IF EXISTS
+            @"
+            {4}
+            IF EXISTS
             (
                 SELECT * FROM {0} post
-                INNER JOIN {1} channelSubscription ON post.{2} = channelSubscription.{3}
-                WHERE post.{4} = @PostId AND channelSubscription.{5} = @UserId
+                WHERE post.{1} = @PostId
+                AND post.{2} <= @Now
+                {3}
             )
                 SELECT 1 AS FOUND
             ELSE
                 SELECT 0 AS FOUND",
             Post.Table,
-            ChannelSubscription.Table,
-            Post.Fields.ChannelId,
-            ChannelSubscription.Fields.ChannelId,
             Post.Fields.Id,
-            ChannelSubscription.Fields.UserId);
+            Post.Fields.LiveDate,
+            GetNewsfeedDbStatement.GetSubscriptionFilter(),
+            GetNewsfeedDbStatement.GetPaymentDeclarations());
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<bool> ExecuteAsync(UserId userId, Shared.PostId postId)
+        public async Task<bool> ExecuteAsync(UserId userId, PostId postId, DateTime now)
         {
             userId.AssertNotNull("userId");
             postId.AssertNotNull("postId");
@@ -43,7 +47,8 @@ namespace Fifthweek.Api.Posts
                     new
                         {
                             PostId = postId.Value,
-                            UserId = userId.Value
+                            RequestorId = userId.Value,
+                            Now = now
                         });
             }
         }

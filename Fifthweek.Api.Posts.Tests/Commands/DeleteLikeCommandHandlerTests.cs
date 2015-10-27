@@ -23,7 +23,6 @@
         private DeleteLikeCommandHandler target;
 
         private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<IPostSecurity> postSecurity;
         private Mock<IUnlikePostDbStatement> unlikePost;
 
         [TestInitialize]
@@ -31,13 +30,11 @@
         {
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
-            this.postSecurity = new Mock<IPostSecurity>();
 
             this.unlikePost = new Mock<IUnlikePostDbStatement>(MockBehavior.Strict);
 
             this.target = new DeleteLikeCommandHandler(
                 this.requesterSecurity.Object,
-                this.postSecurity.Object,
                 this.unlikePost.Object);
         }
 
@@ -56,19 +53,8 @@
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
-        public async Task ItShouldCheckTheUserCanCommentOnThePost()
-        {
-            this.postSecurity.Setup(v => v.AssertCommentOrLikeAllowedAsync(UserId, PostId))
-                .Throws(new UnauthorizedException());
-
-            await this.target.HandleAsync(new DeleteLikeCommand(Requester, PostId));
-        }
-
-        [TestMethod]
         public async Task ItShouldCommentOnPostDatabase()
         {
-            this.postSecurity.Setup(v => v.AssertCommentOrLikeAllowedAsync(UserId, PostId)).Returns(Task.FromResult(0));
             this.unlikePost.Setup(v => v.ExecuteAsync(UserId, PostId))
                 .Returns(Task.FromResult(0))
                 .Verifiable();

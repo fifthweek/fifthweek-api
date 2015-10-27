@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Posts
 {
+    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
@@ -34,21 +35,42 @@
             }
         }
 
-        public async Task<bool> IsCommentOrLikeAllowedAsync(UserId requester, PostId postId)
+        public async Task<bool> IsReadAllowedAsync(UserId requester, PostId postId, DateTime timestamp)
         {
             requester.AssertNotNull("requester");
             postId.AssertNotNull("postId");
 
-            return await this.isPostSubscriber.ExecuteAsync(requester, postId)
+            return await this.isPostSubscriber.ExecuteAsync(requester, postId, timestamp)
                 || await this.isPostOwner.ExecuteAsync(requester, postId);
         }
 
-        public async Task AssertCommentOrLikeAllowedAsync(UserId requester, PostId postId)
+        public async Task AssertReadAllowedAsync(UserId requester, PostId postId, DateTime timestamp)
         {
             requester.AssertNotNull("requester");
             postId.AssertNotNull("postId");
 
-            var isCommentOrLikeAllowed = await this.IsCommentOrLikeAllowedAsync(requester, postId);
+            var isAllowed = await this.IsReadAllowedAsync(requester, postId, timestamp);
+            if (!isAllowed)
+            {
+                throw new UnauthorizedException("Not allowed to read post. {0} {1}", requester, postId);
+            }
+        }
+
+        public async Task<bool> IsCommentOrLikeAllowedAsync(UserId requester, PostId postId, DateTime timestamp)
+        {
+            requester.AssertNotNull("requester");
+            postId.AssertNotNull("postId");
+
+            return await this.isPostSubscriber.ExecuteAsync(requester, postId, timestamp)
+                || await this.isPostOwner.ExecuteAsync(requester, postId);
+        }
+
+        public async Task AssertCommentOrLikeAllowedAsync(UserId requester, PostId postId, DateTime timestamp)
+        {
+            requester.AssertNotNull("requester");
+            postId.AssertNotNull("postId");
+
+            var isCommentOrLikeAllowed = await this.IsCommentOrLikeAllowedAsync(requester, postId, timestamp);
             if (!isCommentOrLikeAllowed)
             {
                 throw new UnauthorizedException("Not allowed to like or comment on post. {0} {1}", requester, postId);

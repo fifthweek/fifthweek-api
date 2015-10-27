@@ -605,6 +605,21 @@ describe('post stub', function() {
     expect(result).toBe(responseData);
   });
 
+  it('should get post', function() {
+    var postId = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectGET(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/' + encodeURIComponent(postId))).respond(200, responseData);
+
+    var result = null;
+    target.getPost(postId).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
   it('should delete post', function() {
     var postId = 'value0';
 

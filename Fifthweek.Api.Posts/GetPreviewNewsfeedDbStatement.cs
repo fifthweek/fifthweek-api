@@ -53,7 +53,7 @@
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var query = new StringBuilder();
-                query.Append(GetNewsfeedDbStatement.GetSqlStart(requestorId, MaxPreviewTextLength));
+                query.Append(GetNewsfeedDbStatement.GetSqlStart(requestorId, GetNewsfeedDbStatement.SqlQuerySource.Newsfeed, MaxPreviewTextLength));
                 query.Append(GetNewsfeedDbStatement.CreateFilter(null, creatorId, requestedChannelIds, now, origin, searchForwards, startIndex, count, true));
 
                 var entities = (await connection.QueryAsync<PreviewNewsfeedPost.Builder>(query.ToString(), parameters)).ToList();

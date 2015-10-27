@@ -39,7 +39,7 @@
                 null,
                 null,
                 hasComment ? "Comment " + random.Next() : null,
-                hasComment ? "Comment " + random.Next() : string.Empty,
+                "content",
                 0,
                 0,
                 0,

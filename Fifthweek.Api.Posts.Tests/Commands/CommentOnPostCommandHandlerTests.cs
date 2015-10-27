@@ -63,7 +63,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task ItShouldCheckTheUserCanCommentOnThePost()
         {
-            this.postSecurity.Setup(v => v.AssertCommentOrLikeAllowedAsync(UserId, PostId))
+            this.postSecurity.Setup(v => v.AssertCommentOrLikeAllowedAsync(UserId, PostId, Timestamp))
                 .Throws(new UnauthorizedException());
 
             await this.target.HandleAsync(new CommentOnPostCommand(Requester, PostId, CommentId, Content, Timestamp));
@@ -72,7 +72,7 @@
         [TestMethod]
         public async Task ItShouldCommentOnPostDatabase()
         {
-            this.postSecurity.Setup(v => v.AssertCommentOrLikeAllowedAsync(UserId, PostId)).Returns(Task.FromResult(0));
+            this.postSecurity.Setup(v => v.AssertCommentOrLikeAllowedAsync(UserId, PostId, Timestamp)).Returns(Task.FromResult(0));
             this.commentOnPost.Setup(v => v.ExecuteAsync(UserId, PostId, CommentId, Content, Timestamp))
                 .Returns(Task.FromResult(0))
                 .Verifiable();

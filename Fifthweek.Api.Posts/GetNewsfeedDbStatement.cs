@@ -26,9 +26,6 @@
             @"DECLARE @AccountBalance int = (SELECT COALESCE(({0}), 0));",
             CalculatedAccountBalance.GetUserAccountBalanceQuery("RequestorId", CalculatedAccountBalance.Fields.Amount));
 
-        private static readonly string SelectAccountBalance = @"
-            SELECT @AccountBalance;";
-
         private static readonly string DeclarePaymentStatus = string.Format(@"
             DECLARE @PaymentStatus int = (SELECT TOP 1 {0} FROM {1} WHERE {2}=@RequestorId);
             DECLARE @IsRetryingPayment bit = CASE WHEN @PaymentStatus>{3} AND @PaymentStatus<{4} THEN 'True' ELSE 'False' END;",
@@ -37,6 +34,9 @@
             UserPaymentOrigin.Fields.UserId,
             (int)PaymentStatus.None,
             (int)PaymentStatus.Failed);
+
+        private static readonly string SelectAccountBalance = @"
+            SELECT @AccountBalance;";
 
         private static readonly string SqlSelectPartial = string.Format(@"
                 blog.{12} AS BlogId, blog.{13} AS CreatorId, post.{1} AS PostId, 
@@ -140,7 +140,7 @@
 
         private static readonly string SubscriptionFilter = string.Format(
             @"
-            AND channel.{0} IN 
+            AND post.{14} IN 
             (
                 SELECT sub.{3} 
                 FROM {2} sub 
@@ -173,7 +173,8 @@
             FifthweekUser.Table,
             FifthweekUser.Fields.Email,
             FifthweekUser.Fields.Id,
-            Channel.Table);
+            Channel.Table,
+            Post.Fields.ChannelId);
 
         private static readonly string CreatorFilter = string.Format(
             @"
@@ -221,13 +222,33 @@
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public static string GetSqlStart(UserId requesterId, PositiveInt maxCommentLength = null)
+        public enum SqlQuerySource
+        {
+            Newsfeed,
+            FullPost
+        }
+
+        public static string GetPaymentDeclarations()
+        {
+            return DeclareAccountBalance + DeclarePaymentStatus;
+        }
+
+        public static string GetSubscriptionFilter()
+        {
+            return SubscriptionFilter;
+        }
+
+        public static string GetSqlStart(UserId requesterId, SqlQuerySource source, PositiveInt maxCommentLength = null)
         {
             bool isPreview = maxCommentLength != null;
 
             var result = new StringBuilder();
 
-            if (maxCommentLength == null)
+            if (source == SqlQuerySource.FullPost)
+            {
+                result.Append(string.Format("SELECT {0},", Post.Fields.Content));
+            }
+            else if (maxCommentLength == null)
             {
                 result.Append(string.Format("SELECT {0},", Post.Fields.PreviewText));
             }
@@ -360,7 +381,7 @@
                     query.Append(DeclarePaymentStatus);
                 }
 
-                query.Append(GetSqlStart(requestorId));
+                query.Append(GetSqlStart(requestorId, SqlQuerySource.Newsfeed));
 
                 query.Append(CreateFilter(requestorId, creatorId, requestedChannelIds, now, origin, searchForwards, startIndex, count, false));
 

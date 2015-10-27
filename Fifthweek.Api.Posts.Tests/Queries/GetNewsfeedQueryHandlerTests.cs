@@ -27,7 +27,7 @@
     using Comment = Fifthweek.Api.Posts.Shared.Comment;
 
     [TestClass]
-    public class GetNewsfeedQueryHandlerTests : PersistenceTestsBase
+    public class GetNewsfeedQueryHandlerTests
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
@@ -60,8 +60,6 @@
         [TestInitialize]
         public void Initialize()
         {
-            DapperTypeHandlerRegistration.Register(FifthweekAssembliesResolver.Assemblies);
-
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.getNewsfeedDbStatement = new Mock<IGetNewsfeedDbStatement>(MockBehavior.Strict);
             this.fileInformationAggregator = new Mock<IFileInformationAggregator>();
@@ -184,6 +182,7 @@
                             BlogId,
                             channelId,
                             i % 2 == 0 ? PreviewText : null,
+                            new Comment("content"),
                             i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
                             i % 2 == 0 ? PreviewText.Value.Length : 0,
                             i % 2 == 0 ? PreviewText.Value.Length : 0,

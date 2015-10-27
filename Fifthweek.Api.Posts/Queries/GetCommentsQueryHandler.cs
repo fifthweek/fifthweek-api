@@ -22,8 +22,7 @@
 
             var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
 
-            // The assumption here is you can only read comments if you can also write them.
-            await this.postSecurity.AssertCommentOrLikeAllowedAsync(authenticatedUserId, query.PostId);
+            await this.postSecurity.AssertReadAllowedAsync(authenticatedUserId, query.PostId, query.Timestamp);
 
             return await this.getComments.ExecuteAsync(query.PostId);
         }

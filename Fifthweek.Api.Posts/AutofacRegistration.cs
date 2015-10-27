@@ -30,6 +30,8 @@
             builder.RegisterType<CommentOnPostDbStatement>().As<ICommentOnPostDbStatement>();
             builder.RegisterType<GetCommentsDbStatement>().As<IGetCommentsDbStatement>();
             builder.RegisterType<RevisePostDbStatement>().As<IRevisePostDbStatement>();
+            builder.RegisterType<GetPostDbStatement>().As<IGetPostDbStatement>();
+            builder.RegisterType<RequestFreePostDbStatement>().As<IRequestFreePostDbStatement>();
         }
     }
 }

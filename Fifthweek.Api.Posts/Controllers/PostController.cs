@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System.Threading.Tasks;
     using System.Web.Http;
 
@@ -34,6 +35,7 @@
         private readonly ICommandHandler<DeleteLikeCommand> deleteLike;
         private readonly ICommandHandler<PostToChannelCommand> postPost;
         private readonly ICommandHandler<RevisePostCommand> revisePost;
+        private readonly IQueryHandler<GetPostQuery, GetPostQueryResult> getPost;
         private readonly IRequesterContext requesterContext;
         private readonly ITimestampCreator timestampCreator;
         private readonly IGuidCreator guidCreator;
@@ -111,6 +113,25 @@
                 post.ImageCount,
                 post.FileCount,
                 post.FileIds ?? new List<FileId>()));
+        }
+
+        [Route("{postId}")]
+        public async Task<GetPostQueryResult> GetPost(string postId)
+        {
+            postId.AssertUrlParameterProvided("postId");
+            var postIdObject = new PostId(postId.DecodeGuid());
+            var timestamp = this.timestampCreator.Now();
+
+            var requester = await this.requesterContext.GetRequesterAsync();
+
+            var result = await this.getPost.HandleAsync(new GetPostQuery(requester, postIdObject, timestamp));
+
+            if (result == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return result;
         }
 
         [Route("{postId}")]
@@ -198,8 +219,9 @@
 
             var parsedPostId = new PostId(postId.DecodeGuid());
             var requester = await this.requesterContext.GetRequesterAsync();
+            var timestamp = this.timestampCreator.Now();
 
-            return await this.getComments.HandleAsync(new GetCommentsQuery(requester, parsedPostId));
+            return await this.getComments.HandleAsync(new GetCommentsQuery(requester, parsedPostId, timestamp));
         }
 
         [Route("{postId}/likes")]

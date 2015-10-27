@@ -3,7 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System.Threading.Tasks;
+    using System.Web.Http;
 
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
@@ -16,6 +18,7 @@
     using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.Shared;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -50,6 +53,7 @@
         private Mock<ICommandHandler<DeleteLikeCommand>> deleteLike;
         private Mock<ICommandHandler<PostToChannelCommand>> postToChannel;
         private Mock<ICommandHandler<RevisePostCommand>> revisePost;
+        private Mock<IQueryHandler<GetPostQuery, GetPostQueryResult>> getPost;
         private Mock<IRequesterContext> requesterContext;
         private Mock<ITimestampCreator> timestampCreator;
         private Mock<IGuidCreator> guidCreator;
@@ -72,6 +76,7 @@
             this.deleteLike = new Mock<ICommandHandler<DeleteLikeCommand>>();
             this.postToChannel = new Mock<ICommandHandler<PostToChannelCommand>>();
             this.revisePost = new Mock<ICommandHandler<RevisePostCommand>>();
+            this.getPost = new Mock<IQueryHandler<GetPostQuery, GetPostQueryResult>>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.timestampCreator = new Mock<ITimestampCreator>();
             this.guidCreator = new Mock<IGuidCreator>();
@@ -90,6 +95,7 @@
                 this.deleteLike.Object,
                 this.postToChannel.Object,
                 this.revisePost.Object,
+                this.getPost.Object,
                 this.requesterContext.Object,
                 this.timestampCreator.Object,
                 this.guidCreator.Object);
@@ -405,9 +411,11 @@
                 {
                     new CommentsResult.Item(CommentId.Random(), PostId.Random(), UserId.Random(), new Username("blah"), new Comment("comment"), DateTime.UtcNow),
                 });
+            var timestamp = DateTime.UtcNow;
 
+            this.timestampCreator.Setup(v => v.Now()).Returns(timestamp);
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
-            this.getComments.Setup(v => v.HandleAsync(new GetCommentsQuery(Requester, PostId)))
+            this.getComments.Setup(v => v.HandleAsync(new GetCommentsQuery(Requester, PostId, timestamp)))
                 .Returns(Task.FromResult(expectedResult))
                 .Verifiable();
 
@@ -458,6 +466,51 @@
             await this.target.DeleteLike(PostId.Value.EncodeGuid());
 
             this.deleteLike.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenGettingPost_AndPostIdIsNotSpecified_ItShouldThrowAnException()
+        {
+            await this.target.GetPost(null);
+        }
+
+        [TestMethod]
+        public async Task WhenGettingPost_ItShouldIssueGetPostCommand()
+        {
+            var expectedResult = new GetPostQueryResult(
+                new GetPostQueryResult.FullPost(UserId, PostId, BlogId, ChannelId, new Comment(string.Empty), 0, 0, 0, 0, DateTime.UtcNow, 0, 0, false),
+                new List<GetPostQueryResult.File>());
+            var timestamp = DateTime.UtcNow;
+
+            this.timestampCreator.Setup(v => v.Now()).Returns(timestamp);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
+            this.getPost.Setup(v => v.HandleAsync(new GetPostQuery(Requester, PostId, timestamp)))
+                .Returns(Task.FromResult(expectedResult))
+                .Verifiable();
+
+            var result = await this.target.GetPost(PostId.Value.EncodeGuid());
+
+            Assert.AreEqual(expectedResult, result);
+            this.getPost.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenGettingPost_AndPostIsNotFound_ItShouldThrowNotFoundException()
+        {
+            var timestamp = DateTime.UtcNow;
+
+            this.timestampCreator.Setup(v => v.Now()).Returns(timestamp);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
+            
+            this.getPost.Setup(v => v.HandleAsync(new GetPostQuery(Requester, PostId, timestamp)))
+                .ReturnsAsync(null)
+                .Verifiable();
+
+            var exception = await ExpectedException.GetExceptionAsync<HttpResponseException>(() => this.target.GetPost(PostId.Value.EncodeGuid()));
+
+            Assert.AreEqual(HttpStatusCode.NotFound, exception.Response.StatusCode);
+            this.getPost.Verify();
         }
     }
 }

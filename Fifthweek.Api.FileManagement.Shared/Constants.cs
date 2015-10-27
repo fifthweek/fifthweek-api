@@ -7,6 +7,7 @@
         // If you're thinking about moving this to the Fifthweek.Shared project, consider using IBlobLocationGenerator instead.
         public const string PublicFileBlobContainerName = "public";
 
+        public const string PostFeedImageThumbnailName = "feed";
         public const string PostPreviewImageThumbnailName = "post-preview";
 
         public static readonly TimeSpan WriteSignatureTimeSpan = TimeSpan.FromHours(1);
