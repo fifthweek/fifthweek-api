@@ -68,11 +68,13 @@
                 blog.{9} AS BlogName, 
                 creator.{6} AS CreatorId, 
                 creator.{10} AS CreatorUsername,
-                creator.{11} AS ProfileImageFileId
+                creator.{11} AS ProfileImageFileId,
+                channel.{14} AS ChannelId
                 FROM {0} blog
                 INNER JOIN {1} freeaccess ON blog.{3} = freeaccess.{4}
                 INNER JOIN {2} creator ON blog.{5} = creator.{6}
                 INNER JOIN {2} subscriber ON freeaccess.{7} = subscriber.{8}
+                INNER JOIN {12} channel ON blog.{3} = channel.{13}
                 WHERE subscriber.{6} = @UserId",
             Blog.Table,
             FreeAccessUser.Table,
@@ -85,13 +87,16 @@
             FifthweekUser.Fields.Email,
             Blog.Fields.Name,
             FifthweekUser.Fields.UserName,
-            FifthweekUser.Fields.ProfileImageFileId);
+            FifthweekUser.Fields.ProfileImageFileId,
+            Channel.Table,
+            Channel.Fields.BlogId,
+            Channel.Fields.Id);
 
         private static readonly string Sql = SubscriptionsQuery + ";" + FreeAccessQuery;
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<IReadOnlyList<BlogSubscriptionDbResult>> ExecuteAsync(UserId userId)
+        public async Task<GetUserSubscriptionsDbResult> ExecuteAsync(UserId userId)
         {
             userId.AssertNotNull("userId");
 
@@ -106,21 +111,26 @@
                 } 
             }
 
-            var blogs = new Dictionary<BlogId, BlogSubscriptionDbResult>();
-
+            var blogs = new Dictionary<BlogId, BlogSubscriptionDbStatus>();
+            var freeAccessChannelIds = new List<ChannelId>();
             foreach (var item in freeAccessResults)
             {
                 var blogId = new BlogId(item.BlogId);
-                var blog = new BlogSubscriptionDbResult(
-                    blogId,
-                    item.BlogName,
-                    new UserId(item.CreatorId),
-                    new Username(item.CreatorUsername),
-                    item.ProfileImageFileId.HasValue ? new FileId(item.ProfileImageFileId.Value) : null,
-                    true,
-                    new List<ChannelSubscriptionStatus>());
-      
-                blogs.Add(blogId, blog);
+                if (!blogs.ContainsKey(blogId))
+                {
+                    var blog = new BlogSubscriptionDbStatus(
+                        blogId,
+                        item.BlogName,
+                        new UserId(item.CreatorId),
+                        new Username(item.CreatorUsername),
+                        item.ProfileImageFileId.HasValue ? new FileId(item.ProfileImageFileId.Value) : null,
+                        true,
+                        new List<ChannelSubscriptionStatus>());
+
+                    blogs.Add(blogId, blog);
+                }
+
+                freeAccessChannelIds.Add(new ChannelId(item.ChannelId));
             }
 
             foreach (var item in subscriptionResults)
@@ -129,10 +139,10 @@
                 item.SubscriptionStartDate = DateTime.SpecifyKind(item.SubscriptionStartDate, DateTimeKind.Utc);
 
                 var blogId = new BlogId(item.BlogId);
-                BlogSubscriptionDbResult blog;
+                BlogSubscriptionDbStatus blog;
                 if (!blogs.TryGetValue(blogId, out blog))
                 {
-                    blog = new BlogSubscriptionDbResult(
+                    blog = new BlogSubscriptionDbStatus(
                         blogId,
                         item.BlogName,
                         new UserId(item.CreatorId),
@@ -149,7 +159,6 @@
                     item.ChannelName,
                     item.AcceptedPrice,
                     item.CurrentPrice,
-                    item.ChannelId == item.BlogId,
                     item.PriceLastSetDate,
                     item.SubscriptionStartDate,
                     item.IsVisibleToNonSubscribers);
@@ -157,7 +166,7 @@
                 ((List<ChannelSubscriptionStatus>)blog.Channels).Add(channel);
             }
 
-            return blogs.Values.ToList();
+            return new GetUserSubscriptionsDbResult(blogs.Values.ToList(), freeAccessChannelIds);
         }
 
         private class DbResult

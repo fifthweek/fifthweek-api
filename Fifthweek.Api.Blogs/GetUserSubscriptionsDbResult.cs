@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Blogs.Queries
+namespace Fifthweek.Api.Blogs
 {
     using System.Collections.Generic;
 
@@ -6,10 +6,10 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]
-    public partial class GetUserSubscriptionsResult
+    public partial class GetUserSubscriptionsDbResult
     {
-        public IReadOnlyList<BlogSubscriptionStatus> Blogs { get; private set; }
-        
+        public IReadOnlyList<BlogSubscriptionDbStatus> Blogs { get; private set; }
+
         public IReadOnlyList<ChannelId> FreeAccessChannelIds { get; private set; }
     }
 }

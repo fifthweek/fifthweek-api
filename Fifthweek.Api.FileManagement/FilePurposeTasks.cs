@@ -50,25 +50,27 @@
                         "preview",
                         ResizeBehaviour.CropToAspectRatio)));
 
+            const int PostFeedImageThumbnailWidth = 1890;
+            const int PostFeedImageThumbnailHeight = 1440;
             Add(
                 FilePurposes.PostImage,
                 new CreateThumbnailsTask(
                     new Thumbnail(
-                        1890,
-                        1440,
+                        PostFeedImageThumbnailWidth,
+                        PostFeedImageThumbnailHeight,
                         Shared.Constants.PostFeedImageThumbnailName,
-                        ResizeBehaviour.MaintainAspectRatio),
+                        ResizeBehaviour.MaintainAspectRatio,
+                        new Thumbnail(
+                            PostFeedImageThumbnailWidth,
+                            PostFeedImageThumbnailHeight,
+                            Shared.Constants.PostPreviewImageThumbnailName,
+                            ResizeBehaviour.MaintainAspectRatio,
+                            ProcessingBehaviour.Lighten)),
                     new Thumbnail(
                         600,
                         600,
                         "preview",
-                        ResizeBehaviour.MaintainAspectRatio),
-                    new Thumbnail(
-                        1200,
-                        1200,
-                        Shared.Constants.PostPreviewImageThumbnailName,
-                        ResizeBehaviour.CropToAspectRatio,
-                        ProcessingBehaviour.Lighten)));
+                        ResizeBehaviour.MaintainAspectRatio)));
 
             Add(FilePurposes.PostFile);
         }

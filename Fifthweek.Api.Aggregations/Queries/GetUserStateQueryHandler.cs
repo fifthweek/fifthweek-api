@@ -76,12 +76,15 @@
             }
 
             List<ChannelId> subscribedChannelIds = null;
+            List<ChannelId> freeAccessChannelIds = null;
             if (userSubscriptions != null)
             {
                 subscribedChannelIds = userSubscriptions.Blogs.SelectMany(v => v.Channels).Select(v => v.ChannelId).Distinct().ToList();
+                freeAccessChannelIds = userSubscriptions.FreeAccessChannelIds.Distinct().ToList();
             }
 
-            var userAccessSignatures = await this.getUserAccessSignatures.HandleAsync(new GetUserAccessSignaturesQuery(query.Requester, query.RequestedUserId, creatorChannelIds, subscribedChannelIds));
+            var userAccessSignatures = await this.getUserAccessSignatures.HandleAsync(
+                new GetUserAccessSignaturesQuery(query.Requester, query.RequestedUserId, creatorChannelIds, subscribedChannelIds, freeAccessChannelIds));
 
             return new UserState(
                 userAccessSignatures, 

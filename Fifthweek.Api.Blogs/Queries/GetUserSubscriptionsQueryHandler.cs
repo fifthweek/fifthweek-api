@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Blogs.Queries
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Blogs.Shared;
@@ -25,7 +26,7 @@
             var subscriptions = await this.getUserSubscriptions.ExecuteAsync(query.RequestedUserId);
 
             var results = new List<BlogSubscriptionStatus>();
-            foreach (var item in subscriptions)
+            foreach (var item in subscriptions.Blogs)
             {
                 FileInformation profileImage = null;
 
@@ -47,7 +48,7 @@
                     item.Channels));
             }
 
-            return new GetUserSubscriptionsResult(results);
+            return new GetUserSubscriptionsResult(results, subscriptions.FreeAccessChannelIds);
         }
     }
 }

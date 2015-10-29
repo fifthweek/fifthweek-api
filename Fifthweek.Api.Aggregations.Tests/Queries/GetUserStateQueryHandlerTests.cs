@@ -51,9 +51,10 @@
         private static readonly GetUserSubscriptionsResult UserSubscriptions =
             new GetUserSubscriptionsResult(new List<BlogSubscriptionStatus>
                 {
-                    new BlogSubscriptionStatus(new BlogId(Guid.NewGuid()), "name", new UserId(Guid.NewGuid()), new Username("username"), null, false, new List<ChannelSubscriptionStatus> { new ChannelSubscriptionStatus(new ChannelId(Guid.NewGuid()), "name", 10, 10, true, DateTime.UtcNow, DateTime.UtcNow, true) }),
-                    new BlogSubscriptionStatus(new BlogId(Guid.NewGuid()), "name2", new UserId(Guid.NewGuid()), new Username("username2"), null, false, new List<ChannelSubscriptionStatus> { new ChannelSubscriptionStatus(new ChannelId(Guid.NewGuid()), "name2", 20, 20, true, DateTime.UtcNow, DateTime.UtcNow, true) })
-                });
+                    new BlogSubscriptionStatus(new BlogId(Guid.NewGuid()), "name", new UserId(Guid.NewGuid()), new Username("username"), null, false, new List<ChannelSubscriptionStatus> { new ChannelSubscriptionStatus(new ChannelId(Guid.NewGuid()), "name", 10, 10, DateTime.UtcNow, DateTime.UtcNow, true) }),
+                    new BlogSubscriptionStatus(new BlogId(Guid.NewGuid()), "name2", new UserId(Guid.NewGuid()), new Username("username2"), null, false, new List<ChannelSubscriptionStatus> { new ChannelSubscriptionStatus(new ChannelId(Guid.NewGuid()), "name2", 20, 20, DateTime.UtcNow, DateTime.UtcNow, true) })
+                },
+                new List<ChannelId> { ChannelId.Random(), ChannelId.Random() });
 
         private GetUserStateQueryHandler target;
 
@@ -107,7 +108,7 @@
             // Should not be called.
             this.requesterSecurity = new Mock<IRequesterSecurity>(MockBehavior.Strict);
 
-            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, null, null, null)))
+            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, null, null, null, null)))
                 .ReturnsAsync(UserAccessSignatures);
 
             var result = await this.target.HandleAsync(new GetUserStateQuery(Requester.Unauthenticated, null, false, Now));
@@ -126,7 +127,7 @@
 
             var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
 
-            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId })))
+            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId }, UserSubscriptions.FreeAccessChannelIds)))
                 .ReturnsAsync(UserAccessSignatures);
             this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now)))
                 .ReturnsAsync(accountSettings);
@@ -150,7 +151,7 @@
 
             var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
 
-            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId })))
+            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId }, UserSubscriptions.FreeAccessChannelIds)))
                 .ReturnsAsync(UserAccessSignatures);
             this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now)))
                 .ReturnsAsync(accountSettings);
@@ -180,7 +181,7 @@
 
             var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
 
-            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId })))
+            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId }, UserSubscriptions.FreeAccessChannelIds)))
                 .ReturnsAsync(UserAccessSignatures);
             this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now)))
                 .ReturnsAsync(accountSettings);
@@ -215,7 +216,7 @@
                     new List<ChannelResult> { new ChannelResult(new ChannelId(Guid.NewGuid()), "name", 10, true) },
                     new List<QueueResult> { new QueueResult(new QueueId(Guid.NewGuid()), "name", new List<HourOfWeek>()) }));
 
-            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, new List<ChannelId> { blogChannelsAndCollections.Blog.Channels[0].ChannelId }, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId })))
+            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, new List<ChannelId> { blogChannelsAndCollections.Blog.Channels[0].ChannelId }, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId }, UserSubscriptions.FreeAccessChannelIds)))
                 .ReturnsAsync(UserAccessSignatures);
             this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester, UserId)))
                 .ReturnsAsync(UserSubscriptions);
@@ -243,7 +244,7 @@
             var creatorStatus = new CreatorStatus(null, true);
             var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
 
-            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId })))
+            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId }, UserSubscriptions.FreeAccessChannelIds)))
                 .ReturnsAsync(UserAccessSignatures);
             this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester, UserId)))
                 .ReturnsAsync(UserSubscriptions);

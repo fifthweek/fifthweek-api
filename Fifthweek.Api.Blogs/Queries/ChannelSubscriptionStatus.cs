@@ -17,8 +17,6 @@
 
         public int Price { get; private set; }
 
-        public bool IsDefault { get; private set; }
-
         public DateTime PriceLastSetDate { get; private set; }
 
         public DateTime SubscriptionStartDate { get; private set; }

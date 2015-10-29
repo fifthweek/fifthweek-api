@@ -81,7 +81,8 @@
     <Compile Include="AcceptChannelSubscriptionPriceChangeDbStatement.cs" />
     <Compile Include="AutofacRegistration.cs" />
     <Compile Include="BlogsConstants.cs" />
-    <Compile Include="BlogSubscriptionDbResult.cs" />
+    <Compile Include="BlogSubscriptionDbStatus.cs" />
+    <Compile Include="GetUserSubscriptionsDbResult.cs" />
     <Compile Include="Commands\AcceptChannelSubscriptionPriceChangeCommand.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -29,8 +29,8 @@
             var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
 
             await this.postSecurity.AssertWriteAllowedAsync(authenticatedUserId, command.PostId);
-           
-            if (command.FileIds.All(v => !v.Equals(command.PreviewImageId)))
+
+            if (command.PreviewImageId != null && command.FileIds.All(v => !v.Equals(command.PreviewImageId)))
             {
                 throw new BadRequestException("Preview Image ID must exist in File IDs list.");
             }

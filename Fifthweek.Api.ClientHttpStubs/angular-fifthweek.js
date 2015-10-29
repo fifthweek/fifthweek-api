@@ -456,7 +456,7 @@ angular.module('webApp').factory('postStub',
     //   imageCount: 0,
     //   fileCount: 0,
     //   fileIds: [ /* optional */
-    //     'Base64Guid'
+    //     ''
     //   ]
     // }
     service.postPost = function(postData) {
@@ -475,7 +475,7 @@ angular.module('webApp').factory('postStub',
     //   imageCount: 0,
     //   fileCount: 0,
     //   fileIds: [ /* optional */
-    //     'Base64Guid'
+    //     ''
     //   ]
     // }
     service.putPost = function(postId, postData) {

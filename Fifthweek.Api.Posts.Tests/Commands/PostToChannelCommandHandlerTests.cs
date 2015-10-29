@@ -114,5 +114,18 @@
 
             this.postToChannelDbStatement.Verify();
         }
+
+        [TestMethod]
+        public async Task WhenAllowedToPostWithNoPreviewImage_ItShouldPostToCollection()
+        {
+            this.postToChannelDbStatement.Setup(
+                _ => _.ExecuteAsync(PostId, ChannelId, Content, ScheduleDate, QueueId, PreviewText, null, FileIds, 1, 2, 3, 4, Timestamp))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            await this.target.HandleAsync(new PostToChannelCommand(Requester, PostId, ChannelId, null, PreviewText, Content, 1, 2, 3, 4, FileIds, ScheduleDate, QueueId, Timestamp));
+
+            this.postToChannelDbStatement.Verify();
+        }
     }
 }

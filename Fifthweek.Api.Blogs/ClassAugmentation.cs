@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 21/09/2015 08:49:21 (UTC)
-//// Mapped solution in 70.45s
+//// Generated on 29/10/2015 18:07:24 (UTC)
+//// Mapped solution in 32.95s
 
 
 namespace Fifthweek.Api.Blogs
@@ -153,9 +153,9 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
 
-    public partial class BlogSubscriptionDbResult 
+    public partial class BlogSubscriptionDbStatus 
     {
-        public BlogSubscriptionDbResult(
+        public BlogSubscriptionDbStatus(
             Fifthweek.Api.Blogs.Shared.BlogId blogId,
             System.String name,
             Fifthweek.Api.Identity.Shared.Membership.UserId creatorId,
@@ -2212,7 +2212,6 @@ namespace Fifthweek.Api.Blogs.Queries
             System.String name,
             System.Int32 acceptedPrice,
             System.Int32 price,
-            System.Boolean isDefault,
             System.DateTime priceLastSetDate,
             System.DateTime subscriptionStartDate,
             System.Boolean isVisibleToNonSubscribers)
@@ -2237,11 +2236,6 @@ namespace Fifthweek.Api.Blogs.Queries
                 throw new ArgumentNullException("price");
             }
 
-            if (isDefault == null)
-            {
-                throw new ArgumentNullException("isDefault");
-            }
-
             if (priceLastSetDate == null)
             {
                 throw new ArgumentNullException("priceLastSetDate");
@@ -2261,7 +2255,6 @@ namespace Fifthweek.Api.Blogs.Queries
             this.Name = name;
             this.AcceptedPrice = acceptedPrice;
             this.Price = price;
-            this.IsDefault = isDefault;
             this.PriceLastSetDate = priceLastSetDate;
             this.SubscriptionStartDate = subscriptionStartDate;
             this.IsVisibleToNonSubscribers = isVisibleToNonSubscribers;
@@ -2953,14 +2946,21 @@ namespace Fifthweek.Api.Blogs.Queries
     public partial class GetUserSubscriptionsResult 
     {
         public GetUserSubscriptionsResult(
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Blogs.Queries.BlogSubscriptionStatus> blogs)
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Blogs.Queries.BlogSubscriptionStatus> blogs,
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Channels.Shared.ChannelId> freeAccessChannelIds)
         {
             if (blogs == null)
             {
                 throw new ArgumentNullException("blogs");
             }
 
+            if (freeAccessChannelIds == null)
+            {
+                throw new ArgumentNullException("freeAccessChannelIds");
+            }
+
             this.Blogs = blogs;
+            this.FreeAccessChannelIds = freeAccessChannelIds;
         }
     }
 }
@@ -3182,6 +3182,50 @@ namespace Fifthweek.Api.Blogs.Controllers
         }
     }
 }
+namespace Fifthweek.Api.Blogs
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
+
+    public partial class GetUserSubscriptionsDbResult 
+    {
+        public GetUserSubscriptionsDbResult(
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Blogs.BlogSubscriptionDbStatus> blogs,
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Channels.Shared.ChannelId> freeAccessChannelIds)
+        {
+            if (blogs == null)
+            {
+                throw new ArgumentNullException("blogs");
+            }
+
+            if (freeAccessChannelIds == null)
+            {
+                throw new ArgumentNullException("freeAccessChannelIds");
+            }
+
+            this.Blogs = blogs;
+            this.FreeAccessChannelIds = freeAccessChannelIds;
+        }
+    }
+}
 
 namespace Fifthweek.Api.Blogs
 {
@@ -3206,11 +3250,11 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
 
-    public partial class BlogSubscriptionDbResult 
+    public partial class BlogSubscriptionDbStatus 
     {
         public override string ToString()
         {
-            return string.Format("BlogSubscriptionDbResult({0}, \"{1}\", {2}, {3}, {4}, {5}, {6})", this.BlogId == null ? "null" : this.BlogId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.CreatorUsername == null ? "null" : this.CreatorUsername.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString(), this.FreeAccess == null ? "null" : this.FreeAccess.ToString(), this.Channels == null ? "null" : this.Channels.ToString());
+            return string.Format("BlogSubscriptionDbStatus({0}, \"{1}\", {2}, {3}, {4}, {5}, {6})", this.BlogId == null ? "null" : this.BlogId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.CreatorUsername == null ? "null" : this.CreatorUsername.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString(), this.FreeAccess == null ? "null" : this.FreeAccess.ToString(), this.Channels == null ? "null" : this.Channels.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3230,7 +3274,7 @@ namespace Fifthweek.Api.Blogs
                 return false;
             }
         
-            return this.Equals((BlogSubscriptionDbResult)obj);
+            return this.Equals((BlogSubscriptionDbStatus)obj);
         }
         
         public override int GetHashCode()
@@ -3257,7 +3301,7 @@ namespace Fifthweek.Api.Blogs
             }
         }
         
-        protected bool Equals(BlogSubscriptionDbResult other)
+        protected bool Equals(BlogSubscriptionDbStatus other)
         {
             if (!object.Equals(this.BlogId, other.BlogId))
             {
@@ -5255,7 +5299,7 @@ namespace Fifthweek.Api.Blogs.Queries
     {
         public override string ToString()
         {
-            return string.Format("ChannelSubscriptionStatus({0}, \"{1}\", {2}, {3}, {4}, {5}, {6}, {7})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.AcceptedPrice == null ? "null" : this.AcceptedPrice.ToString(), this.Price == null ? "null" : this.Price.ToString(), this.IsDefault == null ? "null" : this.IsDefault.ToString(), this.PriceLastSetDate == null ? "null" : this.PriceLastSetDate.ToString(), this.SubscriptionStartDate == null ? "null" : this.SubscriptionStartDate.ToString(), this.IsVisibleToNonSubscribers == null ? "null" : this.IsVisibleToNonSubscribers.ToString());
+            return string.Format("ChannelSubscriptionStatus({0}, \"{1}\", {2}, {3}, {4}, {5}, {6})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.AcceptedPrice == null ? "null" : this.AcceptedPrice.ToString(), this.Price == null ? "null" : this.Price.ToString(), this.PriceLastSetDate == null ? "null" : this.PriceLastSetDate.ToString(), this.SubscriptionStartDate == null ? "null" : this.SubscriptionStartDate.ToString(), this.IsVisibleToNonSubscribers == null ? "null" : this.IsVisibleToNonSubscribers.ToString());
         }
         
         public override bool Equals(object obj)
@@ -5287,7 +5331,6 @@ namespace Fifthweek.Api.Blogs.Queries
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.AcceptedPrice != null ? this.AcceptedPrice.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Price != null ? this.Price.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.IsDefault != null ? this.IsDefault.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.PriceLastSetDate != null ? this.PriceLastSetDate.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SubscriptionStartDate != null ? this.SubscriptionStartDate.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.IsVisibleToNonSubscribers != null ? this.IsVisibleToNonSubscribers.GetHashCode() : 0);
@@ -5313,11 +5356,6 @@ namespace Fifthweek.Api.Blogs.Queries
             }
         
             if (!object.Equals(this.Price, other.Price))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.IsDefault, other.IsDefault))
             {
                 return false;
             }
@@ -6115,7 +6153,7 @@ namespace Fifthweek.Api.Blogs.Queries
     {
         public override string ToString()
         {
-            return string.Format("GetUserSubscriptionsResult({0})", this.Blogs == null ? "null" : this.Blogs.ToString());
+            return string.Format("GetUserSubscriptionsResult({0}, {1})", this.Blogs == null ? "null" : this.Blogs.ToString(), this.FreeAccessChannelIds == null ? "null" : this.FreeAccessChannelIds.ToString());
         }
         
         public override bool Equals(object obj)
@@ -6152,6 +6190,15 @@ namespace Fifthweek.Api.Blogs.Queries
         				    }
         				})
         			: 0);
+                hashCode = (hashCode * 397) ^ (this.FreeAccessChannelIds != null 
+        			? this.FreeAccessChannelIds.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
                 return hashCode;
             }
         }
@@ -6166,6 +6213,18 @@ namespace Fifthweek.Api.Blogs.Queries
                 }
             }
             else if (this.Blogs != null || other.Blogs != null)
+            {
+                return false;
+            }
+        
+            if (this.FreeAccessChannelIds != null && other.FreeAccessChannelIds != null)
+            {
+                if (!this.FreeAccessChannelIds.SequenceEqual(other.FreeAccessChannelIds))
+                {
+                    return false;    
+                }
+            }
+            else if (this.FreeAccessChannelIds != null || other.FreeAccessChannelIds != null)
             {
                 return false;
             }
@@ -6238,6 +6297,113 @@ namespace Fifthweek.Api.Blogs.Controllers
             }
         
             if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Blogs
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
+
+    public partial class GetUserSubscriptionsDbResult 
+    {
+        public override string ToString()
+        {
+            return string.Format("GetUserSubscriptionsDbResult({0}, {1})", this.Blogs == null ? "null" : this.Blogs.ToString(), this.FreeAccessChannelIds == null ? "null" : this.FreeAccessChannelIds.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((GetUserSubscriptionsDbResult)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Blogs != null 
+        			? this.Blogs.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                hashCode = (hashCode * 397) ^ (this.FreeAccessChannelIds != null 
+        			? this.FreeAccessChannelIds.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(GetUserSubscriptionsDbResult other)
+        {
+            if (this.Blogs != null && other.Blogs != null)
+            {
+                if (!this.Blogs.SequenceEqual(other.Blogs))
+                {
+                    return false;    
+                }
+            }
+            else if (this.Blogs != null || other.Blogs != null)
+            {
+                return false;
+            }
+        
+            if (this.FreeAccessChannelIds != null && other.FreeAccessChannelIds != null)
+            {
+                if (!this.FreeAccessChannelIds.SequenceEqual(other.FreeAccessChannelIds))
+                {
+                    return false;    
+                }
+            }
+            else if (this.FreeAccessChannelIds != null || other.FreeAccessChannelIds != null)
             {
                 return false;
             }

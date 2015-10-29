@@ -6,6 +6,7 @@
 
     using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -24,47 +25,54 @@
         private static readonly GetUserSubscriptionsQuery Query =
             new GetUserSubscriptionsQuery(Requester.Authenticated(UserId), UserId);
 
-        private static readonly IReadOnlyList<BlogSubscriptionDbResult> DatabaseResult =
-            new List<BlogSubscriptionDbResult>
-            {
-                new BlogSubscriptionDbResult(
-                    new BlogId(Guid.NewGuid()),
-                    "Blog1",
-                    new UserId(Guid.NewGuid()),
-                    new Username("Username1"),
-                    new FileId(Guid.NewGuid()),
-                    true,
-                    new List<ChannelSubscriptionStatus>()),
-                new BlogSubscriptionDbResult(
-                    new BlogId(Guid.NewGuid()),
-                    "Blog2",
-                    new UserId(Guid.NewGuid()),
-                    new Username("Username2"),
-                    null,
-                    true,
-                    new List<ChannelSubscriptionStatus>()),
-            };
+        private static readonly GetUserSubscriptionsDbResult DatabaseResult =
+            new GetUserSubscriptionsDbResult(
+                new List<BlogSubscriptionDbStatus>
+                {
+                    new BlogSubscriptionDbStatus(
+                        new BlogId(Guid.NewGuid()),
+                        "Blog1",
+                        new UserId(Guid.NewGuid()),
+                        new Username("Username1"),
+                        new FileId(Guid.NewGuid()),
+                        true,
+                        new List<ChannelSubscriptionStatus>()),
+                    new BlogSubscriptionDbStatus(
+                        new BlogId(Guid.NewGuid()),
+                        "Blog2",
+                        new UserId(Guid.NewGuid()),
+                        new Username("Username2"),
+                        null,
+                        true,
+                        new List<ChannelSubscriptionStatus>()),
+                },
+                new List<ChannelId> 
+                {
+                    ChannelId.Random(),
+                    ChannelId.Random(),
+                });
 
         private static readonly GetUserSubscriptionsResult Result =
             new GetUserSubscriptionsResult(new List<BlogSubscriptionStatus>
                 {
                     new BlogSubscriptionStatus(
-                        DatabaseResult[0].BlogId,
-                        DatabaseResult[0].Name,
-                        DatabaseResult[0].CreatorId,
-                        DatabaseResult[0].CreatorUsername,
-                        new FileInformation(DatabaseResult[0].ProfileImageFileId, "Container1"),
-                        DatabaseResult[0].FreeAccess,
-                        DatabaseResult[0].Channels),
+                        DatabaseResult.Blogs[0].BlogId,
+                        DatabaseResult.Blogs[0].Name,
+                        DatabaseResult.Blogs[0].CreatorId,
+                        DatabaseResult.Blogs[0].CreatorUsername,
+                        new FileInformation(DatabaseResult.Blogs[0].ProfileImageFileId, "Container1"),
+                        DatabaseResult.Blogs[0].FreeAccess,
+                        DatabaseResult.Blogs[0].Channels),
                     new BlogSubscriptionStatus(
-                        DatabaseResult[1].BlogId,
-                        DatabaseResult[1].Name,
-                        DatabaseResult[1].CreatorId,
-                        DatabaseResult[1].CreatorUsername,
+                        DatabaseResult.Blogs[1].BlogId,
+                        DatabaseResult.Blogs[1].Name,
+                        DatabaseResult.Blogs[1].CreatorId,
+                        DatabaseResult.Blogs[1].CreatorUsername,
                         null,
-                        DatabaseResult[1].FreeAccess,
-                        DatabaseResult[1].Channels),
-                });
+                        DatabaseResult.Blogs[1].FreeAccess,
+                        DatabaseResult.Blogs[1].Channels),
+                },
+                DatabaseResult.FreeAccessChannelIds);
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IGetUserSubscriptionsDbStatement> getUserSubscriptions;
@@ -89,7 +97,7 @@
         private void SetupDbStatement()
         {
             this.fileInformationAggregator
-                .Setup(v => v.GetFileInformationAsync(null, DatabaseResult[0].ProfileImageFileId, FilePurposes.ProfileImage))
+                .Setup(v => v.GetFileInformationAsync(null, DatabaseResult.Blogs[0].ProfileImageFileId, FilePurposes.ProfileImage))
                 .ReturnsAsync(Result.Blogs[0].ProfileImage);
 
             this.getUserSubscriptions.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(DatabaseResult).Verifiable();

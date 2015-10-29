@@ -20,5 +20,8 @@
 
         [Optional]
         public IReadOnlyList<ChannelId> SubscribedChannelIds { get; private set; }
+
+        [Optional]
+        public IReadOnlyList<ChannelId> FreeAccessChannelIds { get; private set; }
     }
 }

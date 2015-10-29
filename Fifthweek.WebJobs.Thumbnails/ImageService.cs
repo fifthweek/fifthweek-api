@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.WebJobs.Thumbnails
 {
     using System;
+    using System.Drawing;
     using System.IO;
 
     using Fifthweek.WebJobs.Thumbnails.Shared;
@@ -29,6 +30,12 @@
             else if (processingBehaviour == ProcessingBehaviour.Lighten)
             {
                 input.Colorize(new MagickColor(ushort.MaxValue, ushort.MaxValue, ushort.MaxValue), new Percentage(75));
+                input.Draw(
+                    new DrawableGravity(Gravity.Center),
+                    new DrawableFont("Arial"),
+                    new DrawableFillColor(Color.Black),
+                    new DrawablePointSize(28),
+                    new DrawableText(0, 0, "Preview"));
             }
 
             input.Write(output);

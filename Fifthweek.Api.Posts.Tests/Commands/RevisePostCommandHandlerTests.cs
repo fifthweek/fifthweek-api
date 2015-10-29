@@ -117,5 +117,21 @@
             this.revisePostDbStatement.Verify();
             this.scheduleGarbageCollection.Verify();
         }
+
+        [TestMethod]
+        public async Task WhenPostExistsAndNoPreviewImage_ItShouldUpdateAndScheduleGarbageCollection()
+        {
+            this.revisePostDbStatement.Setup(
+                v => v.ExecuteAsync(PostId, Content, PreviewText, null, FileIds, 0, 1, 2, 3))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            this.scheduleGarbageCollection.Setup(_ => _.ExecuteAsync()).Returns(Task.FromResult(0)).Verifiable();
+
+            await this.target.HandleAsync(new RevisePostCommand(Requester, PostId, null, PreviewText, Content, 0, 1, 2, 3, FileIds));
+
+            this.revisePostDbStatement.Verify();
+            this.scheduleGarbageCollection.Verify();
+        }
     }
 }

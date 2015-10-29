@@ -8,6 +8,6 @@
 
     public interface IGetUserSubscriptionsDbStatement
     {
-        Task<IReadOnlyList<BlogSubscriptionDbResult>> ExecuteAsync(UserId userId);
+        Task<GetUserSubscriptionsDbResult> ExecuteAsync(UserId userId);
     }
 }

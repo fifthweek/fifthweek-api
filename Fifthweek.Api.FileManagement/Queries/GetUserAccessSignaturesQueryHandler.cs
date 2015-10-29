@@ -40,7 +40,12 @@
             var privateSignatures = new List<UserAccessSignatures.PrivateAccessSignature>();
             if (query.RequestedUserId != null)
             {
-                foreach (var channelId in query.CreatorChannelIds.EmptyIfNull().Concat(query.SubscribedChannelIds.EmptyIfNull()))
+                var channelIds = query.CreatorChannelIds.EmptyIfNull()
+                    .Concat(query.SubscribedChannelIds.EmptyIfNull())
+                    .Concat(query.FreeAccessChannelIds.EmptyIfNull())
+                    .Distinct().ToList();
+
+                foreach (var channelId in channelIds)
                 {
                     var containerName = this.blobLocationGenerator.GetBlobContainerName(channelId);
                     var result = await this.blobService.GetBlobContainerSharedAccessInformationForReadingAsync(containerName, expiry.Private);

@@ -1,4 +1,4 @@
-namespace Fifthweek.Api.Posts.Tests.Commands
+namespace Fifthweek.Api.Posts.Tests
 {
     using System;
     using System.Collections.Generic;

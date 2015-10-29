@@ -86,7 +86,8 @@
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.ExecuteAsync(new UserId(Guid.NewGuid()));
-                Assert.AreEqual(0, result.Count);
+                Assert.AreEqual(0, result.Blogs.Count);
+                Assert.AreEqual(0, result.FreeAccessChannelIds.Count);
 
                 return ExpectedSideEffects.None;
             });
@@ -104,11 +105,16 @@
 
                 var result = await this.target.ExecuteAsync(UserId);
 
-                Assert.AreEqual(3, result.Count);
+                Assert.AreEqual(3, result.Blogs.Count);
+                Assert.AreEqual(3, result.FreeAccessChannelIds.Count);
 
-                var blog1 = result.First(v => v.BlogId.Equals(Blog1Id));
-                var blog2 = result.First(v => v.BlogId.Equals(Blog2Id));
-                var blog3 = result.First(v => v.BlogId.Equals(Blog3Id));
+                CollectionAssert.AreEquivalent(
+                    Blog1ChannelIds.Concat(Blog2ChannelIds).ToList(),
+                    result.FreeAccessChannelIds.ToList());
+
+                var blog1 = result.Blogs.First(v => v.BlogId.Equals(Blog1Id));
+                var blog2 = result.Blogs.First(v => v.BlogId.Equals(Blog2Id));
+                var blog3 = result.Blogs.First(v => v.BlogId.Equals(Blog3Id));
 
                 Assert.IsTrue(blog1.FreeAccess);
                 Assert.IsTrue(blog2.FreeAccess);
@@ -137,10 +143,6 @@
                 var blog2Channel1 = blog2.Channels.First(v => v.ChannelId.Equals(Blog2ChannelIds[0]));
                 var blog3Channel1 = blog3.Channels.First(v => v.ChannelId.Equals(Blog3ChannelIds[0]));
                 var blog3Channel3 = blog3.Channels.First(v => v.ChannelId.Equals(Blog3ChannelIds[2]));
-
-                Assert.IsTrue(blog2Channel1.IsDefault);
-                Assert.IsTrue(blog3Channel1.IsDefault);
-                Assert.IsFalse(blog3Channel3.IsDefault);
 
                 Assert.IsTrue(blog2Channel1.Name.Length > 0);
                 Assert.IsTrue(blog3Channel1.Name.Length > 0);

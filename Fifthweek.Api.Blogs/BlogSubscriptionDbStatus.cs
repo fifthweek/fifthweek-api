@@ -9,7 +9,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]
-    public partial class BlogSubscriptionDbResult
+    public partial class BlogSubscriptionDbStatus
     {
         public BlogId BlogId { get; private set; }
 
