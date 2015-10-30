@@ -12,17 +12,11 @@
     [AutoConstructor]
     public partial class GetCommentsQueryHandler : IQueryHandler<GetCommentsQuery, CommentsResult>
     {
-        private readonly IRequesterSecurity requesterSecurity;
-        private readonly IPostSecurity postSecurity;
         private readonly IGetCommentsDbStatement getComments;
         
         public async Task<CommentsResult> HandleAsync(GetCommentsQuery query)
         {
             query.AssertNotNull("query");
-
-            var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
-
-            await this.postSecurity.AssertReadAllowedAsync(authenticatedUserId, query.PostId, query.Timestamp);
 
             return await this.getComments.ExecuteAsync(query.PostId);
         }

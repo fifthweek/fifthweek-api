@@ -26,22 +26,14 @@
 
         private GetCommentsQueryHandler target;
 
-        private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<IPostSecurity> postSecurity;
         private Mock<IGetCommentsDbStatement> getComments;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.requesterSecurity = new Mock<IRequesterSecurity>();
-            this.requesterSecurity.SetupFor(Requester);
-            this.postSecurity = new Mock<IPostSecurity>();
-
             this.getComments = new Mock<IGetCommentsDbStatement>(MockBehavior.Strict);
 
             this.target = new GetCommentsQueryHandler(
-                this.requesterSecurity.Object,
-                this.postSecurity.Object,
                 this.getComments.Object);
         }
 
@@ -53,27 +45,8 @@
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
-        public async Task ItShouldCheckTheUserIsAuthenticated()
+        public async Task ItShouldReturnComments()
         {
-            await this.target.HandleAsync(new GetCommentsQuery(Requester.Unauthenticated, PostId, Timestamp));
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
-        public async Task ItShouldCheckTheUserCanCommentOnThePost()
-        {
-            this.postSecurity.Setup(v => v.AssertReadAllowedAsync(UserId, PostId, Timestamp))
-                .Throws(new UnauthorizedException());
-
-            await this.target.HandleAsync(new GetCommentsQuery(Requester, PostId, Timestamp));
-        }
-
-        [TestMethod]
-        public async Task ItShouldCommentOnPostDatabase()
-        {
-            this.postSecurity.Setup(v => v.AssertReadAllowedAsync(UserId, PostId, Timestamp)).Returns(Task.FromResult(0));
-
             var expectedResult = new CommentsResult(
                 new List<CommentsResult.Item>
                 {

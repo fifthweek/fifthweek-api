@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 30/10/2015 12:48:48 (UTC)
-//// Mapped solution in 27.26s
+//// Generated on 30/10/2015 15:49:05 (UTC)
+//// Mapped solution in 23.2s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -3121,27 +3121,13 @@ namespace Fifthweek.Api.Posts.Queries
     public partial class GetCommentsQueryHandler 
     {
         public GetCommentsQueryHandler(
-            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
             Fifthweek.Api.Posts.IGetCommentsDbStatement getComments)
         {
-            if (requesterSecurity == null)
-            {
-                throw new ArgumentNullException("requesterSecurity");
-            }
-
-            if (postSecurity == null)
-            {
-                throw new ArgumentNullException("postSecurity");
-            }
-
             if (getComments == null)
             {
                 throw new ArgumentNullException("getComments");
             }
 
-            this.requesterSecurity = requesterSecurity;
-            this.postSecurity = postSecurity;
             this.getComments = getComments;
         }
     }
@@ -4447,16 +4433,26 @@ namespace Fifthweek.Api.Posts
 }
 namespace Fifthweek.Api.Posts.Queries
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Api.Blogs.Shared;
+    using System;
+    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Posts.Controllers;
+    using Fifthweek.Api.Azure;
+    using System.Text.RegularExpressions;
+    using Newtonsoft.Json;
 
     public partial class GetPostQueryAggregator 
     {
