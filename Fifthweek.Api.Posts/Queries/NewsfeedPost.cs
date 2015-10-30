@@ -25,9 +25,6 @@
         public PreviewText PreviewText { get; private set; }
 
         [Optional]
-        public Comment Content { get; private set; }
-
-        [Optional]
         public FileId ImageId { get; private set; }
 
         public int PreviewWordCount { get; private set; }

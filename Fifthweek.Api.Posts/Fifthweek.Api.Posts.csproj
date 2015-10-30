@@ -103,6 +103,7 @@
     <Compile Include="GetNewsfeedDbResult.cs" />
     <Compile Include="GetPostDbResult.cs" />
     <Compile Include="GetPostDbStatement.cs" />
+    <Compile Include="GetPostPreviewContent.cs" />
     <Compile Include="GetPreviewNewsfeedDbResult.cs" />
     <Compile Include="GetPreviewNewsfeedDbStatement.cs" />
     <Compile Include="GetNewsfeedDbStatement.cs" />
@@ -111,7 +112,9 @@
     <Compile Include="IGetCreatorBacklogDbStatement.cs" />
     <Compile Include="IGetNewsfeedDbStatement.cs" />
     <Compile Include="IGetPostDbStatement.cs" />
+    <Compile Include="IGetPostPreviewContent.cs" />
     <Compile Include="IGetPreviewNewsfeedDbStatement.cs" />
+    <Compile Include="IIsPostFreeAccessUserDbStatement.cs" />
     <Compile Include="IIsPostSubscriberDbStatement.cs" />
     <Compile Include="ILikePostDbStatement.cs" />
     <Compile Include="IMovePostToQueueDbStatement.cs" />
@@ -119,6 +122,7 @@
     <Compile Include="IRequestFreePostDbStatement.cs" />
     <Compile Include="IRevisePostDbStatement.cs" />
     <Compile Include="ISetPostLiveDateDbStatement.cs" />
+    <Compile Include="IsPostFreeAccessUserDbStatement.cs" />
     <Compile Include="IsPostSubscriberDbStatement.cs" />
     <Compile Include="ITryGetPostQueueIdStatement.cs" />
     <Compile Include="IScheduledDateClippingFunction.cs" />
@@ -157,12 +161,14 @@
     <Compile Include="Queries\GetCreatorBacklogQueryResult.cs" />
     <Compile Include="Queries\GetNewsfeedQuery.cs" />
     <Compile Include="Queries\GetPostQuery.cs" />
+    <Compile Include="Queries\GetPostQueryAggregator.cs" />
     <Compile Include="Queries\GetPostQueryHandler.cs" />
     <Compile Include="Queries\GetPostQueryResult.cs" />
     <Compile Include="Queries\GetPreviewNewsfeedQueryResult.cs" />
     <Compile Include="Queries\GetPreviewNewsfeedQueryHandler.cs" />
     <Compile Include="Queries\GetNewsfeedQueryHandler.cs" />
     <Compile Include="Queries\GetNewsfeedQueryResult.cs" />
+    <Compile Include="Queries\IGetPostQueryAggregator.cs" />
     <Compile Include="Queries\NewsfeedPost.cs" />
     <Compile Include="Queries\BacklogPost.cs" />
     <Compile Include="Queries\GetCreatorBacklogQuery.cs" />

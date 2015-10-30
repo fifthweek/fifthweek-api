@@ -225,6 +225,7 @@
         public enum SqlQuerySource
         {
             Newsfeed,
+            PreviewNewsfeed,
             FullPost
         }
 
@@ -238,23 +239,19 @@
             return SubscriptionFilter;
         }
 
-        public static string GetSqlStart(UserId requesterId, SqlQuerySource source, PositiveInt maxCommentLength = null)
+        public static string GetSqlStart(UserId requesterId, SqlQuerySource source)
         {
-            bool isPreview = maxCommentLength != null;
+            bool fetchAdditionalColumns = source == SqlQuerySource.PreviewNewsfeed || source == SqlQuerySource.FullPost;
 
             var result = new StringBuilder();
 
             if (source == SqlQuerySource.FullPost)
             {
-                result.Append(string.Format("SELECT {0},", Post.Fields.Content));
-            }
-            else if (maxCommentLength == null)
-            {
-                result.Append(string.Format("SELECT {0},", Post.Fields.PreviewText));
+                result.Append(string.Format("SELECT {0}, {1},", Post.Fields.Content, Post.Fields.PreviewText));
             }
             else
             {
-                result.Append(string.Format("SELECT LEFT({0}, {1}) AS PreviewText,", Post.Fields.PreviewText, maxCommentLength.Value));
+                result.Append(string.Format("SELECT {0},", Post.Fields.PreviewText));
             }
 
             result.Append(SqlSelectPartial);
@@ -264,7 +261,7 @@
                 result.Append(SqlHasLikedSelect);
             }
 
-            if (isPreview)
+            if (fetchAdditionalColumns)
             {
                 result.Append(SqlPreviewInformationSelect);
             }
@@ -276,7 +273,7 @@
                 result.Append(SqlHasLikedFromClause);
             }
 
-            if (isPreview)
+            if (fetchAdditionalColumns)
             {
                 result.Append(SqlPreviewInformationClause);
             }

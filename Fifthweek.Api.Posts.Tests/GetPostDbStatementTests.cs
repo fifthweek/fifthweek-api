@@ -33,10 +33,12 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly DateTime Timestamp = DateTime.UtcNow;
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
+        private static readonly string CreatorUsername = Guid.NewGuid().ToString();
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly ChannelId ChannelId = ChannelId.Random();
         private static readonly QueueId QueueId = new QueueId(Guid.NewGuid());
+        private static readonly PreviewText PreviewText = new PreviewText("Preview hey guys!");
         private static readonly Comment Content = new Comment("Hey guys!");
         private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
         private static readonly int PreviewWordCount = 11;
@@ -167,12 +169,16 @@
         private static void AssertExpectedResult(bool hasLiked, GetPostDbResult result)
         {
             Assert.AreEqual(
-                new NewsfeedPost(
+                new PreviewNewsfeedPost(
                     CreatorId,
+                    CreatorUsername,
+                    null,
                     PostId,
                     BlogId,
+                    BlogId.ToString(),
                     ChannelId,
-                    null,
+                    ChannelId.ToString(),
+                    PreviewText,
                     Content,
                     FileId1,
                     PreviewWordCount,
@@ -222,7 +228,13 @@
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                await databaseContext.CreateTestEntitiesAsync(CreatorId.Value, ChannelId.Value, QueueId.Value, BlogId.Value);
+                await databaseContext.CreateTestBlogAsync(CreatorId.Value, BlogId.Value, null, Random, CreatorUsername, BlogId.ToString());
+
+                var channel = ChannelTests.UniqueEntity(Random);
+                channel.BlogId = BlogId.Value;
+                channel.Name = ChannelId.ToString();
+                channel.Id = ChannelId.Value;
+                await databaseContext.Database.Connection.InsertAsync(channel);
 
                 var file1 = FileTests.UniqueEntity(Random);
                 file1.BlobSizeBytes = FileSize1;
@@ -250,6 +262,7 @@
 
                 var post = PostTests.UniqueFileOrImage(Random);
                 post.ChannelId = ChannelId.Value;
+                post.PreviewText = PreviewText.Value;
                 post.Content = Content.Value;
                 post.CreationDate = CreationDate;
                 post.FileCount = FileCount;
@@ -258,7 +271,6 @@
                 post.LiveDate = LiveDate;
                 post.PreviewImageId = FileId1.Value;
                 post.PreviewWordCount = PreviewWordCount;
-                post.QueueId = QueueId.Value;
                 post.WordCount = WordCount;
 
                 await databaseContext.Database.Connection.InsertAsync(post);

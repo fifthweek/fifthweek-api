@@ -14,6 +14,8 @@
         
         public PostId PostId { get; private set; }
 
+        public bool RequestFreePost { get; private set; }
+
         public DateTime Timestamp { get; private set; }
     }
 }

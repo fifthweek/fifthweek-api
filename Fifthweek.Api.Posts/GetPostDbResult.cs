@@ -9,7 +9,7 @@ namespace Fifthweek.Api.Posts
     [AutoConstructor, AutoEqualityMembers]
     public partial class GetPostDbResult
     {
-        public NewsfeedPost Post { get; private set; }
+        public PreviewNewsfeedPost Post { get; private set; }
 
         public IReadOnlyList<PostFileDbResult> Files { get; private set; }
 

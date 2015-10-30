@@ -97,6 +97,10 @@
     <Compile Include="Commands\RevisePostCommandHandlerTests.cs" />
     <Compile Include="Commands\ReorderQueueCommandHandlerTests.cs" />
     <Compile Include="Commands\DeletePostCommandHandlerTests.cs" />
+    <Compile Include="GetPostPreviewContentTests.cs" />
+    <Compile Include="IsPostFreeAccessUserDbStatementTests.cs" />
+    <Compile Include="IsPostOwnerDbStatementTests.cs" />
+    <Compile Include="Queries\GetPostQueryAggregatorTests.cs" />
     <Compile Include="RevisePostDbStatementTests.cs" />
     <Compile Include="CommentOnPostDbStatementTests.cs" />
     <Compile Include="DeletePostDbStatementTests.cs" />

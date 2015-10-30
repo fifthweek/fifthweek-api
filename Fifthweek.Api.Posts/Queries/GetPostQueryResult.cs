@@ -23,11 +23,17 @@
         {
             public UserId CreatorId { get; private set; }
 
+            public GetPreviewNewsfeedQueryResult.PreviewPostCreator Creator { get; private set; }
+
             public PostId PostId { get; private set; }
 
             public BlogId BlogId { get; private set; }
+            
+            public GetPreviewNewsfeedQueryResult.PreviewPostBlog Blog { get; private set; }
 
             public ChannelId ChannelId { get; private set; }
+           
+            public GetPreviewNewsfeedQueryResult.PreviewPostChannel Channel { get; private set; }
 
             public Comment Content { get; private set; }
 

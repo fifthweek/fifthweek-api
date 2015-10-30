@@ -479,13 +479,29 @@
         public async Task WhenGettingPost_ItShouldIssueGetPostCommand()
         {
             var expectedResult = new GetPostQueryResult(
-                new GetPostQueryResult.FullPost(UserId, PostId, BlogId, ChannelId, new Comment(string.Empty), 0, 0, 0, 0, DateTime.UtcNow, 0, 0, false),
+                new GetPostQueryResult.FullPost(
+                    UserId,
+                    new GetPreviewNewsfeedQueryResult.PreviewPostCreator(new Username(UserId.ToString()), null),
+                    PostId,
+                    BlogId,
+                    new GetPreviewNewsfeedQueryResult.PreviewPostBlog(new BlogName(BlogId.ToString())), 
+                    ChannelId, 
+                    new GetPreviewNewsfeedQueryResult.PreviewPostChannel(new ChannelName(ChannelId.ToString())), 
+                    new Comment(string.Empty),
+                    0,
+                    0,
+                    0, 
+                    0, 
+                    DateTime.UtcNow,
+                    0, 
+                    0, 
+                    false),
                 new List<GetPostQueryResult.File>());
             var timestamp = DateTime.UtcNow;
 
             this.timestampCreator.Setup(v => v.Now()).Returns(timestamp);
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
-            this.getPost.Setup(v => v.HandleAsync(new GetPostQuery(Requester, PostId, timestamp)))
+            this.getPost.Setup(v => v.HandleAsync(new GetPostQuery(Requester, PostId, false, timestamp)))
                 .Returns(Task.FromResult(expectedResult))
                 .Verifiable();
 
@@ -503,7 +519,7 @@
             this.timestampCreator.Setup(v => v.Now()).Returns(timestamp);
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             
-            this.getPost.Setup(v => v.HandleAsync(new GetPostQuery(Requester, PostId, timestamp)))
+            this.getPost.Setup(v => v.HandleAsync(new GetPostQuery(Requester, PostId, false, timestamp)))
                 .ReturnsAsync(null)
                 .Verifiable();
 

@@ -22,8 +22,6 @@
     [AutoConstructor]
     public partial class GetPreviewNewsfeedDbStatement : IGetPreviewNewsfeedDbStatement
     {
-        public static readonly PositiveInt MaxPreviewTextLength = PositiveInt.Parse(400);
-
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task<GetPreviewNewsfeedDbResult> ExecuteAsync(
@@ -53,7 +51,7 @@
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var query = new StringBuilder();
-                query.Append(GetNewsfeedDbStatement.GetSqlStart(requestorId, GetNewsfeedDbStatement.SqlQuerySource.Newsfeed, MaxPreviewTextLength));
+                query.Append(GetNewsfeedDbStatement.GetSqlStart(requestorId, GetNewsfeedDbStatement.SqlQuerySource.PreviewNewsfeed));
                 query.Append(GetNewsfeedDbStatement.CreateFilter(null, creatorId, requestedChannelIds, now, origin, searchForwards, startIndex, count, true));
 
                 var entities = (await connection.QueryAsync<PreviewNewsfeedPost.Builder>(query.ToString(), parameters)).ToList();

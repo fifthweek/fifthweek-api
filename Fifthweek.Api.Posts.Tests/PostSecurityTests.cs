@@ -21,14 +21,16 @@
         private static readonly DateTime Timestamp = DateTime.UtcNow;
         private Mock<IIsPostOwnerDbStatement> isPostOwner;
         private Mock<IIsPostSubscriberDbStatement> isPostSubscriber;
+        private Mock<IIsPostFreeAccessUserDbStatement> isPostFreeAccessUser;
         private PostSecurity target;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.isPostOwner = new Mock<IIsPostOwnerDbStatement>();
-            this.isPostSubscriber = new Mock<IIsPostSubscriberDbStatement>();
-            this.target = new PostSecurity(this.isPostOwner.Object, this.isPostSubscriber.Object);
+            this.isPostOwner = new Mock<IIsPostOwnerDbStatement>(MockBehavior.Strict);
+            this.isPostSubscriber = new Mock<IIsPostSubscriberDbStatement>(MockBehavior.Strict);
+            this.isPostFreeAccessUser = new Mock<IIsPostFreeAccessUserDbStatement>(MockBehavior.Strict);
+            this.target = new PostSecurity(this.isPostOwner.Object, this.isPostSubscriber.Object, this.isPostFreeAccessUser.Object);
         }
 
         [TestMethod]
@@ -59,58 +61,80 @@
         }
 
         [TestMethod]
-        public async Task WhenAuthorizingPostCommentingOrLiking_ItShouldAllowIfUserIsSubscriber()
+        public async Task WhenAuthorizingPostCommentingOrLiking_ItShouldAllowIfUserIsSubscriberOwnerOrFreeAccessUser()
         {
-            this.isPostSubscriber.Setup(_ => _.ExecuteAsync(UserId, PostId, Timestamp)).ReturnsAsync(true);
-            this.isPostOwner.Setup(_ => _.ExecuteAsync(UserId, PostId)).ReturnsAsync(false);
-
-            var result = await this.target.IsCommentOrLikeAllowedAsync(UserId, PostId, Timestamp);
-
-            Assert.IsTrue(result);
-
-            await this.target.AssertCommentOrLikeAllowedAsync(UserId, PostId, Timestamp);
+            await this.PerformCommentOrLikeTest(false, false, false, false);
+            await this.PerformCommentOrLikeTest(false, false, true, true);
+            await this.PerformCommentOrLikeTest(false, true, false, true);
+            await this.PerformCommentOrLikeTest(false, true, true, true);
+            await this.PerformCommentOrLikeTest(true, false, false, true);
+            await this.PerformCommentOrLikeTest(true, false, true, true);
+            await this.PerformCommentOrLikeTest(true, true, false, true);
+            await this.PerformCommentOrLikeTest(true, true, true, true);
         }
 
         [TestMethod]
-        public async Task WhenAuthorizingPostCommentingOrLiking_ItShouldForbidIfUserIsNotSubscriberOrOwner()
+        public async Task WhenAuthorizingReading_ItShouldAllowIfUserIsSubscriberOwnerOrFreeAccessUser()
         {
-            this.isPostSubscriber.Setup(_ => _.ExecuteAsync(UserId, PostId, Timestamp)).ReturnsAsync(false);
-            this.isPostOwner.Setup(_ => _.ExecuteAsync(UserId, PostId)).ReturnsAsync(false);
+            await this.PerformReadTest(false, false, false, false);
+            await this.PerformReadTest(false, false, true, true);
+            await this.PerformReadTest(false, true, false, true);
+            await this.PerformReadTest(false, true, true, true);
+            await this.PerformReadTest(true, false, false, true);
+            await this.PerformReadTest(true, false, true, true);
+            await this.PerformReadTest(true, true, false, true);
+            await this.PerformReadTest(true, true, true, true);
+        }
 
-            var result = await this.target.IsCommentOrLikeAllowedAsync(UserId, PostId, Timestamp);
-
-            Assert.IsFalse(result);
-
-            await ExpectedException.AssertExceptionAsync<UnauthorizedException>(() =>
+        private async Task PerformCommentOrLikeTest(
+            bool isPostSubscriberValue,
+            bool isPostOwnerValue,
+            bool isFreeAccessUserValue,
+            bool expectedResult)
+        {
+            this.SetupReadingTest(isPostSubscriberValue, isPostOwnerValue, isFreeAccessUserValue);
+            if (expectedResult)
             {
-                return this.target.AssertCommentOrLikeAllowedAsync(UserId, PostId, Timestamp);
-            });
+                Assert.IsTrue(await this.target.IsCommentOrLikeAllowedAsync(UserId, PostId, Timestamp));
+                await this.target.AssertCommentOrLikeAllowedAsync(UserId, PostId, Timestamp);
+            }
+            else
+            {
+                Assert.IsFalse(await this.target.IsCommentOrLikeAllowedAsync(UserId, PostId, Timestamp));
+                await ExpectedException.AssertExceptionAsync<UnauthorizedException>(() =>
+                {
+                    return this.target.AssertCommentOrLikeAllowedAsync(UserId, PostId, Timestamp);
+                });
+            }
         }
 
-        [TestMethod]
-        public async Task WhenAuthorizingPostCommentingOrLiking_ItShouldAllowIfUserIsOwner()
+        private async Task PerformReadTest(
+            bool isPostSubscriberValue,
+            bool isPostOwnerValue,
+            bool isFreeAccessUserValue,
+            bool expectedResult)
         {
-            this.isPostSubscriber.Setup(_ => _.ExecuteAsync(UserId, PostId, Timestamp)).ReturnsAsync(false);
-            this.isPostOwner.Setup(_ => _.ExecuteAsync(UserId, PostId)).ReturnsAsync(true);
-
-            var result = await this.target.IsCommentOrLikeAllowedAsync(UserId, PostId, Timestamp);
-
-            Assert.IsTrue(result);
-
-            await this.target.AssertCommentOrLikeAllowedAsync(UserId, PostId, Timestamp);
+            this.SetupReadingTest(isPostSubscriberValue, isPostOwnerValue, isFreeAccessUserValue);
+            if (expectedResult)
+            {
+                Assert.IsTrue(await this.target.IsReadAllowedAsync(UserId, PostId, Timestamp));
+                await this.target.AssertReadAllowedAsync(UserId, PostId, Timestamp);
+            }
+            else
+            {
+                Assert.IsFalse(await this.target.IsReadAllowedAsync(UserId, PostId, Timestamp));
+                await ExpectedException.AssertExceptionAsync<UnauthorizedException>(() =>
+                {
+                    return this.target.AssertReadAllowedAsync(UserId, PostId, Timestamp);
+                });
+            }
         }
 
-        [TestMethod]
-        public async Task WhenAuthorizingPostCommentingOrLiking_ItShouldAllowIfUserIsOwnerAndSubscriber()
+        private void SetupReadingTest(bool isPostSubscriberValue, bool isPostOwnerValue, bool isFreeAccessUserValue)
         {
-            this.isPostSubscriber.Setup(_ => _.ExecuteAsync(UserId, PostId, Timestamp)).ReturnsAsync(true);
-            this.isPostOwner.Setup(_ => _.ExecuteAsync(UserId, PostId)).ReturnsAsync(true);
-
-            var result = await this.target.IsCommentOrLikeAllowedAsync(UserId, PostId, Timestamp);
-
-            Assert.IsTrue(result);
-
-            await this.target.AssertCommentOrLikeAllowedAsync(UserId, PostId, Timestamp);
+            this.isPostSubscriber.Setup(_ => _.ExecuteAsync(UserId, PostId, Timestamp)).ReturnsAsync(isPostSubscriberValue);
+            this.isPostOwner.Setup(_ => _.ExecuteAsync(UserId, PostId)).ReturnsAsync(isPostOwnerValue);
+            this.isPostFreeAccessUser.Setup(_ => _.ExecuteAsync(UserId, PostId)).ReturnsAsync(isFreeAccessUserValue);
         }
     }
 }

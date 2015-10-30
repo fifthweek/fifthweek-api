@@ -67,7 +67,7 @@
             {
                 using (var multi = await connection.QueryMultipleAsync(query.ToString(), parameters))
                 {
-                    var post = (await multi.ReadAsync<NewsfeedPost.Builder>()).SingleOrDefault();
+                    var post = (await multi.ReadAsync<PreviewNewsfeedPost.Builder>()).SingleOrDefault();
 
                     if (post == null)
                     {
@@ -85,7 +85,7 @@
             }
         }
 
-        private static void ProcessNewsfeedResults(NewsfeedPost.Builder entity)
+        private static void ProcessNewsfeedResults(PreviewNewsfeedPost.Builder entity)
         {
             entity.LiveDate = DateTime.SpecifyKind(entity.LiveDate, DateTimeKind.Utc);
             entity.CreationDate = DateTime.SpecifyKind(entity.CreationDate, DateTimeKind.Utc);

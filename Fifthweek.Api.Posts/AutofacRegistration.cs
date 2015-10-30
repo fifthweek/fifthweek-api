@@ -3,6 +3,7 @@
     using Autofac;
 
     using Fifthweek.Api.Posts.Controllers;
+    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.Shared;
 
@@ -32,6 +33,9 @@
             builder.RegisterType<RevisePostDbStatement>().As<IRevisePostDbStatement>();
             builder.RegisterType<GetPostDbStatement>().As<IGetPostDbStatement>();
             builder.RegisterType<RequestFreePostDbStatement>().As<IRequestFreePostDbStatement>();
+            builder.RegisterType<IsPostFreeAccessUserDbStatement>().As<IIsPostFreeAccessUserDbStatement>();
+            builder.RegisterType<GetPostPreviewContent>().As<IGetPostPreviewContent>();
+            builder.RegisterType<GetPostQueryAggregator>().As<IGetPostQueryAggregator>();
         }
     }
 }

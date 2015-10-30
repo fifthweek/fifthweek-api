@@ -182,7 +182,6 @@
                             BlogId,
                             channelId,
                             i % 2 == 0 ? PreviewText : null,
-                            new Comment("content"),
                             i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
                             i % 2 == 0 ? PreviewText.Value.Length : 0,
                             i % 2 == 0 ? PreviewText.Value.Length : 0,

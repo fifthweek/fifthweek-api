@@ -27,9 +27,24 @@
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
+        private static readonly string Username = "username";
+        private static readonly FileId ProfileImageFileId = FileId.Random();
+        private static readonly GetPreviewNewsfeedQueryResult.PreviewPostCreator Creator =
+            new GetPreviewNewsfeedQueryResult.PreviewPostCreator(
+                new Username(Username),
+                new FileInformation(FileId.Random(), "container"));
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
+        private static readonly string BlogName = "blog-name";
+        private static readonly GetPreviewNewsfeedQueryResult.PreviewPostBlog Blog =
+            new GetPreviewNewsfeedQueryResult.PreviewPostBlog(
+                new BlogName(BlogName));
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly ChannelId ChannelId = ChannelId.Random();
+        private static readonly string ChannelName = "channel-name";
+        private static readonly GetPreviewNewsfeedQueryResult.PreviewPostChannel Channel =
+            new GetPreviewNewsfeedQueryResult.PreviewPostChannel(
+                new ChannelName(ChannelName));
+        private static readonly PreviewText PreviewText = new PreviewText("Hey guys preview!");
         private static readonly Comment Content = new Comment("Hey guys!");
         private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
         private static readonly DateTime Timestamp = Now;
@@ -66,13 +81,12 @@
         private static readonly DateTime LiveDate = Now.AddDays(-10);
         private static readonly DateTime PublicExpiry = Now.AddDays(2);
         private static readonly DateTime PrivateExpiry = Now.AddDays(1);
-
-        private static readonly BlobSharedAccessInformation BlobSharedAccessInformation2 =
-            new BlobSharedAccessInformation(ContainerName2, "blob2", "uri2", "sig2", PrivateExpiry);
+        private static readonly AccessSignatureExpiryInformation Expiry = new AccessSignatureExpiryInformation(PublicExpiry, PrivateExpiry);
         
         private static readonly GetPostDbResult Result = new GetPostDbResult(
-            new NewsfeedPost(
-                CreatorId, PostId, BlogId, ChannelId, null, Content, FileId.Random(), PreviewWordCount, WordCount, ImageCount, FileCount,
+            new PreviewNewsfeedPost(
+                CreatorId, Username, ProfileImageFileId, PostId, BlogId, BlogName, ChannelId, ChannelName,
+                PreviewText, Content, FileId.Random(), PreviewWordCount, WordCount, ImageCount, FileCount,
                 LiveDate, null, null, null, null, null, LikesCount, CommentsCount, true, CreationDate),
                 new List<GetPostDbResult.PostFileDbResult>
                 {
@@ -80,14 +94,42 @@
                     new GetPostDbResult.PostFileDbResult(FileId2, FileName2, FileExtension2, FilePurpose2, FileSize2, FileWidth2, FileHeight2),
                 });
 
+        private static readonly GetPostQueryResult QueryResult = new GetPostQueryResult(
+            new GetPostQueryResult.FullPost(
+                CreatorId,
+                Creator,
+                PostId,
+                BlogId,
+                Blog,
+                ChannelId,
+                Channel,
+                Content,
+                PreviewWordCount,
+                WordCount,
+                ImageCount,
+                FileCount,
+                LiveDate,
+                LikesCount,
+                CommentsCount,
+                true),
+            new List<GetPostQueryResult.File>
+            {
+                new GetPostQueryResult.File(
+                    new FileInformation(FileId1, ContainerName1),
+                    new FileSourceInformation(FileName1, FileExtension1, ContentType1, FileSize1, new RenderSize(FileWidth1, FileHeight1)),
+                    null),
+                new GetPostQueryResult.File(
+                    new FileInformation(FileId2, ContainerName2),
+                    new FileSourceInformation(FileName2, FileExtension2, ContentType2, FileSize2, new RenderSize(FileWidth2, FileHeight2)),
+                    null),
+            });
+
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IPostSecurity> postSecurity;
         private Mock<IGetPostDbStatement> getPostDbStatement;
         private Mock<IGetAccessSignatureExpiryInformation> getAccessSignatureExpiryInformation;
-        private Mock<IFileInformationAggregator> fileInformationAggregator;
-        private Mock<IBlobService> blobService;
-        private Mock<IMimeTypeMap> mimeTypeMap;
         private Mock<IRequestFreePostDbStatement> requestFreePost;
+        private Mock<IGetPostQueryAggregator> getPostQueryAggregator;
 
         private GetPostQueryHandler target;
 
@@ -95,41 +137,24 @@
         public void Initialize()
         {
             this.requesterSecurity = new Mock<IRequesterSecurity>();
-            this.postSecurity = new Mock<IPostSecurity>();
-            this.getPostDbStatement = new Mock<IGetPostDbStatement>();
+            this.postSecurity = new Mock<IPostSecurity>(MockBehavior.Strict);
+            this.getPostDbStatement = new Mock<IGetPostDbStatement>(MockBehavior.Strict);
             this.getAccessSignatureExpiryInformation = new Mock<IGetAccessSignatureExpiryInformation>();
-            this.fileInformationAggregator = new Mock<IFileInformationAggregator>();
-            this.blobService = new Mock<IBlobService>(MockBehavior.Strict);
-            this.mimeTypeMap = new Mock<IMimeTypeMap>();
             this.requestFreePost = new Mock<IRequestFreePostDbStatement>(MockBehavior.Strict);
+            this.getPostQueryAggregator = new Mock<IGetPostQueryAggregator>(MockBehavior.Strict);
 
             this.requesterSecurity.SetupFor(Requester);
 
             this.getAccessSignatureExpiryInformation.Setup(v => v.Execute(Now))
-                .Returns(new AccessSignatureExpiryInformation(PublicExpiry, PrivateExpiry));
-
-            this.mimeTypeMap.Setup(v => v.GetMimeType(FileExtension1)).Returns(ContentType1);
-            this.mimeTypeMap.Setup(v => v.GetMimeType(FileExtension2)).Returns(ContentType2);
-
-            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(ChannelId, FileId1, FilePurpose1))
-                .ReturnsAsync(new FileInformation(FileId1, ContainerName1));
-            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(ChannelId, FileId2, FilePurpose2))
-                .ReturnsAsync(new FileInformation(FileId2, ContainerName2));
-
-            this.blobService.Setup(v => v.GetBlobSharedAccessInformationForReadingAsync(
-                ContainerName2, 
-                FileId2.Value.EncodeGuid() + "/" + FileManagement.Shared.Constants.PostFeedImageThumbnailName,
-                PrivateExpiry)).ReturnsAsync(BlobSharedAccessInformation2);
+                .Returns(Expiry);
 
             this.target = new GetPostQueryHandler(
                 this.requesterSecurity.Object,
                 this.postSecurity.Object,
                 this.getPostDbStatement.Object,
                 this.getAccessSignatureExpiryInformation.Object,
-                this.fileInformationAggregator.Object,
-                this.blobService.Object,
-                this.mimeTypeMap.Object,
-                this.requestFreePost.Object);
+                this.requestFreePost.Object,
+                this.getPostQueryAggregator.Object);
         }
 
         [TestMethod]
@@ -140,114 +165,94 @@
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
-        public async Task ItShouldRequireAuthenticatedUser()
-        {
-            this.requesterSecurity.Setup(_ => _.AuthenticateAsync(Requester.Unauthenticated)).Throws<UnauthorizedException>();
-
-            await this.target.HandleAsync(new GetPostQuery(Requester.Unauthenticated, PostId, Timestamp));
-        }
-
-        [TestMethod]
         public async Task WhenPostDoesNotExist_ItShouldReturnNull()
         {
             this.requesterSecurity.Setup(v => v.TryAuthenticateAsync(Requester)).ReturnsAsync(UserId);
             this.getPostDbStatement.Setup(v => v.ExecuteAsync(UserId, PostId)).ReturnsAsync(null);
 
-            var result = await this.target.HandleAsync(new GetPostQuery(Requester, PostId, Timestamp));
+            var result = await this.target.HandleAsync(new GetPostQuery(Requester, PostId, false, Timestamp));
 
             Assert.IsNull(result);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(DivideByZeroException))]
-        public async Task WhenFreePostRejected_ItShouldPropagateException()
+        public async Task WhenNotSignedIn_ItShoudlReturnPreviewPost()
         {
-            this.requesterSecurity.Setup(v => v.TryAuthenticateAsync(Requester)).ReturnsAsync(UserId);
-            this.getPostDbStatement.Setup(v => v.ExecuteAsync(UserId, PostId)).ReturnsAsync(Result);
-            this.postSecurity.Setup(v => v.IsReadAllowedAsync(UserId, PostId, Timestamp)).ReturnsAsync(false);
-            this.requestFreePost.Setup(v => v.ExecuteAsync(UserId, PostId)).Throws(new DivideByZeroException());
+            this.requesterSecurity.Setup(v => v.TryAuthenticateAsync(Requester)).ReturnsAsync(null);
+            this.getPostDbStatement.Setup(v => v.ExecuteAsync(null, PostId)).ReturnsAsync(Result);
 
-            await this.target.HandleAsync(new GetPostQuery(Requester, PostId, Timestamp));
+            this.getPostQueryAggregator.Setup(v => v.ExecuteAsync(Result, false, true, Expiry))
+                .ReturnsAsync(QueryResult)
+                .Verifiable();
+
+            var result = await this.target.HandleAsync(new GetPostQuery(Requester, PostId, false, Timestamp));
+
+            Assert.AreEqual(QueryResult, result);
+            this.getPostQueryAggregator.Verify();
         }
 
         [TestMethod]
-        public async Task ItShouldReturnPostWhenReadAllowed()
+        public async Task WhenReadAllowed_ItShouldReturnFullPost()
         {
             this.requesterSecurity.Setup(v => v.TryAuthenticateAsync(Requester)).ReturnsAsync(UserId);
             this.getPostDbStatement.Setup(v => v.ExecuteAsync(UserId, PostId)).ReturnsAsync(Result);
             this.postSecurity.Setup(v => v.IsReadAllowedAsync(UserId, PostId, Timestamp)).ReturnsAsync(true);
 
-            var result = await this.target.HandleAsync(new GetPostQuery(Requester, PostId, Timestamp));
+            this.getPostQueryAggregator.Setup(v => v.ExecuteAsync(Result, true, false, Expiry))
+                .ReturnsAsync(QueryResult)
+                .Verifiable();
 
-            Assert.AreEqual(
-                new GetPostQueryResult(
-                    new GetPostQueryResult.FullPost(
-                        CreatorId,
-                        PostId,
-                        BlogId,
-                        ChannelId,
-                        Content,
-                        PreviewWordCount,
-                        WordCount,
-                        ImageCount,
-                        FileCount,
-                        LiveDate,
-                        LikesCount,
-                        CommentsCount,
-                        true),
-                    new List<GetPostQueryResult.File>
-                    {
-                        new GetPostQueryResult.File(
-                            new FileInformation(FileId1, ContainerName1),
-                            new FileSourceInformation(FileName1, FileExtension1, ContentType1, FileSize1, new RenderSize(FileWidth1, FileHeight1)),
-                            null),
-                        new GetPostQueryResult.File(
-                            new FileInformation(FileId2, ContainerName2),
-                            new FileSourceInformation(FileName2, FileExtension2, ContentType2, FileSize2, new RenderSize(FileWidth2, FileHeight2)),
-                            null),
-                    }),
-                result);
+            var result = await this.target.HandleAsync(new GetPostQuery(Requester, PostId, false, Timestamp));
+
+            Assert.AreEqual(QueryResult, result);
+            this.getPostQueryAggregator.Verify();
         }
 
         [TestMethod]
-        public async Task ItShouldReturnPostWhenFreePostRequestSucceeds()
+        public async Task WhenReadNotAllowed_AndNotRequestingFreePost_ItShouldReturnPreviewPost()
+        {
+            this.requesterSecurity.Setup(v => v.TryAuthenticateAsync(Requester)).ReturnsAsync(UserId);
+            this.getPostDbStatement.Setup(v => v.ExecuteAsync(UserId, PostId)).ReturnsAsync(Result);
+            this.postSecurity.Setup(v => v.IsReadAllowedAsync(UserId, PostId, Timestamp)).ReturnsAsync(false);
+
+            this.getPostQueryAggregator.Setup(v => v.ExecuteAsync(Result, false, true, Expiry))
+                .ReturnsAsync(QueryResult)
+                .Verifiable();
+
+            var result = await this.target.HandleAsync(new GetPostQuery(Requester, PostId, false, Timestamp));
+
+            Assert.AreEqual(QueryResult, result);
+            this.getPostQueryAggregator.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenReadNotAllowed_AndRequestingFreePost_ItShouldReturnFullPost()
         {
             this.requesterSecurity.Setup(v => v.TryAuthenticateAsync(Requester)).ReturnsAsync(UserId);
             this.getPostDbStatement.Setup(v => v.ExecuteAsync(UserId, PostId)).ReturnsAsync(Result);
             this.postSecurity.Setup(v => v.IsReadAllowedAsync(UserId, PostId, Timestamp)).ReturnsAsync(false);
             this.requestFreePost.Setup(v => v.ExecuteAsync(UserId, PostId)).Returns(Task.FromResult(0));
 
-            var result = await this.target.HandleAsync(new GetPostQuery(Requester, PostId, Timestamp));
+            this.getPostQueryAggregator.Setup(v => v.ExecuteAsync(Result, false, false, Expiry))
+                .ReturnsAsync(QueryResult)
+                .Verifiable();
 
-            Assert.AreEqual(
-                new GetPostQueryResult(
-                    new GetPostQueryResult.FullPost(
-                        CreatorId,
-                        PostId,
-                        BlogId,
-                        ChannelId,
-                        Content,
-                        PreviewWordCount,
-                        WordCount,
-                        ImageCount,
-                        FileCount,
-                        LiveDate,
-                        LikesCount,
-                        CommentsCount,
-                        true),
-                    new List<GetPostQueryResult.File>
-                    {
-                        new GetPostQueryResult.File(
-                            new FileInformation(FileId1, ContainerName1),
-                            new FileSourceInformation(FileName1, FileExtension1, ContentType1, FileSize1, new RenderSize(FileWidth1, FileHeight1)),
-                            null),
-                        new GetPostQueryResult.File(
-                            new FileInformation(FileId2, ContainerName2),
-                            new FileSourceInformation(FileName2, FileExtension2, ContentType2, FileSize2, new RenderSize(FileWidth2, FileHeight2)),
-                            BlobSharedAccessInformation2),
-                    }),
-                result);
+            var result = await this.target.HandleAsync(new GetPostQuery(Requester, PostId, true, Timestamp));
+
+            Assert.AreEqual(QueryResult, result);
+            this.getPostQueryAggregator.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(DivideByZeroException))]
+        public async Task WhenReadNotAllowed_AndFreePostRejected_ItShouldPropagateException()
+        {
+            this.requesterSecurity.Setup(v => v.TryAuthenticateAsync(Requester)).ReturnsAsync(UserId);
+            this.getPostDbStatement.Setup(v => v.ExecuteAsync(UserId, PostId)).ReturnsAsync(Result);
+            this.postSecurity.Setup(v => v.IsReadAllowedAsync(UserId, PostId, Timestamp)).ReturnsAsync(false);
+            this.requestFreePost.Setup(v => v.ExecuteAsync(UserId, PostId)).Throws(new DivideByZeroException());
+
+            await this.target.HandleAsync(new GetPostQuery(Requester, PostId, true, Timestamp));
         }
     }
 }

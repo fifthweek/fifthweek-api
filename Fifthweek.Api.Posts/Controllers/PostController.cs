@@ -124,7 +124,7 @@
 
             var requester = await this.requesterContext.GetRequesterAsync();
 
-            var result = await this.getPost.HandleAsync(new GetPostQuery(requester, postIdObject, timestamp));
+            var result = await this.getPost.HandleAsync(new GetPostQuery(requester, postIdObject, false, timestamp));
 
             if (result == null)
             {

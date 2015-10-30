@@ -14,6 +14,7 @@
     {
         private readonly IIsPostOwnerDbStatement isPostOwner;
         private readonly IIsPostSubscriberDbStatement isPostSubscriber;
+        private readonly IIsPostFreeAccessUserDbStatement isPostFreeAccessUser;
 
         public Task<bool> IsWriteAllowedAsync(UserId requester, PostId postId)
         {
@@ -41,7 +42,8 @@
             postId.AssertNotNull("postId");
 
             return await this.isPostSubscriber.ExecuteAsync(requester, postId, timestamp)
-                || await this.isPostOwner.ExecuteAsync(requester, postId);
+                || await this.isPostOwner.ExecuteAsync(requester, postId)
+                || await this.isPostFreeAccessUser.ExecuteAsync(requester, postId);
         }
 
         public async Task AssertReadAllowedAsync(UserId requester, PostId postId, DateTime timestamp)
@@ -62,7 +64,8 @@
             postId.AssertNotNull("postId");
 
             return await this.isPostSubscriber.ExecuteAsync(requester, postId, timestamp)
-                || await this.isPostOwner.ExecuteAsync(requester, postId);
+                || await this.isPostOwner.ExecuteAsync(requester, postId)
+                || await this.isPostFreeAccessUser.ExecuteAsync(requester, postId);
         }
 
         public async Task AssertCommentOrLikeAllowedAsync(UserId requester, PostId postId, DateTime timestamp)
