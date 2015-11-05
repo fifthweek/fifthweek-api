@@ -22,22 +22,6 @@
     [AutoConstructor]
     public partial class GetNewsfeedDbStatement : IGetNewsfeedDbStatement
     {
-        private static readonly string DeclareAccountBalance = string.Format(
-            @"DECLARE @AccountBalance int = (SELECT COALESCE(({0}), 0));",
-            CalculatedAccountBalance.GetUserAccountBalanceQuery("RequestorId", CalculatedAccountBalance.Fields.Amount));
-
-        private static readonly string DeclarePaymentStatus = string.Format(@"
-            DECLARE @PaymentStatus int = (SELECT TOP 1 {0} FROM {1} WHERE {2}=@RequestorId);
-            DECLARE @IsRetryingPayment bit = CASE WHEN @PaymentStatus>{3} AND @PaymentStatus<{4} THEN 'True' ELSE 'False' END;",
-            UserPaymentOrigin.Fields.PaymentStatus,
-            UserPaymentOrigin.Table,
-            UserPaymentOrigin.Fields.UserId,
-            (int)PaymentStatus.None,
-            (int)PaymentStatus.Failed);
-
-        private static readonly string SelectAccountBalance = @"
-            SELECT @AccountBalance;";
-
         private static readonly string SqlSelectPartial = string.Format(@"
                 blog.{12} AS BlogId, blog.{13} AS CreatorId, post.{1} AS PostId, 
                 post.{2}, {7} AS ImageId, {3}, post.{21}, {22}, {23}, {24}, {25},
@@ -146,19 +130,7 @@
                 FROM {2} sub 
                 INNER JOIN {13} subChannel ON sub.{3} = subChannel.{0}
                 WHERE 
-                    sub.{4} = @RequestorId 
-                    AND 
-                    (
-                        ((@AccountBalance > 0 OR @IsRetryingPayment = 1) AND sub.{5} >= subChannel.{6})
-                        OR
-                        subChannel.{1} IN
-                        (
-                            SELECT fau.{8} 
-                            FROM {7} fau
-                            INNER JOIN {10} u ON u.{11} = fau.{9}
-                            WHERE u.{12} = @RequestorId
-                        )
-                    )
+                    sub.{4} = @RequestorId
             )",
             Channel.Fields.Id,
             Channel.Fields.BlogId,
@@ -229,11 +201,6 @@
             FullPost
         }
 
-        public static string GetPaymentDeclarations()
-        {
-            return DeclareAccountBalance + DeclarePaymentStatus;
-        }
-
         public static string GetSubscriptionFilter()
         {
             return SubscriptionFilter;
@@ -247,7 +214,12 @@
 
             if (source == SqlQuerySource.FullPost)
             {
-                result.Append(string.Format("SELECT {0}, {1},", Post.Fields.Content, Post.Fields.PreviewText));
+                result.Append(string.Format(
+                    "SELECT {0}, {1}, {2}, {3}, ", 
+                    Post.Fields.Content,
+                    Post.Fields.PreviewText,
+                    Blog.Fields.HeaderImageFileId, 
+                    Blog.Fields.Introduction));
             }
             else
             {
@@ -371,30 +343,17 @@
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var query = new StringBuilder();
-                query.Append(DeclareAccountBalance);
-
-                if (!requestorId.Equals(creatorId))
-                {
-                    query.Append(DeclarePaymentStatus);
-                }
 
                 query.Append(GetSqlStart(requestorId, SqlQuerySource.Newsfeed));
 
                 query.Append(CreateFilter(requestorId, creatorId, requestedChannelIds, now, origin, searchForwards, startIndex, count, false));
 
                 query.Append(SqlEnd);
-                query.Append(SelectAccountBalance);
 
-                using (var multi = await connection.QueryMultipleAsync(query.ToString(), parameters))
-                {
-                    var entities = (await multi.ReadAsync<NewsfeedPost.Builder>()).ToList();
-                    
-                    ProcessNewsfeedResults(entities);
+                var entities = (await connection.QueryAsync<NewsfeedPost.Builder>(query.ToString(), parameters)).ToList();
+                ProcessNewsfeedResults(entities);
 
-                    var accountBalance = (await multi.ReadAsync<int>()).Single();
-
-                    return new GetNewsfeedDbResult(entities.Select(_ => _.Build()).ToList(), accountBalance);
-                }
+                return new GetNewsfeedDbResult(entities.Select(_ => _.Build()).ToList());
             }
         }
 

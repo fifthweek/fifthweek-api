@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
@@ -41,12 +42,14 @@
         private static readonly PositiveInt Count = PositiveInt.Parse(5);
         private static readonly PreviewText PreviewText = new PreviewText("Hey guys!");
         private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
+        private static readonly AccessSignatureExpiryInformation Expiry = new AccessSignatureExpiryInformation(Now.AddDays(1), Now.AddDays(2));
         private static readonly string FileName = "FileName";
         private static readonly string FileExtension = "FileExtension";
         private static readonly long FileSize = 1024;
         private static readonly int FileWidth = 800;
         private static readonly int FileHeight = 600;
         private static readonly string ContentType = "ContentType";
+        private static readonly string Signature = "signature";
         private static readonly IReadOnlyList<NewsfeedPost> NewsfeedPosts = GetNewsfeedPosts().ToList();
 
         private Mock<IRequesterSecurity> requesterSecurity;
@@ -54,6 +57,8 @@
         private Mock<IFileInformationAggregator> fileInformationAggregator;
         private Mock<IMimeTypeMap> mimeTypeMap;
         private Mock<ITimestampCreator> timestampCreator;
+        private Mock<IBlobService> blobService;
+        private Mock<IGetAccessSignatureExpiryInformation> getAccessSignatureExpiryInformation;
 
         private GetNewsfeedQueryHandler target;
 
@@ -65,16 +70,21 @@
             this.fileInformationAggregator = new Mock<IFileInformationAggregator>();
             this.mimeTypeMap = new Mock<IMimeTypeMap>();
             this.timestampCreator = new Mock<ITimestampCreator>();
+            this.blobService = new Mock<IBlobService>(MockBehavior.Strict);
+            this.getAccessSignatureExpiryInformation = new Mock<IGetAccessSignatureExpiryInformation>();
 
             this.timestampCreator.Setup(v => v.Now()).Returns(Now);
             this.mimeTypeMap.Setup(v => v.GetMimeType(FileExtension)).Returns(ContentType);
+            this.getAccessSignatureExpiryInformation.Setup(v => v.Execute(Now)).Returns(Expiry);
 
             this.target = new GetNewsfeedQueryHandler(
                 this.requesterSecurity.Object, 
                 this.getNewsfeedDbStatement.Object,
                 this.fileInformationAggregator.Object,
                 this.mimeTypeMap.Object,
-                this.timestampCreator.Object);
+                this.timestampCreator.Object,
+                this.getAccessSignatureExpiryInformation.Object,
+                this.blobService.Object);
         }
 
         [TestMethod]
@@ -108,14 +118,16 @@
             this.requesterSecurity.Setup(_ => _.AuthenticateAsync(Requester)).ReturnsAsync(UserId);
 
             this.getNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, Now, Origin.Value, SearchForwards, StartIndex, Count))
-                .ReturnsAsync(new GetNewsfeedDbResult(NewsfeedPosts, 10));
+                .ReturnsAsync(new GetNewsfeedDbResult(NewsfeedPosts));
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(It.IsAny<ChannelId>(), It.IsAny<FileId>(), It.IsAny<string>()))
                 .Returns<ChannelId, FileId, string>((c, f, p) => Task.FromResult(new FileInformation(f, c.ToString())));
 
+            this.blobService.Setup(v => v.GetBlobSharedAccessInformationForReadingAsync(It.IsAny<string>(), It.IsAny<string>(), Expiry.Public))
+                .Returns<string, string, DateTime>((c, b, e) => Task.FromResult(new BlobSharedAccessInformation(c, b, c + "/" + b, Signature, e)));
+
             var result = await this.target.HandleAsync(new GetNewsfeedQuery(Requester, CreatorId, ChannelIds, Origin, SearchForwards, StartIndex, Count));
 
-            Assert.AreEqual(10, result.AccountBalance);
             Assert.AreEqual(NewsfeedPosts.Count, result.Posts.Count);
             foreach (var item in result.Posts.Zip(NewsfeedPosts, (a, b) => new { Output = a, Input = b }))
             {
@@ -127,11 +139,17 @@
                     Assert.AreEqual(item.Input.ImageExtension, item.Output.ImageSource.FileExtension);
                     Assert.AreEqual(item.Input.ImageSize, item.Output.ImageSource.Size);
                     Assert.AreEqual(ContentType, item.Output.ImageSource.ContentType);
+                    Assert.AreEqual(
+                        item.Input.ImageId.Value.EncodeGuid() + "/" + FileManagement.Shared.Constants.PostPreviewImageThumbnailName,
+                        item.Output.ImageAccessInformation.BlobName);
+                    Assert.AreEqual(Signature, item.Output.ImageAccessInformation.Signature);
+                    Assert.AreEqual(Expiry.Public, item.Output.ImageAccessInformation.Expiry);
                 }
                 else
                 {
                     Assert.IsNull(item.Output.ImageSource);
                     Assert.IsNull(item.Output.Image);
+                    Assert.IsNull(item.Output.ImageAccessInformation);
                 }
 
                 Assert.AreEqual(item.Input.PostId, item.Output.PostId);
@@ -147,10 +165,13 @@
             this.requesterSecurity.Setup(_ => _.AuthenticateAsync(Requester)).ReturnsAsync(UserId);
 
             this.getNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, Now, Now, SearchForwards, StartIndex, Count))
-                .ReturnsAsync(new GetNewsfeedDbResult(NewsfeedPosts, 10));
+                .ReturnsAsync(new GetNewsfeedDbResult(NewsfeedPosts));
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(It.IsAny<ChannelId>(), It.IsAny<FileId>(), It.IsAny<string>()))
                 .Returns<ChannelId, FileId, string>((c, f, p) => Task.FromResult(new FileInformation(f, c.ToString())));
+
+            this.blobService.Setup(v => v.GetBlobSharedAccessInformationForReadingAsync(It.IsAny<string>(), It.IsAny<string>(), Expiry.Public))
+                .Returns<string, string, DateTime>((c, b, e) => Task.FromResult(new BlobSharedAccessInformation(c, b, c + "/" + b, Signature, e)));
 
             await this.target.HandleAsync(new GetNewsfeedQuery(Requester, CreatorId, ChannelIds, null, SearchForwards, StartIndex, Count));
         }

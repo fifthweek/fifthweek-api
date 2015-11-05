@@ -9,7 +9,5 @@ namespace Fifthweek.Api.Posts
     public partial class GetNewsfeedDbResult
     {
         public IReadOnlyList<NewsfeedPost> Posts { get; private set; }
-
-        public int AccountBalance { get; private set; }
     }
 }

@@ -56,6 +56,14 @@
                 },
                 new List<ChannelId> { ChannelId.Random(), ChannelId.Random() });
 
+        private static readonly GetUserSubscriptionsResult UserSubscriptionsWithNonAcceptedPrice =
+            new GetUserSubscriptionsResult(new List<BlogSubscriptionStatus>
+                {
+                    new BlogSubscriptionStatus(new BlogId(Guid.NewGuid()), "name", new UserId(Guid.NewGuid()), new Username("username"), null, false, new List<ChannelSubscriptionStatus> { new ChannelSubscriptionStatus(new ChannelId(Guid.NewGuid()), "name", 9, 10, DateTime.UtcNow, DateTime.UtcNow, true) }),
+                    new BlogSubscriptionStatus(new BlogId(Guid.NewGuid()), "name2", new UserId(Guid.NewGuid()), new Username("username2"), null, false, new List<ChannelSubscriptionStatus> { new ChannelSubscriptionStatus(new ChannelId(Guid.NewGuid()), "name2", 20, 20, DateTime.UtcNow, DateTime.UtcNow, true) })
+                },
+                new List<ChannelId> { ChannelId.Random(), ChannelId.Random() });
+
         private GetUserStateQueryHandler target;
 
         private Mock<IRequesterSecurity> requesterSecurity;
@@ -70,7 +78,7 @@
         {
             this.requesterSecurity = new Mock<IRequesterSecurity>();
 
-            this.getUserAccessSignatures = new Mock<IQueryHandler<GetUserAccessSignaturesQuery, UserAccessSignatures>>();
+            this.getUserAccessSignatures = new Mock<IQueryHandler<GetUserAccessSignaturesQuery, UserAccessSignatures>>(MockBehavior.Strict);
 
             // Give potentially side-effecting components strict mock behaviour.
             this.getAccountSettings = new Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>>(MockBehavior.Strict);
@@ -128,6 +136,82 @@
             var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId }, UserSubscriptions.FreeAccessChannelIds)))
+                .ReturnsAsync(UserAccessSignatures);
+            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now)))
+                .ReturnsAsync(accountSettings);
+            this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester, UserId)))
+                .ReturnsAsync(UserSubscriptions);
+
+            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId, false, Now));
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
+            Assert.AreEqual(UserSubscriptions, result.Subscriptions);
+            Assert.AreEqual(accountSettings, result.AccountSettings);
+
+            Assert.IsNull(result.Blog);
+        }
+
+        [TestMethod]
+        public async Task WhenCalledAsAUser_WithNonAcceptedPrice_ItShouldNotRequestAccessSignaturesForNonAcceptedSubscription()
+        {
+            this.requesterSecurity.SetupFor(Requester);
+
+            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
+
+            GetUserAccessSignaturesQuery actual = null;
+            var expected = new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptionsWithNonAcceptedPrice.Blogs[1].Channels[0].ChannelId }, UserSubscriptionsWithNonAcceptedPrice.FreeAccessChannelIds);
+            this.getUserAccessSignatures.Setup(v => v.HandleAsync(It.IsAny<GetUserAccessSignaturesQuery>()))
+                .Callback<GetUserAccessSignaturesQuery>(v => actual = v)
+                .ReturnsAsync(UserAccessSignatures);
+            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now)))
+                .ReturnsAsync(accountSettings);
+            this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester, UserId)))
+                .ReturnsAsync(UserSubscriptionsWithNonAcceptedPrice);
+
+            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId, false, Now));
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
+            Assert.AreEqual(UserSubscriptionsWithNonAcceptedPrice, result.Subscriptions);
+            Assert.AreEqual(accountSettings, result.AccountSettings);
+
+            Assert.IsNull(result.Blog);
+        }
+
+        [TestMethod]
+        public async Task WhenCalledAsAUser_WithNoAccountBalanceAndRetryingPayment_ItShouldReturnRegisteredUserStateWithoutCreatorState()
+        {
+            this.requesterSecurity.SetupFor(Requester);
+
+            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 0, PaymentStatus.Retry1, true, 1m, null);
+
+            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId }, UserSubscriptions.FreeAccessChannelIds)))
+                .ReturnsAsync(UserAccessSignatures);
+            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now)))
+                .ReturnsAsync(accountSettings);
+            this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester, UserId)))
+                .ReturnsAsync(UserSubscriptions);
+
+            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId, false, Now));
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
+            Assert.AreEqual(UserSubscriptions, result.Subscriptions);
+            Assert.AreEqual(accountSettings, result.AccountSettings);
+
+            Assert.IsNull(result.Blog);
+        }
+
+        [TestMethod]
+        public async Task WhenCalledAsAUser_WithNoAccountBalanceAndNotRetryingPayment_ItNotRequestAccessSignaturesForSubscribedPosts()
+        {
+            this.requesterSecurity.SetupFor(Requester);
+
+            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 0, PaymentStatus.None, true, 1m, null);
+
+            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, null, UserSubscriptions.FreeAccessChannelIds)))
                 .ReturnsAsync(UserAccessSignatures);
             this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now)))
                 .ReturnsAsync(accountSettings);

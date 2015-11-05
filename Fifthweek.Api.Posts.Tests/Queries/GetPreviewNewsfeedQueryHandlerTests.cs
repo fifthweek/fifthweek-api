@@ -213,6 +213,8 @@
                             CreatorId,
                             Guid.NewGuid().ToString(),
                             i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
+                            null,
+                            null,
                             new PostId(Guid.NewGuid()),
                             BlogId,
                             Guid.NewGuid().ToString(),

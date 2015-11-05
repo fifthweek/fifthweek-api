@@ -88,7 +88,7 @@
                     new GetPreviewNewsfeedQueryResult.PreviewPostCreator(new Username(post.Username), profileImage),
                     post.PostId,
                     post.BlogId,
-                    new GetPreviewNewsfeedQueryResult.PreviewPostBlog(new BlogName(post.BlogName)),
+                    new GetPreviewNewsfeedQueryResult.PreviewPostBlog(new BlogName(post.BlogName), null, null),
                     post.ChannelId,
                     new GetPreviewNewsfeedQueryResult.PreviewPostChannel(new ChannelName(post.ChannelName)),
                     post.PreviewText,

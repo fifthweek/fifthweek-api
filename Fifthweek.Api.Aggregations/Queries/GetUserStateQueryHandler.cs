@@ -79,7 +79,17 @@
             List<ChannelId> freeAccessChannelIds = null;
             if (userSubscriptions != null)
             {
-                subscribedChannelIds = userSubscriptions.Blogs.SelectMany(v => v.Channels).Select(v => v.ChannelId).Distinct().ToList();
+                bool hasFunds = accountSettings != null && (accountSettings.AccountBalance > 0 || accountSettings.IsRetryingPayment);
+                if (hasFunds)
+                {
+                    subscribedChannelIds =
+                        userSubscriptions.Blogs.SelectMany(v => v.Channels)
+                            .Where(v => v.AcceptedPrice >= v.Price)
+                            .Select(v => v.ChannelId)
+                            .Distinct()
+                            .ToList();
+                }
+
                 freeAccessChannelIds = userSubscriptions.FreeAccessChannelIds.Distinct().ToList();
             }
 

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.SqlClient;
     using System.Data.SqlTypes;
     using System.Linq;
     using System.Threading.Tasks;
@@ -21,7 +22,7 @@
     using Moq;
 
     [TestClass]
-    public class AcceptChannelSubscriptionPriceChangeDbStatementTests : PersistenceTestsBase
+    public class UpdateChannelSubscriptionDbStatementTests : PersistenceTestsBase
     {
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly ChannelId[] ChannelIds = new[] { new ChannelId(Guid.NewGuid()), new ChannelId(Guid.NewGuid()), new ChannelId(Guid.NewGuid()) };
@@ -45,13 +46,13 @@
         private readonly Random random = new Random();
 
         private MockRequestSnapshotService requestSnapshot;
-        private AcceptChannelSubscriptionPriceChangeDbStatement target;
+        private UpdateChannelSubscriptionDbStatement target;
 
         [TestInitialize]
         public void TestInitialize()
         {
             this.requestSnapshot = new MockRequestSnapshotService();
-            this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object, this.requestSnapshot);
+            this.target = new UpdateChannelSubscriptionDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object, this.requestSnapshot);
         }
 
         [TestMethod]
@@ -80,7 +81,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(testDatabase, this.requestSnapshot);
+                this.target = new UpdateChannelSubscriptionDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase);
 
@@ -97,7 +98,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(testDatabase, this.requestSnapshot);
+                this.target = new UpdateChannelSubscriptionDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -118,12 +119,37 @@
         }
 
         [TestMethod]
+        public async Task WhenTheSubscriptionDoesNotExist_ItShouldInsertTheSubscription()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new UpdateChannelSubscriptionDbStatement(testDatabase, this.requestSnapshot);
+
+                await this.CreateDataAsync(testDatabase, false);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.ExecuteAsync(UserId, Subscriptions[0].ChannelId, NewAcceptedPrice, Now);
+
+                var insert = new ChannelSubscription(
+                            Subscriptions[0].ChannelId.Value,
+                            null,
+                            UserId.Value,
+                            null,
+                            NewAcceptedPrice.Value,
+                            Now,
+                            Now);
+
+                return new ExpectedSideEffects { Insert = insert };
+            });
+        }
+
+        [TestMethod]
         public async Task ItShouldRequestSnapshotAfterUpdate()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 var trackingDatabase = new TrackingConnectionFactory(testDatabase);
-                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(trackingDatabase, this.requestSnapshot);
+                this.target = new UpdateChannelSubscriptionDbStatement(trackingDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -152,7 +178,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(testDatabase, this.requestSnapshot);
+                this.target = new UpdateChannelSubscriptionDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -167,11 +193,12 @@
         }
 
         [TestMethod]
+        [ExpectedException(typeof(SqlException))]
         public async Task WhenTheChannelDoesNotExist_ItShouldDoNothing()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(testDatabase, this.requestSnapshot);
+                this.target = new UpdateChannelSubscriptionDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -183,11 +210,12 @@
         }
 
         [TestMethod]
+        [ExpectedException(typeof(SqlException))]
         public async Task WhenTheUserDoesNotExist_ItShouldDoNothing()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(testDatabase, this.requestSnapshot);
+                this.target = new UpdateChannelSubscriptionDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -198,11 +226,14 @@
             });
         }
 
-        private async Task CreateDataAsync(TestDatabaseContext testDatabase)
+        private async Task CreateDataAsync(TestDatabaseContext testDatabase, bool createSubscription = true)
         {
             await this.CreateChannelsAsync(testDatabase);
             await this.CreateUserAsync(testDatabase);
-            await this.CreateSubscriptionsAsync(testDatabase);
+            if (createSubscription)
+            {
+                await this.CreateSubscriptionsAsync(testDatabase);
+            }
         }
 
         private async Task CreateSubscriptionsAsync(TestDatabaseContext testDatabase)

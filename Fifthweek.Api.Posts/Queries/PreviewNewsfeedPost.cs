@@ -19,6 +19,12 @@
         [Optional]
         public FileId ProfileImageFileId { get; private set; }
 
+        [Optional]
+        public FileId HeaderImageFileId { get; private set; }
+
+        [Optional]
+        public Introduction Introduction { get; private set; }
+
         public PostId PostId { get; private set; }
 
         public BlogId BlogId { get; private set; }

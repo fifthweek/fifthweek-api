@@ -6,7 +6,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
 
-    public interface IAcceptChannelSubscriptionPriceChangeDbStatement
+    public interface IUpdateChannelSubscriptionDbStatement
     {
         Task ExecuteAsync(
             UserId userId, 

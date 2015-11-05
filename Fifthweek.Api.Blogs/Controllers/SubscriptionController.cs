@@ -17,26 +17,49 @@
     {
         private readonly ICommandHandler<UpdateBlogSubscriptionsCommand> updateBlogSubscriptions;
         private readonly ICommandHandler<UnsubscribeFromChannelCommand> unsubscribeFromChannel;
-        private readonly ICommandHandler<AcceptChannelSubscriptionPriceChangeCommand> acceptPriceChange;
+        private readonly ICommandHandler<SubscribeToChannelCommand> subscribeToChannel;
         private readonly IRequesterContext requesterContext;
+        private readonly ITimestampCreator timestampCreator;
 
         [Route("blogs/{blogId}")]
         public async Task PutBlogSubscriptions(string blogId, [FromBody]UpdatedBlogSubscriptionData subscriptionData)
         {
             blogId.AssertUrlParameterProvided("blogId");
             subscriptionData.AssertBodyProvided("subscriptionData");
-           
+
             var subscriptions = subscriptionData.Subscriptions
                 .Select(v => v.Parse())
                 .Select(v => new AcceptedChannelSubscription(new ChannelId(v.ChannelId.DecodeGuid()), v.AcceptedPrice)).ToList();
 
             var requester = await this.requesterContext.GetRequesterAsync();
             var blogIdObject = new BlogId(blogId.DecodeGuid());
-            
+
             await this.updateBlogSubscriptions.HandleAsync(new UpdateBlogSubscriptionsCommand(
                 requester,
                 blogIdObject,
                 subscriptions));
+        }
+
+
+        [Route("channels/{channelId}")]
+        public async Task PostChannelSubscription(string channelId, [FromBody]ChannelSubscriptionDataWithoutChannelId subscriptionData)
+        {
+            channelId.AssertUrlParameterProvided("channelId");
+            subscriptionData.AssertBodyProvided("subscriptionData");
+
+            var requester = await this.requesterContext.GetRequesterAsync();
+            var channelIdObject = new ChannelId(channelId.DecodeGuid());
+
+            var parsedSubscriptionData = subscriptionData.Parse();
+            var acceptedPrice = parsedSubscriptionData.AcceptedPrice;
+
+            var now = this.timestampCreator.Now();
+
+            await this.subscribeToChannel.HandleAsync(new SubscribeToChannelCommand(
+                requester,
+                channelIdObject,
+                acceptedPrice,
+                now));
         }
 
         [Route("channels/{channelId}")]
@@ -64,10 +87,13 @@
             var parsedSubscriptionData = subscriptionData.Parse();
             var acceptedPrice = parsedSubscriptionData.AcceptedPrice;
 
-            await this.acceptPriceChange.HandleAsync(new AcceptChannelSubscriptionPriceChangeCommand(
+            var now = this.timestampCreator.Now();
+
+            await this.subscribeToChannel.HandleAsync(new SubscribeToChannelCommand(
                 requester,
                 channelIdObject,
-                acceptedPrice));
+                acceptedPrice,
+                now));
         }
     }
 }

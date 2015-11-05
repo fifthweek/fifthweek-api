@@ -394,7 +394,12 @@ angular.module('webApp').factory('postStub',
     //         profileImage: { /* optional */
     //           fileId: 'Base64Guid',
     //           containerName: ''
-    //         }
+    //         },
+    //         headerImage: { /* optional */
+    //           fileId: 'Base64Guid',
+    //           containerName: ''
+    //         },
+    //         introduction: '' /* optional */
     //       },
     //       postId: 'Base64Guid',
     //       blogId: 'Base64Guid',
@@ -456,7 +461,7 @@ angular.module('webApp').factory('postStub',
     //   imageCount: 0,
     //   fileCount: 0,
     //   fileIds: [ /* optional */
-    //     ''
+    //     'Base64Guid'
     //   ]
     // }
     service.postPost = function(postData) {
@@ -475,7 +480,7 @@ angular.module('webApp').factory('postStub',
     //   imageCount: 0,
     //   fileCount: 0,
     //   fileIds: [ /* optional */
-    //     ''
+    //     'Base64Guid'
     //   ]
     // }
     service.putPost = function(postId, postData) {
@@ -488,9 +493,27 @@ angular.module('webApp').factory('postStub',
     // result = {
     //   post: {
     //     creatorId: 'Base64Guid',
+    //     creator: {
+    //       username: '',
+    //       profileImage: { /* optional */
+    //         fileId: 'Base64Guid',
+    //         containerName: ''
+    //       },
+    //       headerImage: { /* optional */
+    //         fileId: 'Base64Guid',
+    //         containerName: ''
+    //       },
+    //       introduction: '' /* optional */
+    //     },
     //     postId: 'Base64Guid',
     //     blogId: 'Base64Guid',
+    //     blog: {
+    //       name: ''
+    //     },
     //     channelId: 'Base64Guid',
+    //     channel: {
+    //       name: ''
+    //     },
     //     content: '',
     //     previewWordCount: 0,
     //     wordCount: 0,
@@ -683,6 +706,16 @@ angular.module('webApp').factory('subscriptionStub',
     // }
     service.putBlogSubscriptions = function(blogId, subscriptionData) {
       return $http.put(utilities.fixUri(apiBaseUri + 'subscriptions/blogs/' + encodeURIComponent(blogId)), subscriptionData).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // channelId = 'Base64Guid'
+    // subscriptionData = {
+    //   acceptedPrice: 0
+    // }
+    service.postChannelSubscription = function(channelId, subscriptionData) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'subscriptions/channels/' + encodeURIComponent(channelId)), subscriptionData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -970,13 +1003,15 @@ angular.module('webApp').factory('userStateStub',
     //             name: '',
     //             acceptedPrice: 0,
     //             price: 0,
-    //             isDefault: false,
     //             priceLastSetDate: '2015-12-25T14:45:05Z',
     //             subscriptionStartDate: '2015-12-25T14:45:05Z',
     //             isVisibleToNonSubscribers: false
     //           }
     //         ]
     //       }
+    //     ],
+    //     freeAccessChannelIds: [
+    //       'Base64Guid'
     //     ]
     //   }
     // }
@@ -1067,13 +1102,15 @@ angular.module('webApp').factory('userStateStub',
     //             name: '',
     //             acceptedPrice: 0,
     //             price: 0,
-    //             isDefault: false,
     //             priceLastSetDate: '2015-12-25T14:45:05Z',
     //             subscriptionStartDate: '2015-12-25T14:45:05Z',
     //             isVisibleToNonSubscribers: false
     //           }
     //         ]
     //       }
+    //     ],
+    //     freeAccessChannelIds: [
+    //       'Base64Guid'
     //     ]
     //   }
     // }

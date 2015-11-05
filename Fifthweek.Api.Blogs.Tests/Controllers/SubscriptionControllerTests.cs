@@ -21,26 +21,32 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
+        private static readonly DateTime Now = DateTime.UtcNow;
 
         private Mock<ICommandHandler<UpdateBlogSubscriptionsCommand>> updateBlogSubscriptions;
         private Mock<ICommandHandler<UnsubscribeFromChannelCommand>> unsubscribeFromChannel;
-        private Mock<ICommandHandler<AcceptChannelSubscriptionPriceChangeCommand>> acceptPriceChange;
+        private Mock<ICommandHandler<SubscribeToChannelCommand>> subscribeToChannel;
         private Mock<IRequesterContext> requesterContext;
+        private Mock<ITimestampCreator> timestampCreator;
         private SubscriptionController target;
 
         public virtual void Initialize()
         {
             this.updateBlogSubscriptions = new Mock<ICommandHandler<UpdateBlogSubscriptionsCommand>>(MockBehavior.Strict);
             this.unsubscribeFromChannel = new Mock<ICommandHandler<UnsubscribeFromChannelCommand>>(MockBehavior.Strict);
-            this.acceptPriceChange = new Mock<ICommandHandler<AcceptChannelSubscriptionPriceChangeCommand>>(MockBehavior.Strict);
+            this.subscribeToChannel = new Mock<ICommandHandler<SubscribeToChannelCommand>>(MockBehavior.Strict);
+            this.timestampCreator = new Mock<ITimestampCreator>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.target = new SubscriptionController(
                 this.updateBlogSubscriptions.Object,
                 this.unsubscribeFromChannel.Object,
-                this.acceptPriceChange.Object,
-                this.requesterContext.Object);
+                this.subscribeToChannel.Object,
+                this.requesterContext.Object,
+                this.timestampCreator.Object);
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
+
+            this.timestampCreator.Setup(v => v.Now()).Returns(Now);
         }
 
         [TestClass]
@@ -138,6 +144,51 @@
         }
 
         [TestClass]
+        public class PostChannelSubscription : SubscriptionControllerTests
+        {
+            private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
+            private static readonly ValidAcceptedChannelPrice AcceptedPrice = ValidAcceptedChannelPrice.Parse(10);
+
+            private static readonly ChannelSubscriptionDataWithoutChannelId UpdatedSubscriptionData = new ChannelSubscriptionDataWithoutChannelId
+            {
+                AcceptedPrice = AcceptedPrice.Value
+            };
+
+            [TestInitialize]
+            public override void Initialize()
+            {
+                base.Initialize();
+            }
+
+            [TestMethod]
+            [ExpectedException(typeof(BadRequestException))]
+            public async Task WhenBlogIdIsNull_ItShouldThrowAnException()
+            {
+                await this.target.PostChannelSubscription(null, UpdatedSubscriptionData);
+            }
+
+            [TestMethod]
+            [ExpectedException(typeof(BadRequestException))]
+            public async Task WhenSubscriptionDataIsNull_ItShouldThrowAnException()
+            {
+                await this.target.PostChannelSubscription(ChannelId.Value.EncodeGuid(), null);
+            }
+
+            [TestMethod]
+            public async Task ItShouldUpdateBlogSubscriptions()
+            {
+                this.subscribeToChannel.Setup(v => v.HandleAsync(
+                    new SubscribeToChannelCommand(
+                        Requester,
+                        ChannelId,
+                        AcceptedPrice,
+                        Now))).Returns(Task.FromResult(0));
+
+                await this.target.PostChannelSubscription(ChannelId.Value.EncodeGuid(), UpdatedSubscriptionData);
+            }
+        }
+
+        [TestClass]
         public class PutChannelSubscription : SubscriptionControllerTests
         {
             private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
@@ -171,11 +222,12 @@
             [TestMethod]
             public async Task ItShouldUpdateBlogSubscriptions()
             {
-                this.acceptPriceChange.Setup(v => v.HandleAsync(
-                    new AcceptChannelSubscriptionPriceChangeCommand(
+                this.subscribeToChannel.Setup(v => v.HandleAsync(
+                    new SubscribeToChannelCommand(
                         Requester,
                         ChannelId,
-                        AcceptedPrice))).Returns(Task.FromResult(0));
+                        AcceptedPrice,
+                        Now))).Returns(Task.FromResult(0));
 
                 await this.target.PutChannelSubscription(ChannelId.Value.EncodeGuid(), UpdatedSubscriptionData);
             }

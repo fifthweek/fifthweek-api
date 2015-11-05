@@ -7,6 +7,7 @@
 
     using Dapper;
 
+    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -23,6 +24,8 @@
         private readonly IFileInformationAggregator fileInformationAggregator;
         private readonly IMimeTypeMap mimeTypeMap;
         private readonly ITimestampCreator timestampCreator;
+        private readonly IGetAccessSignatureExpiryInformation getAccessSignatureExpiryInformation;
+        private readonly IBlobService blobService;
 
         public async Task<GetNewsfeedQueryResult> HandleAsync(GetNewsfeedQuery query)
         {
@@ -43,16 +46,24 @@
 
             var posts = postsResult.Posts;
 
+            var expiry = this.getAccessSignatureExpiryInformation.Execute(now);
+
             var results = new List<GetNewsfeedQueryResult.Post>();
             foreach (var post in posts)
             {
                 FileInformation image = null;
+                BlobSharedAccessInformation imageAccessInformation = null;
                 if (post.ImageId != null)
                 {
                     image = await this.fileInformationAggregator.GetFileInformationAsync(
                        post.ChannelId,
                        post.ImageId,
                        FilePurposes.PostImage);
+
+                    imageAccessInformation = await this.blobService.GetBlobSharedAccessInformationForReadingAsync(
+                        image.ContainerName,
+                        image.FileId.Value.EncodeGuid() + "/" + FileManagement.Shared.Constants.PostPreviewImageThumbnailName,
+                        expiry.Public);
                 }
 
                 RenderSize imageRenderSize = null;
@@ -69,6 +80,7 @@
                     post.PreviewText,
                     image,
                     image == null ? null : new FileSourceInformation(post.ImageName, post.ImageExtension, this.mimeTypeMap.GetMimeType(post.ImageExtension), post.ImageSize ?? 0, imageRenderSize),
+                    imageAccessInformation,
                     post.PreviewWordCount,
                     post.WordCount,
                     post.ImageCount,
@@ -81,7 +93,7 @@
                 results.Add(completePost);
             }
 
-            return new GetNewsfeedQueryResult(results, postsResult.AccountBalance);
+            return new GetNewsfeedQueryResult(results);
         }
     }
 }

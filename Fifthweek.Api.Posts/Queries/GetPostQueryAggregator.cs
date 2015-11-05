@@ -108,6 +108,15 @@
                     FilePurposes.ProfileImage);
             }
 
+            FileInformation headerImage = null;
+            if (post.HeaderImageFileId != null)
+            {
+                headerImage = await this.fileInformationAggregator.GetFileInformationAsync(
+                    null,
+                    post.HeaderImageFileId,
+                    FilePurposes.ProfileHeaderImage);
+            }
+
             var postContent = post.Content.Value;
             if (isPreview)
             {
@@ -119,7 +128,7 @@
                 new GetPreviewNewsfeedQueryResult.PreviewPostCreator(new Username(post.Username), profileImage),
                 post.PostId,
                 post.BlogId,
-                new GetPreviewNewsfeedQueryResult.PreviewPostBlog(new BlogName(post.BlogName)),
+                new GetPreviewNewsfeedQueryResult.PreviewPostBlog(new BlogName(post.BlogName), headerImage, post.Introduction),
                 post.ChannelId,
                 new GetPreviewNewsfeedQueryResult.PreviewPostChannel(new ChannelName(post.ChannelName)),
                 new Comment(postContent),

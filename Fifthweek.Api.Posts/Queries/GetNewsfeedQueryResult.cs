@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
 
+    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
@@ -15,8 +16,6 @@
     public partial class GetNewsfeedQueryResult
     {
         public IReadOnlyList<Post> Posts { get; private set; }
-
-        public int AccountBalance { get; private set; }
 
         [AutoConstructor, AutoEqualityMembers]
         public partial class Post
@@ -37,6 +36,9 @@
 
             [Optional]
             public FileSourceInformation ImageSource { get; private set; }
+
+            [Optional]
+            public BlobSharedAccessInformation ImageAccessInformation { get; private set; }
 
             public int PreviewWordCount { get; private set; }
 

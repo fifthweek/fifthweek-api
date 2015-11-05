@@ -856,6 +856,22 @@ describe('subscription stub', function() {
     expect(result).toBe(responseData);
   });
 
+  it('should post channel subscription', function() {
+    var channelId = 'value0';
+    var subscriptionData = 'value-body';
+
+    var responseData = 'response data';
+    $httpBackend.expectPOST(utilities.fixUri(fifthweekConstants.apiBaseUri + 'subscriptions/channels/' + encodeURIComponent(channelId), subscriptionData)).respond(200, responseData);
+
+    var result = null;
+    target.postChannelSubscription(channelId, subscriptionData).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
   it('should delete channel subscription', function() {
     var channelId = 'value0';
 

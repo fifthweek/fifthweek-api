@@ -34,6 +34,7 @@
         private static readonly DateTime Timestamp = DateTime.UtcNow;
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
         private static readonly string CreatorUsername = Guid.NewGuid().ToString();
+        private static readonly Introduction Introduction = new Introduction("intro");
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly ChannelId ChannelId = ChannelId.Random();
@@ -173,6 +174,8 @@
                     CreatorId,
                     CreatorUsername,
                     null,
+                    null,
+                    Introduction,
                     PostId,
                     BlogId,
                     BlogId.ToString(),
@@ -229,6 +232,10 @@
             using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreateTestBlogAsync(CreatorId.Value, BlogId.Value, null, Random, CreatorUsername, BlogId.ToString());
+
+                await databaseContext.Database.Connection.UpdateAsync(
+                        new Blog { Id = BlogId.Value, Introduction = Introduction.Value },
+                        Blog.Fields.Introduction);
 
                 var channel = ChannelTests.UniqueEntity(Random);
                 channel.BlogId = BlogId.Value;

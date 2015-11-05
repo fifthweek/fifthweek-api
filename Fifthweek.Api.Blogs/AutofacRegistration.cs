@@ -16,13 +16,14 @@
             builder.RegisterType<GetFreeAccessUsersDbStatement>().As<IGetFreeAccessUsersDbStatement>();
             builder.RegisterType<GetUserSubscriptionsDbStatement>().As<IGetUserSubscriptionsDbStatement>();
             builder.RegisterType<GetLandingPageDbStatement>().As<IGetLandingPageDbStatement>();
-            builder.RegisterType<AcceptChannelSubscriptionPriceChangeDbStatement>().As<IAcceptChannelSubscriptionPriceChangeDbStatement>();
+            builder.RegisterType<UpdateChannelSubscriptionDbStatement>().As<IUpdateChannelSubscriptionDbStatement>();
             builder.RegisterType<UnsubscribeFromChannelDbStatement>().As<IUnsubscribeFromChannelDbStatement>();
             builder.RegisterType<UpdateBlogSubscriptionsDbStatement>().As<IUpdateBlogSubscriptionsDbStatement>();
             builder.RegisterType<GetIsTestUserBlogDbStatement>().As<IGetIsTestUserBlogDbStatement>();
             builder.RegisterType<GetBlogSubscriberInformationDbStatement>().As<IGetBlogSubscriberInformationDbStatement>();
             builder.RegisterType<GetCreatorRevenueDbStatement>().As<IGetCreatorRevenueDbStatement>();
             builder.RegisterType<GetAllCreatorRevenuesDbStatement>().As<IGetAllCreatorRevenuesDbStatement>();
+            builder.RegisterType<GetIsTestUserChannelDbStatement>().As<IGetIsTestUserChannelDbStatement>();
         }
     }
 }

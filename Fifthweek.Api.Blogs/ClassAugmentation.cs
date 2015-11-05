@@ -1,54 +1,10 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 29/10/2015 18:07:24 (UTC)
-//// Mapped solution in 32.95s
+//// Generated on 03/11/2015 19:07:41 (UTC)
+//// Mapped solution in 40.73s
 
 
-namespace Fifthweek.Api.Blogs
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Blogs.Commands;
-    using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.SnapshotCreation;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Blogs.Queries;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Api.Collections.Shared;
-    using System.Transactions;
-
-    public partial class AcceptChannelSubscriptionPriceChangeDbStatement 
-    {
-        public AcceptChannelSubscriptionPriceChangeDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
-            Fifthweek.Payments.SnapshotCreation.IRequestSnapshotService requestSnapshot)
-        {
-            if (connectionFactory == null)
-            {
-                throw new ArgumentNullException("connectionFactory");
-            }
-
-            if (requestSnapshot == null)
-            {
-                throw new ArgumentNullException("requestSnapshot");
-            }
-
-            this.connectionFactory = connectionFactory;
-            this.requestSnapshot = requestSnapshot;
-        }
-    }
-}
 namespace Fifthweek.Api.Blogs
 {
     using System;
@@ -204,88 +160,47 @@ namespace Fifthweek.Api.Blogs
         }
     }
 }
-namespace Fifthweek.Api.Blogs.Commands
+namespace Fifthweek.Api.Blogs
 {
     using System;
     using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Blogs.Shared;
-    using System.Transactions;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Payments.SnapshotCreation;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Persistence.Identity;
-
-    public partial class AcceptChannelSubscriptionPriceChangeCommand 
-    {
-        public AcceptChannelSubscriptionPriceChangeCommand(
-            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
-            Fifthweek.Api.Channels.Shared.ChannelId channelId,
-            Fifthweek.Api.Channels.Shared.ValidAcceptedChannelPrice acceptedPrice)
-        {
-            if (requester == null)
-            {
-                throw new ArgumentNullException("requester");
-            }
-
-            if (channelId == null)
-            {
-                throw new ArgumentNullException("channelId");
-            }
-
-            if (acceptedPrice == null)
-            {
-                throw new ArgumentNullException("acceptedPrice");
-            }
-
-            this.Requester = requester;
-            this.ChannelId = channelId;
-            this.AcceptedPrice = acceptedPrice;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Blogs.Shared;
-    using System.Transactions;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.Payments.SnapshotCreation;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Collections.Generic;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
-    public partial class AcceptChannelSubscriptionPriceChangeCommandHandler 
+    public partial class UpdateChannelSubscriptionDbStatement 
     {
-        public AcceptChannelSubscriptionPriceChangeCommandHandler(
-            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Blogs.IAcceptChannelSubscriptionPriceChangeDbStatement acceptPriceChange)
+        public UpdateChannelSubscriptionDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
+            Fifthweek.Payments.SnapshotCreation.IRequestSnapshotService requestSnapshot)
         {
-            if (requesterSecurity == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("requesterSecurity");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            if (acceptPriceChange == null)
+            if (requestSnapshot == null)
             {
-                throw new ArgumentNullException("acceptPriceChange");
+                throw new ArgumentNullException("requestSnapshot");
             }
 
-            this.requesterSecurity = requesterSecurity;
-            this.acceptPriceChange = acceptPriceChange;
+            this.connectionFactory = connectionFactory;
+            this.requestSnapshot = requestSnapshot;
         }
     }
 }
@@ -985,8 +900,9 @@ namespace Fifthweek.Api.Blogs.Controllers
         public SubscriptionController(
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Blogs.Commands.UpdateBlogSubscriptionsCommand> updateBlogSubscriptions,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Blogs.Commands.UnsubscribeFromChannelCommand> unsubscribeFromChannel,
-            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Blogs.Commands.AcceptChannelSubscriptionPriceChangeCommand> acceptPriceChange,
-            Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext)
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Blogs.Commands.SubscribeToChannelCommand> subscribeToChannel,
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
+            Fifthweek.Shared.ITimestampCreator timestampCreator)
         {
             if (updateBlogSubscriptions == null)
             {
@@ -998,9 +914,9 @@ namespace Fifthweek.Api.Blogs.Controllers
                 throw new ArgumentNullException("unsubscribeFromChannel");
             }
 
-            if (acceptPriceChange == null)
+            if (subscribeToChannel == null)
             {
-                throw new ArgumentNullException("acceptPriceChange");
+                throw new ArgumentNullException("subscribeToChannel");
             }
 
             if (requesterContext == null)
@@ -1008,10 +924,16 @@ namespace Fifthweek.Api.Blogs.Controllers
                 throw new ArgumentNullException("requesterContext");
             }
 
+            if (timestampCreator == null)
+            {
+                throw new ArgumentNullException("timestampCreator");
+            }
+
             this.updateBlogSubscriptions = updateBlogSubscriptions;
             this.unsubscribeFromChannel = unsubscribeFromChannel;
-            this.acceptPriceChange = acceptPriceChange;
+            this.subscribeToChannel = subscribeToChannel;
             this.requesterContext = requesterContext;
+            this.timestampCreator = timestampCreator;
         }
     }
 }
@@ -3226,6 +3148,109 @@ namespace Fifthweek.Api.Blogs
         }
     }
 }
+namespace Fifthweek.Api.Blogs.Commands
+{
+    using System;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+
+    public partial class SubscribeToChannelCommand 
+    {
+        public SubscribeToChannelCommand(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            Fifthweek.Api.Channels.Shared.ChannelId channelId,
+            Fifthweek.Api.Channels.Shared.ValidAcceptedChannelPrice acceptedPrice,
+            System.DateTime timestamp)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            if (acceptedPrice == null)
+            {
+                throw new ArgumentNullException("acceptedPrice");
+            }
+
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            this.Requester = requester;
+            this.ChannelId = channelId;
+            this.AcceptedPrice = acceptedPrice;
+            this.Timestamp = timestamp;
+        }
+    }
+}
+namespace Fifthweek.Api.Blogs.Commands
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class SubscribeToChannelCommandHandler 
+    {
+        public SubscribeToChannelCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Api.Blogs.IUpdateChannelSubscriptionDbStatement updateChannelSubscription,
+            Fifthweek.Api.Blogs.IGetIsTestUserChannelDbStatement getIsTestUserChannel)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (updateChannelSubscription == null)
+            {
+                throw new ArgumentNullException("updateChannelSubscription");
+            }
+
+            if (getIsTestUserChannel == null)
+            {
+                throw new ArgumentNullException("getIsTestUserChannel");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.updateChannelSubscription = updateChannelSubscription;
+            this.getIsTestUserChannel = getIsTestUserChannel;
+        }
+    }
+}
+namespace Fifthweek.Api.Blogs
+{
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+
+    public partial class GetIsTestUserChannelDbStatement 
+    {
+        public GetIsTestUserChannelDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
 
 namespace Fifthweek.Api.Blogs
 {
@@ -3341,84 +3366,6 @@ namespace Fifthweek.Api.Blogs
                 }
             }
             else if (this.Channels != null || other.Channels != null)
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Blogs.Shared;
-    using System.Transactions;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Payments.SnapshotCreation;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Persistence.Identity;
-
-    public partial class AcceptChannelSubscriptionPriceChangeCommand 
-    {
-        public override string ToString()
-        {
-            return string.Format("AcceptChannelSubscriptionPriceChangeCommand({0}, {1}, {2})", this.Requester == null ? "null" : this.Requester.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.AcceptedPrice == null ? "null" : this.AcceptedPrice.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((AcceptChannelSubscriptionPriceChangeCommand)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.AcceptedPrice != null ? this.AcceptedPrice.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(AcceptChannelSubscriptionPriceChangeCommand other)
-        {
-            if (!object.Equals(this.Requester, other.Requester))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ChannelId, other.ChannelId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.AcceptedPrice, other.AcceptedPrice))
             {
                 return false;
             }
@@ -6866,6 +6813,79 @@ namespace Fifthweek.Api.Blogs.Controllers
                 }
             }
             else if (this.Subscriptions != null || other.Subscriptions != null)
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Blogs.Commands
+{
+    using System;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+
+    public partial class SubscribeToChannelCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("SubscribeToChannelCommand({0}, {1}, {2}, {3})", this.Requester == null ? "null" : this.Requester.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.AcceptedPrice == null ? "null" : this.AcceptedPrice.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((SubscribeToChannelCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.AcceptedPrice != null ? this.AcceptedPrice.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(SubscribeToChannelCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.AcceptedPrice, other.AcceptedPrice))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Timestamp, other.Timestamp))
             {
                 return false;
             }

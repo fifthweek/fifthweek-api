@@ -28,6 +28,8 @@
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
         private static readonly string Username = "username";
         private static readonly FileId ProfileImageFileId = FileId.Random();
+        private static readonly FileId HeaderImageFileId = FileId.Random();
+        private static readonly Introduction Introduction = new Introduction("intro");
         private static readonly GetPreviewNewsfeedQueryResult.PreviewPostCreator Creator =
             new GetPreviewNewsfeedQueryResult.PreviewPostCreator(
                 new Username(Username),
@@ -36,7 +38,9 @@
         private static readonly string BlogName = "blog-name";
         private static readonly GetPreviewNewsfeedQueryResult.PreviewPostBlog Blog =
             new GetPreviewNewsfeedQueryResult.PreviewPostBlog(
-                new BlogName(BlogName));
+                new BlogName(BlogName),
+                new FileInformation(HeaderImageFileId, "container"),
+                Introduction);
         private static readonly ChannelId ChannelId = ChannelId.Random();
         private static readonly string ChannelName = "channel-name";
         private static readonly GetPreviewNewsfeedQueryResult.PreviewPostChannel Channel =
@@ -92,7 +96,7 @@
 
         private static readonly GetPostDbResult PostData = new GetPostDbResult(
             new PreviewNewsfeedPost(
-                CreatorId, Username, ProfileImageFileId, PostId, BlogId, BlogName, ChannelId, ChannelName,
+                CreatorId, Username, ProfileImageFileId, HeaderImageFileId, Introduction, PostId, BlogId, BlogName, ChannelId, ChannelName,
                 PreviewText, Content, FileId.Random(), PreviewWordCount, WordCount, ImageCount, FileCount,
                 LiveDate, null, null, null, null, null, LikesCount, CommentsCount, true, CreationDate),
                 new List<GetPostDbResult.PostFileDbResult>
@@ -121,6 +125,8 @@
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(null, ProfileImageFileId, FilePurposes.ProfileImage))
                 .ReturnsAsync(Creator.ProfileImage);
+            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(null, HeaderImageFileId, FilePurposes.ProfileHeaderImage))
+                .ReturnsAsync(Blog.HeaderImage);
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(ChannelId, FileId1, FilePurpose1))
                 .ReturnsAsync(new FileInformation(FileId1, ContainerName1));
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(ChannelId, FileId2, FilePurpose2))

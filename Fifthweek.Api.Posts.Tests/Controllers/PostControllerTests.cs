@@ -136,7 +136,7 @@
                 StartIndex = 10
             };
 
-            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, BlogId, ChannelId, new PreviewText(string.Empty), null, null, 0, 0, 0, 0, DateTime.UtcNow, 0, 0, false) }, 10);
+            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, BlogId, ChannelId, new PreviewText(string.Empty), null, null, null, 0, 0, 0, 0, DateTime.UtcNow, 0, 0, false) });
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.getNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
@@ -167,7 +167,7 @@
                 StartIndex = 10
             };
 
-            var queryResult = new GetPreviewNewsfeedQueryResult(new[] { new GetPreviewNewsfeedQueryResult.PreviewPost(UserId, new GetPreviewNewsfeedQueryResult.PreviewPostCreator(Username, null), PostId, BlogId, new GetPreviewNewsfeedQueryResult.PreviewPostBlog(BlogName), ChannelId, new GetPreviewNewsfeedQueryResult.PreviewPostChannel(ChannelName), new PreviewText(string.Empty), null, null, null, 0, 0, 0, 0, DateTime.UtcNow, 0, 0, false) });
+            var queryResult = new GetPreviewNewsfeedQueryResult(new[] { new GetPreviewNewsfeedQueryResult.PreviewPost(UserId, new GetPreviewNewsfeedQueryResult.PreviewPostCreator(Username, null), PostId, BlogId, new GetPreviewNewsfeedQueryResult.PreviewPostBlog(BlogName, null, null), ChannelId, new GetPreviewNewsfeedQueryResult.PreviewPostChannel(ChannelName), new PreviewText(string.Empty), null, null, null, 0, 0, 0, 0, DateTime.UtcNow, 0, 0, false) });
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.getPreviewNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
@@ -484,7 +484,7 @@
                     new GetPreviewNewsfeedQueryResult.PreviewPostCreator(new Username(UserId.ToString()), null),
                     PostId,
                     BlogId,
-                    new GetPreviewNewsfeedQueryResult.PreviewPostBlog(new BlogName(BlogId.ToString())), 
+                    new GetPreviewNewsfeedQueryResult.PreviewPostBlog(new BlogName(BlogId.ToString()), null, null), 
                     ChannelId, 
                     new GetPreviewNewsfeedQueryResult.PreviewPostChannel(new ChannelName(ChannelId.ToString())), 
                     new Comment(string.Empty),

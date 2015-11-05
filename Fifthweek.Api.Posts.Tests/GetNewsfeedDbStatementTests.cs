@@ -36,23 +36,13 @@
         const int Posts = 6;
         
         private static readonly UserId UnsubscribedUserId = new UserId(Guid.NewGuid());
-        private static readonly UserId SubscribedLowPriceUserId = new UserId(Guid.NewGuid());
-        private static readonly UserId SubscribedHighPriceUserId = new UserId(Guid.NewGuid());
         private static readonly UserId SubscribedUserId = new UserId(Guid.NewGuid());
-        private static readonly UserId SubscribedUserIdNoBalance = new UserId(Guid.NewGuid());
-        private static readonly UserId SubscribedUserIdZeroBalance = new UserId(Guid.NewGuid());
-        private static readonly UserId SubscribedUserIdZeroBalancePaymentInProgress = new UserId(Guid.NewGuid());
         private static readonly UserId GuestListUserId = new UserId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
         private static readonly List<UserId> UserIds = new List<UserId>
         {
             UnsubscribedUserId,
-            SubscribedLowPriceUserId,
-            SubscribedHighPriceUserId,
             SubscribedUserId,
-            SubscribedUserIdNoBalance,
-            SubscribedUserIdZeroBalance,
-            SubscribedUserIdZeroBalancePaymentInProgress,
             GuestListUserId,
             CreatorId,
         };
@@ -169,25 +159,6 @@
                     var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, Now, origin, searchForwards, startIndex, count);
 
                     CollectionAssert.AreEquivalent(expectedPosts.ToList(), result.Posts.ToList());
-                });
-
-                return ExpectedSideEffects.None;
-            });
-        }
-
-        [TestMethod]
-        public async Task ItShouldReturnExpectedAccountBalances()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.target = new GetNewsfeedDbStatement(testDatabase);
-                await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
-                await testDatabase.TakeSnapshotAsync();
-
-                await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts, expectedAccountBalance) =>
-                {
-                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, Now, origin, searchForwards, startIndex, count);
-                    Assert.AreEqual(expectedAccountBalance, result.AccountBalance);
                 });
 
                 return ExpectedSideEffects.None;
@@ -365,29 +336,9 @@
             await parameterizedTest(
                 SubscribedUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList(), 10);
 
-            // Subscribed at low price.
-            await parameterizedTest(
-                SubscribedLowPriceUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 10);
-
-            // Subscribed at high price.
-            await parameterizedTest(
-                SubscribedHighPriceUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList(), 10);
-
             // Subscribed at zero, but on free access list.
             await parameterizedTest(
                 GuestListUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList(), 0);
-
-            // Subscribed with no balance.
-            await parameterizedTest(
-                SubscribedUserIdNoBalance, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 0);
-
-            // Subscribed with zero balance.
-            await parameterizedTest(
-                SubscribedUserIdZeroBalance, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 0);
-
-            // Subscribed with zero balance but retrying billing.
-            await parameterizedTest(
-                SubscribedUserIdZeroBalancePaymentInProgress, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList(), 0);
 
             // Filter by channel for creator.
             await parameterizedTest(
@@ -432,11 +383,6 @@
             {
                 await this.CreateUserAsync(databaseContext, UnsubscribedUserId);
                 await this.CreateUserAsync(databaseContext, SubscribedUserId);
-                await this.CreateUserAsync(databaseContext, SubscribedLowPriceUserId);
-                await this.CreateUserAsync(databaseContext, SubscribedHighPriceUserId);
-                await this.CreateUserAsync(databaseContext, SubscribedUserIdNoBalance);
-                await this.CreateUserAsync(databaseContext, SubscribedUserIdZeroBalance);
-                await this.CreateUserAsync(databaseContext, SubscribedUserIdZeroBalancePaymentInProgress);
                 await this.CreateUserAsync(databaseContext, GuestListUserId);
 
                 var channelSubscriptions = new List<ChannelSubscription>();
@@ -460,30 +406,6 @@
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserId.Value, null, ChannelPrice, Now, Now));
                     calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserId.Value, LedgerAccountType.FifthweekCredit, Now, 10));
                     calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserId.Value, LedgerAccountType.FifthweekCredit, Now.AddDays(-1), 0));
-
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserIdNoBalance.Value, null, ChannelPrice, Now, Now));
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserIdNoBalance.Value, null, ChannelPrice, Now, Now));
-                    origins.Add(new UserPaymentOrigin(SubscribedUserIdNoBalance.Value, null, null, default(PaymentOriginKeyType), null, null, null, null, PaymentStatus.Failed));
-
-                    // The query should round down to zero for account balance.
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserIdZeroBalance.Value, null, ChannelPrice, Now, Now));
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserIdZeroBalance.Value, null, ChannelPrice, Now, Now));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalance.Value, LedgerAccountType.FifthweekCredit, Now.AddDays(-1), 10));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalance.Value, LedgerAccountType.FifthweekCredit, Now, 0.8m));
-
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserIdZeroBalancePaymentInProgress.Value, null, ChannelPrice, Now, Now));
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserIdZeroBalancePaymentInProgress.Value, null, ChannelPrice, Now, Now));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalancePaymentInProgress.Value, LedgerAccountType.FifthweekCredit, Now.AddDays(-1), 10));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalancePaymentInProgress.Value, LedgerAccountType.FifthweekCredit, Now, 0.8m));
-                    origins.Add(new UserPaymentOrigin(SubscribedUserIdZeroBalancePaymentInProgress.Value, null, null, default(PaymentOriginKeyType), null, null, null, null, PaymentStatus.Retry1));
-
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedLowPriceUserId.Value, null, ChannelPrice / 2, Now, Now));
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedLowPriceUserId.Value, null, ChannelPrice / 2, Now, Now));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedLowPriceUserId.Value, LedgerAccountType.FifthweekCredit, Now, 10));
-                    
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedHighPriceUserId.Value, null, ChannelPrice * 2, Now, Now));
-                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedHighPriceUserId.Value, null, ChannelPrice * 2, Now, Now));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedHighPriceUserId.Value, LedgerAccountType.FifthweekCredit, Now, 10));
                     
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, GuestListUserId.Value, null, 0, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, GuestListUserId.Value, null, 0, Now, Now));

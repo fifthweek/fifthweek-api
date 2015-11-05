@@ -90,13 +90,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="AcceptChannelSubscriptionPriceChangeDbStatementTests.cs" />
+    <Compile Include="GetIsTestUserChannelDbStatementTests.cs" />
+    <Compile Include="UpdateChannelSubscriptionDbStatementTests.cs" />
     <Compile Include="ClassAugmentation.cs">
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Commands\AcceptChannelSubscriptionPriceChangeCommandHandlerTests.cs" />
+    <Compile Include="Commands\SubscribeToChannelCommandHandlerTests.cs" />
     <Compile Include="Commands\UnsubscribeFromChannelCommandHandlerTests.cs" />
     <Compile Include="Commands\UpdateBlogCommandHandlerTests.cs" />
     <Compile Include="Commands\CreateBlogCommandHandlerTests.cs" />

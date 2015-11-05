@@ -80,6 +80,12 @@
         public partial class PreviewPostBlog
         {
             public BlogName Name { get; private set; }
+
+            [Optional]
+            public FileInformation HeaderImage { get; private set; }
+
+            [Optional]
+            public Introduction Introduction { get; private set; }
         }
 
         [AutoConstructor, AutoEqualityMembers]

@@ -17,7 +17,7 @@
     using Fifthweek.Shared;
 
     [AutoConstructor]
-    public partial class AcceptChannelSubscriptionPriceChangeDbStatement : IAcceptChannelSubscriptionPriceChangeDbStatement
+    public partial class UpdateChannelSubscriptionDbStatement : IUpdateChannelSubscriptionDbStatement
     {
         private readonly IFifthweekDbConnectionFactory connectionFactory;
         private readonly IRequestSnapshotService requestSnapshot;
@@ -49,7 +49,7 @@
                         = ChannelSubscription.Fields.AcceptedPrice
                         | ChannelSubscription.Fields.PriceLastAcceptedDate;
 
-                    await connection.UpdateAsync(
+                    await connection.UpsertAsync(
                         channelSubscription,
                         UpdateFields);
                 }

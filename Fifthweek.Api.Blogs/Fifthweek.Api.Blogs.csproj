@@ -78,17 +78,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AcceptChannelSubscriptionPriceChangeDbStatement.cs" />
+    <Compile Include="UpdateChannelSubscriptionDbStatement.cs" />
     <Compile Include="AutofacRegistration.cs" />
     <Compile Include="BlogsConstants.cs" />
     <Compile Include="BlogSubscriptionDbStatus.cs" />
+    <Compile Include="Commands\SubscribeToChannelCommand.cs" />
+    <Compile Include="Commands\SubscribeToChannelCommandHandler.cs" />
+    <Compile Include="GetIsTestUserChannelDbStatement.cs" />
     <Compile Include="GetUserSubscriptionsDbResult.cs" />
-    <Compile Include="Commands\AcceptChannelSubscriptionPriceChangeCommand.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Commands\AcceptChannelSubscriptionPriceChangeCommandHandler.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Commands\AcceptedChannelSubscription.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -118,10 +115,11 @@
     <Compile Include="GetLandingPageDbStatement.cs" />
     <Compile Include="GetUserSubscriptionsDbStatement.cs" />
     <Compile Include="GetFreeAccessUsersDbStatement.cs" />
-    <Compile Include="IAcceptChannelSubscriptionPriceChangeDbStatement.cs" />
+    <Compile Include="IUpdateChannelSubscriptionDbStatement.cs" />
     <Compile Include="IGetAllCreatorRevenuesDbStatement.cs" />
     <Compile Include="IGetBlogSubscriberInformationDbStatement.cs" />
     <Compile Include="IGetCreatorRevenueDbStatement.cs" />
+    <Compile Include="IGetIsTestUserChannelDbStatement.cs" />
     <Compile Include="IGetLandingPageDbStatement.cs" />
     <Compile Include="IGetUserSubscriptionsDbStatement.cs" />
     <Compile Include="IGetFreeAccessUsersDbStatement.cs" />
