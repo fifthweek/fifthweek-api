@@ -43,9 +43,9 @@
 
             Assert.AreEqual(
                ("[{'type':'image','data':{'fileId':'abc'}}," +
-                "{'type':'text','data':{'text':'⁂⁂⁂ ⁂⁂⁂ ⁂⁂⁂⁂⁂, ⁂⁂⁂⁂!'}}," +
+                "{'type':'text','data':{'text':'⁂⁂⁂ ⁂⁂⁂ ⁂⁂⁂⁂⁂⁂ ⁂⁂⁂⁂⁂'}}," +
                 "{'type':'image','data':{'fileId':'def'}}," +
-                "{'type':'text','data':{'text':'⁂-⁂ ⁂⁂⁂⁂⁂.'}}]").Replace("'", "\""),
+                "{'type':'text','data':{'text':'⁂⁂⁂ ⁂⁂⁂⁂⁂⁂'}}]").Replace("'", "\""),
                 result);
         }
 
@@ -61,9 +61,9 @@
 
             Assert.AreEqual(
                ("[{'type':'image','data':{'fileId':'abc'}}," +
-                "{'type':'text','data':{'text':'One two thr⁂⁂, ⁂⁂⁂⁂!'}}," +
+                "{'type':'text','data':{'text':'One two thr⁂⁂⁂ ⁂⁂⁂⁂⁂'}}," +
                 "{'type':'image','data':{'fileId':'def'}}," +
-                "{'type':'text','data':{'text':'⁂-⁂ ⁂⁂⁂⁂⁂.'}}]").Replace("'", "\""),
+                "{'type':'text','data':{'text':'⁂⁂⁂ ⁂⁂⁂⁂⁂⁂'}}]").Replace("'", "\""),
                 result);
         }
     }

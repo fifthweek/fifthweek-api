@@ -18,7 +18,7 @@
                 return string.Empty;
             }
 
-            var regex = new Regex("[a-zA-Z0-9]");
+            var regex = new Regex(@"\S");
             dynamic result = JsonConvert.DeserializeObject(postContent);
             bool isFirstText = true;
             foreach (var item in result)
