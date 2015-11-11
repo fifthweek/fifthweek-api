@@ -9,7 +9,7 @@
     public partial class ValidPreviewText : PreviewText
     {
         public static readonly int MinLength = 1;
-        public static readonly int MaxLength = 1000;
+        public static readonly int MaxLength = 1500;
 
         private ValidPreviewText(string value)
             : base(value)

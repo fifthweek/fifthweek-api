@@ -114,6 +114,10 @@
     <Compile Include="Migrations\201510251521202_SupportFullArticles.Designer.cs">
       <DependentUpon>201510251521202_SupportFullArticles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201511111141019_IncreasePreviewTextTo1500Characters.cs" />
+    <Compile Include="Migrations\201511111141019_IncreasePreviewTextTo1500Characters.Designer.cs">
+      <DependentUpon>201511111141019_IncreasePreviewTextTo1500Characters.cs</DependentUpon>
+    </Compile>
     <Compile Include="PostFile.cs" />
     <Compile Include="Queue.cs" />
     <Compile Include="DapperExtensions.cs" />
@@ -638,6 +642,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201510251521202_SupportFullArticles.resx">
       <DependentUpon>201510251521202_SupportFullArticles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511111141019_IncreasePreviewTextTo1500Characters.resx">
+      <DependentUpon>201511111141019_IncreasePreviewTextTo1500Characters.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

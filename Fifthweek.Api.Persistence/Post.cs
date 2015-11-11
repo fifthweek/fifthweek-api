@@ -39,7 +39,7 @@
         public File PreviewImage { get; set; }
 
         [Optional]
-        [MaxLength(1000)]
+        [MaxLength(1500)]
         public string PreviewText { get; set; }
 
         [Required]
