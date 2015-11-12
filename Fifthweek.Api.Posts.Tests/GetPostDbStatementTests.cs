@@ -46,6 +46,7 @@
         private static readonly int WordCount = 22;
         private static readonly int ImageCount = 33;
         private static readonly int FileCount = 44;
+        private static readonly int VideoCount = 55;
 
         private static readonly FileId FileId1 = FileId.Random();
         private static readonly string FileName1 = "FileName1";
@@ -188,6 +189,7 @@
                     WordCount,
                     ImageCount,
                     FileCount,
+                    VideoCount,
                     LiveDate,
                     FileName1,
                     FileExtension1,
@@ -275,6 +277,7 @@
                 post.FileCount = FileCount;
                 post.Id = PostId.Value;
                 post.ImageCount = ImageCount;
+                post.VideoCount = VideoCount;
                 post.LiveDate = LiveDate;
                 post.PreviewImageId = FileId1.Value;
                 post.PreviewWordCount = PreviewWordCount;

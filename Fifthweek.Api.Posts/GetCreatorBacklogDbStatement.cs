@@ -18,7 +18,7 @@
     public partial class GetCreatorBacklogDbStatement : IGetCreatorBacklogDbStatement
     {
         private static readonly string Sql = string.Format(
-          @"SELECT    post.{1} AS PostId, post.{2}, {4}, {5}, {23}, {24}, {25}, {26}, {7} AS ImageId, {3}, post.{22}, image.{17} as ImageName, image.{18} as ImageExtension, image.{19} as ImageSize, image.{20} as ImageRenderWidth, image.{21} as ImageRenderHeight
+          @"SELECT    post.{1} AS PostId, post.{2}, {4}, {5}, {23}, {24}, {25}, {26}, {27}, {7} AS ImageId, {3}, post.{22}, image.{17} as ImageName, image.{18} as ImageExtension, image.{19} as ImageSize, image.{20} as ImageRenderWidth, image.{21} as ImageRenderHeight
             FROM        {0} post
             INNER JOIN  {9} channel
                 ON      post.{2} = channel.{10}
@@ -55,6 +55,7 @@
           Post.Fields.PreviewWordCount,
           Post.Fields.WordCount,
           Post.Fields.ImageCount,
+          Post.Fields.VideoCount,
           Post.Fields.FileCount);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;

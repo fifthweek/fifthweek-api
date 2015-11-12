@@ -55,6 +55,7 @@
         private static readonly int WordCount = 22;
         private static readonly int ImageCount = 33;
         private static readonly int FileCount = 44;
+        private static readonly int VideoCount = 77;
         private static readonly int CommentsCount = 55;
         private static readonly int LikesCount = 66;
 
@@ -97,7 +98,7 @@
         private static readonly GetPostDbResult PostData = new GetPostDbResult(
             new PreviewNewsfeedPost(
                 CreatorId, Username, ProfileImageFileId, HeaderImageFileId, Introduction, PostId, BlogId, BlogName, ChannelId, ChannelName,
-                PreviewText, Content, FileId.Random(), PreviewWordCount, WordCount, ImageCount, FileCount,
+                PreviewText, Content, FileId.Random(), PreviewWordCount, WordCount, ImageCount, FileCount, VideoCount,
                 LiveDate, null, null, null, null, null, LikesCount, CommentsCount, true, CreationDate),
                 new List<GetPostDbResult.PostFileDbResult>
                 {
@@ -218,6 +219,7 @@
                         WordCount,
                         ImageCount,
                         FileCount,
+                        VideoCount,
                         LiveDate,
                         LikesCount,
                         CommentsCount,

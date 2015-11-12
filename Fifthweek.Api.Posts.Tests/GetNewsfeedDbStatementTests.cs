@@ -215,6 +215,7 @@
                         _.WordCount = 0;
                         _.ImageCount = 0;
                         _.FileCount = 0;
+                        _.VideoCount = 0;
                         _.ImageId = null;
                         _.ImageName = null;
                         _.ImageExtension = null;
@@ -448,6 +449,7 @@
                             newsfeedPost.WordCount,
                             newsfeedPost.ImageCount,
                             newsfeedPost.FileCount,
+                            newsfeedPost.VideoCount,
                             newsfeedPost.LiveDate,
                             newsfeedPost.CreationDate));
 
@@ -587,6 +589,7 @@
                                 i % 2 == 0 ? PreviewText.Value.Length : 0,
                                 i % 3 == 2 ? 1 : 0,
                                 i % 3 == 1 ? 1 : 0,
+                                i,
                                 liveDate,
                                 i % 3 == 2 ? FileName : null,
                                 i % 3 == 2 ? FileExtension : null,
@@ -663,6 +666,7 @@
                     v.WordCount,
                     v.ImageCount,
                     v.FileCount,
+                    v.VideoCount,
                     v.LiveDate,
                     v.ImageName,
                     v.ImageExtension,

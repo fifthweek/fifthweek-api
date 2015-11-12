@@ -43,6 +43,7 @@
                 Content.Value.Length,
                 1,
                 0,
+                0,
                 default(DateTime),
                 Now);
 
@@ -61,6 +62,7 @@
                 PreviewText.Value.Length,
                 Content.Value.Length,
                 1,
+                0,
                 0,
                 default(DateTime),
                 Now);
@@ -81,6 +83,7 @@
                 Content.Value.Length,
                 0,
                 1,
+                0,
                 default(DateTime),
                 Now);
 
@@ -98,6 +101,7 @@
                 Content.Value,
                 PreviewText.Value.Length,
                 Content.Value.Length,
+                1,
                 1,
                 1,
                 default(DateTime),
@@ -119,6 +123,7 @@
                 Content.Value.Length,
                 0,
                 0,
+                0,
                 default(DateTime),
                 Now);
 
@@ -136,6 +141,7 @@
                 Content.Value,
                 PreviewText.Value.Length,
                 Content.Value.Length,
+                1,
                 1,
                 1,
                 default(DateTime),
@@ -171,6 +177,7 @@
                 Content.Value.Length, 
                 0, 
                 1, 
+                0,
                 Now);
 
             this.subStatements.Verify();
@@ -193,6 +200,7 @@
                 PreviewText.Value.Length,
                 Content.Value.Length,
                 1,
+                0,
                 0,
                 Now);
 
@@ -217,6 +225,7 @@
                 Content.Value.Length,
                 1,
                 0,
+                0,
                 Now);
 
             this.subStatements.Verify();
@@ -238,6 +247,7 @@
                 CommentedFileAndImageFileIds,
                 PreviewText.Value.Length,
                 Content.Value.Length,
+                1,
                 1,
                 1,
                 Now);
@@ -263,6 +273,7 @@
                 Content.Value.Length,
                 0,
                 0,
+                0,
                 Now);
 
             this.subStatements.Verify();
@@ -286,6 +297,7 @@
                 Content.Value.Length,
                 1,
                 0,
+                0,
                 Now);
 
             this.subStatements.Verify();
@@ -307,6 +319,7 @@
                 QueuedCommentedFileAndImageFileIds,
                 PreviewText.Value.Length,
                 Content.Value.Length,
+                1,
                 1,
                 1,
                 Now);

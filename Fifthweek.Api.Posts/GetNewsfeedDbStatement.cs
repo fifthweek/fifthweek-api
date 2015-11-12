@@ -24,7 +24,7 @@
     {
         private static readonly string SqlSelectPartial = string.Format(@"
                 blog.{12} AS BlogId, blog.{13} AS CreatorId, post.{1} AS PostId, 
-                post.{2}, {7} AS ImageId, {3}, post.{21}, {22}, {23}, {24}, {25},
+                post.{2}, {7} AS ImageId, {3}, post.{21}, {22}, {23}, {24}, {25}, {26},
                 image.{16} as ImageName, image.{17} as ImageExtension, image.{18} as ImageSize, 
                 image.{19} as ImageRenderWidth, image.{20} as ImageRenderHeight,
                 COALESCE(likes.LikesCount, 0) AS LikesCount,
@@ -54,6 +54,7 @@
             Post.Fields.PreviewWordCount,
             Post.Fields.WordCount,
             Post.Fields.ImageCount,
+            Post.Fields.VideoCount,
             Post.Fields.FileCount);
 
         private static readonly string SqlHasLikedSelect = string.Format(@",

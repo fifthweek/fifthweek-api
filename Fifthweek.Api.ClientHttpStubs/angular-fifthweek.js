@@ -320,6 +320,7 @@ angular.module('webApp').factory('postStub',
     //     wordCount: 0,
     //     imageCount: 0,
     //     fileCount: 0,
+    //     videoCount: 0,
     //     liveDate: '2015-12-25T14:45:05Z'
     //   }
     // ]
@@ -359,17 +360,24 @@ angular.module('webApp').factory('postStub',
     //           height: 0
     //         }
     //       },
+    //       imageAccessInformation: { /* optional */
+    //         containerName: '',
+    //         blobName: '',
+    //         uri: '',
+    //         signature: '',
+    //         expiry: '2015-12-25T14:45:05Z'
+    //       },
     //       previewWordCount: 0,
     //       wordCount: 0,
     //       imageCount: 0,
     //       fileCount: 0,
+    //       videoCount: 0,
     //       liveDate: '2015-12-25T14:45:05Z',
     //       likesCount: 0,
     //       commentsCount: 0,
     //       hasLiked: false
     //     }
-    //   ],
-    //   accountBalance: 0
+    //   ]
     // }
     service.getNewsfeed = function(filterData) {
       return $http.get(utilities.fixUri(apiBaseUri + 'posts/newsfeed?' + (filterData.creatorId === undefined ? '' : 'creatorId=' + encodeURIComponent(filterData.creatorId) + '&') + (filterData.channelId === undefined ? '' : 'channelId=' + encodeURIComponent(filterData.channelId) + '&') + (filterData.origin === undefined ? '' : 'origin=' + encodeURIComponent(filterData.origin) + '&') + (filterData.searchForwards === undefined ? '' : 'searchForwards=' + encodeURIComponent(filterData.searchForwards) + '&') + (filterData.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(filterData.startIndex) + '&') + (filterData.count === undefined ? '' : 'count=' + encodeURIComponent(filterData.count) + '&'))).catch(function(response) {
@@ -394,17 +402,17 @@ angular.module('webApp').factory('postStub',
     //         profileImage: { /* optional */
     //           fileId: 'Base64Guid',
     //           containerName: ''
-    //         },
+    //         }
+    //       },
+    //       postId: 'Base64Guid',
+    //       blogId: 'Base64Guid',
+    //       blog: {
+    //         name: '',
     //         headerImage: { /* optional */
     //           fileId: 'Base64Guid',
     //           containerName: ''
     //         },
     //         introduction: '' /* optional */
-    //       },
-    //       postId: 'Base64Guid',
-    //       blogId: 'Base64Guid',
-    //       blog: {
-    //         name: ''
     //       },
     //       channelId: 'Base64Guid',
     //       channel: {
@@ -436,6 +444,7 @@ angular.module('webApp').factory('postStub',
     //       wordCount: 0,
     //       imageCount: 0,
     //       fileCount: 0,
+    //       videoCount: 0,
     //       liveDate: '2015-12-25T14:45:05Z',
     //       likesCount: 0,
     //       commentsCount: 0,
@@ -460,6 +469,7 @@ angular.module('webApp').factory('postStub',
     //   wordCount: 0,
     //   imageCount: 0,
     //   fileCount: 0,
+    //   videoCount: 0,
     //   fileIds: [ /* optional */
     //     'Base64Guid'
     //   ]
@@ -479,6 +489,7 @@ angular.module('webApp').factory('postStub',
     //   wordCount: 0,
     //   imageCount: 0,
     //   fileCount: 0,
+    //   videoCount: 0,
     //   fileIds: [ /* optional */
     //     'Base64Guid'
     //   ]
@@ -498,17 +509,17 @@ angular.module('webApp').factory('postStub',
     //       profileImage: { /* optional */
     //         fileId: 'Base64Guid',
     //         containerName: ''
-    //       },
+    //       }
+    //     },
+    //     postId: 'Base64Guid',
+    //     blogId: 'Base64Guid',
+    //     blog: {
+    //       name: '',
     //       headerImage: { /* optional */
     //         fileId: 'Base64Guid',
     //         containerName: ''
     //       },
     //       introduction: '' /* optional */
-    //     },
-    //     postId: 'Base64Guid',
-    //     blogId: 'Base64Guid',
-    //     blog: {
-    //       name: ''
     //     },
     //     channelId: 'Base64Guid',
     //     channel: {
@@ -519,6 +530,7 @@ angular.module('webApp').factory('postStub',
     //     wordCount: 0,
     //     imageCount: 0,
     //     fileCount: 0,
+    //     videoCount: 0,
     //     liveDate: '2015-12-25T14:45:05Z',
     //     likesCount: 0,
     //     commentsCount: 0,

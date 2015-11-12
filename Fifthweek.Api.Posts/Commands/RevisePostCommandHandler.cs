@@ -54,7 +54,8 @@
                 command.PreviewWordCount,
                 command.WordCount,
                 command.ImageCount,
-                command.FileCount);
+                command.FileCount,
+                command.VideoCount);
 
             // Only necessary when file changed, but simpler to invoke each time.
             await this.scheduleGarbageCollection.ExecuteAsync();

@@ -32,7 +32,8 @@
             int previewWordCount,
             int wordCount,
             int imageCount,
-            int fileCount)
+            int fileCount,
+            int videoCount)
         {
             postId.AssertNotNull("postId");
             fileIds.AssertNotNull("fileIds");
@@ -47,6 +48,7 @@
                 WordCount = wordCount,
                 ImageCount = imageCount,
                 FileCount = fileCount,
+                VideoCount = videoCount
             };
 
             var postFiles = fileIds.Select(v => new PostFile(postId.Value, v.Value)).ToList();
@@ -64,7 +66,8 @@
                         | Post.Fields.PreviewWordCount 
                         | Post.Fields.WordCount 
                         | Post.Fields.ImageCount 
-                        | Post.Fields.FileCount);
+                        | Post.Fields.FileCount
+                        | Post.Fields.VideoCount);
 
                     if (rowsUpdated > 0)
                     {

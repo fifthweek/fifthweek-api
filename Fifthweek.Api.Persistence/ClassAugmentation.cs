@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 26/10/2015 16:40:47 (UTC)
-//// Mapped solution in 27.24s
+//// Generated on 12/11/2015 15:01:47 (UTC)
+//// Mapped solution in 28.36s
 
 
 namespace Fifthweek.Api.Persistence
@@ -423,6 +423,7 @@ namespace Fifthweek.Api.Persistence
             System.Int32 wordCount,
             System.Int32 imageCount,
             System.Int32 fileCount,
+            System.Int32 videoCount,
             System.DateTime liveDate,
             System.DateTime creationDate)
         {
@@ -461,6 +462,11 @@ namespace Fifthweek.Api.Persistence
                 throw new ArgumentNullException("fileCount");
             }
 
+            if (videoCount == null)
+            {
+                throw new ArgumentNullException("videoCount");
+            }
+
             if (liveDate == null)
             {
                 throw new ArgumentNullException("liveDate");
@@ -484,6 +490,7 @@ namespace Fifthweek.Api.Persistence
             this.WordCount = wordCount;
             this.ImageCount = imageCount;
             this.FileCount = fileCount;
+            this.VideoCount = videoCount;
             this.LiveDate = liveDate;
             this.CreationDate = creationDate;
         }
@@ -1869,7 +1876,7 @@ namespace Fifthweek.Api.Persistence
     {
         public override string ToString()
         {
-            return string.Format("Post({0}, {1}, {2}, {3}, \"{4}\", \"{5}\", {6}, {7}, {8}, {9}, {10}, {11})", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.QueueId == null ? "null" : this.QueueId.ToString(), this.PreviewImageId == null ? "null" : this.PreviewImageId.ToString(), this.PreviewText == null ? "null" : this.PreviewText.ToString(), this.Content == null ? "null" : this.Content.ToString(), this.PreviewWordCount == null ? "null" : this.PreviewWordCount.ToString(), this.WordCount == null ? "null" : this.WordCount.ToString(), this.ImageCount == null ? "null" : this.ImageCount.ToString(), this.FileCount == null ? "null" : this.FileCount.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+            return string.Format("Post({0}, {1}, {2}, {3}, \"{4}\", \"{5}\", {6}, {7}, {8}, {9}, {10}, {11}, {12})", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.QueueId == null ? "null" : this.QueueId.ToString(), this.PreviewImageId == null ? "null" : this.PreviewImageId.ToString(), this.PreviewText == null ? "null" : this.PreviewText.ToString(), this.Content == null ? "null" : this.Content.ToString(), this.PreviewWordCount == null ? "null" : this.PreviewWordCount.ToString(), this.WordCount == null ? "null" : this.WordCount.ToString(), this.ImageCount == null ? "null" : this.ImageCount.ToString(), this.FileCount == null ? "null" : this.FileCount.ToString(), this.VideoCount == null ? "null" : this.VideoCount.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1907,6 +1914,7 @@ namespace Fifthweek.Api.Persistence
                 hashCode = (hashCode * 397) ^ (this.WordCount != null ? this.WordCount.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ImageCount != null ? this.ImageCount.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FileCount != null ? this.FileCount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.VideoCount != null ? this.VideoCount.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.LiveDate != null ? this.LiveDate.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
                 return hashCode;
@@ -1961,6 +1969,11 @@ namespace Fifthweek.Api.Persistence
             }
         
             if (!object.Equals(this.FileCount, other.FileCount))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.VideoCount, other.VideoCount))
             {
                 return false;
             }
@@ -3622,6 +3635,7 @@ namespace Fifthweek.Api.Persistence
             copy.WordCount = this.WordCount;
             copy.ImageCount = this.ImageCount;
             copy.FileCount = this.FileCount;
+            copy.VideoCount = this.VideoCount;
             copy.LiveDate = this.LiveDate;
             copy.CreationDate = this.CreationDate;
             return copy;
@@ -6661,8 +6675,9 @@ namespace Fifthweek.Api.Persistence
             WordCount = 128, 
             ImageCount = 256, 
             FileCount = 512, 
-            LiveDate = 1024, 
-            CreationDate = 2048
+            VideoCount = 1024, 
+            LiveDate = 2048, 
+            CreationDate = 4096
         }
     }
 
@@ -6679,7 +6694,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.Id, entity.ChannelId, entity.QueueId, entity.PreviewImageId, entity.PreviewText, entity.Content, entity.PreviewWordCount, entity.WordCount, entity.ImageCount, entity.FileCount, entity.LiveDate, entity.CreationDate
+                    entity.Id, entity.ChannelId, entity.QueueId, entity.PreviewImageId, entity.PreviewText, entity.Content, entity.PreviewWordCount, entity.WordCount, entity.ImageCount, entity.FileCount, entity.VideoCount, entity.LiveDate, entity.CreationDate
                 }).ToArray(),
                 transaction);
         }
@@ -6695,7 +6710,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.Id, entity.ChannelId, entity.QueueId, entity.PreviewImageId, entity.PreviewText, entity.Content, entity.PreviewWordCount, entity.WordCount, entity.ImageCount, entity.FileCount, entity.LiveDate, entity.CreationDate
+                    entity.Id, entity.ChannelId, entity.QueueId, entity.PreviewImageId, entity.PreviewText, entity.Content, entity.PreviewWordCount, entity.WordCount, entity.ImageCount, entity.FileCount, entity.VideoCount, entity.LiveDate, entity.CreationDate
                 },
                 transaction);
         }
@@ -6740,7 +6755,7 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.Id, entity.ChannelId, entity.QueueId, entity.PreviewImageId, entity.PreviewText, entity.Content, entity.PreviewWordCount, entity.WordCount, entity.ImageCount, entity.FileCount, entity.LiveDate, entity.CreationDate });
+                : new Dapper.DynamicParameters(new { entity.Id, entity.ChannelId, entity.QueueId, entity.PreviewImageId, entity.PreviewText, entity.Content, entity.PreviewWordCount, entity.WordCount, entity.ImageCount, entity.FileCount, entity.VideoCount, entity.LiveDate, entity.CreationDate });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -6764,7 +6779,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(Post.Fields.Empty, fields), 
                 new 
                 {
-                    entity.Id, entity.ChannelId, entity.QueueId, entity.PreviewImageId, entity.PreviewText, entity.Content, entity.PreviewWordCount, entity.WordCount, entity.ImageCount, entity.FileCount, entity.LiveDate, entity.CreationDate
+                    entity.Id, entity.ChannelId, entity.QueueId, entity.PreviewImageId, entity.PreviewText, entity.Content, entity.PreviewWordCount, entity.WordCount, entity.ImageCount, entity.FileCount, entity.VideoCount, entity.LiveDate, entity.CreationDate
                 },
                 transaction);
         }
@@ -6781,7 +6796,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.Id, entity.ChannelId, entity.QueueId, entity.PreviewImageId, entity.PreviewText, entity.Content, entity.PreviewWordCount, entity.WordCount, entity.ImageCount, entity.FileCount, entity.LiveDate, entity.CreationDate
+                    entity.Id, entity.ChannelId, entity.QueueId, entity.PreviewImageId, entity.PreviewText, entity.Content, entity.PreviewWordCount, entity.WordCount, entity.ImageCount, entity.FileCount, entity.VideoCount, entity.LiveDate, entity.CreationDate
                 },
                 transaction);
         }
@@ -6852,7 +6867,7 @@ namespace Fifthweek.Api.Persistence
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO Posts(Id, ChannelId, QueueId, PreviewImageId, PreviewText, Content, PreviewWordCount, WordCount, ImageCount, FileCount, LiveDate, CreationDate) VALUES(@Id, @ChannelId, @QueueId, @PreviewImageId, @PreviewText, @Content, @PreviewWordCount, @WordCount, @ImageCount, @FileCount, @LiveDate, @CreationDate)";
+            const string insert = "INSERT INTO Posts(Id, ChannelId, QueueId, PreviewImageId, PreviewText, Content, PreviewWordCount, WordCount, ImageCount, FileCount, VideoCount, LiveDate, CreationDate) VALUES(@Id, @ChannelId, @QueueId, @PreviewImageId, @PreviewText, @Content, @PreviewWordCount, @WordCount, @ImageCount, @FileCount, @VideoCount, @LiveDate, @CreationDate)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
@@ -6863,7 +6878,7 @@ namespace Fifthweek.Api.Persistence
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE Posts WITH (HOLDLOCK) as Target
-                USING (VALUES (@Id, @ChannelId, @QueueId, @PreviewImageId, @PreviewText, @Content, @PreviewWordCount, @WordCount, @ImageCount, @FileCount, @LiveDate, @CreationDate)) AS Source (Id, ChannelId, QueueId, PreviewImageId, PreviewText, Content, PreviewWordCount, WordCount, ImageCount, FileCount, LiveDate, CreationDate)
+                USING (VALUES (@Id, @ChannelId, @QueueId, @PreviewImageId, @PreviewText, @Content, @PreviewWordCount, @WordCount, @ImageCount, @FileCount, @VideoCount, @LiveDate, @CreationDate)) AS Source (Id, ChannelId, QueueId, PreviewImageId, PreviewText, Content, PreviewWordCount, WordCount, ImageCount, FileCount, VideoCount, LiveDate, CreationDate)
                 ON    (");
                 
             if (mergeOnFields == Post.Fields.Empty)
@@ -6882,8 +6897,8 @@ namespace Fifthweek.Api.Persistence
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (Id, ChannelId, QueueId, PreviewImageId, PreviewText, Content, PreviewWordCount, WordCount, ImageCount, FileCount, LiveDate, CreationDate)
-                    VALUES  (Source.Id, Source.ChannelId, Source.QueueId, Source.PreviewImageId, Source.PreviewText, Source.Content, Source.PreviewWordCount, Source.WordCount, Source.ImageCount, Source.FileCount, Source.LiveDate, Source.CreationDate);");
+                    INSERT  (Id, ChannelId, QueueId, PreviewImageId, PreviewText, Content, PreviewWordCount, WordCount, ImageCount, FileCount, VideoCount, LiveDate, CreationDate)
+                    VALUES  (Source.Id, Source.ChannelId, Source.QueueId, Source.PreviewImageId, Source.PreviewText, Source.Content, Source.PreviewWordCount, Source.WordCount, Source.ImageCount, Source.FileCount, Source.VideoCount, Source.LiveDate, Source.CreationDate);");
             return sql.ToString();
         }
         
@@ -6947,6 +6962,11 @@ namespace Fifthweek.Api.Persistence
             if (fields.HasFlag(Post.Fields.FileCount))
             {
                 fieldNames.Add("FileCount");
+            }
+        
+            if (fields.HasFlag(Post.Fields.VideoCount))
+            {
+                fieldNames.Add("VideoCount");
             }
         
             if (fields.HasFlag(Post.Fields.LiveDate))
@@ -7016,6 +7036,11 @@ namespace Fifthweek.Api.Persistence
                 parameters.Add("FileCount", entity.FileCount);
             }
         
+            if (fields.HasFlag(Post.Fields.VideoCount) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.VideoCount)))
+            {
+                parameters.Add("VideoCount", entity.VideoCount);
+            }
+        
             if (fields.HasFlag(Post.Fields.LiveDate) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.LiveDate)))
             {
                 parameters.Add("LiveDate", entity.LiveDate);
@@ -7080,6 +7105,11 @@ namespace Fifthweek.Api.Persistence
             if (!fields.HasFlag(Post.Fields.FileCount))
             {
                 parameters.Add("FileCount", entity.FileCount);
+            }
+        
+            if (!fields.HasFlag(Post.Fields.VideoCount))
+            {
+                parameters.Add("VideoCount", entity.VideoCount);
             }
         
             if (!fields.HasFlag(Post.Fields.LiveDate))

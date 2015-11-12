@@ -58,6 +58,7 @@
                 command.WordCount,
                 command.ImageCount,
                 command.FileCount,
+                command.VideoCount,
                 command.Timestamp);
         }
     }

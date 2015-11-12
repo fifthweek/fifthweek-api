@@ -36,6 +36,8 @@
 
         public int FileCount { get; private set; }
 
+        public int VideoCount { get; private set; }
+
         public IReadOnlyList<FileId> FileIds { get; private set; }
 
         [Optional]

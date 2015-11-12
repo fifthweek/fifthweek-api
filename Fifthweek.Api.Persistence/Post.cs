@@ -58,6 +58,9 @@
         [Required]
         public int FileCount { get; set; }
 
+        [Required]
+        public int VideoCount { get; set; }
+
         [Required, Index("IX_DTA_GetNewsfeed", Order = 1)]
         public DateTime LiveDate { get; set; }
 

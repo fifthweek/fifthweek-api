@@ -32,6 +32,8 @@
 
         public int FileCount { get; set; }
 
+        public int VideoCount { get; set; }
+
         [Optional]
         public List<FileId> FileIds { get; set; }
     }

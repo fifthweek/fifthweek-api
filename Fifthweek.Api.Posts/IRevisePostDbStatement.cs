@@ -17,6 +17,7 @@ namespace Fifthweek.Api.Posts
             int previewWordCount,
             int wordCount,
             int imageCount,
-            int fileCount);
+            int fileCount,
+            int videoCount);
     }
 }

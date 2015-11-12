@@ -22,6 +22,7 @@
                 0,
                 0,
                 0,
+                0,
                 new SqlDateTime(DateTime.UtcNow.AddDays((random.NextDouble() * -1000) + (random.NextDouble() * 1000))).Value,
                 new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -1000)).Value);
         }
@@ -40,6 +41,7 @@
                 null,
                 hasComment ? "Comment " + random.Next() : null,
                 "content",
+                0,
                 0,
                 0,
                 0,

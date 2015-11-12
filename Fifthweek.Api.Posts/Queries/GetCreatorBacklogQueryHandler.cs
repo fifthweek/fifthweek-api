@@ -61,6 +61,7 @@
                     post.WordCount,
                     post.ImageCount,
                     post.FileCount,
+                    post.VideoCount,
                     post.LiveDate);
                 
                 result.Add(completePost);

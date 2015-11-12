@@ -31,7 +31,7 @@
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly FileId ImageId = new FileId(Guid.NewGuid());
         private static readonly IReadOnlyList<FileId> FileIds = new List<FileId> { FileId, ImageId };
-        private static readonly RevisePostCommand Command = new RevisePostCommand(Requester, PostId, ImageId, PreviewText, Content, 0, 1, 2, 3, FileIds);
+        private static readonly RevisePostCommand Command = new RevisePostCommand(Requester, PostId, ImageId, PreviewText, Content, 0, 1, 2, 3, 4, FileIds);
         private Mock<IPostSecurity> postSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IScheduleGarbageCollectionStatement> scheduleGarbageCollection;
@@ -63,7 +63,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
-            await this.target.HandleAsync(new RevisePostCommand(Requester.Unauthenticated, PostId, ImageId, PreviewText, Content, 0, 1, 2, 3, FileIds));
+            await this.target.HandleAsync(new RevisePostCommand(Requester.Unauthenticated, PostId, ImageId, PreviewText, Content, 0, 1, 2, 3, 4, FileIds));
         }
 
         [TestMethod]
@@ -88,7 +88,7 @@
         [ExpectedException(typeof(BadRequestException))]
         public async Task WhenFileIdsDoNotContainPreviewImageId_ItShouldThrowRecoverableException()
         {
-            await this.target.HandleAsync(new RevisePostCommand(Requester, PostId, ImageId, PreviewText, Content, 0, 1, 2, 3, new List<FileId> { FileId }));
+            await this.target.HandleAsync(new RevisePostCommand(Requester, PostId, ImageId, PreviewText, Content, 0, 1, 2, 3, 4, new List<FileId> { FileId }));
 
             await this.target.HandleAsync(Command);
         }
@@ -97,7 +97,7 @@
         [ExpectedException(typeof(BadRequestException))]
         public async Task WhenNoContent_ItShouldThrowRecoverableException()
         {
-            await this.target.HandleAsync(new RevisePostCommand(Requester, PostId, ImageId, null, Content, 0, 1, 2, 3, new List<FileId> { }));
+            await this.target.HandleAsync(new RevisePostCommand(Requester, PostId, ImageId, null, Content, 0, 1, 2, 3, 4, new List<FileId> { }));
 
             await this.target.HandleAsync(Command);
         }
@@ -106,7 +106,7 @@
         public async Task WhenPostExists_ItShouldUpdateAndScheduleGarbageCollection()
         {
             this.revisePostDbStatement.Setup(
-                v => v.ExecuteAsync(PostId, Content, PreviewText, ImageId, FileIds, 0, 1, 2, 3))
+                v => v.ExecuteAsync(PostId, Content, PreviewText, ImageId, FileIds, 0, 1, 2, 3, 4))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
@@ -122,13 +122,13 @@
         public async Task WhenPostExistsAndNoPreviewImage_ItShouldUpdateAndScheduleGarbageCollection()
         {
             this.revisePostDbStatement.Setup(
-                v => v.ExecuteAsync(PostId, Content, PreviewText, null, FileIds, 0, 1, 2, 3))
+                v => v.ExecuteAsync(PostId, Content, PreviewText, null, FileIds, 0, 1, 2, 3, 4))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
             this.scheduleGarbageCollection.Setup(_ => _.ExecuteAsync()).Returns(Task.FromResult(0)).Verifiable();
 
-            await this.target.HandleAsync(new RevisePostCommand(Requester, PostId, null, PreviewText, Content, 0, 1, 2, 3, FileIds));
+            await this.target.HandleAsync(new RevisePostCommand(Requester, PostId, null, PreviewText, Content, 0, 1, 2, 3, 4, FileIds));
 
             this.revisePostDbStatement.Verify();
             this.scheduleGarbageCollection.Verify();

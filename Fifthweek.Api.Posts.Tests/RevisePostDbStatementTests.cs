@@ -54,14 +54,14 @@ namespace Fifthweek.Api.Posts.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenPostIdIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(null, Content, PreviewText, ImageId, FileIds, 1, 2, 3, 4);
+            await this.target.ExecuteAsync(null, Content, PreviewText, ImageId, FileIds, 1, 2, 3, 4, 5);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenFileIdsIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(PostId, Content, PreviewText, ImageId, null, 1, 2, 3, 4);
+            await this.target.ExecuteAsync(PostId, Content, PreviewText, ImageId, null, 1, 2, 3, 4, 5);
         }
 
         [TestMethod]
@@ -71,10 +71,10 @@ namespace Fifthweek.Api.Posts.Tests
                 {
                     this.InitializeTarget(testDatabase);
                     await this.CreateCollectionAsync(testDatabase, createPost: true);
-                    await this.target.ExecuteAsync(PostId, Content, PreviewText, ImageId, FileIds, 1, 2, 3, 4);
+                    await this.target.ExecuteAsync(PostId, Content, PreviewText, ImageId, FileIds, 1, 2, 3, 4, 5);
                     await testDatabase.TakeSnapshotAsync();
 
-                    await this.target.ExecuteAsync(PostId, Content, PreviewText, ImageId, FileIds, 1, 2, 3, 4);
+                    await this.target.ExecuteAsync(PostId, Content, PreviewText, ImageId, FileIds, 1, 2, 3, 4, 5);
 
                     return ExpectedSideEffects.None;
                 });
@@ -89,7 +89,7 @@ namespace Fifthweek.Api.Posts.Tests
                     await this.CreateCollectionAsync(testDatabase, createPost: false);
                     await testDatabase.TakeSnapshotAsync();
 
-                    await this.target.ExecuteAsync(PostId, Content, PreviewText, ImageId, FileIds, 1, 2, 3, 4);
+                    await this.target.ExecuteAsync(PostId, Content, PreviewText, ImageId, FileIds, 1, 2, 3, 4, 5);
 
                     return ExpectedSideEffects.None;
                 });
@@ -104,7 +104,7 @@ namespace Fifthweek.Api.Posts.Tests
                     var post = await this.CreateCollectionAsync(testDatabase, createPost: true);
                     await testDatabase.TakeSnapshotAsync();
 
-                    await this.target.ExecuteAsync(PostId, Content, PreviewText, ImageId, FileIds, 1, 2, 3, 4);
+                    await this.target.ExecuteAsync(PostId, Content, PreviewText, ImageId, FileIds, 1, 2, 3, 4, 5);
 
                     var existingFileId = post.PreviewImageId;
                     var expectedPost = post.Copy(v => 
@@ -116,6 +116,7 @@ namespace Fifthweek.Api.Posts.Tests
                         v.WordCount = 2;
                         v.ImageCount = 3;
                         v.FileCount = 4;
+                        v.VideoCount = 5;
                     });
 
                     return new ExpectedSideEffects

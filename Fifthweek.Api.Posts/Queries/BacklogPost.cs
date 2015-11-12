@@ -32,6 +32,8 @@
 
         public int FileCount { get; private set; }
 
+        public int VideoCount { get; private set; }
+
         public DateTime LiveDate { get; private set; }
 
         [Optional]

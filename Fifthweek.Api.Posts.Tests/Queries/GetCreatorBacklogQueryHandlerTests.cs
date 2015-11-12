@@ -172,6 +172,7 @@
                                 i % 2 == 0 ? PreviewText.Value.Length : 0,
                                 i % 3 == 2 ? 1 : 0,
                                 i % 3 == 1 ? 1 : 0,
+                                i,
                                 liveDate,
                                 i % 3 == 2 ? FileName : null,
                                 i % 3 == 2 ? FileExtension : null,

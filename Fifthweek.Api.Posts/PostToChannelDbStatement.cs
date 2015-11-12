@@ -32,6 +32,7 @@ namespace Fifthweek.Api.Posts
             int wordCount,
             int imageCount,
             int fileCount,
+            int videoCount,
             DateTime now)
         {
             newPostId.AssertNotNull("newPostId");
@@ -52,6 +53,7 @@ namespace Fifthweek.Api.Posts
                 wordCount,
                 imageCount,
                 fileCount,
+                videoCount,
                 default(DateTime), // Live date assigned by sub-statements.
                 now);
 

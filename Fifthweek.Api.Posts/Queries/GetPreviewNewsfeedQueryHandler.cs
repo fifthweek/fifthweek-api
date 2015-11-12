@@ -99,6 +99,7 @@
                     post.WordCount,
                     post.ImageCount,
                     post.FileCount,
+                    post.VideoCount,
                     post.LiveDate,
                     post.LikesCount,
                     post.CommentsCount,

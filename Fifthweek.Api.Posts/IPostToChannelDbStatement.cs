@@ -24,6 +24,7 @@ namespace Fifthweek.Api.Posts
             int wordCount,
             int imageCount,
             int fileCount,
+            int videoCount,
             DateTime now);
     }
 }

@@ -34,7 +34,7 @@
         private static readonly DateTime? ScheduleDate = null;
         private static readonly ValidPreviewText PreviewText = ValidPreviewText.Parse("preview-text");
         private static readonly ValidComment Content = ValidComment.Parse("comment");
-        private static readonly PostToChannelCommand Command = new PostToChannelCommand(Requester, PostId, ChannelId, ImageId, PreviewText, Content, 1, 2, 3, 4, FileIds, ScheduleDate, QueueId, Timestamp);
+        private static readonly PostToChannelCommand Command = new PostToChannelCommand(Requester, PostId, ChannelId, ImageId, PreviewText, Content, 1, 2, 3, 4, 5, FileIds, ScheduleDate, QueueId, Timestamp);
         private Mock<IQueueSecurity> queueSecurity;
         private Mock<IFileSecurity> fileSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
@@ -63,7 +63,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
-            await this.target.HandleAsync(new PostToChannelCommand(Requester.Unauthenticated, PostId, ChannelId, ImageId, PreviewText, Content, 1, 2, 3, 4, FileIds, ScheduleDate, QueueId, Timestamp));
+            await this.target.HandleAsync(new PostToChannelCommand(Requester.Unauthenticated, PostId, ChannelId, ImageId, PreviewText, Content, 1, 2, 3, 4, 5, FileIds, ScheduleDate, QueueId, Timestamp));
         }
 
         [TestMethod]
@@ -88,7 +88,7 @@
         [ExpectedException(typeof(BadRequestException))]
         public async Task WhenFileIdsDoNotContainPreviewImageId_ItShouldThrowRecoverableException()
         {
-            await this.target.HandleAsync(new PostToChannelCommand(Requester, PostId, ChannelId, ImageId, PreviewText, Content, 1, 2, 3, 4, new List<FileId> { FileId }, ScheduleDate, QueueId, Timestamp));
+            await this.target.HandleAsync(new PostToChannelCommand(Requester, PostId, ChannelId, ImageId, PreviewText, Content, 1, 2, 3, 4, 5, new List<FileId> { FileId }, ScheduleDate, QueueId, Timestamp));
 
             await this.target.HandleAsync(Command);
         }
@@ -97,7 +97,7 @@
         [ExpectedException(typeof(BadRequestException))]
         public async Task WhenNoContent_ItShouldThrowRecoverableException()
         {
-            await this.target.HandleAsync(new PostToChannelCommand(Requester, PostId, ChannelId, ImageId, null, Content, 1, 2, 3, 4, new List<FileId> { }, ScheduleDate, QueueId, Timestamp));
+            await this.target.HandleAsync(new PostToChannelCommand(Requester, PostId, ChannelId, ImageId, null, Content, 1, 2, 3, 4, 5, new List<FileId> { }, ScheduleDate, QueueId, Timestamp));
 
             await this.target.HandleAsync(Command);
         }
@@ -106,7 +106,7 @@
         public async Task WhenAllowedToPost_ItShouldPostToCollection()
         {
             this.postToChannelDbStatement.Setup(
-                _ => _.ExecuteAsync(PostId, ChannelId, Content, ScheduleDate, QueueId, PreviewText, ImageId, FileIds, 1, 2, 3, 4, Timestamp))
+                _ => _.ExecuteAsync(PostId, ChannelId, Content, ScheduleDate, QueueId, PreviewText, ImageId, FileIds, 1, 2, 3, 4, 5, Timestamp))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
@@ -119,11 +119,11 @@
         public async Task WhenAllowedToPostWithNoPreviewImage_ItShouldPostToCollection()
         {
             this.postToChannelDbStatement.Setup(
-                _ => _.ExecuteAsync(PostId, ChannelId, Content, ScheduleDate, QueueId, PreviewText, null, FileIds, 1, 2, 3, 4, Timestamp))
+                _ => _.ExecuteAsync(PostId, ChannelId, Content, ScheduleDate, QueueId, PreviewText, null, FileIds, 1, 2, 3, 4, 5, Timestamp))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.target.HandleAsync(new PostToChannelCommand(Requester, PostId, ChannelId, null, PreviewText, Content, 1, 2, 3, 4, FileIds, ScheduleDate, QueueId, Timestamp));
+            await this.target.HandleAsync(new PostToChannelCommand(Requester, PostId, ChannelId, null, PreviewText, Content, 1, 2, 3, 4, 5, FileIds, ScheduleDate, QueueId, Timestamp));
 
             this.postToChannelDbStatement.Verify();
         }

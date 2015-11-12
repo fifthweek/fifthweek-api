@@ -118,6 +118,10 @@
     <Compile Include="Migrations\201511111141019_IncreasePreviewTextTo1500Characters.Designer.cs">
       <DependentUpon>201511111141019_IncreasePreviewTextTo1500Characters.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201511121528598_AddVideoCountToPost.cs" />
+    <Compile Include="Migrations\201511121528598_AddVideoCountToPost.Designer.cs">
+      <DependentUpon>201511121528598_AddVideoCountToPost.cs</DependentUpon>
+    </Compile>
     <Compile Include="PostFile.cs" />
     <Compile Include="Queue.cs" />
     <Compile Include="DapperExtensions.cs" />
@@ -645,6 +649,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201511111141019_IncreasePreviewTextTo1500Characters.resx">
       <DependentUpon>201511111141019_IncreasePreviewTextTo1500Characters.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511121528598_AddVideoCountToPost.resx">
+      <DependentUpon>201511121528598_AddVideoCountToPost.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

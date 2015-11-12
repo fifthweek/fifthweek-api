@@ -85,6 +85,7 @@
                 post.WordCount,
                 post.ImageCount,
                 post.FileCount,
+                post.VideoCount,
                 post.FileIds ?? new List<FileId>(),
                 post.ScheduledPostTime,
                 post.QueueId,
@@ -112,6 +113,7 @@
                 post.WordCount,
                 post.ImageCount,
                 post.FileCount,
+                post.VideoCount,
                 post.FileIds ?? new List<FileId>()));
         }
 

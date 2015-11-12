@@ -163,6 +163,7 @@
                 Assert.AreEqual(item.Input.WordCount, item.Output.WordCount);
                 Assert.AreEqual(item.Input.ImageCount, item.Output.ImageCount);
                 Assert.AreEqual(item.Input.FileCount, item.Output.FileCount);
+                Assert.AreEqual(item.Input.VideoCount, item.Output.VideoCount);
                 Assert.AreEqual(item.Input.LiveDate, item.Output.LiveDate);
 
                 Assert.AreEqual(item.Input.Username, item.Output.Creator.Username.Value);
@@ -227,6 +228,7 @@
                             i % 2 == 0 ? PreviewText.Value.Length : 0,
                             i % 3 == 2 ? 1 : 0,
                             i % 3 == 1 ? 1 : 0,
+                            i,
                             liveDate,
                             i % 3 == 2 ? FileName : null,
                             i % 3 == 2 ? FileExtension : null,
