@@ -50,6 +50,24 @@
         }
 
         [TestMethod]
+        public void WhenPostContainersTextBlocks_AndLinks_ItShouldReturnObfuscatedText()
+        {
+            var result = this.target.Execute(
+                "[{'type':'image','data':{'fileId':'abc'}}," +
+                "{'type':'text','data':{'text':'One [two three](some url), four!'}}," +
+                "{'type':'image','data':{'fileId':'def'}}," +
+                "{'type':'text','data':{'text':'[5-6](url)[ Se7en.](url2)'}}]",
+                null);
+
+            Assert.AreEqual(
+               ("[{'type':'image','data':{'fileId':'abc'}}," +
+                "{'type':'text','data':{'text':'⁂⁂⁂ ⁂⁂⁂ ⁂⁂⁂⁂⁂⁂ ⁂⁂⁂⁂⁂'}}," +
+                "{'type':'image','data':{'fileId':'def'}}," +
+                "{'type':'text','data':{'text':'⁂⁂⁂ ⁂⁂⁂⁂⁂⁂'}}]").Replace("'", "\""),
+                result);
+        }
+
+        [TestMethod]
         public void WhenPostContainersTextBlocks_AndPreviewText_ItShouldReturnObfuscatedTextWithPreview()
         {
             var result = this.target.Execute(

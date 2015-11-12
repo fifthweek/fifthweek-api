@@ -11,6 +11,9 @@
         // https://en.wikipedia.org/wiki/Asterism_(typography)
         private const string ReplacementCharacter = "⁂";
 
+        private static readonly Regex CharacterReplaceRegex = new Regex(@"\S");
+        private static readonly Regex LinkReplaceRegex = new Regex(@"\[([^\]]+)\]\([^)]+\)");
+
         public string Execute(string postContent, PreviewText previewText)
         {
             if (string.IsNullOrWhiteSpace(postContent))
@@ -18,7 +21,6 @@
                 return string.Empty;
             }
 
-            var regex = new Regex(@"\S");
             dynamic result = JsonConvert.DeserializeObject(postContent);
             bool isFirstText = true;
             foreach (var item in result)
@@ -35,11 +37,11 @@
                             if (isFirstText && previewText != null)
                             {
                                 text = text.Substring(previewText.Value.Length);
-                                data.text = previewText.Value + regex.Replace(text, ReplacementCharacter);
+                                data.text = previewText.Value + this.Obfuscate(text);
                             }
                             else
                             {
-                                data.text = regex.Replace(text, ReplacementCharacter);
+                                data.text = this.Obfuscate(text);
                             }
 
                             isFirstText = false;
@@ -50,6 +52,13 @@
 
             postContent = JsonConvert.SerializeObject(result);
             return postContent;
+        }
+
+        private string Obfuscate(string text)
+        {
+            var linksRemoved = LinkReplaceRegex.Replace(text, v => v.Groups[1].Value);
+            var result = CharacterReplaceRegex.Replace(linksRemoved, ReplacementCharacter);
+            return result;
         }
     }
 }
