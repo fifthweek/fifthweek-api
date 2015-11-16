@@ -118,7 +118,7 @@
         }
 
         [Route("{postId}")]
-        public async Task<GetPostQueryResult> GetPost(string postId)
+        public async Task<GetPostQueryResult> GetPost(string postId, [FromUri]bool requestFreePost = false)
         {
             postId.AssertUrlParameterProvided("postId");
             var postIdObject = new PostId(postId.DecodeGuid());
@@ -126,7 +126,7 @@
 
             var requester = await this.requesterContext.GetRequesterAsync();
 
-            var result = await this.getPost.HandleAsync(new GetPostQuery(requester, postIdObject, false, timestamp));
+            var result = await this.getPost.HandleAsync(new GetPostQuery(requester, postIdObject, requestFreePost, timestamp));
 
             if (result == null)
             {

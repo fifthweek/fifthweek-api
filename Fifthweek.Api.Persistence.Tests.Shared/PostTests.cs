@@ -50,9 +50,13 @@
                 new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -1000)).Value);
         }
 
-        public static Task CreateTestNoteAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newPostId)
+        public static Task CreateTestNoteAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newPostId, Random random = null)
         {
-            var random = new Random();
+            if (random == null)
+            {
+                random = new Random();
+            }
+
             var creator = UserTests.UniqueEntity(random);
             creator.Id = newUserId;
 

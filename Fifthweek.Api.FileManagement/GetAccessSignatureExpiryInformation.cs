@@ -4,6 +4,9 @@
 
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    using Constants = Fifthweek.Api.FileManagement.Shared.Constants;
 
     [AutoConstructor]
     public partial class GetAccessSignatureExpiryInformation : IGetAccessSignatureExpiryInformation
@@ -22,7 +25,7 @@
                 ? Constants.PublicReadSignatureTimeSpan
                 : Constants.PrivateReadSignatureTimeSpan;
 
-            var expiry = this.RoundUp(now, baseTimeSpan);
+            var expiry = DateTimeUtils.RoundUp(now, baseTimeSpan);
 
             if ((expiry - now) <= Constants.ReadSignatureMinimumExpiryTime)
             {
@@ -31,16 +34,5 @@
 
             return expiry;
         }
-
-        private DateTime RoundUp(DateTime dt, TimeSpan d)
-        {
-            if (dt.Kind != DateTimeKind.Utc)
-            {
-                throw new InvalidOperationException("Expiry time must be in UTC");
-            }
-
-            return new DateTime(((dt.Ticks + d.Ticks - 1) / d.Ticks) * d.Ticks, DateTimeKind.Utc);
-        }
-
     }
 }

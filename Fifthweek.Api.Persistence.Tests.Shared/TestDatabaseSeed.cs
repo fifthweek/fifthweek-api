@@ -67,6 +67,7 @@
         private readonly List<UserPaymentOrigin> userPaymentOrigins = new List<UserPaymentOrigin>();
         private readonly List<Comment> comments = new List<Comment>();
         private readonly List<Like> likes = new List<Like>();
+        private readonly List<FreePost> freePosts = new List<FreePost>();
 
         public TestDatabaseSeed(Func<IFifthweekDbContext> databaseContextFactory)
         {
@@ -155,6 +156,7 @@
                     await connection.InsertAsync(this.userPaymentOrigins, false);
                     await connection.InsertAsync(this.comments, false);
                     await connection.InsertAsync(this.likes, false);
+                    await connection.InsertAsync(this.freePosts, false);
                 }
                 finally
                 {
@@ -516,6 +518,7 @@
       
             this.comments.Add(new Comment(Guid.NewGuid(), this.posts.Last().Id, null, this.users.First().Id, null, "Test comment", DateTime.UtcNow));
             this.likes.Add(new Like(this.posts.Last().Id, null, this.users.First().Id, null, DateTime.UtcNow));
+            this.freePosts.Add(new FreePost(this.users.First().Id, this.posts.Last().Id, null, DateTime.UtcNow));
         }
 
         private IEnumerable<int> GenerageUniqueIndexes(int collectionCount, int indexCount)

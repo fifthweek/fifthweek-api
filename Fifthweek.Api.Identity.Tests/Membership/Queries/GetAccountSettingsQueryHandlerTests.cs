@@ -12,6 +12,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
 
@@ -31,11 +32,14 @@
         private static readonly PaymentStatus PaymentStatus = PaymentStatus.Retry2;
         private static readonly bool HasPaymentInformation = true;
         private static readonly DateTime Now = DateTime.UtcNow;
+        private static readonly DateTime FreePostTimestamp = DateTime.UtcNow.AddDays(-1);
+        private static readonly int FreePostsRemaining = 3;
 
         private GetAccountSettingsQueryHandler target;
         private Mock<IGetAccountSettingsDbStatement> getAccountSettings;
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IFileInformationAggregator> fileInformationAggregator;
+        private Mock<IGetFreePostTimestamp> getFreePostTimestamp;
 
         [TestInitialize]
         public void TestInitialize()
@@ -45,8 +49,11 @@
 
             this.getAccountSettings = new Mock<IGetAccountSettingsDbStatement>();
             this.fileInformationAggregator = new Mock<IFileInformationAggregator>();
+            this.getFreePostTimestamp = new Mock<IGetFreePostTimestamp>();
 
-            this.target = new GetAccountSettingsQueryHandler(this.requesterSecurity.Object, this.getAccountSettings.Object, this.fileInformationAggregator.Object);
+            this.getFreePostTimestamp.Setup(v => v.Execute(Now)).Returns(FreePostTimestamp);
+
+            this.target = new GetAccountSettingsQueryHandler(this.requesterSecurity.Object, this.getAccountSettings.Object, this.fileInformationAggregator.Object, this.getFreePostTimestamp.Object);
         }
 
         [TestMethod]
@@ -60,7 +67,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenCalledWithUnauthorizedUserId_ItShouldThrowAnException()
         {
-            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId, FreePostTimestamp, PostConstants.MaximumFreePostsPerInterval))
                 .Throws(new Exception("This should not be called"));
 
             await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, new UserId(Guid.NewGuid()), Now));
@@ -76,15 +83,15 @@
         [TestMethod]
         public async Task WhenCalled_ItShouldCallTheAccountRepository()
         {
-            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsDbResult(Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, null))
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId, FreePostTimestamp, PostConstants.MaximumFreePostsPerInterval))
+                .ReturnsAsync(new GetAccountSettingsDbResult(Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, null, FreePostsRemaining))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
 
             this.getAccountSettings.Verify();
 
-            var expectedResult = new GetAccountSettingsResult(Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, Payments.Constants.DefaultCreatorPercentage, null);
+            var expectedResult = new GetAccountSettingsResult(Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, Payments.Constants.DefaultCreatorPercentage, null, FreePostsRemaining);
 
             Assert.AreEqual(expectedResult, result);
         }
@@ -94,8 +101,8 @@
         {
             const string ContainerName = "containerName";
 
-            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsDbResult(Username, Email, FileId, AccountBalance, PaymentStatus, HasPaymentInformation, null));
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId, FreePostTimestamp, PostConstants.MaximumFreePostsPerInterval))
+                .ReturnsAsync(new GetAccountSettingsDbResult(Username, Email, FileId, AccountBalance, PaymentStatus, HasPaymentInformation, null, FreePostsRemaining));
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(null, FileId, FilePurposes.ProfileImage))
                 .ReturnsAsync(new FileInformation(FileId, ContainerName));
@@ -110,7 +117,8 @@
                 PaymentStatus,
                 HasPaymentInformation, 
                 Payments.Constants.DefaultCreatorPercentage, 
-                null);
+                null,
+                FreePostsRemaining);
 
             Assert.AreEqual(expectedResult, result);
         }
@@ -120,9 +128,9 @@
         {
             var creatorPercentageOverride = new CreatorPercentageOverrideData(0.9m, null);
 
-            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId, FreePostTimestamp, PostConstants.MaximumFreePostsPerInterval))
                 .ReturnsAsync(new GetAccountSettingsDbResult(
-                    Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
+                    Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride, FreePostsRemaining))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
@@ -137,7 +145,8 @@
                 PaymentStatus,
                 HasPaymentInformation,
                 creatorPercentageOverride.Percentage,
-                null);
+                null,
+                FreePostsRemaining);
 
             Assert.AreEqual(expectedResult, result);
         }
@@ -148,9 +157,9 @@
             var paymentProcessingStartDateInclusive = PaymentProcessingUtilities.GetPaymentProcessingStartDate(Now);
             var creatorPercentageOverride = new CreatorPercentageOverrideData(0.9m, paymentProcessingStartDateInclusive.AddDays(7));
 
-            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId, FreePostTimestamp, PostConstants.MaximumFreePostsPerInterval))
                 .ReturnsAsync(new GetAccountSettingsDbResult(
-                    Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
+                    Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride, FreePostsRemaining))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
@@ -165,7 +174,8 @@
                 PaymentStatus,
                 HasPaymentInformation,
                 creatorPercentageOverride.Percentage,
-                0);
+                0,
+                FreePostsRemaining);
 
             Assert.AreEqual(expectedResult, result);
         }
@@ -176,9 +186,9 @@
             var paymentProcessingStartDateInclusive = PaymentProcessingUtilities.GetPaymentProcessingStartDate(Now);
             var creatorPercentageOverride = new CreatorPercentageOverrideData(0.9m, paymentProcessingStartDateInclusive.AddDays(14));
 
-            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId, FreePostTimestamp, PostConstants.MaximumFreePostsPerInterval))
                 .ReturnsAsync(new GetAccountSettingsDbResult(
-                    Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
+                    Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride, FreePostsRemaining))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
@@ -193,7 +203,8 @@
                 PaymentStatus,
                 HasPaymentInformation,
                 creatorPercentageOverride.Percentage,
-                1);
+                1,
+                FreePostsRemaining);
 
             Assert.AreEqual(expectedResult, result);
         }
@@ -204,9 +215,9 @@
             var paymentProcessingStartDateInclusive = PaymentProcessingUtilities.GetPaymentProcessingStartDate(Now);
             var creatorPercentageOverride = new CreatorPercentageOverrideData(0.9m, paymentProcessingStartDateInclusive.AddDays(25));
 
-            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId, FreePostTimestamp, PostConstants.MaximumFreePostsPerInterval))
                 .ReturnsAsync(new GetAccountSettingsDbResult(
-                    Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
+                    Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride, FreePostsRemaining))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
@@ -221,7 +232,8 @@
                 PaymentStatus,
                 HasPaymentInformation, 
                 creatorPercentageOverride.Percentage,
-                2);
+                2,
+                FreePostsRemaining);
 
             Assert.AreEqual(expectedResult, result);
         }
@@ -232,9 +244,9 @@
             var paymentProcessingStartDateInclusive = PaymentProcessingUtilities.GetPaymentProcessingStartDate(Now);
             var creatorPercentageOverride = new CreatorPercentageOverrideData(0.9m, paymentProcessingStartDateInclusive.AddDays(7).AddTicks(-1));
 
-            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId, FreePostTimestamp, PostConstants.MaximumFreePostsPerInterval))
                 .ReturnsAsync(new GetAccountSettingsDbResult(
-                    Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
+                    Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride, FreePostsRemaining))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
@@ -248,8 +260,9 @@
                 AccountBalance,
                 PaymentStatus,
                 HasPaymentInformation, 
-                Payments.Constants.DefaultCreatorPercentage, 
-                null);
+                Payments.Constants.DefaultCreatorPercentage,
+                null,
+                FreePostsRemaining);
 
             Assert.AreEqual(expectedResult, result);
         }

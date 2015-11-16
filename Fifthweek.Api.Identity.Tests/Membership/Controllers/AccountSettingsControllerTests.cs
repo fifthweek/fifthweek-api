@@ -37,6 +37,7 @@
         private static readonly int AccountBalance = 10;
         private static readonly PaymentStatus PaymentStatus = PaymentStatus.Retry2;
         private static readonly bool HasPaymentInformation = true;
+        private static readonly int FreePostsRemaining = 2;
 
         private Mock<IGuidCreator> guidCreator;
         private Mock<ITimestampCreator> timestampCreator;
@@ -89,7 +90,7 @@
         {
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId, Now);
 
-            var expectedResult = new GetAccountSettingsResult(Username, Email, FileInformation, AccountBalance, PaymentStatus, HasPaymentInformation, 1m, null);
+            var expectedResult = new GetAccountSettingsResult(Username, Email, FileInformation, AccountBalance, PaymentStatus, HasPaymentInformation, 1m, null, FreePostsRemaining);
 
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
                 .ReturnsAsync(expectedResult)
@@ -107,7 +108,7 @@
         {
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId, Now);
 
-            var expectedResult = new GetAccountSettingsResult(Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, 1m, null);
+            var expectedResult = new GetAccountSettingsResult(Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, 1m, null, FreePostsRemaining);
             
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
                 .ReturnsAsync(expectedResult)

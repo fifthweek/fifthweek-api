@@ -155,7 +155,8 @@ angular.module('webApp').factory('accountSettingsStub',
     //   paymentStatus: 'paymentstatus',
     //   hasPaymentInformation: false,
     //   creatorPercentage: 0.0,
-    //   creatorPercentageWeeksRemaining: 0 /* optional */
+    //   creatorPercentageWeeksRemaining: 0, /* optional */
+    //   freePostsRemaining: 0
     // }
     service.get = function(userId) {
       return $http.get(utilities.fixUri(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId))).catch(function(response) {
@@ -501,6 +502,7 @@ angular.module('webApp').factory('postStub',
     };
 
     // postId = 'Base64Guid'
+    // requestFreePost = false /* optional */
     // result = {
     //   post: {
     //     creatorId: 'Base64Guid',
@@ -534,7 +536,9 @@ angular.module('webApp').factory('postStub',
     //     liveDate: '2015-12-25T14:45:05Z',
     //     likesCount: 0,
     //     commentsCount: 0,
-    //     hasLiked: false
+    //     hasLiked: false,
+    //     isPreview: false,
+    //     isFreePost: false
     //   },
     //   files: [
     //     {
@@ -562,8 +566,8 @@ angular.module('webApp').factory('postStub',
     //     }
     //   ]
     // }
-    service.getPost = function(postId) {
-      return $http.get(utilities.fixUri(apiBaseUri + 'posts/' + encodeURIComponent(postId))).catch(function(response) {
+    service.getPost = function(postId, requestFreePost) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'posts/' + encodeURIComponent(postId) + '?' + (requestFreePost === undefined ? '' : 'requestFreePost=' + encodeURIComponent(requestFreePost) + '&'))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -966,7 +970,8 @@ angular.module('webApp').factory('userStateStub',
     //     paymentStatus: 'paymentstatus',
     //     hasPaymentInformation: false,
     //     creatorPercentage: 0.0,
-    //     creatorPercentageWeeksRemaining: 0 /* optional */
+    //     creatorPercentageWeeksRemaining: 0, /* optional */
+    //     freePostsRemaining: 0
     //   },
     //   blog: { /* optional */
     //     blogId: 'Base64Guid',
@@ -1065,7 +1070,8 @@ angular.module('webApp').factory('userStateStub',
     //     paymentStatus: 'paymentstatus',
     //     hasPaymentInformation: false,
     //     creatorPercentage: 0.0,
-    //     creatorPercentageWeeksRemaining: 0 /* optional */
+    //     creatorPercentageWeeksRemaining: 0, /* optional */
+    //     freePostsRemaining: 0
     //   },
     //   blog: { /* optional */
     //     blogId: 'Base64Guid',

@@ -55,6 +55,7 @@
             this.tables.Add(this.Load(databaseContext => databaseContext.Comments));
             this.tables.Add(this.Load(databaseContext => databaseContext.Likes));
             this.tables.Add(this.Load(databaseContext => databaseContext.PostFiles));
+            this.tables.Add(this.Load(databaseContext => databaseContext.FreePosts));
 
             Trace.WriteLine(string.Format("Snapshot taken in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
         }

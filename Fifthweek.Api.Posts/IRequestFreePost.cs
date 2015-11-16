@@ -6,8 +6,8 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Shared;
 
-    public interface IRequestFreePostDbStatement
+    public interface IRequestFreePost
     {
-        Task<bool> ExecuteAsync(UserId requestorId, PostId postId, DateTime timestamp, int maximumPosts);
+        Task ExecuteAsync(UserId requestorId, PostId postId, DateTime now);
     }
 }

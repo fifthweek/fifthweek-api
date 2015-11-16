@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 12/11/2015 15:03:08 (UTC)
-//// Mapped solution in 19.43s
+//// Generated on 15/11/2015 18:13:21 (UTC)
+//// Mapped solution in 15.99s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -666,7 +666,8 @@ namespace Fifthweek.Api.Posts
         public PostSecurity(
             Fifthweek.Api.Posts.IIsPostOwnerDbStatement isPostOwner,
             Fifthweek.Api.Posts.IIsPostSubscriberDbStatement isPostSubscriber,
-            Fifthweek.Api.Posts.IIsPostFreeAccessUserDbStatement isPostFreeAccessUser)
+            Fifthweek.Api.Posts.IIsPostFreeAccessUserDbStatement isPostFreeAccessUser,
+            Fifthweek.Api.Posts.IIsFreePostDbStatement isFreePostDbStatement)
         {
             if (isPostOwner == null)
             {
@@ -683,9 +684,15 @@ namespace Fifthweek.Api.Posts
                 throw new ArgumentNullException("isPostFreeAccessUser");
             }
 
+            if (isFreePostDbStatement == null)
+            {
+                throw new ArgumentNullException("isFreePostDbStatement");
+            }
+
             this.isPostOwner = isPostOwner;
             this.isPostSubscriber = isPostSubscriber;
             this.isPostFreeAccessUser = isPostFreeAccessUser;
+            this.isFreePostDbStatement = isFreePostDbStatement;
         }
     }
 }
@@ -4095,7 +4102,7 @@ namespace Fifthweek.Api.Posts.Queries
             Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
             Fifthweek.Api.Posts.IGetPostDbStatement getPostDbStatement,
             Fifthweek.Api.FileManagement.Shared.IGetAccessSignatureExpiryInformation getAccessSignatureExpiryInformation,
-            Fifthweek.Api.Posts.IRequestFreePostDbStatement requestFreePost,
+            Fifthweek.Api.Posts.IRequestFreePost requestFreePost,
             Fifthweek.Api.Posts.Queries.IGetPostQueryAggregator getPostQueryAggregator)
         {
             if (requesterSecurity == null)
@@ -4220,7 +4227,9 @@ namespace Fifthweek.Api.Posts.Queries
                 System.DateTime liveDate,
                 System.Int32 likesCount,
                 System.Int32 commentsCount,
-                System.Boolean hasLiked)
+                System.Boolean hasLiked,
+                System.Boolean isPreview,
+                System.Boolean isFreePost)
             {
                 if (creatorId == null)
                 {
@@ -4307,6 +4316,16 @@ namespace Fifthweek.Api.Posts.Queries
                     throw new ArgumentNullException("hasLiked");
                 }
 
+                if (isPreview == null)
+                {
+                    throw new ArgumentNullException("isPreview");
+                }
+
+                if (isFreePost == null)
+                {
+                    throw new ArgumentNullException("isFreePost");
+                }
+
                 this.CreatorId = creatorId;
                 this.Creator = creator;
                 this.PostId = postId;
@@ -4324,6 +4343,8 @@ namespace Fifthweek.Api.Posts.Queries
                 this.LikesCount = likesCount;
                 this.CommentsCount = commentsCount;
                 this.HasLiked = hasLiked;
+                this.IsPreview = isPreview;
+                this.IsFreePost = isFreePost;
             }
         }
     }
@@ -4573,6 +4594,130 @@ namespace Fifthweek.Api.Posts.Queries
             this.blobService = blobService;
             this.mimeTypeMap = mimeTypeMap;
             this.getPostPreviewContent = getPostPreviewContent;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
+    using System.Text;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Api.Posts.Controllers;
+
+    public partial class IsFreePostDbStatement 
+    {
+        public IsFreePostDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
+    using System.Text;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Api.Posts.Controllers;
+
+    public partial class RequestFreePost 
+    {
+        public RequestFreePost(
+            Fifthweek.Api.Posts.Shared.IGetFreePostTimestamp getFreePostTimestamp,
+            Fifthweek.Api.Posts.IRequestFreePostDbStatement requestFreePost)
+        {
+            if (getFreePostTimestamp == null)
+            {
+                throw new ArgumentNullException("getFreePostTimestamp");
+            }
+
+            if (requestFreePost == null)
+            {
+                throw new ArgumentNullException("requestFreePost");
+            }
+
+            this.getFreePostTimestamp = getFreePostTimestamp;
+            this.requestFreePost = requestFreePost;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
+    using System.Text;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Api.Posts.Controllers;
+
+    public partial class RequestFreePostDbStatement 
+    {
+        public RequestFreePostDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -8416,7 +8561,7 @@ namespace Fifthweek.Api.Posts.Queries
         {
             public override string ToString()
             {
-                return string.Format("FullPost({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.Creator == null ? "null" : this.Creator.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.Blog == null ? "null" : this.Blog.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Channel == null ? "null" : this.Channel.ToString(), this.Content == null ? "null" : this.Content.ToString(), this.PreviewWordCount == null ? "null" : this.PreviewWordCount.ToString(), this.WordCount == null ? "null" : this.WordCount.ToString(), this.ImageCount == null ? "null" : this.ImageCount.ToString(), this.FileCount == null ? "null" : this.FileCount.ToString(), this.VideoCount == null ? "null" : this.VideoCount.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.LikesCount == null ? "null" : this.LikesCount.ToString(), this.CommentsCount == null ? "null" : this.CommentsCount.ToString(), this.HasLiked == null ? "null" : this.HasLiked.ToString());
+                return string.Format("FullPost({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.Creator == null ? "null" : this.Creator.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.Blog == null ? "null" : this.Blog.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Channel == null ? "null" : this.Channel.ToString(), this.Content == null ? "null" : this.Content.ToString(), this.PreviewWordCount == null ? "null" : this.PreviewWordCount.ToString(), this.WordCount == null ? "null" : this.WordCount.ToString(), this.ImageCount == null ? "null" : this.ImageCount.ToString(), this.FileCount == null ? "null" : this.FileCount.ToString(), this.VideoCount == null ? "null" : this.VideoCount.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.LikesCount == null ? "null" : this.LikesCount.ToString(), this.CommentsCount == null ? "null" : this.CommentsCount.ToString(), this.HasLiked == null ? "null" : this.HasLiked.ToString(), this.IsPreview == null ? "null" : this.IsPreview.ToString(), this.IsFreePost == null ? "null" : this.IsFreePost.ToString());
             }
             
             public override bool Equals(object obj)
@@ -8461,6 +8606,8 @@ namespace Fifthweek.Api.Posts.Queries
                     hashCode = (hashCode * 397) ^ (this.LikesCount != null ? this.LikesCount.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.CommentsCount != null ? this.CommentsCount.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.HasLiked != null ? this.HasLiked.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.IsPreview != null ? this.IsPreview.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.IsFreePost != null ? this.IsFreePost.GetHashCode() : 0);
                     return hashCode;
                 }
             }
@@ -8548,6 +8695,16 @@ namespace Fifthweek.Api.Posts.Queries
                 }
             
                 if (!object.Equals(this.HasLiked, other.HasLiked))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.IsPreview, other.IsPreview))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.IsFreePost, other.IsFreePost))
                 {
                     return false;
                 }

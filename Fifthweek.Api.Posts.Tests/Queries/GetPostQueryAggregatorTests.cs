@@ -161,48 +161,53 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequirePostData()
         {
-            await this.target.ExecuteAsync(null, true, true, Expiry);
+            await this.target.ExecuteAsync(null, PostSecurityResult.Subscriber, Expiry);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireExpiry()
         {
-            await this.target.ExecuteAsync(PostData, true, true, null);
+            await this.target.ExecuteAsync(PostData, PostSecurityResult.Subscriber, null);
         }
 
         [TestMethod]
-        public async Task ItShouldReturnExpectedPost_WhenNotHasAccessAndNotPreview()
+        public async Task ItShouldReturnExpectedPost_WhenAccessDenied()
         {
-            await this.PerformTest(false, false, Content, BlobSharedAccessInformation1, BlobSharedAccessInformation2);
+            await this.PerformTest(PostSecurityResult.Denied, PreviewContent, null, BlobSharedAccessInformation2Preview);
         }
 
         [TestMethod]
-        public async Task ItShouldReturnExpectedPost_WhenHasAccessAndNotPreview()
+        public async Task ItShouldReturnExpectedPost_WhenOwner()
         {
-            await this.PerformTest(true, false, Content, null, null);
+            await this.PerformTest(PostSecurityResult.Owner, Content, null, null);
         }
 
         [TestMethod]
-        public async Task ItShouldReturnExpectedPost_WhenNotHasAccessAndPreview()
+        public async Task ItShouldReturnExpectedPost_WhenGuestList()
         {
-            await this.PerformTest(false, true, PreviewContent, null, BlobSharedAccessInformation2Preview);
+            await this.PerformTest(PostSecurityResult.GuestList, Content, null, null);
         }
 
         [TestMethod]
-        public async Task ItShouldReturnExpectedPost_WhenHasAccessAndPreview()
+        public async Task ItShouldReturnExpectedPost_WhenSubscriber()
         {
-            await this.PerformTest(true, true, PreviewContent, null, null);
+            await this.PerformTest(PostSecurityResult.Subscriber, Content, null, null);
+        }
+
+        [TestMethod]
+        public async Task ItShouldReturnExpectedPost_WhenFreePost()
+        {
+            await this.PerformTest(PostSecurityResult.FreePost, Content, BlobSharedAccessInformation1, BlobSharedAccessInformation2);
         }
 
         private async Task PerformTest(
-            bool hasAccess,
-            bool isPreview,
+            PostSecurityResult access,
             Comment expectedContent,
             BlobSharedAccessInformation expectedFileSharedAccessInformation,
             BlobSharedAccessInformation expectedImageSharedAccessInformation)
         {
-            var result = await this.target.ExecuteAsync(PostData, hasAccess, isPreview, Expiry);
+            var result = await this.target.ExecuteAsync(PostData, access, Expiry);
 
             Assert.AreEqual(
                 new GetPostQueryResult(
@@ -223,7 +228,9 @@
                         LiveDate,
                         LikesCount,
                         CommentsCount,
-                        true),
+                        true,
+                        access == PostSecurityResult.Denied,
+                        access == PostSecurityResult.FreePost),
                     new List<GetPostQueryResult.File>
                     {
                         new GetPostQueryResult.File(

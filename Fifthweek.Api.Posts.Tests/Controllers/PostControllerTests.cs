@@ -478,35 +478,48 @@
         [TestMethod]
         public async Task WhenGettingPost_ItShouldIssueGetPostCommand()
         {
+            await this.PerformGetPostTest(false);
+        }
+
+        [TestMethod]
+        public async Task WhenGettingPost_AndRequestingFreePost_ItShouldIssueGetPostCommand()
+        {
+            await this.PerformGetPostTest(true);
+        }
+
+        public async Task PerformGetPostTest(bool requestFreePost)
+        {
             var expectedResult = new GetPostQueryResult(
                 new GetPostQueryResult.FullPost(
                     UserId,
                     new GetPreviewNewsfeedQueryResult.PreviewPostCreator(new Username(UserId.ToString()), null),
                     PostId,
                     BlogId,
-                    new GetPreviewNewsfeedQueryResult.PreviewPostBlog(new BlogName(BlogId.ToString()), null, null), 
-                    ChannelId, 
-                    new GetPreviewNewsfeedQueryResult.PreviewPostChannel(new ChannelName(ChannelId.ToString())), 
+                    new GetPreviewNewsfeedQueryResult.PreviewPostBlog(new BlogName(BlogId.ToString()), null, null),
+                    ChannelId,
+                    new GetPreviewNewsfeedQueryResult.PreviewPostChannel(new ChannelName(ChannelId.ToString())),
                     new Comment(string.Empty),
                     0,
                     0,
-                    0, 
-                    0, 
+                    0,
+                    0,
                     0,
                     DateTime.UtcNow,
-                    0, 
-                    0, 
-                    false),
+                    0,
+                    0,
+                    false,
+                    true,
+                    true),
                 new List<GetPostQueryResult.File>());
             var timestamp = DateTime.UtcNow;
 
             this.timestampCreator.Setup(v => v.Now()).Returns(timestamp);
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
-            this.getPost.Setup(v => v.HandleAsync(new GetPostQuery(Requester, PostId, false, timestamp)))
+            this.getPost.Setup(v => v.HandleAsync(new GetPostQuery(Requester, PostId, requestFreePost, timestamp)))
                 .Returns(Task.FromResult(expectedResult))
                 .Verifiable();
 
-            var result = await this.target.GetPost(PostId.Value.EncodeGuid());
+            var result = await this.target.GetPost(PostId.Value.EncodeGuid(), requestFreePost);
 
             Assert.AreEqual(expectedResult, result);
             this.getPost.Verify();

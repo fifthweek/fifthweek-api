@@ -35,5 +35,7 @@
 
         [Optional]
         public int? CreatorPercentageWeeksRemaining { get; private set; }
+
+        public int FreePostsRemaining { get; private set; }
     }
 }

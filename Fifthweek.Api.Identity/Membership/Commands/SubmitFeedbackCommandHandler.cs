@@ -13,7 +13,7 @@
     public partial class SubmitFeedbackCommandHandler : ICommandHandler<SubmitFeedbackCommand>
     {
         private readonly IRequesterSecurity requesterSecurity;
-        private readonly IGetAccountSettingsDbStatement getAccountSettings;
+        private readonly IGetFeedbackUserDataDbStatement getUserData;
         private readonly IFifthweekActivityReporter activityReporter;
         private readonly IMarkdownRenderer markdownRenderer;
         private readonly ISendEmailService sendEmailService;
@@ -26,22 +26,22 @@
 
             try
             {
-                var accountSettings = await this.getAccountSettings.ExecuteAsync(userId);
+                var userData = await this.getUserData.ExecuteAsync(userId);
 
-                if (accountSettings.Email.Value.EndsWith(Core.Constants.TestEmailDomain))
+                if (userData.Email.Value.EndsWith(Core.Constants.TestEmailDomain))
                 {
                     return;
                 }
 
                 await this.activityReporter.ReportActivityAsync(
-                    string.Format("Feedback from {0}, {1}: {2}", accountSettings.Username.Value, accountSettings.Email.Value, command.Message.Value));
+                    string.Format("Feedback from {0}, {1}: {2}", userData.Username.Value, userData.Email.Value, command.Message.Value));
 
                 var htmlMessage = this.markdownRenderer.GetHtml(command.Message.Value);
 
                 await this.sendEmailService.SendEmailAsync(
-                    new MailAddress(accountSettings.Email.Value, accountSettings.Username.Value),
+                    new MailAddress(userData.Email.Value, userData.Username.Value),
                     Fifthweek.Shared.Constants.FifthweekEmailAddress.Address,
-                    "Feedback from " + accountSettings.Username.Value,
+                    "Feedback from " + userData.Username.Value,
                     htmlMessage);
 
             }

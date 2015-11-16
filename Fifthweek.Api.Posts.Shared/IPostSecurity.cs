@@ -11,11 +11,15 @@ namespace Fifthweek.Api.Posts.Shared
 
         Task AssertWriteAllowedAsync(UserId requester, PostId postId);
 
-        Task<bool> IsCommentOrLikeAllowedAsync(UserId requester, PostId postId, DateTime timestamp);
+        Task<bool> IsCommentAllowedAsync(UserId requester, PostId postId, DateTime timestamp);
 
-        Task AssertCommentOrLikeAllowedAsync(UserId requester, PostId postId, DateTime timestamp);
+        Task AssertCommentAllowedAsync(UserId requester, PostId postId, DateTime timestamp);
 
-        Task<bool> IsReadAllowedAsync(UserId requester, PostId postId, DateTime timestamp);
+        Task<bool> IsLikeAllowedAsync(UserId requester, PostId postId, DateTime timestamp);
+
+        Task AssertLikeAllowedAsync(UserId requester, PostId postId, DateTime timestamp);
+
+        Task<PostSecurityResult> IsReadAllowedAsync(UserId requester, PostId postId, DateTime timestamp);
 
         Task AssertReadAllowedAsync(UserId requester, PostId postId, DateTime timestamp);
     }

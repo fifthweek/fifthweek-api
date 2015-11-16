@@ -36,6 +36,9 @@
             builder.RegisterType<IsPostFreeAccessUserDbStatement>().As<IIsPostFreeAccessUserDbStatement>();
             builder.RegisterType<GetPostPreviewContent>().As<IGetPostPreviewContent>();
             builder.RegisterType<GetPostQueryAggregator>().As<IGetPostQueryAggregator>();
+            builder.RegisterType<IsFreePostDbStatement>().As<IIsFreePostDbStatement>();
+            builder.RegisterType<GetFreePostTimestamp>().As<IGetFreePostTimestamp>();
+            builder.RegisterType<RequestFreePost>().As<IRequestFreePost>();
         }
     }
 }

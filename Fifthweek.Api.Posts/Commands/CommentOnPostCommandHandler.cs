@@ -20,7 +20,7 @@
             command.AssertNotNull("command");
 
             var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
-            await this.postSecurity.AssertCommentOrLikeAllowedAsync(authenticatedUserId, command.PostId, command.Timestamp);
+            await this.postSecurity.AssertCommentAllowedAsync(authenticatedUserId, command.PostId, command.Timestamp);
 
             await this.commentOnPost.ExecuteAsync(
                     authenticatedUserId,

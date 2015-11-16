@@ -14,5 +14,15 @@
         {
             return DateTime.Parse(input, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
         }
+
+        public static DateTime RoundUp(DateTime dt, TimeSpan d)
+        {
+            if (dt.Kind != DateTimeKind.Utc)
+            {
+                throw new InvalidOperationException("Time must be in UTC");
+            }
+
+            return new DateTime(((dt.Ticks + d.Ticks - 1) / d.Ticks) * d.Ticks, DateTimeKind.Utc);
+        }
     }
 }

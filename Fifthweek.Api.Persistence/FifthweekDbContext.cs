@@ -70,6 +70,8 @@ namespace Fifthweek.Api.Persistence
         public IDbSet<Comment> Comments { get; set; }
 
         public IDbSet<Like> Likes { get; set; }
+        
+        public IDbSet<FreePost> FreePosts { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

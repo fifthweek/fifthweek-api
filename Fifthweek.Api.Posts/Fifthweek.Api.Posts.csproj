@@ -100,6 +100,7 @@
     <Compile Include="Controllers\RevisedPostData.cs" />
     <Compile Include="GetCommentsDbStatement.cs" />
     <Compile Include="GetCreatorBacklogDbStatement.cs" />
+    <Compile Include="GetFreePostTimestamp.cs" />
     <Compile Include="GetNewsfeedDbResult.cs" />
     <Compile Include="GetPostDbResult.cs" />
     <Compile Include="GetPostDbStatement.cs" />
@@ -114,14 +115,17 @@
     <Compile Include="IGetPostDbStatement.cs" />
     <Compile Include="IGetPostPreviewContent.cs" />
     <Compile Include="IGetPreviewNewsfeedDbStatement.cs" />
+    <Compile Include="IIsFreePostDbStatement.cs" />
     <Compile Include="IIsPostFreeAccessUserDbStatement.cs" />
     <Compile Include="IIsPostSubscriberDbStatement.cs" />
     <Compile Include="ILikePostDbStatement.cs" />
     <Compile Include="IMovePostToQueueDbStatement.cs" />
     <Compile Include="IDefragmentQueueIfRequiredDbStatement.cs" />
+    <Compile Include="IRequestFreePost.cs" />
     <Compile Include="IRequestFreePostDbStatement.cs" />
     <Compile Include="IRevisePostDbStatement.cs" />
     <Compile Include="ISetPostLiveDateDbStatement.cs" />
+    <Compile Include="IsFreePostDbStatement.cs" />
     <Compile Include="IsPostFreeAccessUserDbStatement.cs" />
     <Compile Include="IsPostSubscriberDbStatement.cs" />
     <Compile Include="ITryGetPostQueueIdStatement.cs" />
@@ -176,6 +180,7 @@
     <Compile Include="Queries\PreviewNewsfeedPost.cs" />
     <Compile Include="Queries\RenderSize.cs" />
     <Compile Include="DefragmentQueueIfRequiredDbStatement.cs" />
+    <Compile Include="RequestFreePost.cs" />
     <Compile Include="RequestFreePostDbStatement.cs" />
     <Compile Include="RevisePostDbStatement.cs" />
     <Compile Include="ScheduledDateClippingFunction.cs" />

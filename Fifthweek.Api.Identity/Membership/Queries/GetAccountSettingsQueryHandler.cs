@@ -7,6 +7,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
@@ -17,6 +18,7 @@
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IGetAccountSettingsDbStatement getAccountSettings;
         private readonly IFileInformationAggregator fileInformationAggregator;
+        private readonly IGetFreePostTimestamp getFreePostTimestamp;
 
         public async Task<GetAccountSettingsResult> HandleAsync(GetAccountSettingsQuery query)
         {
@@ -24,7 +26,8 @@
 
             await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId);
 
-            var result = await this.getAccountSettings.ExecuteAsync(query.RequestedUserId);
+            var freePostTimestamp = this.getFreePostTimestamp.Execute(query.Now);
+            var result = await this.getAccountSettings.ExecuteAsync(query.RequestedUserId, freePostTimestamp, PostConstants.MaximumFreePostsPerInterval);
 
             var creatorPercentage = GetCreatorPercentage(result.CreatorPercentageOverride, query.Now);
 
@@ -38,7 +41,8 @@
                     result.PaymentStatus,
                     result.HasPaymentInformation,
                     creatorPercentage.Percentage,
-                    GetWeeksRemaining(creatorPercentage.ExpiryDate, query.Now));
+                    GetWeeksRemaining(creatorPercentage.ExpiryDate, query.Now),
+                    result.FreePostsRemaining);
             }
 
             var fileInformation = await this.fileInformationAggregator.GetFileInformationAsync(
@@ -54,7 +58,8 @@
                 result.PaymentStatus,
                 result.HasPaymentInformation,
                 creatorPercentage.Percentage,
-                GetWeeksRemaining(creatorPercentage.ExpiryDate, query.Now));
+                GetWeeksRemaining(creatorPercentage.ExpiryDate, query.Now),
+                result.FreePostsRemaining);
         }
 
         internal static CreatorPercentageOverrideData GetCreatorPercentage(CreatorPercentageOverrideData creatorPercentageOverride, DateTime now)

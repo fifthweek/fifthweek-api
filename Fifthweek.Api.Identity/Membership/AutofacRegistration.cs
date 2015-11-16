@@ -19,6 +19,7 @@
 
             builder.RegisterType<GetUserRolesDbStatement>().As<IGetUserRolesDbStatement>();
             builder.RegisterType<ImpersonateIfRequired>().As<IImpersonateIfRequired>();
+            builder.RegisterType<GetFeedbackUserDataDbStatement>().As<IGetFeedbackUserDataDbStatement>();
         }
     }
 }

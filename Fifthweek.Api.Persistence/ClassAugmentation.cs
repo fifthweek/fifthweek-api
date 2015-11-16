@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 12/11/2015 15:01:47 (UTC)
-//// Mapped solution in 28.36s
+//// Generated on 16/11/2015 11:56:24 (UTC)
+//// Mapped solution in 17.93s
 
 
 namespace Fifthweek.Api.Persistence
@@ -1226,6 +1226,45 @@ namespace Fifthweek.Api.Persistence
             this.QueueId = queueId;
             this.Queue = queue;
             this.HourOfWeek = hourOfWeek;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+
+    public partial class FreePost 
+    {
+        public FreePost(
+            System.Guid userId,
+            System.Guid postId,
+            Fifthweek.Api.Persistence.Post post,
+            System.DateTime timestamp)
+        {
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
+            if (postId == null)
+            {
+                throw new ArgumentNullException("postId");
+            }
+
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            this.UserId = userId;
+            this.PostId = postId;
+            this.Post = post;
+            this.Timestamp = timestamp;
         }
     }
 }
@@ -3282,6 +3321,75 @@ namespace Fifthweek.Api.Persistence
             }
         
             if (!object.Equals(this.HourOfWeek, other.HourOfWeek))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+
+    public partial class FreePost 
+    {
+        public override string ToString()
+        {
+            return string.Format("FreePost({0}, {1}, {2})", this.UserId == null ? "null" : this.UserId.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((FreePost)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(FreePost other)
+        {
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.PostId, other.PostId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Timestamp, other.Timestamp))
             {
                 return false;
             }
@@ -13631,6 +13739,370 @@ namespace Fifthweek.Api.Persistence
             // Assume we never want to exclude primary key field(s) from our input.
             parameters.Add("QueueId", entity.QueueId);
             parameters.Add("HourOfWeek", entity.HourOfWeek);
+            return parameters;
+        }
+        
+    }
+}
+namespace Fifthweek.Api.Persistence
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+
+    public partial class FreePost  : IIdentityEquatable
+    {
+        public const string Table = "FreePosts";
+        
+        public FreePost(
+            System.Guid userId,
+            System.Guid postId)
+        {
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
+            if (postId == null)
+            {
+                throw new ArgumentNullException("postId");
+            }
+
+            this.UserId = userId;
+            this.PostId = postId;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((FreePost)other);
+        }
+        
+        protected bool IdentityEquals(FreePost other)
+        {
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.PostId, other.PostId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            UserId = 1, 
+            PostId = 2, 
+            Timestamp = 4
+        }
+    }
+
+    public static partial class FreePostExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<FreePost> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.UserId, entity.PostId, entity.Timestamp
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            FreePost entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.UserId, entity.PostId, entity.Timestamp
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<FreePost, FreePost.Fields> parameters)
+        {
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new Dapper.DynamicParameters(new { entity.UserId, entity.PostId, entity.Timestamp });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            FreePost entity, 
+            FreePost.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(FreePost.Fields.Empty, fields), 
+                new 
+                {
+                    entity.UserId, entity.PostId, entity.Timestamp
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            FreePost entity, 
+            FreePost.Fields mergeOnFields,
+            FreePost.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.UserId, entity.PostId, entity.Timestamp
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            FreePost entity, 
+            FreePost.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<FreePost, FreePost.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO FreePosts(UserId, PostId, Timestamp) VALUES(@UserId, @PostId, @Timestamp)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(FreePost.Fields mergeOnFields, FreePost.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE FreePosts WITH (HOLDLOCK) as Target
+                USING (VALUES (@UserId, @PostId, @Timestamp)) AS Source (UserId, PostId, Timestamp)
+                ON    (");
+                
+            if (mergeOnFields == FreePost.Fields.Empty)
+            {
+                sql.Append(@"Target.UserId = Source.UserId AND Target.PostId = Source.PostId");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (UserId, PostId, Timestamp)
+                    VALUES  (Source.UserId, Source.PostId, Source.Timestamp);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(FreePost.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE FreePosts SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE UserId = @UserId AND PostId = @PostId");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(FreePost.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("UserId");
+            }
+        
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("PostId");
+            }
+        
+            if (fields.HasFlag(FreePost.Fields.Timestamp))
+            {
+                fieldNames.Add("Timestamp");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
+            FreePost entity, 
+            FreePost.Fields fields,
+            FreePost.Fields? excludedFields = null)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("UserId", entity.UserId);
+            parameters.Add("PostId", entity.PostId);
+            if (fields.HasFlag(FreePost.Fields.Timestamp) && (excludedFields == null || !excludedFields.Value.HasFlag(FreePost.Fields.Timestamp)))
+            {
+                parameters.Add("Timestamp", entity.Timestamp);
+            }
+        
+            return parameters;
+        }
+        
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
+            FreePost entity, 
+            FreePost.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("UserId", entity.UserId);
+            parameters.Add("PostId", entity.PostId);
+            if (!fields.HasFlag(FreePost.Fields.Timestamp))
+            {
+                parameters.Add("Timestamp", entity.Timestamp);
+            }
+        
             return parameters;
         }
         

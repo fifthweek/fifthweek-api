@@ -117,8 +117,10 @@
     <Compile Include="Membership\Controllers\UpdatedAccountSettings.cs" />
     <Compile Include="Membership\GetAccountSettingsDbStatement.cs" />
     <Compile Include="Membership\GetAccountSettingsResult.cs" />
+    <Compile Include="Membership\GetFeedbackUserDataDbStatement.cs" />
     <Compile Include="Membership\GetUserRolesDbStatement.cs" />
     <Compile Include="Membership\IGetAccountSettingsDbStatement.cs" />
+    <Compile Include="Membership\IGetFeedbackUserDataDbStatement.cs" />
     <Compile Include="Membership\IGetUserRolesDbStatement.cs" />
     <Compile Include="Membership\IImpersonateIfRequired.cs" />
     <Compile Include="Membership\ImpersonateIfRequired.cs" />

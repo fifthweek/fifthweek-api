@@ -28,28 +28,18 @@
         private static readonly ValidEmail ValidEmail = ValidEmail.Parse("name@test.com");
         private static readonly string HtmlMessage = "html-message";
 
-        private static readonly GetAccountSettingsDbResult AccountSettings = new GetAccountSettingsDbResult(
-            Username,
+        private static readonly GetFeedbackUserDataDbStatement.GetFeedbackUserDataResult AccountSettings = new GetFeedbackUserDataDbStatement.GetFeedbackUserDataResult(
             ValidEmail,
-            null,
-            10,
-            Persistence.Payments.PaymentStatus.None,
-            true,
-            null);
+            Username);
 
-        private static readonly GetAccountSettingsDbResult TestAccountSettings = new GetAccountSettingsDbResult(
-            Username,
+        private static readonly GetFeedbackUserDataDbStatement.GetFeedbackUserDataResult TestAccountSettings = new GetFeedbackUserDataDbStatement.GetFeedbackUserDataResult(
             new Email("something" + Constants.TestEmailDomain),
-            null,
-            10,
-            Persistence.Payments.PaymentStatus.None,
-            true,
-            null);
+            Username);
 
         private static readonly string Activity = "Feedback from username, name@test.com: A valid comment";
 
         private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<IGetAccountSettingsDbStatement> getAccountSettings;
+        private Mock<IGetFeedbackUserDataDbStatement> getFeedbackUserData;
         private Mock<IFifthweekActivityReporter> activityReporter;
         private Mock<IMarkdownRenderer> markdownRenderer;
         private Mock<ISendEmailService> sendEmailService;
@@ -61,7 +51,7 @@
         public void Initialize()
         {
             this.requesterSecurity = new Mock<IRequesterSecurity>();
-            this.getAccountSettings = new Mock<IGetAccountSettingsDbStatement>(MockBehavior.Strict);
+            this.getFeedbackUserData = new Mock<IGetFeedbackUserDataDbStatement>(MockBehavior.Strict);
             this.activityReporter = new Mock<IFifthweekActivityReporter>(MockBehavior.Strict);
             this.markdownRenderer = new Mock<IMarkdownRenderer>(MockBehavior.Strict);
             this.sendEmailService = new Mock<ISendEmailService>(MockBehavior.Strict);
@@ -71,7 +61,7 @@
 
             this.target = new SubmitFeedbackCommandHandler(
                 this.requesterSecurity.Object,
-                this.getAccountSettings.Object,
+                this.getFeedbackUserData.Object,
                 this.activityReporter.Object, 
                 this.markdownRenderer.Object,
                 this.sendEmailService.Object,
@@ -97,7 +87,7 @@
         [TestMethod]
         public async Task WhenEmailIsFromTestDomain_ItShouldNotReport()
         {
-            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
+            this.getFeedbackUserData.Setup(v => v.ExecuteAsync(UserId))
                 .ReturnsAsync(TestAccountSettings);
 
             await this.target.HandleAsync(new SubmitFeedbackCommand(Requester, Message));
@@ -107,7 +97,7 @@
         [TestMethod]
         public async Task WhenReportingSucceeds_ItShouldCompleteSuccessfully()
         {
-            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
+            this.getFeedbackUserData.Setup(v => v.ExecuteAsync(UserId))
                 .ReturnsAsync(AccountSettings);
 
             this.activityReporter.Setup(v => v.ReportActivityAsync(Activity))
@@ -133,7 +123,7 @@
         [TestMethod]
         public async Task WhenReportingFails_ItShouldLogErrorAndCompleteSuccessfully()
         {
-            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
+            this.getFeedbackUserData.Setup(v => v.ExecuteAsync(UserId))
                 .ReturnsAsync(AccountSettings);
             
             this.activityReporter.Setup(v => v.ReportActivityAsync(Activity))

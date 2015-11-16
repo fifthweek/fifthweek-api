@@ -54,8 +54,11 @@
     </Compile>
     <Compile Include="Comment.cs" />
     <Compile Include="CommentId.cs" />
+    <Compile Include="IGetFreePostTimestamp.cs" />
     <Compile Include="IPostSecurity.cs" />
+    <Compile Include="PostConstants.cs" />
     <Compile Include="PostId.cs" />
+    <Compile Include="PostSecurityResult.cs" />
     <Compile Include="PreviewText.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidComment.cs" />

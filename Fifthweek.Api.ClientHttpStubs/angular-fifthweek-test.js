@@ -607,12 +607,13 @@ describe('post stub', function() {
 
   it('should get post', function() {
     var postId = 'value0';
+    var requestFreePost = 'value1';
 
     var responseData = 'response data';
-    $httpBackend.expectGET(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/' + encodeURIComponent(postId))).respond(200, responseData);
+    $httpBackend.expectGET(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/' + encodeURIComponent(postId) + '?' + (requestFreePost === undefined ? '' : 'requestFreePost=' + encodeURIComponent(requestFreePost) + '&'))).respond(200, responseData);
 
     var result = null;
-    target.getPost(postId).then(function(response) { result = response.data; });
+    target.getPost(postId, requestFreePost).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();

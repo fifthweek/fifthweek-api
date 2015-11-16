@@ -133,7 +133,7 @@
         {
             this.requesterSecurity.SetupFor(Requester);
 
-            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
+            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null, 1);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId }, UserSubscriptions.FreeAccessChannelIds)))
                 .ReturnsAsync(UserAccessSignatures);
@@ -157,7 +157,7 @@
         {
             this.requesterSecurity.SetupFor(Requester);
 
-            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
+            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null, 1);
 
             GetUserAccessSignaturesQuery actual = null;
             var expected = new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptionsWithNonAcceptedPrice.Blogs[1].Channels[0].ChannelId }, UserSubscriptionsWithNonAcceptedPrice.FreeAccessChannelIds);
@@ -185,7 +185,7 @@
         {
             this.requesterSecurity.SetupFor(Requester);
 
-            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 0, PaymentStatus.Retry1, true, 1m, null);
+            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 0, PaymentStatus.Retry1, true, 1m, null, 1);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId }, UserSubscriptions.FreeAccessChannelIds)))
                 .ReturnsAsync(UserAccessSignatures);
@@ -209,7 +209,7 @@
         {
             this.requesterSecurity.SetupFor(Requester);
 
-            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 0, PaymentStatus.None, true, 1m, null);
+            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 0, PaymentStatus.None, true, 1m, null, 1);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, null, UserSubscriptions.FreeAccessChannelIds)))
                 .ReturnsAsync(UserAccessSignatures);
@@ -233,7 +233,7 @@
         {
             this.requesterSecurity.SetupFor(Requester);
 
-            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
+            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null, 1);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId }, UserSubscriptions.FreeAccessChannelIds)))
                 .ReturnsAsync(UserAccessSignatures);
@@ -263,7 +263,7 @@
         {
             this.requesterSecurity.SetupFor(Requester);
 
-            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
+            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null, 1);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId }, UserSubscriptions.FreeAccessChannelIds)))
                 .ReturnsAsync(UserAccessSignatures);
@@ -294,7 +294,7 @@
             this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.Creator)).ReturnsAsync(true);
 
             var creatorStatus = new CreatorStatus(new BlogId(Guid.NewGuid()), true);
-            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
+            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null, 1);
             var blogChannelsAndCollections = new GetBlogChannelsAndQueuesResult(
                 new BlogWithFileInformation(new BlogId(Guid.NewGuid()), new BlogName("My Subscription"), new Introduction("Once upon a time there was an intro."), DateTime.UtcNow, null, null, null,
                     new List<ChannelResult> { new ChannelResult(new ChannelId(Guid.NewGuid()), "name", 10, true) },
@@ -326,7 +326,7 @@
             this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.Creator)).ReturnsAsync(true);
 
             var creatorStatus = new CreatorStatus(null, true);
-            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
+            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null, 1);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId }, UserSubscriptions.FreeAccessChannelIds)))
                 .ReturnsAsync(UserAccessSignatures);

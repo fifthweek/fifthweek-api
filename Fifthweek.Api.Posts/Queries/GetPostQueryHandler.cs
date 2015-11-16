@@ -23,7 +23,7 @@
         private readonly IPostSecurity postSecurity;
         private readonly IGetPostDbStatement getPostDbStatement;
         private readonly IGetAccessSignatureExpiryInformation getAccessSignatureExpiryInformation;
-        private readonly IRequestFreePostDbStatement requestFreePost;
+        private readonly IRequestFreePost requestFreePost;
         private readonly IGetPostQueryAggregator getPostQueryAggregator;
 
         public async Task<GetPostQueryResult> HandleAsync(GetPostQuery query)
@@ -38,22 +38,20 @@
                 return null;
             }
 
-            var hasAccess = false;
-            var isPreview = true;
+            var access = PostSecurityResult.Denied;
             if (requestingUserId != null)
             {
-                hasAccess = await this.postSecurity.IsReadAllowedAsync(requestingUserId, query.PostId, query.Timestamp);
-                isPreview = !hasAccess;
-                if (!hasAccess && query.RequestFreePost)
+                access = await this.postSecurity.IsReadAllowedAsync(requestingUserId, query.PostId, query.Timestamp);
+                if (access == PostSecurityResult.Denied && query.RequestFreePost)
                 {
-                    await this.requestFreePost.ExecuteAsync(requestingUserId, query.PostId);
-                    isPreview = false;
+                    await this.requestFreePost.ExecuteAsync(requestingUserId, query.PostId, query.Timestamp);
+                    access = PostSecurityResult.FreePost;
                 }
             }
 
             var expiry = this.getAccessSignatureExpiryInformation.Execute(query.Timestamp);
 
-            return await this.getPostQueryAggregator.ExecuteAsync(result, hasAccess, isPreview, expiry);
+            return await this.getPostQueryAggregator.ExecuteAsync(result, access, expiry);
         }
     }
 }

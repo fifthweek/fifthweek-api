@@ -54,6 +54,10 @@
             public int CommentsCount { get; private set; }
 
             public bool HasLiked { get; private set; }
+
+            public bool IsPreview { get; private set; }
+
+            public bool IsFreePost { get; private set; }
         }
 
         [AutoConstructor, AutoEqualityMembers]

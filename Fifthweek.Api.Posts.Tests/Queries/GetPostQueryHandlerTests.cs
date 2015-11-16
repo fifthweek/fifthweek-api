@@ -117,6 +117,8 @@
                 LiveDate,
                 LikesCount,
                 CommentsCount,
+                true,
+                true,
                 true),
             new List<GetPostQueryResult.File>
             {
@@ -134,7 +136,7 @@
         private Mock<IPostSecurity> postSecurity;
         private Mock<IGetPostDbStatement> getPostDbStatement;
         private Mock<IGetAccessSignatureExpiryInformation> getAccessSignatureExpiryInformation;
-        private Mock<IRequestFreePostDbStatement> requestFreePost;
+        private Mock<IRequestFreePost> requestFreePost;
         private Mock<IGetPostQueryAggregator> getPostQueryAggregator;
 
         private GetPostQueryHandler target;
@@ -146,7 +148,7 @@
             this.postSecurity = new Mock<IPostSecurity>(MockBehavior.Strict);
             this.getPostDbStatement = new Mock<IGetPostDbStatement>(MockBehavior.Strict);
             this.getAccessSignatureExpiryInformation = new Mock<IGetAccessSignatureExpiryInformation>();
-            this.requestFreePost = new Mock<IRequestFreePostDbStatement>(MockBehavior.Strict);
+            this.requestFreePost = new Mock<IRequestFreePost>(MockBehavior.Strict);
             this.getPostQueryAggregator = new Mock<IGetPostQueryAggregator>(MockBehavior.Strict);
 
             this.requesterSecurity.SetupFor(Requester);
@@ -187,7 +189,7 @@
             this.requesterSecurity.Setup(v => v.TryAuthenticateAsync(Requester)).ReturnsAsync(null);
             this.getPostDbStatement.Setup(v => v.ExecuteAsync(null, PostId)).ReturnsAsync(Result);
 
-            this.getPostQueryAggregator.Setup(v => v.ExecuteAsync(Result, false, true, Expiry))
+            this.getPostQueryAggregator.Setup(v => v.ExecuteAsync(Result, PostSecurityResult.Denied, Expiry))
                 .ReturnsAsync(QueryResult)
                 .Verifiable();
 
@@ -202,9 +204,9 @@
         {
             this.requesterSecurity.Setup(v => v.TryAuthenticateAsync(Requester)).ReturnsAsync(UserId);
             this.getPostDbStatement.Setup(v => v.ExecuteAsync(UserId, PostId)).ReturnsAsync(Result);
-            this.postSecurity.Setup(v => v.IsReadAllowedAsync(UserId, PostId, Timestamp)).ReturnsAsync(true);
+            this.postSecurity.Setup(v => v.IsReadAllowedAsync(UserId, PostId, Timestamp)).ReturnsAsync(PostSecurityResult.Subscriber);
 
-            this.getPostQueryAggregator.Setup(v => v.ExecuteAsync(Result, true, false, Expiry))
+            this.getPostQueryAggregator.Setup(v => v.ExecuteAsync(Result, PostSecurityResult.Subscriber, Expiry))
                 .ReturnsAsync(QueryResult)
                 .Verifiable();
 
@@ -219,9 +221,9 @@
         {
             this.requesterSecurity.Setup(v => v.TryAuthenticateAsync(Requester)).ReturnsAsync(UserId);
             this.getPostDbStatement.Setup(v => v.ExecuteAsync(UserId, PostId)).ReturnsAsync(Result);
-            this.postSecurity.Setup(v => v.IsReadAllowedAsync(UserId, PostId, Timestamp)).ReturnsAsync(false);
+            this.postSecurity.Setup(v => v.IsReadAllowedAsync(UserId, PostId, Timestamp)).ReturnsAsync(PostSecurityResult.Denied);
 
-            this.getPostQueryAggregator.Setup(v => v.ExecuteAsync(Result, false, true, Expiry))
+            this.getPostQueryAggregator.Setup(v => v.ExecuteAsync(Result, PostSecurityResult.Denied, Expiry))
                 .ReturnsAsync(QueryResult)
                 .Verifiable();
 
@@ -236,10 +238,10 @@
         {
             this.requesterSecurity.Setup(v => v.TryAuthenticateAsync(Requester)).ReturnsAsync(UserId);
             this.getPostDbStatement.Setup(v => v.ExecuteAsync(UserId, PostId)).ReturnsAsync(Result);
-            this.postSecurity.Setup(v => v.IsReadAllowedAsync(UserId, PostId, Timestamp)).ReturnsAsync(false);
-            this.requestFreePost.Setup(v => v.ExecuteAsync(UserId, PostId)).Returns(Task.FromResult(0));
+            this.postSecurity.Setup(v => v.IsReadAllowedAsync(UserId, PostId, Timestamp)).ReturnsAsync(PostSecurityResult.Denied);
+            this.requestFreePost.Setup(v => v.ExecuteAsync(UserId, PostId, Timestamp)).Returns(Task.FromResult(0));
 
-            this.getPostQueryAggregator.Setup(v => v.ExecuteAsync(Result, false, false, Expiry))
+            this.getPostQueryAggregator.Setup(v => v.ExecuteAsync(Result, PostSecurityResult.FreePost, Expiry))
                 .ReturnsAsync(QueryResult)
                 .Verifiable();
 
@@ -255,8 +257,8 @@
         {
             this.requesterSecurity.Setup(v => v.TryAuthenticateAsync(Requester)).ReturnsAsync(UserId);
             this.getPostDbStatement.Setup(v => v.ExecuteAsync(UserId, PostId)).ReturnsAsync(Result);
-            this.postSecurity.Setup(v => v.IsReadAllowedAsync(UserId, PostId, Timestamp)).ReturnsAsync(false);
-            this.requestFreePost.Setup(v => v.ExecuteAsync(UserId, PostId)).Throws(new DivideByZeroException());
+            this.postSecurity.Setup(v => v.IsReadAllowedAsync(UserId, PostId, Timestamp)).ReturnsAsync(PostSecurityResult.Denied);
+            this.requestFreePost.Setup(v => v.ExecuteAsync(UserId, PostId, Timestamp)).Throws(new DivideByZeroException());
 
             await this.target.HandleAsync(new GetPostQuery(Requester, PostId, true, Timestamp));
         }

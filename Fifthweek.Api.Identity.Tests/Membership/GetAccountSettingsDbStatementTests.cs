@@ -30,6 +30,10 @@
         private static readonly Email Email = new Email("accountrepositorytests@testing.fifthweek.com");
         private static readonly decimal PercentageOverride = 0.9m;
         private static readonly DateTime Expiry = new SqlDateTime(DateTime.UtcNow).Value;
+        private static readonly DateTime FreePostsTimestamp1 = Expiry.AddDays(1);
+        private static readonly DateTime FreePostsTimestamp2 = Expiry.AddDays(2);
+        private static readonly int MaximumFreePosts = 7;
+        private static readonly int ExpectedFreePostRemaining = MaximumFreePosts - 2;
 
         private GetAccountSettingsDbStatement target;
 
@@ -59,7 +63,7 @@
 
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(UserId);
+                var result = await this.target.ExecuteAsync(UserId, FreePostsTimestamp2, MaximumFreePosts);
 
                 var expectedResult = new GetAccountSettingsDbResult(
                     Username,
@@ -68,7 +72,8 @@
                     0,
                     PaymentStatus.None,
                     false,
-                    null);
+                    null,
+                    ExpectedFreePostRemaining);
 
                 Assert.AreEqual(expectedResult, result);
                 
@@ -95,7 +100,7 @@
 
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(UserId);
+                var result = await this.target.ExecuteAsync(UserId, FreePostsTimestamp2, MaximumFreePosts);
 
                 var expectedResult = new GetAccountSettingsDbResult(
                     Username,
@@ -104,7 +109,8 @@
                     0,
                     PaymentStatus.None,
                     false,
-                    null);
+                    null,
+                    ExpectedFreePostRemaining);
 
                 Assert.AreEqual(expectedResult, result);
 
@@ -131,7 +137,7 @@
 
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(UserId);
+                var result = await this.target.ExecuteAsync(UserId, FreePostsTimestamp2, MaximumFreePosts);
 
                 var expectedResult = new GetAccountSettingsDbResult(
                     Username,
@@ -140,7 +146,8 @@
                     100,
                     PaymentStatus.None,
                     false,
-                    null);
+                    null,
+                    ExpectedFreePostRemaining);
 
                 Assert.AreEqual(expectedResult, result);
 
@@ -167,7 +174,7 @@
 
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(UserId);
+                var result = await this.target.ExecuteAsync(UserId, FreePostsTimestamp2, MaximumFreePosts);
 
                 var expectedResult = new GetAccountSettingsDbResult(
                     Username,
@@ -176,7 +183,8 @@
                     0,
                     PaymentStatus.Retry2,
                     false,
-                    null);
+                    null,
+                    ExpectedFreePostRemaining);
 
                 Assert.AreEqual(expectedResult, result);
 
@@ -203,7 +211,7 @@
 
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(UserId);
+                var result = await this.target.ExecuteAsync(UserId, FreePostsTimestamp2, MaximumFreePosts);
 
                 var expectedResult = new GetAccountSettingsDbResult(
                     Username,
@@ -212,7 +220,8 @@
                     0,
                     PaymentStatus.Retry2,
                     true,
-                    null);
+                    null,
+                    ExpectedFreePostRemaining);
 
                 Assert.AreEqual(expectedResult, result);
 
@@ -239,7 +248,7 @@
 
                 await testDatabase.TakeSnapshotAsync();
 
-                Func<Task> badMethodCall = () => this.target.ExecuteAsync(new UserId(Guid.NewGuid()));
+                Func<Task> badMethodCall = () => this.target.ExecuteAsync(new UserId(Guid.NewGuid()), FreePostsTimestamp2, MaximumFreePosts);
 
                 await badMethodCall.AssertExceptionAsync<DetailedRecoverableException>();
 
@@ -250,7 +259,7 @@
         [TestMethod]
         public async Task WhenGetAccountSettingsCalledWithNullUserId_ItShouldThrowAnAugumentException()
         {
-            Func<Task> badMethodCall = () => this.target.ExecuteAsync(null);
+            Func<Task> badMethodCall = () => this.target.ExecuteAsync(null, FreePostsTimestamp2, MaximumFreePosts);
 
             await badMethodCall.AssertExceptionAsync<ArgumentNullException>();
         }
@@ -274,7 +283,7 @@
 
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(UserId);
+                var result = await this.target.ExecuteAsync(UserId, FreePostsTimestamp2, MaximumFreePosts);
 
                 var expectedResult = new GetAccountSettingsDbResult(
                     Username,
@@ -283,7 +292,8 @@
                     0,
                     PaymentStatus.None,
                     false,
-                    new CreatorPercentageOverrideData(PercentageOverride, Expiry));
+                    new CreatorPercentageOverrideData(PercentageOverride, Expiry),
+                    ExpectedFreePostRemaining);
 
                 Assert.AreEqual(expectedResult, result);
 
@@ -308,9 +318,17 @@
             user.Email = email.Value;
             user.UserName = username.Value;
 
+            var postId1 = Guid.NewGuid();
+            var postId2 = Guid.NewGuid();
+            var postId3 = Guid.NewGuid();
             using (var databaseContext = testDatabase.CreateContext())
             {
                 databaseContext.Users.Add(user);
+
+                await databaseContext.CreateTestNoteAsync(Guid.NewGuid(), postId1, random);
+                await databaseContext.CreateTestNoteAsync(Guid.NewGuid(), postId2, random);
+                await databaseContext.CreateTestNoteAsync(Guid.NewGuid(), postId3, random);
+
                 await databaseContext.SaveChangesAsync();
             }
 
@@ -401,6 +419,10 @@
                 {
                     await connection.InsertAsync(new CreatorPercentageOverride(user.Id, PercentageOverride, Expiry));
                 }
+
+                await connection.InsertAsync(new FreePost(UserId.Value, postId1, null, FreePostsTimestamp1));
+                await connection.InsertAsync(new FreePost(UserId.Value, postId2, null, FreePostsTimestamp2));
+                await connection.InsertAsync(new FreePost(UserId.Value, postId3, null, FreePostsTimestamp2));
             }
         }
     }

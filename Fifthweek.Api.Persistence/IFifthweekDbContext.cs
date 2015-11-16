@@ -67,6 +67,8 @@
 
         IDbSet<PostFile> PostFiles { get; set; }
 
+        IDbSet<FreePost> FreePosts { get; set; }
+
         Task<int> SaveChangesAsync();
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);

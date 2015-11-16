@@ -22,11 +22,13 @@
         private static readonly string Sql = string.Format(
             @"SELECT u.{1}, u.{2}, u.{3}, cab.{4} as Balance, origin.{11},
                     CASE WHEN origin.{10} IS NULL OR origin.{13}={14} THEN 'False' ELSE 'True' END AS HasPaymentInformation,
-                    cpo.{17}, cpo.{18}
+                    cpo.{17}, cpo.{18}, fp.FreePostCount
                 FROM {5} u
                 LEFT OUTER JOIN ({8}) cab ON u.{6} = cab.{7}
                 LEFT OUTER JOIN {9} origin ON u.{6} = origin.{12}
                 LEFT OUTER JOIN {15} cpo ON u.{6}=cpo.{16}
+                LEFT OUTER JOIN (SELECT COUNT(*) AS FreePostCount, @UserId AS UserId FROM {19} WHERE {20}=@UserId AND {21}=@FreePostTimestamp) fp
+                    ON u.{6}=fp.UserId
                 WHERE u.{6}=@UserId",
             FifthweekUser.Fields.Name,
             FifthweekUser.Fields.UserName,
@@ -46,11 +48,14 @@
             CreatorPercentageOverride.Table,
             CreatorPercentageOverride.Fields.UserId,
             CreatorPercentageOverride.Fields.Percentage,
-            CreatorPercentageOverride.Fields.ExpiryDate);
+            CreatorPercentageOverride.Fields.ExpiryDate,
+            FreePost.Table,
+            FreePost.Fields.UserId,
+            FreePost.Fields.Timestamp);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<GetAccountSettingsDbResult> ExecuteAsync(UserId userId)
+        public async Task<GetAccountSettingsDbResult> ExecuteAsync(UserId userId, DateTime freePostTimestamp, int maximumFreePosts)
         {
             userId.AssertNotNull("userId");
 
@@ -58,7 +63,11 @@
             {
                 var result = (await connection.QueryAsync<GetAccountSettingsDapperResult>(
                          Sql,
-                         new { UserId = userId.Value })).SingleOrDefault();
+                         new 
+                         {
+                             UserId = userId.Value,
+                             FreePostTimestamp = freePostTimestamp
+                         })).SingleOrDefault();
 
                 if (result == null)
                 {
@@ -78,7 +87,8 @@
                     result.Balance == null ? 0 : result.Balance.Value,
                     result.PaymentStatus == null ? PaymentStatus.None : result.PaymentStatus.Value,
                     result.HasPaymentInformation,
-                    creatorPercentageOverrideData);
+                    creatorPercentageOverrideData,
+                    Math.Max(0, maximumFreePosts - result.FreePostCount));
             }
         }
 
@@ -99,6 +109,8 @@
             public decimal? Percentage { get; set; }
 
             public DateTime? ExpiryDate { get; set; }
+
+            public int FreePostCount { get; set; }
         }
     }
 
@@ -120,5 +132,7 @@
 
         [Optional]
         public CreatorPercentageOverrideData CreatorPercentageOverride { get; private set; }
+
+        public int FreePostsRemaining { get; private set; }
     }
 }

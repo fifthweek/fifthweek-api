@@ -20,24 +20,24 @@
         private readonly IMimeTypeMap mimeTypeMap;
         private readonly IGetPostPreviewContent getPostPreviewContent;
 
-        public async Task<GetPostQueryResult> ExecuteAsync(GetPostDbResult postData, bool hasAccess, bool isPreview, AccessSignatureExpiryInformation expiry)
+        public async Task<GetPostQueryResult> ExecuteAsync(GetPostDbResult postData, PostSecurityResult access, AccessSignatureExpiryInformation expiry)
         {
             postData.AssertNotNull("postData");
             expiry.AssertNotNull("expiry");
 
-            var post = await this.ProcessPost(postData.Post, isPreview);
+            var post = await this.ProcessPost(postData.Post, access);
 
             var files = new List<GetPostQueryResult.File>();
             foreach (var file in postData.Files)
             {
-                var completeFile = await this.ProcessFile(post, file, hasAccess, isPreview, expiry);
+                var completeFile = await this.ProcessFile(post, file, access, expiry);
                 files.Add(completeFile);
             }
 
             return new GetPostQueryResult(post, files);
         }
 
-        private async Task<GetPostQueryResult.File> ProcessFile(GetPostQueryResult.FullPost post, GetPostDbResult.PostFileDbResult file, bool hasAccess, bool isPreview, AccessSignatureExpiryInformation expiry)
+        private async Task<GetPostQueryResult.File> ProcessFile(GetPostQueryResult.FullPost post, GetPostDbResult.PostFileDbResult file, PostSecurityResult access, AccessSignatureExpiryInformation expiry)
         {
             var fileInformation =
                 await this.fileInformationAggregator.GetFileInformationAsync(post.ChannelId, file.FileId, file.Purpose);
@@ -56,40 +56,37 @@
                 renderSize);
 
             BlobSharedAccessInformation accessInformation = null;
-            if (!hasAccess)
+            if (access == PostSecurityResult.Denied)
             {
-                if (isPreview)
+                if (file.Purpose == FilePurposes.PostImage)
                 {
-                    if (file.Purpose == FilePurposes.PostImage)
-                    {
-                        accessInformation =
-                            await
-                            this.blobService.GetBlobSharedAccessInformationForReadingAsync(
-                                fileInformation.ContainerName,
-                                file.FileId.Value.EncodeGuid() + "/" + FileManagement.Shared.Constants.PostPreviewImageThumbnailName,
-                                expiry.Private);
-                    }
+                    accessInformation =
+                        await
+                        this.blobService.GetBlobSharedAccessInformationForReadingAsync(
+                            fileInformation.ContainerName,
+                            file.FileId.Value.EncodeGuid() + "/" + FileManagement.Shared.Constants.PostPreviewImageThumbnailName,
+                            expiry.Private);
                 }
-                else
+            }
+            else if (access == PostSecurityResult.FreePost)
+            {
+                if (file.Purpose == FilePurposes.PostImage)
                 {
-                    if (file.Purpose == FilePurposes.PostImage)
-                    {
-                        accessInformation =
-                           await
-                           this.blobService.GetBlobSharedAccessInformationForReadingAsync(
-                               fileInformation.ContainerName,
-                               file.FileId.Value.EncodeGuid() + "/" + FileManagement.Shared.Constants.PostFeedImageThumbnailName,
-                               expiry.Private);
-                    }
-                    else if (file.Purpose == FilePurposes.PostFile)
-                    {
-                        accessInformation =
-                           await
-                           this.blobService.GetBlobSharedAccessInformationForReadingAsync(
-                               fileInformation.ContainerName,
-                               file.FileId.Value.EncodeGuid(),
-                               expiry.Private);
-                    }
+                    accessInformation =
+                        await
+                        this.blobService.GetBlobSharedAccessInformationForReadingAsync(
+                            fileInformation.ContainerName,
+                            file.FileId.Value.EncodeGuid() + "/" + FileManagement.Shared.Constants.PostFeedImageThumbnailName,
+                            expiry.Private);
+                }
+                else if (file.Purpose == FilePurposes.PostFile)
+                {
+                    accessInformation =
+                        await
+                        this.blobService.GetBlobSharedAccessInformationForReadingAsync(
+                            fileInformation.ContainerName,
+                            file.FileId.Value.EncodeGuid(),
+                            expiry.Private);
                 }
             }
 
@@ -97,7 +94,7 @@
             return completeFile;
         }
 
-        private async Task<GetPostQueryResult.FullPost> ProcessPost(PreviewNewsfeedPost post, bool isPreview)
+        private async Task<GetPostQueryResult.FullPost> ProcessPost(PreviewNewsfeedPost post, PostSecurityResult access)
         {
             FileInformation profileImage = null;
             if (post.ProfileImageFileId != null)
@@ -118,7 +115,7 @@
             }
 
             var postContent = post.Content.Value;
-            if (isPreview)
+            if (access == PostSecurityResult.Denied)
             {
                 postContent = this.getPostPreviewContent.Execute(postContent, post.PreviewText);
             }
@@ -140,7 +137,9 @@
                 post.LiveDate,
                 post.LikesCount,
                 post.CommentsCount,
-                post.HasLikedPost);
+                post.HasLikedPost,
+                access == PostSecurityResult.Denied,
+                access == PostSecurityResult.FreePost);
         }
     }
 }

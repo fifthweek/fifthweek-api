@@ -90,6 +90,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
+    <Compile Include="FreePost.cs" />
     <Compile Include="Migrations\201509111552242_ChangeCollectionsToQueuesAndSimplifyBlogFields.cs" />
     <Compile Include="Migrations\201509111552242_ChangeCollectionsToQueuesAndSimplifyBlogFields.Designer.cs">
       <DependentUpon>201509111552242_ChangeCollectionsToQueuesAndSimplifyBlogFields.cs</DependentUpon>
@@ -121,6 +122,10 @@
     <Compile Include="Migrations\201511121528598_AddVideoCountToPost.cs" />
     <Compile Include="Migrations\201511121528598_AddVideoCountToPost.Designer.cs">
       <DependentUpon>201511121528598_AddVideoCountToPost.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201511151427521_CreateFreePostsTable.cs" />
+    <Compile Include="Migrations\201511151427521_CreateFreePostsTable.Designer.cs">
+      <DependentUpon>201511151427521_CreateFreePostsTable.cs</DependentUpon>
     </Compile>
     <Compile Include="PostFile.cs" />
     <Compile Include="Queue.cs" />
@@ -652,6 +657,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201511121528598_AddVideoCountToPost.resx">
       <DependentUpon>201511121528598_AddVideoCountToPost.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201511151427521_CreateFreePostsTable.resx">
+      <DependentUpon>201511151427521_CreateFreePostsTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

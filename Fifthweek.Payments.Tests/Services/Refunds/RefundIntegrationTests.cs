@@ -98,7 +98,7 @@
                 Pause();
                 await this.updateAccountBalances.ExecuteAsync(SubscriberId1, DateTime.UtcNow);
                 Assert.AreEqual(1000, (await this.getCreditTransactionInformation.ExecuteAsync(transactionReference)).CreditAmountAvailableForRefund);
-                Assert.AreEqual(1000, (await this.getAccountSettings.ExecuteAsync(SubscriberId1)).AccountBalance);
+                Assert.AreEqual(1000, (await this.getAccountSettings.ExecuteAsync(SubscriberId1, DateTime.UtcNow, 0)).AccountBalance);
                 Assert.AreEqual(200, await this.GetAccountBalance(SubscriberId1, LedgerAccountType.SalesTax));
                 Assert.AreEqual(-1200, await this.GetAccountBalance(SubscriberId1, LedgerAccountType.Stripe));
 
@@ -116,7 +116,7 @@
                 Pause();
                 await this.updateAccountBalances.ExecuteAsync(SubscriberId1, DateTime.UtcNow);
                 Assert.AreEqual(900, (await this.getCreditTransactionInformation.ExecuteAsync(transactionReference)).CreditAmountAvailableForRefund);
-                Assert.AreEqual(900, (await this.getAccountSettings.ExecuteAsync(SubscriberId1)).AccountBalance);
+                Assert.AreEqual(900, (await this.getAccountSettings.ExecuteAsync(SubscriberId1, DateTime.UtcNow, 0)).AccountBalance);
                 Assert.AreEqual(180, await this.GetAccountBalance(SubscriberId1, LedgerAccountType.SalesTax));
                 Assert.AreEqual(-1080, await this.GetAccountBalance(SubscriberId1, LedgerAccountType.Stripe));
 
@@ -134,7 +134,7 @@
                 Pause();
                 await this.updateAccountBalances.ExecuteAsync(SubscriberId1, DateTime.UtcNow);
                 Assert.AreEqual(400, (await this.getCreditTransactionInformation.ExecuteAsync(transactionReference)).CreditAmountAvailableForRefund);
-                Assert.AreEqual(400, (await this.getAccountSettings.ExecuteAsync(SubscriberId1)).AccountBalance);
+                Assert.AreEqual(400, (await this.getAccountSettings.ExecuteAsync(SubscriberId1, DateTime.UtcNow, 0)).AccountBalance);
                 Assert.AreEqual(80, await this.GetAccountBalance(SubscriberId1, LedgerAccountType.SalesTax));
                 Assert.AreEqual(-480, await this.GetAccountBalance(SubscriberId1, LedgerAccountType.Stripe));
 
@@ -152,7 +152,7 @@
                 Pause();
                 await this.updateAccountBalances.ExecuteAsync(SubscriberId1, DateTime.UtcNow);
                 Assert.AreEqual(0, (await this.getCreditTransactionInformation.ExecuteAsync(transactionReference)).CreditAmountAvailableForRefund);
-                Assert.AreEqual(0, (await this.getAccountSettings.ExecuteAsync(SubscriberId1)).AccountBalance);
+                Assert.AreEqual(0, (await this.getAccountSettings.ExecuteAsync(SubscriberId1, DateTime.UtcNow, 0)).AccountBalance);
                 Assert.AreEqual(0, await this.GetAccountBalance(SubscriberId1, LedgerAccountType.SalesTax));
                 Assert.AreEqual(0, await this.GetAccountBalance(SubscriberId1, LedgerAccountType.Stripe));
 
@@ -191,11 +191,11 @@
                 Pause();
                 await this.updateAccountBalances.ExecuteAsync(null, DateTime.UtcNow);
                 Assert.AreEqual(1000, (await this.getCreditTransactionInformation.ExecuteAsync(creditTransactionReference)).CreditAmountAvailableForRefund);
-                Assert.AreEqual(0, (await this.getAccountSettings.ExecuteAsync(SubscriberId1)).AccountBalance);
+                Assert.AreEqual(0, (await this.getAccountSettings.ExecuteAsync(SubscriberId1, DateTime.UtcNow, 0)).AccountBalance);
                 Assert.AreEqual(200, await this.GetAccountBalance(SubscriberId1, LedgerAccountType.SalesTax));
                 Assert.AreEqual(-1200, await this.GetAccountBalance(SubscriberId1, LedgerAccountType.Stripe));
 
-                Assert.AreEqual(0, (await this.getAccountSettings.ExecuteAsync(CreatorId1)).AccountBalance);
+                Assert.AreEqual(0, (await this.getAccountSettings.ExecuteAsync(CreatorId1, DateTime.UtcNow, 0)).AccountBalance);
                 Assert.AreEqual(350, await this.GetAccountBalance(CreatorId1, LedgerAccountType.FifthweekRevenue));
                 Assert.AreEqual(350, (await this.getCreatorRevenue.ExecuteAsync(CreatorId1, Now)).UnreleasedRevenue);
 
@@ -209,11 +209,11 @@
                 Pause();
                 await this.updateAccountBalances.ExecuteAsync(null, DateTime.UtcNow);
                 Assert.AreEqual(1000, (await this.getCreditTransactionInformation.ExecuteAsync(creditTransactionReference)).CreditAmountAvailableForRefund);
-                Assert.AreEqual(500, (await this.getAccountSettings.ExecuteAsync(SubscriberId1)).AccountBalance);
+                Assert.AreEqual(500, (await this.getAccountSettings.ExecuteAsync(SubscriberId1, DateTime.UtcNow, 0)).AccountBalance);
                 Assert.AreEqual(200, await this.GetAccountBalance(SubscriberId1, LedgerAccountType.SalesTax));
                 Assert.AreEqual(-1200, await this.GetAccountBalance(SubscriberId1, LedgerAccountType.Stripe));
 
-                Assert.AreEqual(0, (await this.getAccountSettings.ExecuteAsync(CreatorId1)).AccountBalance);
+                Assert.AreEqual(0, (await this.getAccountSettings.ExecuteAsync(CreatorId1, DateTime.UtcNow, 0)).AccountBalance);
                 Assert.AreEqual(0, await this.GetAccountBalance(CreatorId1, LedgerAccountType.FifthweekRevenue));
                 Assert.AreEqual(0, (await this.getCreatorRevenue.ExecuteAsync(CreatorId1, Now)).UnreleasedRevenue);
 
