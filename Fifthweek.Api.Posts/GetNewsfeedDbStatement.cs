@@ -61,6 +61,10 @@
             CASE WHEN likedPosts.{0} IS NOT NULL THEN 1 ELSE 0 END AS HasLikedPost",
             Like.Fields.PostId);
 
+        private static readonly string SqlIsFreePostSelect = string.Format(@",
+            CASE WHEN fp.{0} IS NOT NULL THEN 1 ELSE 0 END AS IsFreePost",
+            FreePost.Fields.PostId);
+
         private static readonly string SqlPreviewInformationSelect = string.Format(@",
             u.{0} AS Username,
             blog.{1} AS BlogName,
@@ -107,10 +111,17 @@
             Like.Fields.UserId);
 
         private static readonly string SqlHasLikedFromClause = string.Format(@"
-            LEFT OUTER JOIN (SELECT {1} FROM {2} WHERE {3}=@RequestorId) likedPosts ON post.{0} = likedPosts.{1}",
+            LEFT OUTER JOIN {2} likedPosts ON post.{0} = likedPosts.{1} AND @RequestorId=likedPosts.{3}",
             Post.Fields.Id,
             Like.Fields.PostId,
             Like.Table,
+            Like.Fields.UserId);
+
+        private static readonly string SqlIsFreePostFromClause = string.Format(@"
+            LEFT OUTER JOIN {2} fp ON post.{0} = fp.{1} AND @RequestorId=fp.{3}",
+            Post.Fields.Id,
+            FreePost.Fields.PostId,
+            FreePost.Table,
             Like.Fields.UserId);
 
         private static readonly string SqlPreviewInformationClause = string.Format(@"
@@ -232,6 +243,11 @@
             if (requesterId != null)
             {
                 result.Append(SqlHasLikedSelect);
+
+                if (fetchAdditionalColumns)
+                {
+                    result.Append(SqlIsFreePostSelect);
+                }
             }
 
             if (fetchAdditionalColumns)
@@ -244,6 +260,11 @@
             if (requesterId != null)
             {
                 result.Append(SqlHasLikedFromClause);
+
+                if (fetchAdditionalColumns)
+                {
+                    result.Append(SqlIsFreePostFromClause);
+                }
             }
 
             if (fetchAdditionalColumns)

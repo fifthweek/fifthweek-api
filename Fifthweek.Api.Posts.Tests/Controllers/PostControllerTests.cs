@@ -167,7 +167,7 @@
                 StartIndex = 10
             };
 
-            var queryResult = new GetPreviewNewsfeedQueryResult(new[] { new GetPreviewNewsfeedQueryResult.PreviewPost(UserId, new GetPreviewNewsfeedQueryResult.PreviewPostCreator(Username, null), PostId, BlogId, new GetPreviewNewsfeedQueryResult.PreviewPostBlog(BlogName, null, null), ChannelId, new GetPreviewNewsfeedQueryResult.PreviewPostChannel(ChannelName), new PreviewText(string.Empty), null, null, null, 0, 0, 0, 0, 0, DateTime.UtcNow, 0, 0, false) });
+            var queryResult = new GetPreviewNewsfeedQueryResult(new[] { new GetPreviewNewsfeedQueryResult.PreviewPost(UserId, new GetPreviewNewsfeedQueryResult.PreviewPostCreator(Username, null), PostId, BlogId, new GetPreviewNewsfeedQueryResult.PreviewPostBlog(BlogName, null, null), ChannelId, new GetPreviewNewsfeedQueryResult.PreviewPostChannel(ChannelName), new PreviewText(string.Empty), null, null, null, 0, 0, 0, 0, 0, DateTime.UtcNow, 0, 0, false, false) });
 
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.getPreviewNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);

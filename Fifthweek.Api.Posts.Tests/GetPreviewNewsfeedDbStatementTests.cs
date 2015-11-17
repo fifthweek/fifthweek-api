@@ -391,6 +391,7 @@
                 var origins = new List<UserPaymentOrigin>();
                 var likes = new List<Like>();
                 var comments = new List<Persistence.Comment>();
+                var freePosts = new List<FreePost>();
 
                 if (createLivePosts || createFuturePosts)
                 {
@@ -457,6 +458,15 @@
                                     "Comment " + this.random.Next(),
                                     DateTime.UtcNow));
                         }
+
+                        if (newsfeedPost.IsFreePost)
+                        {
+                            foreach (var userId in UserIds)
+                            {
+                                freePosts.Add(
+                                    new FreePost(userId.Value, newsfeedPost.PostId.Value, null, Now));
+                            }
+                        }
                     }
                 }
 
@@ -518,6 +528,7 @@
                 await databaseContext.Database.Connection.InsertAsync(origins);
                 await databaseContext.Database.Connection.InsertAsync(likes);
                 await databaseContext.Database.Connection.InsertAsync(comments);
+                await databaseContext.Database.Connection.InsertAsync(freePosts);
             }
         }
 
@@ -590,6 +601,7 @@
                                 1,
                                 1,
                                 false,
+                                i % 2 == 0,
                                 creationDate));
                         }
                     }
@@ -674,6 +686,7 @@
                     v.LikesCount,
                     v.CommentsCount,
                     userId != null && UserIds.IndexOf(userId) < v.LikesCount,
+                    userId != null && v.IsFreePost,
                     v.CreationDate)).ToList();
             }
         }

@@ -111,7 +111,7 @@
 
                 var result = await this.target.ExecuteAsync(UserId, PostId);
 
-                AssertExpectedResult(false, result);
+                AssertExpectedResult(false, false, result);
 
                 return ExpectedSideEffects.None;
             });
@@ -128,7 +128,24 @@
 
                 var result = await this.target.ExecuteAsync(UserId, PostId);
 
-                AssertExpectedResult(true, result);
+                AssertExpectedResult(true, false, result);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenIsFreePost_ItShouldReturnPostAndFiles()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.InitializeTarget(testDatabase);
+                await this.CreateEntitiesAsync(testDatabase, isFreePost: true);
+                await testDatabase.TakeSnapshotAsync();
+
+                var result = await this.target.ExecuteAsync(UserId, PostId);
+
+                AssertExpectedResult(false, true, result);
 
                 return ExpectedSideEffects.None;
             });
@@ -145,7 +162,7 @@
 
                 var result = await this.target.ExecuteAsync(null, PostId);
 
-                AssertExpectedResult(false, result);
+                AssertExpectedResult(false, false, result);
 
                 return ExpectedSideEffects.None;
             });
@@ -168,7 +185,7 @@
             });
         }
 
-        private static void AssertExpectedResult(bool hasLiked, GetPostDbResult result)
+        private static void AssertExpectedResult(bool hasLiked, bool isFreePost, GetPostDbResult result)
         {
             Assert.AreEqual(
                 new PreviewNewsfeedPost(
@@ -199,6 +216,7 @@
                     1 + (hasLiked ? 1 : 0),
                     1,
                     hasLiked,
+                    isFreePost,
                     CreationDate),
                 result.Post);
 
@@ -229,7 +247,7 @@
                 file2);
         }
 
-        private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase, bool likePost)
+        private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase, bool likePost = false, bool isFreePost = false)
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
@@ -296,6 +314,11 @@
                 if (likePost)
                 {
                     await databaseContext.Database.Connection.InsertAsync(new Like(post.Id, null, UserId.Value, null, CreationDate));
+                }
+
+                if (isFreePost)
+                {
+                    await databaseContext.Database.Connection.InsertAsync(new FreePost(UserId.Value, post.Id, null, Now));
                 }
             }
         }

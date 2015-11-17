@@ -92,7 +92,7 @@
             new PreviewNewsfeedPost(
                 CreatorId, Username, ProfileImageFileId, HeaderImageFileId, Introduction, PostId, BlogId, BlogName, ChannelId, ChannelName,
                 PreviewText, Content, FileId.Random(), PreviewWordCount, WordCount, ImageCount, FileCount, VideoCount,
-                LiveDate, null, null, null, null, null, LikesCount, CommentsCount, true, CreationDate),
+                LiveDate, null, null, null, null, null, LikesCount, CommentsCount, true, true, CreationDate),
                 new List<GetPostDbResult.PostFileDbResult>
                 {
                     new GetPostDbResult.PostFileDbResult(FileId1, FileName1, FileExtension1, FilePurpose1, FileSize1, FileWidth1, FileHeight1),

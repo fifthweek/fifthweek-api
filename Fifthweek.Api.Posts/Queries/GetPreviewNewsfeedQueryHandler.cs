@@ -71,9 +71,13 @@
                        post.ImageId,
                        FilePurposes.PostImage);
 
+                    var imageType = post.IsFreePost
+                        ? FileManagement.Shared.Constants.PostFeedImageThumbnailName
+                        : FileManagement.Shared.Constants.PostPreviewImageThumbnailName;
+
                     imageAccessInformation = await this.blobService.GetBlobSharedAccessInformationForReadingAsync(
                         image.ContainerName, 
-                        image.FileId.Value.EncodeGuid() + "/" + FileManagement.Shared.Constants.PostPreviewImageThumbnailName,
+                        image.FileId.Value.EncodeGuid() + "/" + imageType,
                         expiry.Public);
                 }
 
@@ -103,7 +107,8 @@
                     post.LiveDate,
                     post.LikesCount,
                     post.CommentsCount,
-                    post.HasLikedPost);
+                    post.HasLikedPost,
+                    post.IsFreePost);
 
                 results.Add(completePost);
             }

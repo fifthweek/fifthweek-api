@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 15/11/2015 18:13:21 (UTC)
-//// Mapped solution in 15.99s
+//// Generated on 17/11/2015 19:08:59 (UTC)
+//// Mapped solution in 40.43s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -3471,7 +3471,8 @@ namespace Fifthweek.Api.Posts.Queries
                 System.DateTime liveDate,
                 System.Int32 likesCount,
                 System.Int32 commentsCount,
-                System.Boolean hasLiked)
+                System.Boolean hasLiked,
+                System.Boolean isFreePost)
             {
                 if (creatorId == null)
                 {
@@ -3553,6 +3554,11 @@ namespace Fifthweek.Api.Posts.Queries
                     throw new ArgumentNullException("hasLiked");
                 }
 
+                if (isFreePost == null)
+                {
+                    throw new ArgumentNullException("isFreePost");
+                }
+
                 this.CreatorId = creatorId;
                 this.Creator = creator;
                 this.PostId = postId;
@@ -3573,6 +3579,7 @@ namespace Fifthweek.Api.Posts.Queries
                 this.LikesCount = likesCount;
                 this.CommentsCount = commentsCount;
                 this.HasLiked = hasLiked;
+                this.IsFreePost = isFreePost;
             }
         }
     }
@@ -3630,6 +3637,7 @@ namespace Fifthweek.Api.Posts.Queries
             System.Int32 likesCount,
             System.Int32 commentsCount,
             System.Boolean hasLikedPost,
+            System.Boolean isFreePost,
             System.DateTime creationDate)
         {
             if (creatorId == null)
@@ -3712,6 +3720,11 @@ namespace Fifthweek.Api.Posts.Queries
                 throw new ArgumentNullException("hasLikedPost");
             }
 
+            if (isFreePost == null)
+            {
+                throw new ArgumentNullException("isFreePost");
+            }
+
             if (creationDate == null)
             {
                 throw new ArgumentNullException("creationDate");
@@ -3744,6 +3757,7 @@ namespace Fifthweek.Api.Posts.Queries
             this.LikesCount = likesCount;
             this.CommentsCount = commentsCount;
             this.HasLikedPost = hasLikedPost;
+            this.IsFreePost = isFreePost;
             this.CreationDate = creationDate;
         }
     }
@@ -7606,7 +7620,7 @@ namespace Fifthweek.Api.Posts.Queries
         {
             public override string ToString()
             {
-                return string.Format("PreviewPost({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.Creator == null ? "null" : this.Creator.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.Blog == null ? "null" : this.Blog.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Channel == null ? "null" : this.Channel.ToString(), this.PreviewText == null ? "null" : this.PreviewText.ToString(), this.Image == null ? "null" : this.Image.ToString(), this.ImageSource == null ? "null" : this.ImageSource.ToString(), this.ImageAccessInformation == null ? "null" : this.ImageAccessInformation.ToString(), this.PreviewWordCount == null ? "null" : this.PreviewWordCount.ToString(), this.WordCount == null ? "null" : this.WordCount.ToString(), this.ImageCount == null ? "null" : this.ImageCount.ToString(), this.FileCount == null ? "null" : this.FileCount.ToString(), this.VideoCount == null ? "null" : this.VideoCount.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.LikesCount == null ? "null" : this.LikesCount.ToString(), this.CommentsCount == null ? "null" : this.CommentsCount.ToString(), this.HasLiked == null ? "null" : this.HasLiked.ToString());
+                return string.Format("PreviewPost({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.Creator == null ? "null" : this.Creator.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.Blog == null ? "null" : this.Blog.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Channel == null ? "null" : this.Channel.ToString(), this.PreviewText == null ? "null" : this.PreviewText.ToString(), this.Image == null ? "null" : this.Image.ToString(), this.ImageSource == null ? "null" : this.ImageSource.ToString(), this.ImageAccessInformation == null ? "null" : this.ImageAccessInformation.ToString(), this.PreviewWordCount == null ? "null" : this.PreviewWordCount.ToString(), this.WordCount == null ? "null" : this.WordCount.ToString(), this.ImageCount == null ? "null" : this.ImageCount.ToString(), this.FileCount == null ? "null" : this.FileCount.ToString(), this.VideoCount == null ? "null" : this.VideoCount.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.LikesCount == null ? "null" : this.LikesCount.ToString(), this.CommentsCount == null ? "null" : this.CommentsCount.ToString(), this.HasLiked == null ? "null" : this.HasLiked.ToString(), this.IsFreePost == null ? "null" : this.IsFreePost.ToString());
             }
             
             public override bool Equals(object obj)
@@ -7654,6 +7668,7 @@ namespace Fifthweek.Api.Posts.Queries
                     hashCode = (hashCode * 397) ^ (this.LikesCount != null ? this.LikesCount.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.CommentsCount != null ? this.CommentsCount.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.HasLiked != null ? this.HasLiked.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.IsFreePost != null ? this.IsFreePost.GetHashCode() : 0);
                     return hashCode;
                 }
             }
@@ -7760,6 +7775,11 @@ namespace Fifthweek.Api.Posts.Queries
                     return false;
                 }
             
+                if (!object.Equals(this.IsFreePost, other.IsFreePost))
+                {
+                    return false;
+                }
+            
                 return true;
             }
         }
@@ -7792,7 +7812,7 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public override string ToString()
         {
-            return string.Format("PreviewNewsfeedPost({0}, \"{1}\", {2}, {3}, {4}, {5}, {6}, \"{7}\", {8}, \"{9}\", {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, \"{19}\", \"{20}\", {21}, {22}, {23}, {24}, {25}, {26}, {27})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.BlogName == null ? "null" : this.BlogName.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.ChannelName == null ? "null" : this.ChannelName.ToString(), this.PreviewText == null ? "null" : this.PreviewText.ToString(), this.Content == null ? "null" : this.Content.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.PreviewWordCount == null ? "null" : this.PreviewWordCount.ToString(), this.WordCount == null ? "null" : this.WordCount.ToString(), this.ImageCount == null ? "null" : this.ImageCount.ToString(), this.FileCount == null ? "null" : this.FileCount.ToString(), this.VideoCount == null ? "null" : this.VideoCount.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.ImageName == null ? "null" : this.ImageName.ToString(), this.ImageExtension == null ? "null" : this.ImageExtension.ToString(), this.ImageSize == null ? "null" : this.ImageSize.ToString(), this.ImageRenderWidth == null ? "null" : this.ImageRenderWidth.ToString(), this.ImageRenderHeight == null ? "null" : this.ImageRenderHeight.ToString(), this.LikesCount == null ? "null" : this.LikesCount.ToString(), this.CommentsCount == null ? "null" : this.CommentsCount.ToString(), this.HasLikedPost == null ? "null" : this.HasLikedPost.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+            return string.Format("PreviewNewsfeedPost({0}, \"{1}\", {2}, {3}, {4}, {5}, {6}, \"{7}\", {8}, \"{9}\", {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, \"{19}\", \"{20}\", {21}, {22}, {23}, {24}, {25}, {26}, {27}, {28})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.BlogName == null ? "null" : this.BlogName.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.ChannelName == null ? "null" : this.ChannelName.ToString(), this.PreviewText == null ? "null" : this.PreviewText.ToString(), this.Content == null ? "null" : this.Content.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.PreviewWordCount == null ? "null" : this.PreviewWordCount.ToString(), this.WordCount == null ? "null" : this.WordCount.ToString(), this.ImageCount == null ? "null" : this.ImageCount.ToString(), this.FileCount == null ? "null" : this.FileCount.ToString(), this.VideoCount == null ? "null" : this.VideoCount.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.ImageName == null ? "null" : this.ImageName.ToString(), this.ImageExtension == null ? "null" : this.ImageExtension.ToString(), this.ImageSize == null ? "null" : this.ImageSize.ToString(), this.ImageRenderWidth == null ? "null" : this.ImageRenderWidth.ToString(), this.ImageRenderHeight == null ? "null" : this.ImageRenderHeight.ToString(), this.LikesCount == null ? "null" : this.LikesCount.ToString(), this.CommentsCount == null ? "null" : this.CommentsCount.ToString(), this.HasLikedPost == null ? "null" : this.HasLikedPost.ToString(), this.IsFreePost == null ? "null" : this.IsFreePost.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
         }
         
         public override bool Equals(object obj)
@@ -7847,6 +7867,7 @@ namespace Fifthweek.Api.Posts.Queries
                 hashCode = (hashCode * 397) ^ (this.LikesCount != null ? this.LikesCount.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CommentsCount != null ? this.CommentsCount.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.HasLikedPost != null ? this.HasLikedPost.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsFreePost != null ? this.IsFreePost.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
                 return hashCode;
             }
@@ -7985,6 +8006,11 @@ namespace Fifthweek.Api.Posts.Queries
             }
         
             if (!object.Equals(this.HasLikedPost, other.HasLikedPost))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.IsFreePost, other.IsFreePost))
             {
                 return false;
             }
@@ -9416,6 +9442,7 @@ namespace Fifthweek.Api.Posts.Queries
             builder.LikesCount = this.LikesCount;
             builder.CommentsCount = this.CommentsCount;
             builder.HasLikedPost = this.HasLikedPost;
+            builder.IsFreePost = this.IsFreePost;
             builder.CreationDate = this.CreationDate;
             return builder;
         }
@@ -9456,6 +9483,7 @@ namespace Fifthweek.Api.Posts.Queries
             public System.Int32 LikesCount { get; set; }
             public System.Int32 CommentsCount { get; set; }
             public System.Boolean HasLikedPost { get; set; }
+            public System.Boolean IsFreePost { get; set; }
             public System.DateTime CreationDate { get; set; }
         
             public PreviewNewsfeedPost Build()
@@ -9488,6 +9516,7 @@ namespace Fifthweek.Api.Posts.Queries
                     this.LikesCount, 
                     this.CommentsCount, 
                     this.HasLikedPost, 
+                    this.IsFreePost, 
                     this.CreationDate);
             }
         }

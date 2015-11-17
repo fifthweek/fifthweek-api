@@ -77,6 +77,8 @@
 
         public bool HasLikedPost { get; private set; }
 
+        public bool IsFreePost { get; private set; }
+
         public DateTime CreationDate { get; private set; }
     }
 }

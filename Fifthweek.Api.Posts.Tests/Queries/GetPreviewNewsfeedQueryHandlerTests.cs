@@ -143,9 +143,22 @@
                     Assert.AreEqual(item.Input.ImageSize, item.Output.ImageSource.Size);
                     Assert.AreEqual(ContentType, item.Output.ImageSource.ContentType);
                     Assert.AreEqual(item.Input.ChannelId.ToString(), item.Output.ImageAccessInformation.ContainerName);
-                    Assert.AreEqual(
-                        item.Input.ImageId.Value.EncodeGuid() + "/" + FileManagement.Shared.Constants.PostPreviewImageThumbnailName, 
-                        item.Output.ImageAccessInformation.BlobName);
+
+                    if (item.Input.IsFreePost)
+                    {
+                        Assert.AreEqual(
+                            item.Input.ImageId.Value.EncodeGuid() + "/"
+                            + FileManagement.Shared.Constants.PostFeedImageThumbnailName,
+                            item.Output.ImageAccessInformation.BlobName);
+                    }
+                    else
+                    {
+                        Assert.AreEqual(
+                            item.Input.ImageId.Value.EncodeGuid() + "/"
+                            + FileManagement.Shared.Constants.PostPreviewImageThumbnailName,
+                            item.Output.ImageAccessInformation.BlobName);
+                    }
+
                     Assert.AreEqual(Signature, item.Output.ImageAccessInformation.Signature);
                     Assert.AreEqual(Expiry.Public, item.Output.ImageAccessInformation.Expiry);
                 }
@@ -238,6 +251,7 @@
                             0,
                             0, 
                             false,
+                            i % 2 == 0,
                             liveDate));
                     }
                 }
