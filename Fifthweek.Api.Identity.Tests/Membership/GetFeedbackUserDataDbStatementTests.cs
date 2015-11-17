@@ -4,6 +4,7 @@
     using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.AssemblyResolution;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
@@ -34,6 +35,8 @@
         [TestInitialize]
         public void Initialize()
         {
+            DapperTypeHandlerRegistration.Register(FifthweekAssembliesResolver.Assemblies);
+
             // Required for non-database tests.
             this.target = new GetFeedbackUserDataDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object);
         }
